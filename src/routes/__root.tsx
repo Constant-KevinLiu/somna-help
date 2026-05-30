@@ -78,17 +78,54 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "somna — Sleep Better, Starting Tonight" },
       { name: "description", content: "A science-based CBT-I sleep platform that gently helps you restore healthy sleep patterns — drug-free, calming, and built around you." },
       { name: "author", content: "somna" },
+      // ==============================================
+      // ✅ OPEN GRAPH（Facebook / WhatsApp / Telegram / 微信 / 搜索引擎）
+      // ==============================================
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://somna.help/" },
       { property: "og:title", content: "somna — Sleep Better, Starting Tonight" },
       { property: "og:description", content: "Science-based CBT-I sleep companion. Calm, gentle, evidence-backed." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { property: "og:image", content: "https://somna.help/og-cover.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:type", content: "image/jpeg" },
+      { property: "og:site_name", content: "somna" },
+      { property: "og:locale", content: "en_US" },
+
+      // ==============================================
+      // ✅ TWITTER CARD（X / Twitter 分享大图）
+      // ==============================================
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "somna — Sleep Better, Starting Tonight" },
+      { name: "twitter:description", content: "Science-based CBT-I sleep companion. Calm, gentle, evidence-backed." },
+      { name: "twitter:image", content: "https://somna.help/og-cover.jpg" },
       { name: "twitter:site", content: "@somna" },
+      { name: "twitter:creator", content: "@somna" },
+
+      // 浏览器主题颜色（标签栏颜色）
+      { name: "theme-color", content: "#1E1B4B" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "#1E1B4B" },
+
+      // { property: "og:title", content: "somna — Sleep Better, Starting Tonight" },
+      // { property: "og:description", content: "Science-based CBT-I sleep companion. Calm, gentle, evidence-backed." },
+      // { property: "og:type", content: "website" },
+      // { property: "og:image", content: "https://somna.help/og-cover.jpg"},
+      // { name: "twitter:card", content: "summary" },
+      // { name: "twitter:site", content: "@somna" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      // 👇 这里是新增的 canonical 标签，全站统一指向权威URL
+      // Canonical 标签
+      { rel: "canonical", href: "https://somna.help/" },
+      // Favicon 相关
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
+      { rel: "icon", type: "image/png", sizes: "48x48", href: "/favicon-48x48.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+      { rel: "manifest", href: "/site.webmanifest" },
+      // 你现有的样式/字体链接
+      { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" },
