@@ -4,6 +4,25 @@ export type Lang = "en" | "zh" | "es";
 
 type Dict = Record<string, string>;
 
+export const localeMap: Record<Lang, string> = {
+  en: "en-US",
+  zh: "zh-CN",
+  es: "es-ES",
+};
+
+export function formatTime(d: Date, lang: Lang) {
+  return d.toLocaleTimeString(localeMap[lang], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
+export function useFmtTime() {
+  const { lang } = useI18n();
+  return (d: Date) => formatTime(d, lang);
+}
+
 const en: Dict = {
   "nav.home": "Home",
   "nav.calculator": "Calculator",

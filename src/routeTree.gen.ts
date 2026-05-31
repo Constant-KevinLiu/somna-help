@@ -9,15 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SleepCalculatorRouteImport } from './routes/sleep-calculator'
 import { Route as RelaxRouteImport } from './routes/relax'
 import { Route as ProgramRouteImport } from './routes/program'
+import { Route as NapCalculatorRouteImport } from './routes/nap-calculator'
+import { Route as MelatoninCalculatorRouteImport } from './routes/melatonin-calculator'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as DiaryRouteImport } from './routes/diary'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CalculatorRouteImport } from './routes/calculator'
+import { Route as BedtimeCalculatorRouteImport } from './routes/bedtime-calculator'
 import { Route as AssessmentRouteImport } from './routes/assessment'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SleepCalculatorRoute = SleepCalculatorRouteImport.update({
+  id: '/sleep-calculator',
+  path: '/sleep-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RelaxRoute = RelaxRouteImport.update({
   id: '/relax',
   path: '/relax',
@@ -26,6 +35,16 @@ const RelaxRoute = RelaxRouteImport.update({
 const ProgramRoute = ProgramRouteImport.update({
   id: '/program',
   path: '/program',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NapCalculatorRoute = NapCalculatorRouteImport.update({
+  id: '/nap-calculator',
+  path: '/nap-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MelatoninCalculatorRoute = MelatoninCalculatorRouteImport.update({
+  id: '/melatonin-calculator',
+  path: '/melatonin-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnRoute = LearnRouteImport.update({
@@ -48,6 +67,11 @@ const CalculatorRoute = CalculatorRouteImport.update({
   path: '/calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BedtimeCalculatorRoute = BedtimeCalculatorRouteImport.update({
+  id: '/bedtime-calculator',
+  path: '/bedtime-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AssessmentRoute = AssessmentRouteImport.update({
   id: '/assessment',
   path: '/assessment',
@@ -62,80 +86,115 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assessment': typeof AssessmentRoute
+  '/bedtime-calculator': typeof BedtimeCalculatorRoute
   '/calculator': typeof CalculatorRoute
   '/dashboard': typeof DashboardRoute
   '/diary': typeof DiaryRoute
   '/learn': typeof LearnRoute
+  '/melatonin-calculator': typeof MelatoninCalculatorRoute
+  '/nap-calculator': typeof NapCalculatorRoute
   '/program': typeof ProgramRoute
   '/relax': typeof RelaxRoute
+  '/sleep-calculator': typeof SleepCalculatorRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assessment': typeof AssessmentRoute
+  '/bedtime-calculator': typeof BedtimeCalculatorRoute
   '/calculator': typeof CalculatorRoute
   '/dashboard': typeof DashboardRoute
   '/diary': typeof DiaryRoute
   '/learn': typeof LearnRoute
+  '/melatonin-calculator': typeof MelatoninCalculatorRoute
+  '/nap-calculator': typeof NapCalculatorRoute
   '/program': typeof ProgramRoute
   '/relax': typeof RelaxRoute
+  '/sleep-calculator': typeof SleepCalculatorRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assessment': typeof AssessmentRoute
+  '/bedtime-calculator': typeof BedtimeCalculatorRoute
   '/calculator': typeof CalculatorRoute
   '/dashboard': typeof DashboardRoute
   '/diary': typeof DiaryRoute
   '/learn': typeof LearnRoute
+  '/melatonin-calculator': typeof MelatoninCalculatorRoute
+  '/nap-calculator': typeof NapCalculatorRoute
   '/program': typeof ProgramRoute
   '/relax': typeof RelaxRoute
+  '/sleep-calculator': typeof SleepCalculatorRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/assessment'
+    | '/bedtime-calculator'
     | '/calculator'
     | '/dashboard'
     | '/diary'
     | '/learn'
+    | '/melatonin-calculator'
+    | '/nap-calculator'
     | '/program'
     | '/relax'
+    | '/sleep-calculator'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/assessment'
+    | '/bedtime-calculator'
     | '/calculator'
     | '/dashboard'
     | '/diary'
     | '/learn'
+    | '/melatonin-calculator'
+    | '/nap-calculator'
     | '/program'
     | '/relax'
+    | '/sleep-calculator'
   id:
     | '__root__'
     | '/'
     | '/assessment'
+    | '/bedtime-calculator'
     | '/calculator'
     | '/dashboard'
     | '/diary'
     | '/learn'
+    | '/melatonin-calculator'
+    | '/nap-calculator'
     | '/program'
     | '/relax'
+    | '/sleep-calculator'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssessmentRoute: typeof AssessmentRoute
+  BedtimeCalculatorRoute: typeof BedtimeCalculatorRoute
   CalculatorRoute: typeof CalculatorRoute
   DashboardRoute: typeof DashboardRoute
   DiaryRoute: typeof DiaryRoute
   LearnRoute: typeof LearnRoute
+  MelatoninCalculatorRoute: typeof MelatoninCalculatorRoute
+  NapCalculatorRoute: typeof NapCalculatorRoute
   ProgramRoute: typeof ProgramRoute
   RelaxRoute: typeof RelaxRoute
+  SleepCalculatorRoute: typeof SleepCalculatorRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sleep-calculator': {
+      id: '/sleep-calculator'
+      path: '/sleep-calculator'
+      fullPath: '/sleep-calculator'
+      preLoaderRoute: typeof SleepCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/relax': {
       id: '/relax'
       path: '/relax'
@@ -148,6 +207,20 @@ declare module '@tanstack/react-router' {
       path: '/program'
       fullPath: '/program'
       preLoaderRoute: typeof ProgramRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nap-calculator': {
+      id: '/nap-calculator'
+      path: '/nap-calculator'
+      fullPath: '/nap-calculator'
+      preLoaderRoute: typeof NapCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/melatonin-calculator': {
+      id: '/melatonin-calculator'
+      path: '/melatonin-calculator'
+      fullPath: '/melatonin-calculator'
+      preLoaderRoute: typeof MelatoninCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn': {
@@ -178,6 +251,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bedtime-calculator': {
+      id: '/bedtime-calculator'
+      path: '/bedtime-calculator'
+      fullPath: '/bedtime-calculator'
+      preLoaderRoute: typeof BedtimeCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/assessment': {
       id: '/assessment'
       path: '/assessment'
@@ -198,12 +278,16 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssessmentRoute: AssessmentRoute,
+  BedtimeCalculatorRoute: BedtimeCalculatorRoute,
   CalculatorRoute: CalculatorRoute,
   DashboardRoute: DashboardRoute,
   DiaryRoute: DiaryRoute,
   LearnRoute: LearnRoute,
+  MelatoninCalculatorRoute: MelatoninCalculatorRoute,
+  NapCalculatorRoute: NapCalculatorRoute,
   ProgramRoute: ProgramRoute,
   RelaxRoute: RelaxRoute,
+  SleepCalculatorRoute: SleepCalculatorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

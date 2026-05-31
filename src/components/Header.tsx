@@ -1,11 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, Moon } from "lucide-react";
+import { Menu, X, Moon, ChevronDown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { getCalcDict } from "@/lib/calc-i18n";
 
 const navItems = [
   { to: "/", key: "nav.home" as const },
-  { to: "/calculator", key: "nav.calculator" as const },
   { to: "/program", key: "nav.program" as const },
   { to: "/assessment", key: "nav.assessment" as const },
   { to: "/diary", key: "nav.diary" as const },
@@ -15,7 +15,16 @@ const navItems = [
 
 export function Header() {
   const { t, lang, setLang } = useI18n();
+  const calcDict = getCalcDict(lang);
+  const calculatorItems = [
+    { to: "/calculator", label: calcDict.nav.cycle },
+    { to: "/sleep-calculator", label: calcDict.nav.sleep },
+    { to: "/bedtime-calculator", label: calcDict.nav.bedtime },
+    { to: "/nap-calculator", label: calcDict.nav.nap },
+    { to: "/melatonin-calculator", label: calcDict.nav.melatonin },
+  ];
   const [open, setOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50">
@@ -41,6 +50,37 @@ export function Header() {
                 {t(item.key)}
               </Link>
             ))}
+            <div
+              className="relative"
+              onMouseEnter={() => setToolsOpen(true)}
+              onMouseLeave={() => setToolsOpen(false)}
+            >
+              <button
+                className="flex items-center gap-1 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
+                onClick={() => setToolsOpen((v) => !v)}
+              >
+                {calcDict.nav.tools} <ChevronDown className="h-3.5 w-3.5" />
+              </button>
+              {toolsOpen && (
+                <div className="absolute right-0 top-full pt-2">
+                  <div className="glass-strong w-64 rounded-2xl border border-white/10 p-2 shadow-xl">
+                    <div className="px-3 py-2 text-xs uppercase tracking-widest text-muted-foreground">
+                      {calcDict.nav.section}
+                    </div>
+                    {calculatorItems.map((c) => (
+                      <Link
+                        key={c.to}
+                        to={c.to as any}
+                        className="block rounded-lg px-3 py-2 text-sm text-foreground/90 transition hover:bg-white/5"
+                        onClick={() => setToolsOpen(false)}
+                      >
+                        {c.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -85,6 +125,22 @@ export function Header() {
                   {t(item.key)}
                 </Link>
               ))}
+              <div className="mt-2 border-t border-white/5 pt-2">
+                <div className="px-3 py-2 text-xs uppercase tracking-widest text-muted-foreground">
+                  {calcDict.nav.section}
+                </div>
+                {calculatorItems.map((c) => (
+                  <Link
+                    key={c.to}
+                    to={c.to as any}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                    activeProps={{ className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground" }}
+                  >
+                    {c.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           </nav>
         )}

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, useFmtTime } from "@/lib/i18n";
+import { getCalcDict } from "@/lib/calc-i18n";
 import { PageHero } from "@/components/PageHero";
 import { Moon, Sun } from "lucide-react";
 
@@ -16,12 +17,10 @@ export const Route = createFileRoute("/calculator")({
 
 const FALL_MIN = 15;
 
-function fmt(d: Date) {
-  return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
-}
-
 function CalculatorPage() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
+  const fmt = useFmtTime();
+  const dict = getCalcDict(lang);
   const [mode, setMode] = useState<"wake" | "bed">("wake");
   const [time, setTime] = useState("07:00");
 
@@ -80,7 +79,7 @@ function CalculatorPage() {
                   </span>
                   <div>
                     <div className="font-display text-2xl">{r.time}</div>
-                    <div className="text-xs text-muted-foreground">{r.hours}h · {r.cycles} {t("calc.cycles")}</div>
+                    <div className="text-xs text-muted-foreground">{r.hours}{dict.common.hoursShort} · {r.cycles} {dict.common.cyclesWord}</div>
                   </div>
                 </div>
               </div>
