@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Menu, X, Moon, ChevronDown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { getCalcDict } from "@/lib/calc-i18n";
+import { getCbtiDict, CBTI_SLUGS, cbtiPath } from "@/lib/cbti-i18n";
+import { getLearnDict, LEARN_SLUGS, learnPath } from "@/lib/learn-i18n";
 
 const navItems = [
   { to: "/", key: "nav.home" as const },
@@ -10,12 +12,13 @@ const navItems = [
   { to: "/assessment", key: "nav.assessment" as const },
   { to: "/diary", key: "nav.diary" as const },
   { to: "/relax", key: "nav.relax" as const },
-  { to: "/learn", key: "nav.learn" as const },
 ];
 
 export function Header() {
   const { t, lang, setLang } = useI18n();
   const calcDict = getCalcDict(lang);
+  const cbtiDict = getCbtiDict(lang);
+  const learnDict = getLearnDict(lang);
   const calculatorItems = [
     { to: "/calculator", label: calcDict.nav.cycle },
     { to: "/sleep-calculator", label: calcDict.nav.sleep },
@@ -23,8 +26,11 @@ export function Header() {
     { to: "/nap-calculator", label: calcDict.nav.nap },
     { to: "/melatonin-calculator", label: calcDict.nav.melatonin },
   ];
+  const guideItems = CBTI_SLUGS.map((s) => ({ to: cbtiPath(s), label: cbtiDict.titles[s] }));
+  const lessonItems = LEARN_SLUGS.map((s) => ({ to: learnPath(s), label: learnDict.titles[s] }));
   const [open, setOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
+  const [learnOpen, setLearnOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50">
@@ -77,6 +83,64 @@ export function Header() {
                         {c.label}
                       </Link>
                     ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            <div
+              className="relative"
+              onMouseEnter={() => setLearnOpen(true)}
+              onMouseLeave={() => setLearnOpen(false)}
+            >
+              <button
+                className="flex items-center gap-1 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
+                onClick={() => setLearnOpen((v) => !v)}
+              >
+                {learnDict.ui.learn} <ChevronDown className="h-3.5 w-3.5" />
+              </button>
+              {learnOpen && (
+                <div className="absolute right-0 top-full pt-2">
+                  <div className="glass-strong w-[34rem] rounded-2xl border border-white/10 p-3 shadow-xl">
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <Link
+                          to="/learn"
+                          onClick={() => setLearnOpen(false)}
+                          className="block px-3 py-2 text-xs uppercase tracking-widest text-accent hover:underline"
+                        >
+                          {learnDict.ui.cbtiGuides}
+                        </Link>
+                        {guideItems.map((g) => (
+                          <Link
+                            key={g.to}
+                            to={g.to as any}
+                            className="block rounded-lg px-3 py-2 text-sm text-foreground/90 transition hover:bg-white/5"
+                            onClick={() => setLearnOpen(false)}
+                          >
+                            {g.label}
+                          </Link>
+                        ))}
+                      </div>
+                      <div>
+                        <Link
+                          to="/learn"
+                          onClick={() => setLearnOpen(false)}
+                          className="block px-3 py-2 text-xs uppercase tracking-widest text-accent hover:underline"
+                        >
+                          {learnDict.ui.quickLessons}
+                        </Link>
+                        {lessonItems.map((l) => (
+                          <Link
+                            key={l.to}
+                            to={l.to as any}
+                            className="block rounded-lg px-3 py-2 text-sm text-foreground/90 transition hover:bg-white/5"
+                            onClick={() => setLearnOpen(false)}
+                          >
+                            {l.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -138,6 +202,45 @@ export function Header() {
                     activeProps={{ className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground" }}
                   >
                     {c.label}
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-2 border-t border-white/5 pt-2">
+                <div className="px-3 py-2 text-xs uppercase tracking-widest text-muted-foreground">
+                  {learnDict.ui.cbtiGuides}
+                </div>
+                {guideItems.map((g) => (
+                  <Link
+                    key={g.to}
+                    to={g.to as any}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                    activeProps={{ className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground" }}
+                  >
+                    {g.label}
+                  </Link>
+                ))}
+              </div>
+              <div className="mt-2 border-t border-white/5 pt-2">
+                <div className="px-3 py-2 text-xs uppercase tracking-widest text-muted-foreground">
+                  {learnDict.ui.quickLessons}
+                </div>
+                <Link
+                  to="/learn"
+                  onClick={() => setOpen(false)}
+                  className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                >
+                  {learnDict.ui.hubTitle}
+                </Link>
+                {lessonItems.map((l) => (
+                  <Link
+                    key={l.to}
+                    to={l.to as any}
+                    onClick={() => setOpen(false)}
+                    className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                    activeProps={{ className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground" }}
+                  >
+                    {l.label}
                   </Link>
                 ))}
               </div>
