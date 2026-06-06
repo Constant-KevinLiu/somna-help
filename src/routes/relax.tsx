@@ -2,14 +2,26 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { PageHero } from "@/components/PageHero";
-import { Wind, Music, Heart } from "lucide-react";
+import { Wind, Music, Heart, Play } from "lucide-react";
+import { relaxTracks, type RelaxCategory } from "@/lib/relax-tracks";
+import { RelaxAudioPlayer } from "@/components/RelaxAudioPlayer";
 
 export const Route = createFileRoute("/relax")({
   component: RelaxPage,
   head: () => ({
     meta: [
-      { title: "Relax & Wind Down — somna" },
-      { name: "description", content: "Breathing, meditation, and calming nighttime rituals." },
+      { title: "Relaxing Sleep Audio | Somna" },
+      {
+        name: "description",
+        content:
+          "Guided relaxation, body scan meditation, ocean sounds, rain sounds, anxiety relief sessions and pink noise for better sleep.",
+      },
+      { property: "og:title", content: "Relaxing Sleep Audio | Somna" },
+      {
+        property: "og:description",
+        content:
+          "Guided relaxation, body scan meditation, ocean sounds, rain sounds, anxiety relief sessions and pink noise for better sleep.",
+      },
     ],
   }),
 });
@@ -20,12 +32,33 @@ const phases = [
   { key: "relax.exhale", dur: 8 },
 ] as const;
 
+const catLabels: Record<RelaxCategory, { en: string; zh: string; es: string }> = {
+  guided: { en: "Guided", zh: "引导", es: "Guiada" },
+  nature: { en: "Nature", zh: "自然", es: "Naturaleza" },
+  noise: { en: "Noise", zh: "噪音", es: "Ruido" },
+};
+
+const catIcon = { guided: Heart, nature: Wind, noise: Music } as const;
+
+const sectionLabel = {
+  en: "Sleep Audio Library",
+  zh: "睡眠音频库",
+  es: "Biblioteca de audio para dormir",
+};
+const sectionSub = {
+  en: "Guided sessions, nature ambiences and noise. Tap a session to open the player.",
+  zh: "引导练习、自然音景与噪音。点击任一会话打开播放器。",
+  es: "Sesiones guiadas, ambientes naturales y ruido. Toca una sesión para abrir el reproductor.",
+};
+const playLabel = { en: "Play", zh: "播放", es: "Reproducir" };
+
 function RelaxPage() {
   const { t, lang } = useI18n();
   const [running, setRunning] = useState(false);
   const [phase, setPhase] = useState<number>(0);
   const [sec, setSec] = useState<number>(phases[0].dur);
   const ref = useRef<number | null>(null);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!running) return;
@@ -44,15 +77,6 @@ function RelaxPage() {
   }, [running, phase]);
 
   const scale = phase === 0 ? "scale-110" : phase === 1 ? "scale-110" : "scale-90";
-
-  const sessions = [
-    { icon: Wind, en: "Body scan · 8 min", zh: "身体扫描 · 8 分钟" },
-    { icon: Heart, en: "Letting go of the day · 10 min", zh: "放下白天 · 10 分钟" },
-    { icon: Music, en: "Rain on leaves · 30 min", zh: "雨打树叶 · 30 分钟" },
-    { icon: Wind, en: "Soft ocean · 45 min", zh: "海浪轻拍 · 45 分钟" },
-    { icon: Heart, en: "Anxiety relief · 12 min", zh: "缓解焦虑 · 12 分钟" },
-    { icon: Music, en: "Pink noise · loop", zh: "粉红噪音 · 循环" },
-  ];
 
   return (
     <>
@@ -84,15 +108,56 @@ function RelaxPage() {
       </section>
 
       <section className="px-5 pb-20">
-        <div className="mx-auto grid max-w-5xl gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {sessions.map((s, i) => (
-            <div key={i} className="glass rounded-2xl p-5 transition hover:-translate-y-1 hover:bg-white/[0.06]">
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/5">
-                <s.icon className="h-4 w-4 text-accent" />
-              </div>
-              <div className="text-sm">{lang === "zh" ? s.zh : s.en}</div>
-            </div>
-          ))}
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-6 text-center">
+            <h2 className="font-display text-2xl sm:text-3xl">{sectionLabel[lang]}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{sectionSub[lang]}</p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {relaxTracks.map((tr) => {
+              const Icon = catIcon[tr.category];
+              const isActive = activeId === tr.id;
+              return (
+                <div
+                  key={tr.id}
+                  className={`glass rounded-2xl p-5 transition ${isActive ? "ring-1 ring-primary/40 bg-white/[0.06]" : "hover:-translate-y-1 hover:bg-white/[0.06]"}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/5">
+                      <Icon className="h-4 w-4 text-accent" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="truncate text-sm font-medium">{tr.title[lang]}</h3>
+                        <span className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
+                          {catLabels[tr.category][lang]}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">{tr.description[lang]}</p>
+                      {tr.duration && (
+                        <p className="mt-1 text-[11px] text-muted-foreground/80">{tr.duration}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {!isActive ? (
+                    <button
+                      onClick={() => setActiveId(tr.id)}
+                      aria-label={`${playLabel[lang]}: ${tr.title[lang]}`}
+                      className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2 text-xs font-medium text-primary-foreground transition hover:opacity-90"
+                    >
+                      <Play className="h-3.5 w-3.5" />
+                      {playLabel[lang]}
+                    </button>
+                  ) : (
+                    <div className="mt-4">
+                      <RelaxAudioPlayer src={tr.audioUrl} title={tr.title[lang]} />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </section>
     </>
