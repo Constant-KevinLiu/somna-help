@@ -13,7 +13,6 @@ import { Route as WakeUpAt3amRouteImport } from './routes/wake-up-at-3am'
 import { Route as SleepCalculatorRouteImport } from './routes/sleep-calculator'
 import { Route as SleepAnxietyRouteImport } from './routes/sleep-anxiety'
 import { Route as RelaxRouteImport } from './routes/relax'
-import { Route as ProgramRouteImport } from './routes/program'
 import { Route as NapCalculatorRouteImport } from './routes/nap-calculator'
 import { Route as MelatoninCalculatorRouteImport } from './routes/melatonin-calculator'
 import { Route as InsomniaTreatmentRouteImport } from './routes/insomnia-treatment'
@@ -25,7 +24,9 @@ import { Route as CalculatorRouteImport } from './routes/calculator'
 import { Route as BedtimeCalculatorRouteImport } from './routes/bedtime-calculator'
 import { Route as AssessmentRouteImport } from './routes/assessment'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProgramIndexRouteImport } from './routes/program.index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as ProgramSlugRouteImport } from './routes/program.$slug'
 import { Route as LearnWhatIsCbtiRouteImport } from './routes/learn.what-is-cbti'
 import { Route as LearnStimulusControlRouteImport } from './routes/learn.stimulus-control'
 import { Route as LearnRacingThoughtsAtNightRouteImport } from './routes/learn.racing-thoughts-at-night'
@@ -51,11 +52,6 @@ const SleepAnxietyRoute = SleepAnxietyRouteImport.update({
 const RelaxRoute = RelaxRouteImport.update({
   id: '/relax',
   path: '/relax',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProgramRoute = ProgramRouteImport.update({
-  id: '/program',
-  path: '/program',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NapCalculatorRoute = NapCalculatorRouteImport.update({
@@ -113,9 +109,19 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProgramIndexRoute = ProgramIndexRouteImport.update({
+  id: '/program/',
+  path: '/program/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LearnIndexRoute = LearnIndexRouteImport.update({
   id: '/learn/',
   path: '/learn/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramSlugRoute = ProgramSlugRouteImport.update({
+  id: '/program/$slug',
+  path: '/program/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LearnWhatIsCbtiRoute = LearnWhatIsCbtiRouteImport.update({
@@ -162,7 +168,6 @@ export interface FileRoutesByFullPath {
   '/insomnia-treatment': typeof InsomniaTreatmentRoute
   '/melatonin-calculator': typeof MelatoninCalculatorRoute
   '/nap-calculator': typeof NapCalculatorRoute
-  '/program': typeof ProgramRoute
   '/relax': typeof RelaxRoute
   '/sleep-anxiety': typeof SleepAnxietyRoute
   '/sleep-calculator': typeof SleepCalculatorRoute
@@ -173,7 +178,9 @@ export interface FileRoutesByFullPath {
   '/learn/racing-thoughts-at-night': typeof LearnRacingThoughtsAtNightRoute
   '/learn/stimulus-control': typeof LearnStimulusControlRoute
   '/learn/what-is-cbti': typeof LearnWhatIsCbtiRoute
+  '/program/$slug': typeof ProgramSlugRoute
   '/learn/': typeof LearnIndexRoute
+  '/program/': typeof ProgramIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -187,7 +194,6 @@ export interface FileRoutesByTo {
   '/insomnia-treatment': typeof InsomniaTreatmentRoute
   '/melatonin-calculator': typeof MelatoninCalculatorRoute
   '/nap-calculator': typeof NapCalculatorRoute
-  '/program': typeof ProgramRoute
   '/relax': typeof RelaxRoute
   '/sleep-anxiety': typeof SleepAnxietyRoute
   '/sleep-calculator': typeof SleepCalculatorRoute
@@ -198,7 +204,9 @@ export interface FileRoutesByTo {
   '/learn/racing-thoughts-at-night': typeof LearnRacingThoughtsAtNightRoute
   '/learn/stimulus-control': typeof LearnStimulusControlRoute
   '/learn/what-is-cbti': typeof LearnWhatIsCbtiRoute
+  '/program/$slug': typeof ProgramSlugRoute
   '/learn': typeof LearnIndexRoute
+  '/program': typeof ProgramIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -213,7 +221,6 @@ export interface FileRoutesById {
   '/insomnia-treatment': typeof InsomniaTreatmentRoute
   '/melatonin-calculator': typeof MelatoninCalculatorRoute
   '/nap-calculator': typeof NapCalculatorRoute
-  '/program': typeof ProgramRoute
   '/relax': typeof RelaxRoute
   '/sleep-anxiety': typeof SleepAnxietyRoute
   '/sleep-calculator': typeof SleepCalculatorRoute
@@ -224,7 +231,9 @@ export interface FileRoutesById {
   '/learn/racing-thoughts-at-night': typeof LearnRacingThoughtsAtNightRoute
   '/learn/stimulus-control': typeof LearnStimulusControlRoute
   '/learn/what-is-cbti': typeof LearnWhatIsCbtiRoute
+  '/program/$slug': typeof ProgramSlugRoute
   '/learn/': typeof LearnIndexRoute
+  '/program/': typeof ProgramIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -240,7 +249,6 @@ export interface FileRouteTypes {
     | '/insomnia-treatment'
     | '/melatonin-calculator'
     | '/nap-calculator'
-    | '/program'
     | '/relax'
     | '/sleep-anxiety'
     | '/sleep-calculator'
@@ -251,7 +259,9 @@ export interface FileRouteTypes {
     | '/learn/racing-thoughts-at-night'
     | '/learn/stimulus-control'
     | '/learn/what-is-cbti'
+    | '/program/$slug'
     | '/learn/'
+    | '/program/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -265,7 +275,6 @@ export interface FileRouteTypes {
     | '/insomnia-treatment'
     | '/melatonin-calculator'
     | '/nap-calculator'
-    | '/program'
     | '/relax'
     | '/sleep-anxiety'
     | '/sleep-calculator'
@@ -276,7 +285,9 @@ export interface FileRouteTypes {
     | '/learn/racing-thoughts-at-night'
     | '/learn/stimulus-control'
     | '/learn/what-is-cbti'
+    | '/program/$slug'
     | '/learn'
+    | '/program'
   id:
     | '__root__'
     | '/'
@@ -290,7 +301,6 @@ export interface FileRouteTypes {
     | '/insomnia-treatment'
     | '/melatonin-calculator'
     | '/nap-calculator'
-    | '/program'
     | '/relax'
     | '/sleep-anxiety'
     | '/sleep-calculator'
@@ -301,7 +311,9 @@ export interface FileRouteTypes {
     | '/learn/racing-thoughts-at-night'
     | '/learn/stimulus-control'
     | '/learn/what-is-cbti'
+    | '/program/$slug'
     | '/learn/'
+    | '/program/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -316,7 +328,6 @@ export interface RootRouteChildren {
   InsomniaTreatmentRoute: typeof InsomniaTreatmentRoute
   MelatoninCalculatorRoute: typeof MelatoninCalculatorRoute
   NapCalculatorRoute: typeof NapCalculatorRoute
-  ProgramRoute: typeof ProgramRoute
   RelaxRoute: typeof RelaxRoute
   SleepAnxietyRoute: typeof SleepAnxietyRoute
   SleepCalculatorRoute: typeof SleepCalculatorRoute
@@ -327,7 +338,9 @@ export interface RootRouteChildren {
   LearnRacingThoughtsAtNightRoute: typeof LearnRacingThoughtsAtNightRoute
   LearnStimulusControlRoute: typeof LearnStimulusControlRoute
   LearnWhatIsCbtiRoute: typeof LearnWhatIsCbtiRoute
+  ProgramSlugRoute: typeof ProgramSlugRoute
   LearnIndexRoute: typeof LearnIndexRoute
+  ProgramIndexRoute: typeof ProgramIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -358,13 +371,6 @@ declare module '@tanstack/react-router' {
       path: '/relax'
       fullPath: '/relax'
       preLoaderRoute: typeof RelaxRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/program': {
-      id: '/program'
-      path: '/program'
-      fullPath: '/program'
-      preLoaderRoute: typeof ProgramRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nap-calculator': {
@@ -444,11 +450,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/program/': {
+      id: '/program/'
+      path: '/program'
+      fullPath: '/program/'
+      preLoaderRoute: typeof ProgramIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/learn/': {
       id: '/learn/'
       path: '/learn'
       fullPath: '/learn/'
       preLoaderRoute: typeof LearnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/program/$slug': {
+      id: '/program/$slug'
+      path: '/program/$slug'
+      fullPath: '/program/$slug'
+      preLoaderRoute: typeof ProgramSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/learn/what-is-cbti': {
@@ -508,7 +528,6 @@ const rootRouteChildren: RootRouteChildren = {
   InsomniaTreatmentRoute: InsomniaTreatmentRoute,
   MelatoninCalculatorRoute: MelatoninCalculatorRoute,
   NapCalculatorRoute: NapCalculatorRoute,
-  ProgramRoute: ProgramRoute,
   RelaxRoute: RelaxRoute,
   SleepAnxietyRoute: SleepAnxietyRoute,
   SleepCalculatorRoute: SleepCalculatorRoute,
@@ -519,7 +538,9 @@ const rootRouteChildren: RootRouteChildren = {
   LearnRacingThoughtsAtNightRoute: LearnRacingThoughtsAtNightRoute,
   LearnStimulusControlRoute: LearnStimulusControlRoute,
   LearnWhatIsCbtiRoute: LearnWhatIsCbtiRoute,
+  ProgramSlugRoute: ProgramSlugRoute,
   LearnIndexRoute: LearnIndexRoute,
+  ProgramIndexRoute: ProgramIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

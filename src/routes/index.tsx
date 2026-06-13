@@ -73,17 +73,21 @@ function Index() {
           <h2 className="mb-12 text-center font-display text-3xl text-gradient md:text-4xl">{t("features.title")}</h2>
           <div className="grid gap-6 md:grid-cols-3">
             {[
-              { icon: Sparkles, t: t("features.1.t"), d: t("features.1.d") },
-              { icon: Calculator, t: t("features.2.t"), d: t("features.2.d") },
-              { icon: Wind, t: t("features.3.t"), d: t("features.3.d") },
+              { icon: Sparkles, t: t("features.1.t"), d: t("features.1.d"), to: "/program" as const },
+              { icon: Calculator, t: t("features.2.t"), d: t("features.2.d"), to: "/calculator" as const },
+              { icon: Wind, t: t("features.3.t"), d: t("features.3.d"), to: "/relax" as const },
             ].map((f) => (
-              <div key={f.t} className="glass rounded-3xl p-7 transition hover:-translate-y-1 hover:bg-white/[0.06]">
+              <Link
+                key={f.t}
+                to={f.to}
+                className="group block cursor-pointer glass rounded-3xl p-7 transition hover:-translate-y-1 hover:bg-white/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
                 <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/30 to-accent/30">
                   <f.icon className="h-5 w-5 text-accent" />
                 </div>
                 <h3 className="font-display text-xl">{f.t}</h3>
                 <p className="mt-2 text-sm text-muted-foreground leading-relaxed">{f.d}</p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
