@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, CheckCircle2, Heart, Sparkles } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { useI18n } from "@/lib/i18n";
+import { SleepRestrictionWidget } from "@/components/program/SleepRestrictionWidget";
 import {
   getAdjacentWeeks,
   programLabels,
@@ -26,6 +27,8 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
 
       <section className="px-5 pb-10">
         <div className="mx-auto grid max-w-3xl gap-6">
+          {week.slug === "week-3-sleep-restriction" && <SleepRestrictionWidget />}
+
           {/* Why it matters */}
           <article className="glass rounded-3xl p-6 md:p-8">
             <h2 className="font-display text-2xl text-foreground/90">{c.whyTitle}</h2>

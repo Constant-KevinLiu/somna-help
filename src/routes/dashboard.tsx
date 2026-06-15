@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useSleepI18n } from "@/lib/sleep-i18n";
 import { PageHero } from "@/components/PageHero";
-import { Moon, Sun, Wind, Flame, Sparkles } from "lucide-react";
+import { Moon, Sun, Wind, Flame, Sparkles, Compass, MessageCircleHeart, Trophy, BedDouble } from "lucide-react";
 import {
   ResponsiveContainer,
   LineChart,
@@ -25,6 +25,12 @@ import {
   efficiencyColor,
   type SleepRecord,
 } from "@/lib/sleep-records";
+import {
+  recommend,
+  sleepWindow,
+  coachMessageKey,
+  achievements,
+} from "@/lib/cbti-brain";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dash,
@@ -79,6 +85,10 @@ function Dash() {
   const weeklyAvg = weeklyAverageEfficiency(records);
   const streak = currentStreak(records);
   const trend = efficiencyTrend(records);
+  const rec = recommend(records);
+  const win = sleepWindow(records);
+  const coach = coachMessageKey(records);
+  const ach = achievements(streak);
   const chartData = last7Days(records).map((d) => ({
     day: d.date.slice(5),
     efficiency: d.efficiency,
@@ -89,7 +99,14 @@ function Dash() {
       <PageHero eyebrow="TONIGHT" title={t("dash.title")} />
       <section className="px-5 pb-20">
         <div className="mx-auto max-w-5xl space-y-6">
+          <NextStepCard rec={rec} />
+
           <TodayPlanCard plan={plan} />
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <SleepWindowCard win={win} />
+            <CoachCard coach={coach} />
+          </div>
 
           <div className="grid gap-5 md:grid-cols-2">
             <LastNightCard record={last} trend={trend} weeklyAvg={weeklyAvg} />
@@ -100,11 +117,135 @@ function Dash() {
 
           <div className="grid gap-5 md:grid-cols-2">
             <InsightCard records={records} trend={trend} />
-            <StreakCard streak={streak} />
+            <AchievementsCard streak={streak} items={ach} />
           </div>
         </div>
       </section>
     </>
+  );
+}
+
+function NextStepCard({ rec }: { rec: ReturnType<typeof recommend> }) {
+  const { t } = useSleepI18n();
+  const vars = rec.efficiency !== null ? { n: rec.efficiency } : undefined;
+  return (
+    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-primary/20 via-accent/10 to-transparent p-6 md:p-8 animate-fade-up">
+      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent">
+        <Compass className="h-3.5 w-3.5" />
+        {t("cbti.nextStep")}
+      </div>
+      <h2 className="mt-3 font-display text-2xl text-foreground/95 md:text-3xl">
+        {t(rec.titleKey)}
+      </h2>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
+        {t(rec.reasonKey, vars)}
+      </p>
+    </div>
+  );
+}
+
+function SleepWindowCard({ win }: { win: ReturnType<typeof sleepWindow> }) {
+  const { t } = useSleepI18n();
+  const hours = Math.floor(win.timeInBedMinutes / 60);
+  const mins = win.timeInBedMinutes % 60;
+  const adjLabel =
+    win.adjustmentMinutes > 0
+      ? t("cbti.window.adjust.expand", { n: win.adjustmentMinutes })
+      : t("cbti.window.adjust.hold");
+  return (
+    <div className="glass-strong rounded-3xl p-6 md:p-8">
+      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <BedDouble className="h-3.5 w-3.5" />
+        {t("cbti.window.title")}
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("dash.bedtime")}</div>
+          <div className="mt-1 font-display text-2xl text-gradient">{win.bedtime}</div>
+        </div>
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("dash.wake")}</div>
+          <div className="mt-1 font-display text-2xl text-gradient">{win.wakeUpTime}</div>
+        </div>
+      </div>
+      <div className="mt-4 flex items-center justify-between text-sm">
+        <span className="text-muted-foreground">{t("cbti.window.tib")}</span>
+        <span className="font-medium">{hours}h {String(mins).padStart(2, "0")}m</span>
+      </div>
+      <div className="mt-1 flex items-center justify-between text-sm">
+        <span className="text-muted-foreground">{t("cbti.window.adjust")}</span>
+        <span className="font-medium text-accent">{adjLabel}</span>
+      </div>
+    </div>
+  );
+}
+
+function CoachCard({ coach }: { coach: { key: string; vars?: Record<string, string | number> } }) {
+  const { t } = useSleepI18n();
+  return (
+    <div className="glass-strong rounded-3xl p-6 md:p-8">
+      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <MessageCircleHeart className="h-3.5 w-3.5" />
+        {t("cbti.coach.title")}
+      </div>
+      <p className="mt-4 text-base leading-relaxed text-foreground/90">
+        {t(coach.key, coach.vars)}
+      </p>
+    </div>
+  );
+}
+
+function AchievementsCard({
+  streak,
+  items,
+}: {
+  streak: number;
+  items: ReturnType<typeof achievements>;
+}) {
+  const { t } = useSleepI18n();
+  const upcoming = items.find((a) => !a.unlocked);
+  return (
+    <div className="glass-strong rounded-3xl p-6 md:p-8">
+      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <Trophy className="h-3.5 w-3.5" />
+        {t("cbti.ach.title")}
+      </div>
+      <div className="mt-3 flex items-center gap-3">
+        <Flame className={`h-7 w-7 ${streak > 0 ? "text-accent" : "text-muted-foreground/40"}`} />
+        <div>
+          <span className="font-display text-4xl text-gradient">{streak}</span>
+          <span className="ml-2 text-sm text-muted-foreground">{t("dash.streak.days")}</span>
+        </div>
+      </div>
+      <div className="mt-5 grid grid-cols-5 gap-2">
+        {items.map((a) => (
+          <div
+            key={a.days}
+            className={`rounded-2xl border px-1 py-3 text-center transition ${
+              a.unlocked
+                ? "border-accent/40 bg-accent/10"
+                : "border-white/10 bg-white/5"
+            }`}
+          >
+            <div
+              className={`text-base font-medium ${
+                a.unlocked ? "text-gradient font-display" : "text-muted-foreground"
+              }`}
+            >
+              {a.days}
+            </div>
+            <div className="text-[9px] uppercase tracking-wider text-muted-foreground">
+              {t("dash.streak.days")}
+            </div>
+          </div>
+        ))}
+      </div>
+      {upcoming && (
+        <p className="mt-3 text-xs text-muted-foreground">
+          {t("cbti.ach.next", { n: Math.max(0, upcoming.days - streak) })}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -263,33 +404,4 @@ function InsightCard({ records, trend }: { records: SleepRecord[]; trend: number
   );
 }
 
-function StreakCard({ streak }: { streak: number }) {
-  const { t } = useSleepI18n();
-  const milestones = [3, 7, 14, 30];
-  return (
-    <div className="glass-strong rounded-3xl p-6 md:p-8">
-      <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.streak")}</div>
-      <div className="mt-2 flex items-center gap-3">
-        <Flame className={`h-8 w-8 ${streak > 0 ? "text-accent" : "text-muted-foreground/50"}`} />
-        <div>
-          <span className="font-display text-5xl text-gradient">{streak}</span>
-          <span className="ml-2 text-sm text-muted-foreground">{t("dash.streak.days")}</span>
-        </div>
-      </div>
-      <div className="mt-5 grid grid-cols-4 gap-2">
-        {milestones.map((m) => {
-          const reached = streak >= m;
-          return (
-            <div
-              key={m}
-              className={`rounded-2xl border px-2 py-3 text-center transition ${reached ? "border-accent/40 bg-accent/10" : "border-white/10 bg-white/5"}`}
-            >
-              <div className={`text-lg font-medium ${reached ? "text-gradient font-display" : "text-muted-foreground"}`}>{m}</div>
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("dash.streak.days")}</div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+
