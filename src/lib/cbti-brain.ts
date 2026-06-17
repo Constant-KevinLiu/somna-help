@@ -7,15 +7,20 @@ import {
   isoDaysAgo,
 } from "./sleep-records";
 
-/** Average sleep efficiency over the last 7 days (records present only). */
+/** Average sleep efficiency from all available records (not just 7 days). Allows sparse data. */
 export function avgEfficiency7d(records: SleepRecord[]): number | null {
-  const cutoff = new Set<string>();
-  for (let i = 0; i < 7; i++) cutoff.add(isoDaysAgo(i));
-  const week = records.filter((r) => cutoff.has(r.date));
-  if (!week.length) return null;
-  return Math.round(
-    week.reduce((s, r) => s + r.sleepEfficiency, 0) / week.length,
+  // Use all records, not just 7 days, to be more flexible for small datasets
+  const validRecords = records.filter(
+    (r) => r.sleepEfficiency !== null && r.sleepEfficiency !== undefined
   );
+  
+  if (validRecords.length === 0) return null;
+  
+  const avg = Math.round(
+    validRecords.reduce((s, r) => s + r.sleepEfficiency, 0) / validRecords.length
+  );
+  console.log("avgEfficiency7d:", { recordCount: validRecords.length, average: avg });
+  return avg;
 }
 
 export type RecommendationAction = "expand" | "maintain" | "consistency";
@@ -30,12 +35,16 @@ export interface Recommendation {
 
 /**
  * Adaptive sleep-restriction recommendation.
+ * Works with any amount of data (≥1 record):
  *  >85%   → expand window by 15 min
  *  80–85% → maintain
  *  <80%   → hold + focus on consistency
  */
 export function recommend(records: SleepRecord[]): Recommendation {
   const eff = avgEfficiency7d(records);
+  console.log("recommend() called with", { recordCount: records.length, avgEfficiency: eff });
+  
+  // Generate recommendation even with limited data
   if (eff === null) {
     return {
       action: "consistency",
@@ -45,7 +54,9 @@ export function recommend(records: SleepRecord[]): Recommendation {
       reasonKey: "cbti.rec.reason.collect",
     };
   }
+  
   if (eff > 85) {
+    console.log("recommend: expanding window (+15 min)");
     return {
       action: "expand",
       adjustmentMinutes: 15,
@@ -54,7 +65,9 @@ export function recommend(records: SleepRecord[]): Recommendation {
       reasonKey: "cbti.rec.reason.expand",
     };
   }
+  
   if (eff >= 80) {
+    console.log("recommend: maintaining current plan");
     return {
       action: "maintain",
       adjustmentMinutes: 0,
@@ -63,6 +76,8 @@ export function recommend(records: SleepRecord[]): Recommendation {
       reasonKey: "cbti.rec.reason.maintain",
     };
   }
+  
+  console.log("recommend: consistency focus (<80%)");
   return {
     action: "consistency",
     adjustmentMinutes: 0,
@@ -100,6 +115,7 @@ export interface SleepWindow {
 /**
  * Recommended sleep window. Keeps wake-up fixed and shifts bedtime earlier
  * when expanding (more time in bed), later when contracting.
+ * Works with sparse data.
  */
 export function sleepWindow(records: SleepRecord[]): SleepWindow {
   const rec = recommend(records);
@@ -107,27 +123,62 @@ export function sleepWindow(records: SleepRecord[]): SleepWindow {
   const baseBed = avgClock(records, "bedtime");
   // expanding the window = bedtime earlier = subtract minutes
   const bedtime = shiftClock(baseBed, -rec.adjustmentMinutes);
+  const tib = minutesInBed(bedtime, wake);
+  
+  console.log("sleepWindow:", {
+    adjustmentMinutes: rec.adjustmentMinutes,
+    bedtime,
+    wake,
+    timeInBed: tib,
+  });
+  
   return {
     bedtime,
     wakeUpTime: wake,
-    timeInBedMinutes: minutesInBed(bedtime, wake),
+    timeInBedMinutes: tib,
     adjustmentMinutes: rec.adjustmentMinutes,
   };
 }
 
-/** Coach message — one warm sentence based on the latest night and the trend. */
+/** Coach message — one warm sentence based on available data and recommendation. Works with sparse data. */
 export function coachMessageKey(records: SleepRecord[]): {
   key: string;
   vars?: Record<string, string | number>;
 } {
-  if (!records.length) return { key: "coach.empty" };
+  console.log("coachMessageKey() called with", records.length, "records");
+  
+  if (!records.length) {
+    console.log("coachMessageKey: no records, returning empty");
+    return { key: "coach.empty" };
+  }
+  
   const last = records[records.length - 1];
   const rec = recommend(records);
-  if (rec.efficiency === null) return { key: "coach.collect" };
-  if (rec.action === "expand")
+  
+  // If we can't compute average, show collecting message
+  if (rec.efficiency === null) {
+    console.log("coachMessageKey: no efficiency data, showing collect message");
+    return { key: "coach.collect" };
+  }
+  
+  // Generate message based on recommendation
+  if (rec.action === "expand") {
+    console.log("coachMessageKey: expand action");
     return { key: "coach.expand", vars: { n: rec.adjustmentMinutes } };
-  if (rec.action === "maintain") return { key: "coach.maintain" };
-  if (last.sleepEfficiency < 70) return { key: "coach.lowNight" };
+  }
+  
+  if (rec.action === "maintain") {
+    console.log("coachMessageKey: maintain action");
+    return { key: "coach.maintain" };
+  }
+  
+  // For low efficiency or consistency action
+  if (last.sleepEfficiency < 70) {
+    console.log("coachMessageKey: low night efficiency");
+    return { key: "coach.lowNight" };
+  }
+  
+  console.log("coachMessageKey: consistency message");
   return { key: "coach.consistency" };
 }
 

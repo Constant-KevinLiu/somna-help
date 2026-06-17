@@ -1,78 +1,83 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useSleepI18n } from "@/lib/sleep-i18n";
 import { PageHero } from "@/components/PageHero";
-import { Moon, Sun, Wind, Flame, Sparkles, Compass, MessageCircleHeart, Trophy, BedDouble } from "lucide-react";
+import { Flame, Moon, Sparkles, Sun, TrendingUp, Wind } from "lucide-react";
+import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from "recharts";
-import {
-  loadRecords,
-  last7Days,
-  weeklyAverageEfficiency,
   currentStreak,
   efficiencyTrend,
+  loadRecords,
   tonightPlan,
-  scoreTier,
-  efficiencyTier,
-  efficiencyColor,
   type SleepRecord,
+  weeklyAverageEfficiency,
 } from "@/lib/sleep-records";
-import {
-  recommend,
-  sleepWindow,
-  coachMessageKey,
-  achievements,
-} from "@/lib/cbti-brain";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dash,
   head: () => ({
     meta: [
-      { title: "Tonight's Sleep Plan — somna" },
+      { title: "Dashboard — somna" },
       { name: "description", content: "Your gentle sleep dashboard." },
     ],
   }),
 });
 
 function Dash() {
-  const { t } = useI18n();
-  const { t: ts } = useSleepI18n();
+  const { lang, t: baseT } = useI18n();
+  const { t } = useSleepI18n();
   const [records, setRecords] = useState<SleepRecord[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setRecords(loadRecords());
+    const sleepRecords = loadRecords();
+    console.log("sleepRecords", sleepRecords);
+    setRecords(sleepRecords);
     setHydrated(true);
   }, []);
 
+  const sortedRecords = useMemo(() => [...records].sort((a, b) => a.date.localeCompare(b.date)), [records]);
+  const plan = tonightPlan(sortedRecords);
+  const weeklyAvg = weeklyAverageEfficiency(sortedRecords);
+  const streak = currentStreak(sortedRecords);
+  const trend = efficiencyTrend(sortedRecords);
+  const latest = sortedRecords[sortedRecords.length - 1] ?? null;
+  const chartData = useMemo(
+    () =>
+      sortedRecords.slice(-7).map((record) => ({
+        date: record.date,
+        label: record.date.slice(5),
+        efficiency: record.sleepEfficiency,
+      })),
+    [sortedRecords],
+  );
+
+  const recommendation = buildRecommendation(sortedRecords, lang);
+  console.log("chartData", chartData);
+  console.log("brainRecommendation", recommendation);
+  console.log("dashboard rendered");
+
+  const greeting =
+    lang === "zh" ? "晚上好，Kevin" : lang === "es" ? "Buenas noches, Kevin" : "Good evening, Kevin";
+
   if (!hydrated) {
-    return <PageHero eyebrow="TONIGHT" title={t("dash.title")} />;
+    return <PageHero eyebrow={baseT("nav.dashboard")} title={greeting} />;
   }
 
   if (records.length === 0) {
     return (
       <>
-        <PageHero eyebrow="TONIGHT" title={t("dash.title")} />
+        <PageHero eyebrow={baseT("nav.dashboard")} title={greeting} />
         <section className="px-5 pb-20">
           <div className="mx-auto max-w-xl glass-strong rounded-3xl p-8 text-center animate-fade-up">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/5">
               <Sparkles className="h-6 w-6 text-accent" />
             </div>
-            <h2 className="font-display text-2xl text-gradient">{ts("dash.empty.title")}</h2>
-            <p className="mt-3 text-sm text-muted-foreground">{ts("dash.empty.body")}</p>
-            <Link
-              to="/diary"
-              className="mt-6 inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"
-            >
-              {ts("dash.empty.cta")}
+            <h2 className="font-display text-2xl text-gradient">{t("dash.chart.empty")}</h2>
+            <p className="mt-3 text-sm text-muted-foreground">{t("dash.empty.body")}</p>
+            <Link to="/diary" className="mt-6 inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]">
+              {t("dash.empty.cta")}
             </Link>
           </div>
         </section>
@@ -80,44 +85,128 @@ function Dash() {
     );
   }
 
-  const plan = tonightPlan(records);
-  const last = records[records.length - 1];
-  const weeklyAvg = weeklyAverageEfficiency(records);
-  const streak = currentStreak(records);
-  const trend = efficiencyTrend(records);
-  const rec = recommend(records);
-  const win = sleepWindow(records);
-  const coach = coachMessageKey(records);
-  const ach = achievements(streak);
-  const chartData = last7Days(records).map((d) => ({
-    day: d.date.slice(5),
-    efficiency: d.efficiency,
-  }));
-
   return (
     <>
-      <PageHero eyebrow="TONIGHT" title={t("dash.title")} />
+      <PageHero eyebrow={baseT("nav.dashboard")} title={greeting} />
       <section className="px-5 pb-20">
-        <div className="mx-auto max-w-5xl space-y-6">
-          <NextStepCard rec={rec} />
-
-          <TodayPlanCard plan={plan} />
-
-          <div className="grid gap-5 md:grid-cols-2">
-            <SleepWindowCard win={win} />
-            <CoachCard coach={coach} />
+        <div className="mx-auto max-w-6xl space-y-6">
+          <div className="glass-strong rounded-3xl p-6 md:p-8">
+            <div className="text-xs uppercase tracking-[0.2em] text-accent">{t("dash.today")}</div>
+            <div className="mt-5 grid gap-4 md:grid-cols-3">
+              <PlanTile icon={Moon} label={t("dash.bedtime")} value={plan.bedtime} />
+              <PlanTile icon={Sun} label={t("dash.wake")} value={plan.wakeUpTime} />
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5">
+                    <Wind className="h-4 w-4 text-accent" />
+                  </span>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">{t("dash.avoidScreens")}</div>
+                </div>
+                <div className="mt-3 text-sm text-muted-foreground">60 min</div>
+              </div>
+            </div>
+            <Link to="/relax" className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]">
+              <Wind className="h-4 w-4" />
+              {t("dash.startWindDown")}
+            </Link>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-2">
-            <LastNightCard record={last} trend={trend} weeklyAvg={weeklyAvg} />
-            <SleepScoreCard score={last.sleepScore} />
+          <div className="grid gap-6 lg:grid-cols-2">
+            <div className="glass-strong rounded-3xl p-6 md:p-8">
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.lastNight")}</div>
+              {latest && (
+                <>
+                  <div className="mt-3 flex items-end justify-between gap-4">
+                    <div>
+                      <div className="font-display text-5xl text-gradient">{latest.sleepEfficiency}%</div>
+                      <div className="mt-1 text-sm text-muted-foreground">{t("sleep.efficiency")}</div>
+                    </div>
+                    <div className="text-right text-sm text-muted-foreground">
+                      <div>{t("dash.trend")}</div>
+                      <div className="mt-1 font-medium text-foreground">
+                        {trend === null ? t("trend.flat") : trend > 0 ? t("trend.up", { n: Math.abs(trend) }) : trend < 0 ? t("trend.down", { n: Math.abs(trend) }) : t("trend.flat")}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="glass-strong rounded-3xl p-6 md:p-8">
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.insight")}</div>
+              <p className="mt-3 text-base leading-relaxed text-foreground/90">{getWeeklyInsight(sortedRecords, trend, t)}</p>
+            </div>
           </div>
 
-          <ChartCard data={chartData} />
+          <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+            <div className="glass-strong rounded-3xl p-6 md:p-8">
+              <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.last7")}</div>
+              <div className="mt-1 text-sm text-muted-foreground">{t("dash.last7Subtitle")}</div>
+              {chartData.length > 0 && chartData.some((item) => item.efficiency !== null) ? (
+                <div className="mt-4 h-64 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={chartData} margin={{ top: 10, right: 10, left: -16, bottom: 0 }}>
+                      <CartesianGrid stroke="oklch(1 0 0 / 8%)" vertical={false} />
+                      <XAxis dataKey="label" stroke="oklch(0.78 0.03 270)" fontSize={11} tickLine={false} axisLine={false} />
+                      <YAxis domain={[0, 100]} stroke="oklch(0.78 0.03 270)" fontSize={11} tickLine={false} axisLine={false} />
+                      <Tooltip
+                        contentStyle={{
+                          background: "oklch(0.22 0.045 270)",
+                          border: "1px solid oklch(1 0 0 / 10%)",
+                          borderRadius: "12px",
+                          fontSize: "12px",
+                        }}
+                        formatter={(value: number | string) => [`${value}%`, t("sleep.efficiency")]}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="efficiency"
+                        stroke="oklch(0.78 0.12 285)"
+                        strokeWidth={2.5}
+                        dot={{ r: 4, fill: "oklch(0.78 0.12 285)" }}
+                        activeDot={{ r: 6 }}
+                        connectNulls
+                        isAnimationActive
+                        animationDuration={900}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <div className="mt-4 flex h-64 items-center justify-center rounded-2xl border border-dashed border-white/10 bg-white/5">
+                  <p className="text-sm text-muted-foreground">{t("dash.chart.empty")}</p>
+                </div>
+              )}
+            </div>
+            <div className="glass-strong rounded-3xl p-6 md:p-8">
+              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                <Flame className="h-3.5 w-3.5 text-accent" />
+                {t("dash.streak")}
+              </div>
+              <div className="mt-4 flex items-end gap-2">
+                <span className="font-display text-5xl text-gradient">{streak}</span>
+                <span className="pb-1 text-sm text-muted-foreground">{t("dash.streak.days")}</span>
+              </div>
+              <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                {[3, 7, 14, 30].map((days) => (
+                  <div key={days} className={`rounded-2xl border px-3 py-3 text-center ${streak >= days ? "border-accent/40 bg-accent/10" : "border-white/10 bg-white/5"}`}>
+                    <div className="flex items-center justify-center gap-1 text-sm font-medium">
+                      <Flame className={`h-4 w-4 ${streak >= days ? "text-accent" : "text-muted-foreground"}`} />
+                      {days}
+                    </div>
+                    <div className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">{t("dash.streak.days")}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
 
-          <div className="grid gap-5 md:grid-cols-2">
-            <InsightCard records={records} trend={trend} />
-            <AchievementsCard streak={streak} items={ach} />
+          <div className="glass-strong rounded-3xl p-6 md:p-8">
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.recommendation.label")}</div>
+            <div className="mt-3 flex items-center gap-2 text-sm text-accent">
+              <TrendingUp className="h-4 w-4" />
+              {t("dash.recommendation.title")}
+            </div>
+            <p className="mt-3 max-w-3xl text-base leading-relaxed text-foreground/90">{recommendation}</p>
           </div>
         </div>
       </section>
@@ -125,152 +214,7 @@ function Dash() {
   );
 }
 
-function NextStepCard({ rec }: { rec: ReturnType<typeof recommend> }) {
-  const { t } = useSleepI18n();
-  const vars = rec.efficiency !== null ? { n: rec.efficiency } : undefined;
-  return (
-    <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-primary/20 via-accent/10 to-transparent p-6 md:p-8 animate-fade-up">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-accent">
-        <Compass className="h-3.5 w-3.5" />
-        {t("cbti.nextStep")}
-      </div>
-      <h2 className="mt-3 font-display text-2xl text-foreground/95 md:text-3xl">
-        {t(rec.titleKey)}
-      </h2>
-      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground md:text-base">
-        {t(rec.reasonKey, vars)}
-      </p>
-    </div>
-  );
-}
-
-function SleepWindowCard({ win }: { win: ReturnType<typeof sleepWindow> }) {
-  const { t } = useSleepI18n();
-  const hours = Math.floor(win.timeInBedMinutes / 60);
-  const mins = win.timeInBedMinutes % 60;
-  const adjLabel =
-    win.adjustmentMinutes > 0
-      ? t("cbti.window.adjust.expand", { n: win.adjustmentMinutes })
-      : t("cbti.window.adjust.hold");
-  return (
-    <div className="glass-strong rounded-3xl p-6 md:p-8">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        <BedDouble className="h-3.5 w-3.5" />
-        {t("cbti.window.title")}
-      </div>
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("dash.bedtime")}</div>
-          <div className="mt-1 font-display text-2xl text-gradient">{win.bedtime}</div>
-        </div>
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{t("dash.wake")}</div>
-          <div className="mt-1 font-display text-2xl text-gradient">{win.wakeUpTime}</div>
-        </div>
-      </div>
-      <div className="mt-4 flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">{t("cbti.window.tib")}</span>
-        <span className="font-medium">{hours}h {String(mins).padStart(2, "0")}m</span>
-      </div>
-      <div className="mt-1 flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">{t("cbti.window.adjust")}</span>
-        <span className="font-medium text-accent">{adjLabel}</span>
-      </div>
-    </div>
-  );
-}
-
-function CoachCard({ coach }: { coach: { key: string; vars?: Record<string, string | number> } }) {
-  const { t } = useSleepI18n();
-  return (
-    <div className="glass-strong rounded-3xl p-6 md:p-8">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        <MessageCircleHeart className="h-3.5 w-3.5" />
-        {t("cbti.coach.title")}
-      </div>
-      <p className="mt-4 text-base leading-relaxed text-foreground/90">
-        {t(coach.key, coach.vars)}
-      </p>
-    </div>
-  );
-}
-
-function AchievementsCard({
-  streak,
-  items,
-}: {
-  streak: number;
-  items: ReturnType<typeof achievements>;
-}) {
-  const { t } = useSleepI18n();
-  const upcoming = items.find((a) => !a.unlocked);
-  return (
-    <div className="glass-strong rounded-3xl p-6 md:p-8">
-      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        <Trophy className="h-3.5 w-3.5" />
-        {t("cbti.ach.title")}
-      </div>
-      <div className="mt-3 flex items-center gap-3">
-        <Flame className={`h-7 w-7 ${streak > 0 ? "text-accent" : "text-muted-foreground/40"}`} />
-        <div>
-          <span className="font-display text-4xl text-gradient">{streak}</span>
-          <span className="ml-2 text-sm text-muted-foreground">{t("dash.streak.days")}</span>
-        </div>
-      </div>
-      <div className="mt-5 grid grid-cols-5 gap-2">
-        {items.map((a) => (
-          <div
-            key={a.days}
-            className={`rounded-2xl border px-1 py-3 text-center transition ${
-              a.unlocked
-                ? "border-accent/40 bg-accent/10"
-                : "border-white/10 bg-white/5"
-            }`}
-          >
-            <div
-              className={`text-base font-medium ${
-                a.unlocked ? "text-gradient font-display" : "text-muted-foreground"
-              }`}
-            >
-              {a.days}
-            </div>
-            <div className="text-[9px] uppercase tracking-wider text-muted-foreground">
-              {t("dash.streak.days")}
-            </div>
-          </div>
-        ))}
-      </div>
-      {upcoming && (
-        <p className="mt-3 text-xs text-muted-foreground">
-          {t("cbti.ach.next", { n: Math.max(0, upcoming.days - streak) })}
-        </p>
-      )}
-    </div>
-  );
-}
-
-function TodayPlanCard({ plan }: { plan: { bedtime: string; wakeUpTime: string } }) {
-  const { t } = useSleepI18n();
-  return (
-    <div className="glass-strong rounded-3xl p-6 md:p-8">
-      <div className="text-xs uppercase tracking-[0.2em] text-accent">{t("dash.today")}</div>
-      <div className="mt-5 grid gap-4 sm:grid-cols-2">
-        <PlanTile icon={Moon} label={t("dash.bedtime")} value={plan.bedtime} />
-        <PlanTile icon={Sun} label={t("dash.wake")} value={plan.wakeUpTime} />
-      </div>
-      <p className="mt-5 text-sm text-muted-foreground">· {t("dash.avoidScreens")}</p>
-      <Link
-        to="/relax"
-        className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"
-      >
-        <Wind className="h-4 w-4" />
-        {t("dash.startWindDown")}
-      </Link>
-    </div>
-  );
-}
-
-function PlanTile({ icon: Icon, label, value }: { icon: any; label: string; value: string }) {
+function PlanTile({ icon: Icon, label, value }: { icon: typeof Moon; label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
       <div className="flex items-center gap-3">
@@ -284,124 +228,49 @@ function PlanTile({ icon: Icon, label, value }: { icon: any; label: string; valu
   );
 }
 
-function LastNightCard({
-  record,
-  trend,
-  weeklyAvg,
-}: {
-  record: SleepRecord;
-  trend: number | null;
-  weeklyAvg: number | null;
-}) {
-  const { t } = useSleepI18n();
-  const tier = efficiencyTier(record.sleepEfficiency);
-  const color = efficiencyColor(tier);
-  return (
-    <div className="glass-strong rounded-3xl p-6 md:p-8">
-      <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.lastNight")}</div>
-      <div className="mt-2 flex items-baseline gap-3">
-        <span className="font-display text-5xl" style={{ color }}>{record.sleepEfficiency}%</span>
-        <span className="text-xs text-muted-foreground">{t("sleep.efficiency")}</span>
-      </div>
-      <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/5">
-        <div className="h-full rounded-full transition-all" style={{ width: `${record.sleepEfficiency}%`, background: color }} />
-      </div>
-      <div className="mt-5 flex items-center justify-between text-sm">
-        <div>
-          <div className="text-muted-foreground">{t("dash.trend")}</div>
-          <div className="mt-1 font-medium">
-            {trend === null
-              ? t("trend.flat")
-              : trend > 0
-                ? t("trend.up", { n: Math.abs(trend) })
-                : trend < 0
-                  ? t("trend.down", { n: Math.abs(trend) })
-                  : t("trend.flat")}
-          </div>
-        </div>
-        <div className="text-right">
-          <div className="text-muted-foreground">{t("dash.weeklyAvg")}</div>
-          <div className="mt-1 font-medium">{weeklyAvg !== null ? `${weeklyAvg}%` : "—"}</div>
-        </div>
-      </div>
-    </div>
-  );
+function getWeeklyInsight(records: SleepRecord[], trend: number | null, t: (key: string) => string) {
+  if (records.length === 0) return t("dash.chart.empty");
+  if (trend === null) return t("insight.collecting");
+  if (trend >= 3) return t("insight.improving", { n: trend });
+  if (trend <= -3) return t("insight.declining", { n: Math.abs(trend) });
+  return t("insight.steady");
 }
 
-function SleepScoreCard({ score }: { score: number }) {
-  const { t } = useSleepI18n();
-  const tier = scoreTier(score);
-  const color =
-    tier === "good" ? "oklch(0.78 0.16 150)" : tier === "fair" ? "oklch(0.85 0.13 90)" : "oklch(0.74 0.16 55)";
-  return (
-    <div className="glass-strong rounded-3xl p-6 md:p-8">
-      <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("sleep.score")}</div>
-      <div className="mt-2 flex items-baseline gap-3">
-        <span className="font-display text-6xl" style={{ color }}>{score}</span>
-        <span className="text-sm text-muted-foreground">/ 100</span>
-      </div>
-      <div className="mt-4 inline-flex rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium" style={{ color }}>
-        {t(`sleep.score.${tier}`)}
-      </div>
-    </div>
-  );
-}
+function buildRecommendation(records: SleepRecord[], lang: "en" | "zh" | "es") {
+  if (records.length === 0) {
+    return lang === "zh" ? "先记录几晚睡眠，再给你一个更贴合的建议。" : lang === "es" ? "Registra unas noches primero para recibir una recomendación más precisa." : "Log a few nights first so we can give a more precise recommendation.";
+  }
 
-function ChartCard({ data }: { data: { day: string; efficiency: number | null }[] }) {
-  const { t } = useSleepI18n();
-  return (
-    <div className="glass-strong rounded-3xl p-6 md:p-8">
-      <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.last7")}</div>
-      <div className="mt-4 h-56 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid stroke="oklch(1 0 0 / 8%)" vertical={false} />
-            <XAxis dataKey="day" stroke="oklch(0.78 0.03 270)" fontSize={11} tickLine={false} axisLine={false} />
-            <YAxis domain={[0, 100]} stroke="oklch(0.78 0.03 270)" fontSize={11} tickLine={false} axisLine={false} />
-            <Tooltip
-              contentStyle={{
-                background: "oklch(0.22 0.045 270)",
-                border: "1px solid oklch(1 0 0 / 10%)",
-                borderRadius: "12px",
-                fontSize: "12px",
-              }}
-              labelStyle={{ color: "oklch(0.78 0.03 270)" }}
-              formatter={(v: any) => [v === null ? "—" : `${v}%`, t("sleep.efficiency")]}
-            />
-            <Line
-              type="monotone"
-              dataKey="efficiency"
-              stroke="oklch(0.78 0.12 285)"
-              strokeWidth={2.5}
-              dot={{ r: 4, fill: "oklch(0.78 0.12 285)" }}
-              activeDot={{ r: 6 }}
-              connectNulls
-              isAnimationActive
-              animationDuration={900}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-  );
-}
+  const latest = records[records.length - 1];
+  const averageEfficiency = Math.round(records.reduce((sum, record) => sum + record.sleepEfficiency, 0) / records.length);
 
-function InsightCard({ records, trend }: { records: SleepRecord[]; trend: number | null }) {
-  const { t } = useSleepI18n();
-  let message: string;
-  if (records.length === 1) message = t("insight.firstEntry");
-  else if (records.length < 4) message = t("insight.collecting");
-  else if (trend === null) message = t("insight.collecting");
-  else if (trend >= 3) message = t("insight.improving", { n: trend });
-  else if (trend <= -3) message = t("insight.declining", { n: Math.abs(trend) });
-  else message = t("insight.steady");
+  if (lang === "zh") {
+    if (latest.sleepLatency > 30 || latest.nightAwakenings > 2) {
+      return "你的入睡时间偏长，夜间醒来次数也略多。建议先固定起床时间，并把睡前放松流程坚持下来。";
+    }
+    if (averageEfficiency >= 85) {
+      return "你的睡眠效率正在改善。建议继续保持固定起床时间。";
+    }
+    return "建议把睡前屏幕时间缩短，并尽量在相同时间上床。";
+  }
 
-  return (
-    <div className="glass-strong rounded-3xl p-6 md:p-8">
-      <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.insight")}</div>
-      <p className="mt-3 text-base leading-relaxed">{message}</p>
-    </div>
-  );
+  if (lang === "es") {
+    if (latest.sleepLatency > 30 || latest.nightAwakenings > 2) {
+      return "Tu tiempo para quedarte dormido es más alto y te despiertas más veces durante la noche. Mantén una hora fija para despertarte y sigue una rutina tranquila antes de dormir.";
+    }
+    if (averageEfficiency >= 85) {
+      return "Tu eficiencia del sueño está mejorando. Mantén una hora fija para despertarte.";
+    }
+    return "Intenta reducir el uso de pantallas antes de dormir y acostarte a horas parecidas.";
+  }
+
+  if (latest.sleepLatency > 30 || latest.nightAwakenings > 2) {
+    return "Your sleep latency is a bit high and night awakenings are frequent. Keep a consistent wake-up time and follow a calm wind-down routine.";
+  }
+  if (averageEfficiency >= 85) {
+    return "Your sleep efficiency is improving. Keep a consistent wake-up time.";
+  }
+  return "Try reducing screen time before bed and keeping your bedtime routine consistent.";
 }
 
 
