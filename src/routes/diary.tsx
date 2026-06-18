@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useSleepI18n } from "@/lib/sleep-i18n";
@@ -70,8 +70,6 @@ function DiaryPage() {
       <PageHero eyebrow="DIARY" title={t("diary.title")} sub={t("diary.sub")} />
       <section className="px-5 pb-20">
         <div className="mx-auto max-w-xl space-y-6">
-          {feedback && <FeedbackCard record={feedback} />}
-
           <form onSubmit={onSubmit} className="glass-strong space-y-5 rounded-3xl p-6 md:p-8">
             <Field label={t("diary.bedtime")}>
               <input type="time" value={bed} onChange={(e) => setBed(e.target.value)} className={inputCls} />
@@ -103,6 +101,15 @@ function DiaryPage() {
               {t("diary.save")}
             </button>
           </form>
+
+          {feedback && (
+            <div className="space-y-4">
+              <FeedbackCard record={feedback} />
+              <Link to="/dashboard" className="block rounded-full border border-white/15 bg-white/5 px-5 py-3 text-center text-sm transition hover:border-white/25 hover:bg-white/10">
+                {t("diary.cta.dashboard")}
+              </Link>
+            </div>
+          )}
 
           <p className="text-center text-xs text-muted-foreground">{ts("diary.feedback.note")}</p>
         </div>

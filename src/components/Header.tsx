@@ -12,6 +12,7 @@ const navItems = [
   { to: "/assessment", key: "nav.assessment" as const },
   { to: "/diary", key: "nav.diary" as const },
   { to: "/relax", key: "nav.relax" as const },
+  { to: "/dashboard", key: "nav.dashboard" as const },
 ];
 
 export function Header() {

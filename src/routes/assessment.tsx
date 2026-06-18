@@ -133,8 +133,8 @@ function AssessPage() {
               </p>
               <p className="mt-2 text-xs text-muted-foreground">{t("assess.result.sub")}</p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
-                <Link to="/program" className="rounded-full bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-medium text-primary-foreground">{t("cta.start")}</Link>
-                <Link to="/dashboard" className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm">{t("nav.dashboard")}</Link>
+                <Link to="/program" className="rounded-full bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-medium text-primary-foreground">{t("assess.cta.program")}</Link>
+                <Link to="/dashboard" className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm">{t("assess.cta.dashboard")}</Link>
               </div>
             </div>
           )}

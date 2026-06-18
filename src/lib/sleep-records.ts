@@ -79,6 +79,12 @@ export function scoreTier(score: number): ScoreTier {
   return "needs";
 }
 
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+function isISODate(value: unknown): value is string {
+  return typeof value === "string" && ISO_DATE.test(value);
+}
+
 export function loadRecords(): SleepRecord[] {
   if (typeof window === "undefined") return [];
   try {
@@ -86,7 +92,22 @@ export function loadRecords(): SleepRecord[] {
     if (!raw) return [];
     const arr = JSON.parse(raw);
     if (!Array.isArray(arr)) return [];
-    return arr.filter((r) => r && typeof r.date === "string");
+    const valid = arr.filter((r): r is SleepRecord => {
+      return (
+        r && typeof r === "object" &&
+        isISODate((r as any).date) &&
+        typeof (r as any).bedtime === "string" &&
+        typeof (r as any).wakeUpTime === "string" &&
+        typeof (r as any).sleepLatency === "number" &&
+        typeof (r as any).nightAwakenings === "number" &&
+        typeof (r as any).sleepQuality === "number" &&
+        typeof (r as any).mood === "number" &&
+        typeof (r as any).sleepEfficiency === "number" &&
+        typeof (r as any).sleepScore === "number"
+      );
+    });
+    valid.sort((a, b) => a.date.localeCompare(b.date));
+    return valid;
   } catch {
     return [];
   }
@@ -119,26 +140,52 @@ export function isoDaysAgo(n: number): string {
   return `${y}-${m}-${day}`;
 }
 
-/** Returns last 7 days (oldest → newest) with efficiency value or null. */
+/** 
+ * Returns exactly 7 days of data (oldest → newest), with full date range from 7 days ago to today.
+ * Missing dates are filled with null efficiency/score placeholders.
+ * Ensures consistent X-axis display (Mon–Sun).
+ */
 export function last7Days(records: SleepRecord[]): { date: string; efficiency: number | null; score: number | null }[] {
-  const byDate = new Map(records.map((r) => [r.date, r]));
-  const out: { date: string; efficiency: number | null; score: number | null }[] = [];
+  const recordMap = new Map(records.map((r) => [r.date, r]));
+  const result: { date: string; efficiency: number | null; score: number | null }[] = [];
+  
+  // Generate all 7 dates from 7 days ago to today
   for (let i = 6; i >= 0; i--) {
     const date = isoDaysAgo(i);
-    const r = byDate.get(date);
-    out.push({
-      date,
-      efficiency: r ? r.sleepEfficiency : null,
-      score: r ? r.sleepScore : null,
-    });
+    const record = recordMap.get(date);
+    
+    if (record) {
+      // Ensure efficiency and score are always calculated/filled
+      result.push({
+        date,
+        efficiency: record.sleepEfficiency,
+        score: record.sleepScore,
+      });
+    } else {
+      // Placeholder for missing date
+      result.push({
+        date,
+        efficiency: null,
+        score: null,
+      });
+    }
   }
-  return out;
+  
+  console.log("last7Days result:", result);
+  return result;
 }
 
 export function weeklyAverageEfficiency(records: SleepRecord[]): number | null {
-  const week = last7Days(records).filter((d) => d.efficiency !== null) as { efficiency: number }[];
-  if (!week.length) return null;
-  return Math.round(week.reduce((s, d) => s + d.efficiency, 0) / week.length);
+  // Get valid records with non-null efficiency
+  const validRecords = records.filter((r) => r.sleepEfficiency !== null && r.sleepEfficiency !== undefined);
+  
+  // If at least 1 record exists, calculate average
+  if (validRecords.length === 0) return null;
+  
+  const sum = validRecords.reduce((s, r) => s + r.sleepEfficiency, 0);
+  const avg = Math.round(sum / validRecords.length);
+  console.log("weeklyAverageEfficiency:", { recordCount: validRecords.length, average: avg });
+  return avg;
 }
 
 /** Streak of consecutive days ending today (or yesterday if no entry yet today). */
@@ -155,22 +202,42 @@ export function currentStreak(records: SleepRecord[]): number {
   return streak;
 }
 
-/** Compare this week's avg efficiency vs the previous 7 days. */
+/** Compare trend: this week's avg efficiency vs previous period. Handles sparse data. */
 export function efficiencyTrend(records: SleepRecord[]): number | null {
+  if (records.length === 0) return null;
+  
   const byDate = new Map(records.map((r) => [r.date, r]));
   const thisWeek: number[] = [];
   const prevWeek: number[] = [];
+  
+  // Collect this week's efficiency (last 7 days)
   for (let i = 0; i < 7; i++) {
     const r = byDate.get(isoDaysAgo(i));
-    if (r) thisWeek.push(r.sleepEfficiency);
+    if (r && r.sleepEfficiency !== null) thisWeek.push(r.sleepEfficiency);
   }
+  
+  // Collect previous week's efficiency (7-14 days ago)
   for (let i = 7; i < 14; i++) {
     const r = byDate.get(isoDaysAgo(i));
-    if (r) prevWeek.push(r.sleepEfficiency);
+    if (r && r.sleepEfficiency !== null) prevWeek.push(r.sleepEfficiency);
   }
-  if (!thisWeek.length || !prevWeek.length) return null;
-  const avg = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / xs.length;
-  return Math.round(avg(thisWeek) - avg(prevWeek));
+  
+  // Calculate averages
+  const avg = (xs: number[]) => (xs.length > 0 ? xs.reduce((s, x) => s + x, 0) / xs.length : null);
+  const thisAvg = avg(thisWeek);
+  const prevAvg = avg(prevWeek);
+  
+  // If only one period has data, use comparison with 0 baseline (flat if no comparison period)
+  if (thisAvg === null) return null;
+  if (prevAvg === null) {
+    // If we have this week but no previous week, return "flat" as 0
+    console.log("efficiencyTrend: only current week data available, returning 0 (flat)");
+    return 0;
+  }
+  
+  const trend = Math.round(thisAvg - prevAvg);
+  console.log("efficiencyTrend:", { thisWeek, prevWeek, thisAvg, prevAvg, trend });
+  return trend;
 }
 
 /** Suggest tonight's bedtime/wake based on recent records, or sensible defaults. */
