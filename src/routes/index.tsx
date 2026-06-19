@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
-import { Moon, Calculator, Wind, Sparkles, Heart, ShieldCheck, Leaf } from "lucide-react";
+import { Moon, Calculator, Wind, Sparkles, Heart, ShieldCheck, Leaf, ArrowRight } from "lucide-react";
+import { SLEEP_RECORDS_KEY } from "@/lib/sleep-records";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -14,6 +16,15 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { t } = useI18n();
+  const [isReturning, setIsReturning] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hasRecords = !!window.localStorage.getItem(SLEEP_RECORDS_KEY);
+    const hasProfile = !!window.localStorage.getItem("sleepProfile");
+    setIsReturning(hasRecords || hasProfile);
+  }, []);
+
   return (
     <>
       {/* HERO */}
@@ -66,6 +77,30 @@ function Index() {
           </div>
         </div>
       </section>
+
+      {/* RETURNING USER CARD */}
+      {isReturning && (
+        <section className="px-5 pb-4">
+          <div className="mx-auto max-w-3xl animate-fade-up">
+            <Link
+              to="/dashboard"
+              className="group relative flex items-center justify-between gap-4 overflow-hidden rounded-3xl border border-accent/30 bg-gradient-to-r from-primary/20 via-accent/10 to-transparent p-6 transition hover:border-accent/50 hover:shadow-[0_0_40px_-12px_oklch(0.72_0.13_280/60%)]"
+            >
+              <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-accent/20 blur-3xl" />
+              <div className="relative flex items-center gap-4">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent shadow-[0_0_24px_-6px_oklch(0.72_0.13_280/70%)]">
+                  <Moon className="h-5 w-5 text-primary-foreground" />
+                </span>
+                <div>
+                  <div className="font-display text-lg text-foreground">{t("home.return.title")}</div>
+                  <div className="mt-0.5 text-sm text-accent">{t("home.return.cta")}</div>
+                </div>
+              </div>
+              <ArrowRight className="relative h-5 w-5 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-accent" />
+            </Link>
+          </div>
+        </section>
+      )}
 
       {/* FEATURES */}
       <section className="px-5 py-16 md:py-24">

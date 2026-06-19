@@ -116,6 +116,8 @@ const en: Dict = {
   "footer.tag": "A gentle sleep companion guided by science.",
   "footer.rights": "© 2026 somna. All rights reserved.",
   "footer.disc": "Not medical advice. For ongoing sleep concerns, please consult a clinician.",
+  "home.return.title": "Continue your sleep journey",
+  "home.return.cta": "Go to Dashboard",
   "lang": "中文",
 };
 
@@ -213,6 +215,8 @@ const zh: Dict = {
   "footer.tag": "由科学引导的温柔睡眠伙伴。",
   "footer.rights": "© 2026 somna. 保留所有权利。",
   "footer.disc": "本内容不构成医疗建议。如有持续的睡眠问题,请咨询专业医生。",
+  "home.return.title": "继续你的睡眠计划",
+  "home.return.cta": "进入仪表盘",
   "lang": "ES",
 };
 
@@ -309,6 +313,8 @@ const es: Dict = {
   "footer.tag": "Un compañero de sueño suave guiado por la ciencia.",
   "footer.rights": "© 2026 somna. Todos los derechos reservados.",
   "footer.disc": "No es consejo médico. Para problemas de sueño persistentes, consulta a un clínico.",
+  "home.return.title": "Continúa tu viaje del sueño",
+  "home.return.cta": "Ir al panel",
   "lang": "EN",
 };
 

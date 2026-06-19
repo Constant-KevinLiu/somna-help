@@ -12,8 +12,9 @@ const navItems = [
   { to: "/assessment", key: "nav.assessment" as const },
   { to: "/diary", key: "nav.diary" as const },
   { to: "/relax", key: "nav.relax" as const },
-  { to: "/dashboard", key: "nav.dashboard" as const },
 ];
+
+const dashboardItem = { to: "/dashboard", key: "nav.dashboard" as const };
 
 export function Header() {
   const { t, lang, setLang } = useI18n();
@@ -46,7 +47,28 @@ export function Header() {
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">
-            {navItems.map((item) => (
+            {navItems.slice(0, 4).map((item) => (
+              <Link
+                key={item.to}
+                to={item.to as any}
+                activeOptions={{ exact: item.to === "/" }}
+                className="rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
+                activeProps={{ className: "rounded-full px-3 py-1.5 text-sm bg-white/10 text-foreground" }}
+              >
+                {t(item.key)}
+              </Link>
+            ))}
+            {/* Highlighted Dashboard pill — primary accent, moon icon, glow */}
+            <Link
+              to={dashboardItem.to as any}
+              activeOptions={{ exact: false }}
+              className="group relative mx-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1.5 text-sm font-medium text-primary-foreground shadow-[0_0_24px_-6px_oklch(0.72_0.13_280/70%)] transition hover:scale-[1.03] hover:shadow-[0_0_36px_-6px_oklch(0.72_0.13_280/90%)]"
+              activeProps={{ className: "group relative mx-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1.5 text-sm font-medium text-primary-foreground shadow-[0_0_28px_-4px_oklch(0.72_0.13_280/90%)] ring-2 ring-accent/40" }}
+            >
+              <Moon className="h-3.5 w-3.5" />
+              {t(dashboardItem.key)}
+            </Link>
+            {navItems.slice(4).map((item) => (
               <Link
                 key={item.to}
                 to={item.to as any}
@@ -178,7 +200,28 @@ export function Header() {
         {open && (
           <nav className="lg:hidden border-t border-white/5 px-5 py-3 animate-fade-up">
             <div className="flex flex-col">
-              {navItems.map((item) => (
+              {navItems.slice(0, 4).map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to as any}
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                  activeProps={{ className: "rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground" }}
+                  activeOptions={{ exact: item.to === "/" }}
+                >
+                  {t(item.key)}
+                </Link>
+              ))}
+              <Link
+                to={dashboardItem.to as any}
+                onClick={() => setOpen(false)}
+                className="my-1 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_0_24px_-6px_oklch(0.72_0.13_280/70%)]"
+                activeProps={{ className: "my-1 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2.5 text-sm font-medium text-primary-foreground ring-2 ring-accent/40" }}
+              >
+                <Moon className="h-4 w-4" />
+                {t(dashboardItem.key)}
+              </Link>
+              {navItems.slice(4).map((item) => (
                 <Link
                   key={item.to}
                   to={item.to as any}
