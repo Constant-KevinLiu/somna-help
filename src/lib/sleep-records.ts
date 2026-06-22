@@ -32,6 +32,50 @@ export function minutesInBed(bedtime: string, wakeUpTime: string): number {
   return diff;
 }
 
+function fmtClock(minutes: number): string {
+  const normalized = ((minutes % (24 * 60)) + 24 * 60) % (24 * 60);
+  return `${String(Math.floor(normalized / 60)).padStart(2, "0")}:${String(normalized % 60).padStart(2, "0")}`;
+}
+
+export interface SafeSleepWindow {
+  bedtime: string;
+  wakeUpTime: string;
+  timeInBedMinutes: number;
+}
+
+export function buildSafeSleepWindow(bedtime: string, wakeUpTime: string): SafeSleepWindow {
+  const safeWakeUpTime = (() => {
+    const total = toMinutes(wakeUpTime);
+    if (total < 5 * 60) return "06:00";
+    if (total > 9 * 60) return "08:00";
+    return fmtClock(total);
+  })();
+
+  const wakeMinutes = toMinutes(safeWakeUpTime);
+  let bedtimeMinutes = toMinutes(bedtime);
+  if (bedtimeMinutes < 20 * 60) {
+    bedtimeMinutes = 22 * 60;
+  }
+
+  let timeInBed = minutesInBed(fmtClock(bedtimeMinutes), safeWakeUpTime);
+  if (timeInBed < 5 * 60) {
+    bedtimeMinutes = wakeMinutes - 5 * 60;
+  } else if (timeInBed > 9 * 60) {
+    bedtimeMinutes = wakeMinutes - 9 * 60;
+  }
+
+  if (bedtimeMinutes < 20 * 60) bedtimeMinutes = 20 * 60;
+
+  const safeBedtime = fmtClock(bedtimeMinutes);
+  const finalTimeInBed = minutesInBed(safeBedtime, safeWakeUpTime);
+
+  return {
+    bedtime: safeBedtime,
+    wakeUpTime: safeWakeUpTime,
+    timeInBedMinutes: Math.min(9 * 60, Math.max(5 * 60, finalTimeInBed)),
+  };
+}
+
 /** Sleep efficiency = (actual sleep / time in bed) * 100. Each awakening ≈ 10 min. */
 export function computeEfficiency(input: {
   bedtime: string;
@@ -243,11 +287,26 @@ export function efficiencyTrend(records: SleepRecord[]): number | null {
 /** Suggest tonight's bedtime/wake based on recent records, or sensible defaults. */
 export function tonightPlan(records: SleepRecord[]): { bedtime: string; wakeUpTime: string } {
   const recent = records.slice(-7);
-  if (!recent.length) return { bedtime: "22:45", wakeUpTime: "06:45" };
+  if (!recent.length) {
+    const fallback = buildSafeSleepWindow("22:30", "06:30");
+    console.log("recommendedBedtime", fallback.bedtime);
+    console.log("recommendedWakeUp", fallback.wakeUpTime);
+    console.log("sleepWindow", fallback.timeInBedMinutes);
+    return { bedtime: fallback.bedtime, wakeUpTime: fallback.wakeUpTime };
+  }
+
   const avgMin = (key: "bedtime" | "wakeUpTime") => {
     const mins = recent.map((r) => toMinutes(r[key]));
     return Math.round(mins.reduce((s, x) => s + x, 0) / mins.length);
   };
   const fmt = (m: number) => `${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`;
-  return { bedtime: fmt(avgMin("bedtime")), wakeUpTime: fmt(avgMin("wakeUpTime")) };
+  const bedtime = fmt(avgMin("bedtime"));
+  const wakeUpTime = fmt(avgMin("wakeUpTime"));
+  const safePlan = buildSafeSleepWindow(bedtime, wakeUpTime);
+
+  console.log("recommendedBedtime", safePlan.bedtime);
+  console.log("recommendedWakeUp", safePlan.wakeUpTime);
+  console.log("sleepWindow", safePlan.timeInBedMinutes);
+
+  return { bedtime: safePlan.bedtime, wakeUpTime: safePlan.wakeUpTime };
 }

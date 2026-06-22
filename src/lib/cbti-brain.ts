@@ -5,7 +5,10 @@ import {
   type SleepRecord,
   minutesInBed,
   isoDaysAgo,
+  buildSafeSleepWindow,
 } from "./sleep-records";
+
+export { buildSafeSleepWindow } from "./sleep-records";
 
 /** Average sleep efficiency from all available records (not just 7 days). Allows sparse data. */
 export function avgEfficiency7d(records: SleepRecord[]): number | null {
@@ -90,7 +93,7 @@ export function recommend(records: SleepRecord[]): Recommendation {
 /** Recent average bedtime / wake-up (last up-to-7 records). */
 function avgClock(records: SleepRecord[], key: "bedtime" | "wakeUpTime"): string {
   const recent = records.slice(-7);
-  if (!recent.length) return key === "bedtime" ? "22:45" : "06:45";
+  if (!recent.length) return key === "bedtime" ? "22:30" : "06:30";
   const mins = recent.map((r) => {
     const [h, m] = r[key].split(":").map(Number);
     return (h || 0) * 60 + (m || 0);
@@ -122,20 +125,23 @@ export function sleepWindow(records: SleepRecord[]): SleepWindow {
   const wake = avgClock(records, "wakeUpTime");
   const baseBed = avgClock(records, "bedtime");
   // expanding the window = bedtime earlier = subtract minutes
-  const bedtime = shiftClock(baseBed, -rec.adjustmentMinutes);
-  const tib = minutesInBed(bedtime, wake);
-  
+  const adjustedBedtime = shiftClock(baseBed, -rec.adjustmentMinutes);
+  const safePlan = buildSafeSleepWindow(adjustedBedtime, wake);
+
+  console.log("recommendedBedtime", safePlan.bedtime);
+  console.log("recommendedWakeUp", safePlan.wakeUpTime);
+  console.log("sleepWindow", safePlan.timeInBedMinutes);
   console.log("sleepWindow:", {
     adjustmentMinutes: rec.adjustmentMinutes,
-    bedtime,
-    wake,
-    timeInBed: tib,
+    bedtime: safePlan.bedtime,
+    wake: safePlan.wakeUpTime,
+    timeInBed: safePlan.timeInBedMinutes,
   });
-  
+
   return {
-    bedtime,
-    wakeUpTime: wake,
-    timeInBedMinutes: tib,
+    bedtime: safePlan.bedtime,
+    wakeUpTime: safePlan.wakeUpTime,
+    timeInBedMinutes: safePlan.timeInBedMinutes,
     adjustmentMinutes: rec.adjustmentMinutes,
   };
 }

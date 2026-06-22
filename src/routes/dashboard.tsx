@@ -52,8 +52,8 @@ function Dash() {
     [sortedRecords],
   );
 
-  // Screen cutoff = 60 minutes before bedtime
-  const screenCutoff = useMemo(() => shiftClock(plan.bedtime, -60), [plan.bedtime]);
+  // Screen cutoff = 60 minutes before bedtime, with a safe default for new users
+  const screenCutoff = useMemo(() => (records.length === 0 ? "22:00" : shiftClock(plan.bedtime, -60)), [plan.bedtime, records.length]);
 
   const greeting =
     lang === "zh" ? "晚上好，Kevin" : lang === "es" ? "Buenas noches, Kevin" : "Good evening, Kevin";
