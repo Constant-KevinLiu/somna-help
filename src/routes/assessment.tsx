@@ -13,6 +13,59 @@ export const Route = createFileRoute("/assessment")({
   }),
 });
 
+type LevelId = 1 | 2 | 3 | 4;
+
+type LevelConfig = {
+  id: LevelId;
+  /** Soft gradient used for the profile ring + health bar. No red. */
+  gradient: string;
+  /** Solid accent color for the level badge. */
+  color: string;
+  /** Glow color for the profile halo. */
+  glow: string;
+};
+
+const levels: LevelConfig[] = [
+  {
+    id: 1,
+    gradient: "linear-gradient(135deg, #63D39A 0%, #7BE0B0 100%)",
+    color: "#63D39A",
+    glow: "oklch(0.78 0.14 155 / 45%)",
+  },
+  {
+    id: 2,
+    gradient: "linear-gradient(135deg, #7C8CFF 0%, #9BA8FF 100%)",
+    color: "#7C8CFF",
+    glow: "oklch(0.72 0.13 280 / 45%)",
+  },
+  {
+    id: 3,
+    gradient: "linear-gradient(135deg, #FFC978 0%, #FFD9A0 100%)",
+    color: "#FFC978",
+    glow: "oklch(0.82 0.13 80 / 45%)",
+  },
+  {
+    id: 4,
+    gradient: "linear-gradient(135deg, #9FA8FF 0%, #B8BFFF 100%)",
+    color: "#9FA8FF",
+    glow: "oklch(0.74 0.1 270 / 45%)",
+  },
+];
+
+function getLevel(score: number): LevelConfig {
+  if (score <= 3) return levels[0];
+  if (score <= 7) return levels[1];
+  if (score <= 11) return levels[2];
+  return levels[3];
+}
+
+/** Health bar fills from left; higher score = lower health. We invert so
+ *  healthier profiles show a fuller green/amber bar. */
+function healthPercent(score: number, max: number) {
+  const remaining = Math.max(0, max - score);
+  return Math.round((remaining / max) * 100);
+}
+
 const questions = [
   { key: "assess.q1", options: [
     { en: "Under 15 min", zh: "少于 15 分钟", score: 0 },
@@ -67,11 +120,9 @@ function AssessPage() {
 
   const score = answers.reduce((a, b) => a + (b ?? 0), 0);
   const max = total * 3;
-  const profile = score <= 4
-    ? { en: "Mostly restful", zh: "大致良好", note_en: "Your sleep is mostly on track. A consistent schedule keeps it that way.", note_zh: "你的睡眠总体良好。保持规律的节律即可。" }
-    : score <= 9
-    ? { en: "Mild disruption", zh: "轻度困扰", note_en: "Some friction here and there. CBT-I habits will help quickly.", note_zh: "存在一些小困扰,CBT-I 的小习惯能很快带来改善。" }
-    : { en: "Notable insomnia signs", zh: "明显的失眠信号", note_en: "This can change. Structured CBT-I is the gentlest, most effective starting point.", note_zh: "这一切是可以改变的。结构化的 CBT-I 是最温柔、有效的起点。" };
+  const level = getLevel(score);
+  const levelKey = `assess.level${level.id}` as const;
+  const health = healthPercent(score, max);
 
   return (
     <>
@@ -119,19 +170,78 @@ function AssessPage() {
           ) : (
             <div className="glass-strong rounded-3xl p-8 text-center animate-fade-up">
               <div className="text-xs uppercase tracking-[0.2em] text-accent">{t("assess.result")}</div>
-              <h2 className="mt-3 font-display text-3xl text-gradient">
-                {lang === "zh" ? profile.zh : profile.en}
-              </h2>
-              <div className="mx-auto mt-6 flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-primary/30 to-accent/30">
-                <div className="text-center">
-                  <div className="font-display text-3xl">{score}</div>
-                  <div className="text-xs text-muted-foreground">/ {max}</div>
+
+              {/* Profile ring — no raw score, only the level name */}
+              <div
+                className="mx-auto mt-6 flex h-32 w-32 items-center justify-center rounded-full"
+                style={{
+                  background: `radial-gradient(circle, ${level.glow} 0%, transparent 70%)`,
+                }}
+              >
+                <div
+                  className="flex h-24 w-24 items-center justify-center rounded-full"
+                  style={{ background: level.gradient }}
+                >
+                  <span className="font-display text-2xl text-black/70">L{level.id}</span>
                 </div>
               </div>
-              <p className="mx-auto mt-6 max-w-sm text-sm text-muted-foreground">
-                {lang === "zh" ? profile.note_zh : profile.note_en}
+
+              <div className="mt-5 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                {t("assess.level.label")}
+              </div>
+              <h2 className="mt-2 font-display text-3xl text-gradient">
+                {t(`${levelKey}.name`)}
+              </h2>
+              <p className="mx-auto mt-3 max-w-sm text-sm text-muted-foreground">
+                {t(`${levelKey}.desc`)}
               </p>
               <p className="mt-2 text-xs text-muted-foreground">{t("assess.result.sub")}</p>
+
+              {/* Sleep Health progress bar — soft gradient, no red */}
+              <div className="mx-auto mt-7 max-w-sm text-left">
+                <div className="mb-2 flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{t("assess.health.label")}</span>
+                  <span>{t("assess.health.note")}</span>
+                </div>
+                <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/5">
+                  <div
+                    className="h-full rounded-full transition-all duration-700 ease-out"
+                    style={{
+                      width: `${health}%`,
+                      background: level.gradient,
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Stats — Sleep Efficiency · Recommended Program · Program Duration */}
+              <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
+                  <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
+                    {t("assess.stat.efficiency")}
+                  </div>
+                  <div className="mt-1.5 font-display text-base" style={{ color: level.color }}>
+                    {t(`assess.stat.efficiency.value.l${level.id}`)}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
+                  <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
+                    {t("assess.stat.program")}
+                  </div>
+                  <div className="mt-1.5 font-display text-base" style={{ color: level.color }}>
+                    {t(`assess.stat.program.value.l${level.id}`)}
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-left">
+                  <div className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
+                    {t("assess.stat.duration")}
+                  </div>
+                  <div className="mt-1.5 font-display text-base" style={{ color: level.color }}>
+                    {t(`assess.stat.duration.value.l${level.id}`)}
+                  </div>
+                </div>
+              </div>
+
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Link to="/program" className="rounded-full bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-medium text-primary-foreground">{t("assess.cta.program")}</Link>
                 <Link to="/dashboard" className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm">{t("assess.cta.dashboard")}</Link>
