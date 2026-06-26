@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useSleepI18n } from "@/lib/sleep-i18n";
 import { PageHero } from "@/components/PageHero";
-import { Flame, Moon, Sparkles, Sun, TrendingUp, Wind, BookOpen, Activity } from "lucide-react";
+import { DashboardShareCard } from "@/components/DashboardShareCard";
+import { Flame, Moon, Sparkles, Sun, TrendingUp, Wind, BookOpen, Activity, ArrowRight, GraduationCap } from "lucide-react";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import {
   currentStreak,
@@ -13,6 +14,14 @@ import {
   type SleepRecord,
   weeklyAverageEfficiency,
 } from "@/lib/sleep-records";
+import { getProgramLessonUI } from "@/lib/program-lessons-i18n";
+import { TOTAL_LESSONS } from "@/lib/program-lessons";
+import { getWeekByNumber, programWeeks } from "@/lib/program-weeks";
+import {
+  overallCompletionPercent,
+  recommendedNextLesson,
+  useProgramProgress,
+} from "@/lib/program-progress";
 
 export const Route = createFileRoute("/dashboard")({
   component: Dash,
@@ -67,15 +76,20 @@ function Dash() {
       <>
         <PageHero eyebrow={baseT("nav.dashboard")} title={greeting} />
         <section className="px-5 pb-20">
-          <div className="mx-auto max-w-xl glass-strong rounded-3xl p-8 text-center animate-fade-up">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/5">
-              <Sparkles className="h-6 w-6 text-accent" />
+          <div className="mx-auto max-w-6xl space-y-6">
+            {/* CBT-I Program progress — shown even before sleep records exist */}
+            <ProgramProgressCard />
+
+            <div className="mx-auto max-w-xl glass-strong rounded-3xl p-8 text-center animate-fade-up">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/5">
+                <Sparkles className="h-6 w-6 text-accent" />
+              </div>
+              <h2 className="font-display text-2xl text-gradient">{t("dash.chart.empty")}</h2>
+              <p className="mt-3 text-sm text-muted-foreground">{t("dash.empty.body")}</p>
+              <Link to="/diary" className="mt-6 inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]">
+                {t("dash.empty.cta")}
+              </Link>
             </div>
-            <h2 className="font-display text-2xl text-gradient">{t("dash.chart.empty")}</h2>
-            <p className="mt-3 text-sm text-muted-foreground">{t("dash.empty.body")}</p>
-            <Link to="/diary" className="mt-6 inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]">
-              {t("dash.empty.cta")}
-            </Link>
           </div>
         </section>
       </>
@@ -151,6 +165,9 @@ function Dash() {
             <p className="mt-5 max-w-3xl text-base leading-relaxed text-foreground/90">{brainExplanation}</p>
           </div>
 
+          {/* SECTION 2b — CBT-I Program Progress */}
+          <ProgramProgressCard />
+
           {/* SECTION 3 — Last 7 Days Trend */}
           <div className="glass-strong rounded-3xl p-6 md:p-8 animate-fade-up">
             <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.last7")}</div>
@@ -224,6 +241,9 @@ function Dash() {
             </div>
           </div>
 
+          {/* SECTION 5b — Share Progress */}
+          <DashboardShareCard efficiency={weeklyAvg} streak={streak} />
+
           {/* SECTION 6 — Quick Actions */}
           <div className="glass-strong rounded-3xl p-6 md:p-8 animate-fade-up">
             <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.actions.title")}</div>
@@ -295,4 +315,100 @@ function getWeeklyInsight(records: SleepRecord[], trend: number | null, t: (key:
   return t("insight.steady");
 }
 
+/** CBT-I Program progress card — shows current week, current lesson, completion %, and a CTA. */
+function ProgramProgressCard() {
+  const { lang } = useI18n();
+  const ui = getProgramLessonUI(lang);
+  const { progress, hydrated } = useProgramProgress();
+
+  if (!hydrated) {
+    return (
+      <div className="glass-strong rounded-3xl p-6 md:p-8 animate-fade-up">
+        <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+          <GraduationCap className="h-3.5 w-3.5 text-accent" />
+          {ui.dashProgramTitle}
+        </div>
+        <div className="mt-4 h-24 animate-pulse rounded-2xl bg-white/5" />
+      </div>
+    );
+  }
+
+  const pct = overallCompletionPercent(progress);
+  const nextLesson = recommendedNextLesson(progress);
+  const isComplete = pct === 100;
+
+  // Current week info
+  const weekNumber = nextLesson ? nextLesson.weekNumber : 6;
+  const currentWeek = getWeekByNumber(weekNumber);
+  const weekLocale = currentWeek ? (currentWeek.i18n[lang] ?? currentWeek.i18n.en) : null;
+
+  return (
+    <div className="glass-strong rounded-3xl p-6 md:p-8 animate-fade-up">
+      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
+        <GraduationCap className="h-3.5 w-3.5 text-accent" />
+        {ui.dashProgramTitle}
+      </div>
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-3">
+        <BrainMetric label={ui.dashCurrentWeek} value={weekLocale ? `${ui.weekLabel} ${weekNumber}` : "—"} />
+        <BrainMetric
+          label={ui.dashCurrentLesson}
+          value={nextLesson ? `${ui.lessonLabel} ${nextLesson.lessonNumber}` : ui.dashProgramComplete}
+        />
+        <BrainMetric label={ui.dashCompletion} value={`${pct}%`} />
+      </div>
+
+      {/* Progress bar */}
+      <div className="mt-5">
+        <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
+          <span>{progress.completedLessons.length} / {TOTAL_LESSONS}</span>
+          <span>{pct}%</span>
+        </div>
+        <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
+            style={{ width: `${pct}%` }}
+            role="progressbar"
+            aria-valuenow={pct}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={ui.dashCompletion}
+          />
+        </div>
+      </div>
+
+      {/* Recommended next lesson CTA */}
+      {nextLesson ? (
+        <Link
+          to="/program/$week/$lesson"
+          params={{ week: nextLesson.weekSlug, lesson: nextLesson.slug }}
+          className="group mt-5 flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/[0.07] p-4 transition hover:bg-accent/[0.12]"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/40 to-accent/40">
+            <BookOpen className="h-4 w-4 text-foreground" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">{ui.dashRecommended}</div>
+            <div className="mt-0.5 font-display text-base text-foreground">
+              {ui.lessonLabel} {nextLesson.lessonNumber}
+            </div>
+          </div>
+          <span className="inline-flex items-center gap-1 text-sm font-medium text-accent">
+            {ui.dashContinueLearning}
+            <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+          </span>
+        </Link>
+      ) : (
+        <div className="mt-5 flex items-center gap-3 rounded-2xl border border-success/30 bg-success/10 p-4">
+          <GraduationCap className="h-5 w-5 shrink-0 text-success" />
+          <p className="text-sm text-foreground/90">{ui.dashProgramComplete}</p>
+        </div>
+      )}
+
+      {isComplete && (
+        <p className="mt-3 text-sm text-muted-foreground">{ui.dashProgramComplete}</p>
+      )}
+    </div>
+  );
+}
 

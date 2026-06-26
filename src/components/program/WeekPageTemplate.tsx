@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, CheckCircle2, Heart, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Clock, Heart, Sparkles } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { useI18n } from "@/lib/i18n";
 import { SleepRestrictionWidget } from "@/components/program/SleepRestrictionWidget";
@@ -10,12 +11,20 @@ import {
   weekHeading,
   type WeekContent,
 } from "@/lib/program-weeks";
+import { getLessonsByWeek, loadLesson } from "@/lib/program-lessons";
+import { getProgramLessonUI } from "@/lib/program-lessons-i18n";
+import { useProgramProgress, weekCompletionPercent, resolveWeekSlug } from "@/lib/program-progress";
 
 export function WeekPageTemplate({ week }: { week: WeekContent }) {
   const { lang } = useI18n();
   const labels = programLabels[lang];
+  const ui = getProgramLessonUI(lang);
   const c = week.i18n[lang] ?? week.i18n.en;
   const { prev, next } = getAdjacentWeeks(week.slug);
+  const { progress, hydrated } = useProgramProgress();
+
+  const weekLessons = getLessonsByWeek(resolveWeekSlug(week.slug) ?? resolveWeekSlug(week.slug) ?? resolveWeekSlug(week.slug) ?? week.slug);
+  const weekPct = hydrated ? weekCompletionPercent(progress, week.slug) : 0;
 
   return (
     <>
@@ -24,6 +33,67 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
         title={weekHeading(lang, week.number, c.title)}
         sub={c.intro}
       />
+
+      {/* Lessons in this week */}
+      <section className="px-5 pb-8" aria-label={ui.lessonsLabel}>
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-4 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
+              <BookOpen className="h-3.5 w-3.5 text-accent" /> {ui.lessonsLabel}
+            </div>
+            {hydrated && (
+              <span className="text-xs text-muted-foreground">{weekPct}%</span>
+            )}
+          </div>
+          {hydrated && (
+            <div className="mb-4 h-1 w-full overflow-hidden rounded-full bg-white/10">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
+                style={{ width: `${weekPct}%` }}
+                role="progressbar"
+                aria-valuenow={weekPct}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-label={ui.completionLabel}
+              />
+            </div>
+          )}
+          <div className="space-y-3">
+            {weekLessons.map((lm) => {
+              const done = hydrated && progress.completedLessons.includes(lm.slug);
+              return (
+                <Link
+                  key={lm.slug}
+                  to="/program/$week/$lesson"
+                  params={{ week: lm.weekSlug, lesson: lm.slug }}
+                  className="glass group flex items-center gap-3 rounded-2xl p-4 transition hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/40 to-accent/40 text-xs font-medium text-foreground">
+                    {lm.lessonNumber}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      {done && <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-success" />}
+                      <span className="text-[10px] uppercase tracking-[0.18em] text-accent">
+                        {ui.lessonLabel} {lm.lessonNumber}
+                      </span>
+                    </div>
+                    <div className="mt-0.5 font-display text-base text-foreground group-hover:text-accent">
+                      <WeekLessonTitle weekSlug={lm.weekSlug} lessonSlug={lm.slug} />
+                    </div>
+                    <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground">
+                      <Clock className="h-3 w-3" /> {lm.estimatedMinutes} min
+                      <span className="text-white/20">·</span>
+                      {ui.difficulty[lm.difficultyKey]}
+                    </div>
+                  </div>
+                  <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-accent" />
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       <section className="px-5 pb-10">
         <div className="mx-auto grid max-w-3xl gap-6">
@@ -161,4 +231,37 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
       </section>
     </>
   );
+}
+
+// Cache for lesson titles shown on the week page (keyed by week/lesson/lang).
+const weekLessonTitleCache = new Map<string, string>();
+
+/** Resolves a lesson's localized title lazily for the week-page lesson list. */
+function WeekLessonTitle({ weekSlug, lessonSlug }: { weekSlug: string; lessonSlug: string }) {
+  const { lang } = useI18n();
+  const cacheKey = `${weekSlug}/${lessonSlug}/${lang}`;
+  const [title, setTitle] = useState<string | null>(() => weekLessonTitleCache.get(cacheKey) ?? null);
+
+  useEffect(() => {
+    if (weekLessonTitleCache.has(cacheKey)) {
+      setTitle(weekLessonTitleCache.get(cacheKey)!);
+      return;
+    }
+    let active = true;
+    loadLesson(weekSlug, lessonSlug)
+      .then((lesson) => {
+        if (!lesson || !active) return;
+        const t = (lesson.i18n[lang] ?? lesson.i18n.en).title;
+        weekLessonTitleCache.set(cacheKey, t);
+        setTitle(t);
+      })
+      .catch(() => {
+        /* ignore */
+      });
+    return () => {
+      active = false;
+    };
+  }, [cacheKey, lang]);
+
+  return <>{title ?? "…"}</>;
 }

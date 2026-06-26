@@ -33,6 +33,7 @@ import { Route as LearnRacingThoughtsAtNightRouteImport } from './routes/learn.r
 import { Route as LearnCircadianRhythmRouteImport } from './routes/learn.circadian-rhythm'
 import { Route as Learn90MinuteSleepCycleRouteImport } from './routes/learn.90-minute-sleep-cycle'
 import { Route as Learn478BreathingRouteImport } from './routes/learn.4-7-8-breathing'
+import { Route as ProgramWeekLessonRouteImport } from './routes/program.$week.$lesson'
 
 const WakeUpAt3amRoute = WakeUpAt3amRouteImport.update({
   id: '/wake-up-at-3am',
@@ -155,6 +156,11 @@ const Learn478BreathingRoute = Learn478BreathingRouteImport.update({
   path: '/learn/4-7-8-breathing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProgramWeekLessonRoute = ProgramWeekLessonRouteImport.update({
+  id: '/program/$week/$lesson',
+  path: '/program/$week/$lesson',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -181,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/program/$slug': typeof ProgramSlugRoute
   '/learn/': typeof LearnIndexRoute
   '/program/': typeof ProgramIndexRoute
+  '/program/$week/$lesson': typeof ProgramWeekLessonRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -207,6 +214,7 @@ export interface FileRoutesByTo {
   '/program/$slug': typeof ProgramSlugRoute
   '/learn': typeof LearnIndexRoute
   '/program': typeof ProgramIndexRoute
+  '/program/$week/$lesson': typeof ProgramWeekLessonRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -234,6 +242,7 @@ export interface FileRoutesById {
   '/program/$slug': typeof ProgramSlugRoute
   '/learn/': typeof LearnIndexRoute
   '/program/': typeof ProgramIndexRoute
+  '/program/$week/$lesson': typeof ProgramWeekLessonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -262,6 +271,7 @@ export interface FileRouteTypes {
     | '/program/$slug'
     | '/learn/'
     | '/program/'
+    | '/program/$week/$lesson'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -288,6 +298,7 @@ export interface FileRouteTypes {
     | '/program/$slug'
     | '/learn'
     | '/program'
+    | '/program/$week/$lesson'
   id:
     | '__root__'
     | '/'
@@ -314,6 +325,7 @@ export interface FileRouteTypes {
     | '/program/$slug'
     | '/learn/'
     | '/program/'
+    | '/program/$week/$lesson'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -341,6 +353,7 @@ export interface RootRouteChildren {
   ProgramSlugRoute: typeof ProgramSlugRoute
   LearnIndexRoute: typeof LearnIndexRoute
   ProgramIndexRoute: typeof ProgramIndexRoute
+  ProgramWeekLessonRoute: typeof ProgramWeekLessonRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -513,6 +526,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Learn478BreathingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/program/$week/$lesson': {
+      id: '/program/$week/$lesson'
+      path: '/program/$week/$lesson'
+      fullPath: '/program/$week/$lesson'
+      preLoaderRoute: typeof ProgramWeekLessonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -541,6 +561,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgramSlugRoute: ProgramSlugRoute,
   LearnIndexRoute: LearnIndexRoute,
   ProgramIndexRoute: ProgramIndexRoute,
+  ProgramWeekLessonRoute: ProgramWeekLessonRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useI18n, useFmtTime } from "@/lib/i18n";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { PageHero } from "@/components/PageHero";
+import { CalculatorShareCard } from "@/components/CalculatorShareCard";
 import { Moon, Sun } from "lucide-react";
 
 export const Route = createFileRoute("/calculator")({
@@ -181,6 +182,16 @@ function CalculatorPage() {
           <div className="mt-8 glass-strong rounded-3xl p-6 md:p-8">
             <h3 className="font-display text-lg text-foreground/90">{t("calc.explain.title")}</h3>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{t("calc.explain.body")}</p>
+          </div>
+
+          {/* Share result */}
+          <div className="mt-8">
+            <CalculatorShareCard
+              title={t("calc.title")}
+              resultLines={results.slice(0, 2).map((r) => r.time)}
+              context="sleep-calculator"
+              filename="somna-sleep-calculator.png"
+            />
           </div>
         </div>
       </section>

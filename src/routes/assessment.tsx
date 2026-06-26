@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { PageHero } from "@/components/PageHero";
+import { AssessmentShareCard } from "@/components/AssessmentShareCard";
 
 export const Route = createFileRoute("/assessment")({
   component: AssessPage,
@@ -245,6 +246,13 @@ function AssessPage() {
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Link to="/program" className="rounded-full bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-medium text-primary-foreground">{t("assess.cta.program")}</Link>
                 <Link to="/dashboard" className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm">{t("assess.cta.dashboard")}</Link>
+              </div>
+
+              <div className="mt-8">
+                <AssessmentShareCard
+                  efficiencyLabel={t(`assess.stat.efficiency.value.l${level.id}`)}
+                  sleepType={t(`${levelKey}.name`)}
+                />
               </div>
             </div>
           )}

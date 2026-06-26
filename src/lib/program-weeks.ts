@@ -561,6 +561,10 @@ export function getWeek(slug: string) {
   return programWeeks.find((w) => w.slug === slug);
 }
 
+export function getWeekByNumber(number: number) {
+  return programWeeks.find((w) => w.number === number);
+}
+
 export function getAdjacentWeeks(slug: string) {
   const idx = programWeeks.findIndex((w) => w.slug === slug);
   return {
