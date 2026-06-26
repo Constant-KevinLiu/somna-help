@@ -3,13 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
 import { trackShare } from "@/lib/share-analytics";
-import {
-  redditShareUrl,
-  xShareUrl,
-  pinterestShareUrl,
-  pinterestDescription,
-  copyToClipboard,
-} from "@/lib/share-text";
+import { redditShareUrl, xShareUrl, pinterestShareUrl, copyToClipboard } from "@/lib/share-text";
+import { uploadShareImage } from "@/lib/share-image";
+import { SHARE_IMAGE_HOSTING_ENABLED } from "@/lib/share-config";
 import { toast } from "sonner";
 import { MessageCircle, Twitter, Image as ImageIcon, Link2, X as XIcon } from "lucide-react";
 
@@ -24,6 +20,12 @@ export interface ShareModalProps {
   imageDataUrl?: string;
   /** Optional custom URL to copy (defaults to current page URL). */
   url?: string;
+  /**
+   * Filename used when uploading the image to R2 for Pinterest.
+   * Should be unique per share context, e.g. "somna-sleep-score-84.png".
+   * If omitted, a name derived from `context` is used.
+   */
+  imageFilename?: string;
 }
 
 export function ShareModal({
@@ -33,11 +35,13 @@ export function ShareModal({
   efficiency,
   imageDataUrl,
   url,
+  imageFilename,
 }: ShareModalProps) {
   const { t, lang } = useI18n();
   const [busy, setBusy] = useState(false);
 
-  const pageUrl = url ?? (typeof window !== "undefined" ? window.location.href : "https://somna.help");
+  const pageUrl =
+    url ?? (typeof window !== "undefined" ? window.location.href : "https://somna.help");
 
   const handleReddit = () => {
     trackShare("share_reddit", context, pageUrl);
@@ -51,10 +55,38 @@ export function ShareModal({
     onOpenChange(false);
   };
 
-  const handlePinterest = () => {
+  const handlePinterest = async () => {
+    // Pinterest requires a real public https:// image URL. data: and blob:
+    // URLs do not work because Pinterest fetches the image server-side.
+    // If we have no generated image, or hosting is disabled, do NOT open
+    // Pinterest — show the fallback message instead.
+    if (!imageDataUrl) {
+      toast.error(t("share.pinterestFallback"));
+      return;
+    }
+
+    if (!SHARE_IMAGE_HOSTING_ENABLED) {
+      toast.error(t("share.pinterestFallback"));
+      return;
+    }
+
+    setBusy(true);
     trackShare("share_pinterest", context, pageUrl);
-    window.open(pinterestShareUrl(imageDataUrl ?? "", lang), "_blank", "noopener,noreferrer");
-    onOpenChange(false);
+    try {
+      const filename = imageFilename ?? `somna-${context}-${Math.round(efficiency)}.png`;
+      const imageUrl = await uploadShareImage(imageDataUrl, filename);
+      if (!imageUrl) {
+        // Upload failed (R2 not bound, network error, etc.) — do NOT open
+        // Pinterest without an image; show the fallback message.
+        toast.error(t("share.pinterestFallback"));
+        return;
+      }
+      const pinUrl = pinterestShareUrl(pageUrl, imageUrl, lang);
+      window.open(pinUrl, "_blank", "noopener,noreferrer");
+      onOpenChange(false);
+    } finally {
+      setBusy(false);
+    }
   };
 
   const handleCopyLink = async () => {
@@ -97,6 +129,7 @@ export function ShareModal({
             icon={<ImageIcon className="h-4 w-4" />}
             label={t("share.pinterest")}
             accent="bg-[#E60023]/15 text-[#FF4D5A] hover:bg-[#E60023]/25"
+            disabled={busy}
           />
           <ShareButton
             onClick={handleCopyLink}
@@ -138,7 +171,9 @@ function ShareButton({
       disabled={disabled}
       className={`flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${accent} disabled:opacity-50`}
     >
-      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5">{icon}</span>
+      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/5">
+        {icon}
+      </span>
       {label}
     </button>
   );

@@ -11,6 +11,18 @@
     "nodejs_compat"
   ],
 
+  // R2 bucket for storing generated share images so Pinterest can fetch them
+  // via a public URL. Create this bucket with:
+  //   wrangler r2 bucket create somna-share
+  // Then enable public access (r2.dev subdomain or a custom domain like
+  // share.somna.help) and set PUBLIC_SHARE_BASE_URL in src/lib/share-config.ts.
+  "r2_buckets": [
+    {
+      "binding": "SHARE_BUCKET",
+      "bucket_name": "somna-share"
+    }
+  ],
+
   "assets": {
     "directory": "dist/client"
   }

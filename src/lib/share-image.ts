@@ -16,15 +16,18 @@ const SIZE = 1200;
 const SITE_URL = "somna.help";
 
 /** Localized labels used inside generated images. */
-const IMG_LABELS: Record<Lang, {
-  sleepEfficiency: string;
-  improving: string;
-  dayStreak: string;
-  cbtiTraining: string;
-  sleepProfile: string;
-  sleepType: string;
-  result: string;
-}> = {
+const IMG_LABELS: Record<
+  Lang,
+  {
+    sleepEfficiency: string;
+    improving: string;
+    dayStreak: string;
+    cbtiTraining: string;
+    sleepProfile: string;
+    sleepType: string;
+    result: string;
+  }
+> = {
   en: {
     sleepEfficiency: "Sleep Efficiency",
     improving: "Improving",
@@ -273,4 +276,32 @@ export function downloadDataUrl(dataUrl: string, filename: string) {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+/**
+ * Upload a generated share image (data URL) to R2 and return its public URL.
+ *
+ * Pinterest requires a real https:// image URL — data: and blob: URLs do not
+ * work because Pinterest fetches the image server-side. This helper posts the
+ * PNG to /api/share-image (handled in src/server.ts), which stores it in the
+ * SHARE_BUCKET R2 binding and returns the public URL.
+ *
+ * @returns The public image URL on success, or null if hosting is disabled,
+ *          the bucket is not bound, or the upload fails. Callers should fall
+ *          back to the "download image first" Pinterest workflow on null.
+ */
+export async function uploadShareImage(dataUrl: string, filename: string): Promise<string | null> {
+  try {
+    const res = await fetch("/api/share-image", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ image: dataUrl, filename }),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { ok?: boolean; url?: string };
+    if (!data.ok || !data.url) return null;
+    return data.url;
+  } catch {
+    return null;
+  }
 }

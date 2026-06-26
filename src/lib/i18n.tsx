@@ -35,7 +35,8 @@ const en: Dict = {
   "cta.start": "Start Sleep Plan",
   "cta.calc": "Try Sleep Calculator",
   "hero.title": "Sleep Better, Starting Tonight",
-  "hero.sub": "A science-based CBT-I sleep platform designed to help you restore healthy sleep patterns naturally.",
+  "hero.sub":
+    "A science-based CBT-I sleep platform designed to help you restore healthy sleep patterns naturally.",
   "features.title": "A gentle path back to restful nights",
   "features.1.t": "CBT-I Program",
   "features.1.d": "Step-by-step guidance to improve sleep habits and rebuild healthy sleep rhythm.",
@@ -44,9 +45,11 @@ const en: Dict = {
   "features.3.t": "Relax & Wind Down",
   "features.3.d": "Breathing, meditation, and calming nighttime rituals.",
   "trust.title": "Backed by science. Built for calm.",
-  "trust.sub": "CBT-I is the gold-standard, drug-free approach recommended by sleep specialists worldwide. Small, gentle changes — over weeks — rebuild your natural rhythm.",
+  "trust.sub":
+    "CBT-I is the gold-standard, drug-free approach recommended by sleep specialists worldwide. Small, gentle changes — over weeks — rebuild your natural rhythm.",
   "trust.1.t": "Evidence-based",
-  "trust.1.d": "Decades of clinical research support CBT-I as the first-line treatment for chronic insomnia.",
+  "trust.1.d":
+    "Decades of clinical research support CBT-I as the first-line treatment for chronic insomnia.",
   "trust.2.t": "Drug-free",
   "trust.2.d": "No medication. No side effects. Just structured habits that retrain your brain.",
   "trust.3.t": "Habit-based recovery",
@@ -58,7 +61,8 @@ const en: Dict = {
   "emo.4": "Anxiety creeping in as bedtime approaches",
   "emo.note": "You're not alone. Sleep can be relearned — gently, gradually, and without pressure.",
   "calc.title": "Sleep Cycle Calculator",
-  "calc.sub": "Sleep happens in ~90 minute cycles. Waking at the end of a cycle helps you feel refreshed.",
+  "calc.sub":
+    "Sleep happens in ~90 minute cycles. Waking at the end of a cycle helps you feel refreshed.",
   "calc.wake": "I want to wake up at",
   "calc.bed": "I want to fall asleep at",
   "calc.mode.wake": "Plan around wake time",
@@ -74,7 +78,8 @@ const en: Dict = {
   "calc.badge.recommended": "⭐ Recommended",
   "calc.badge.recovery": "Recovery",
   "calc.explain.title": "Why are 5 and 6 cycles recommended?",
-  "calc.explain.body": "Most adults function best with 7.5–9 hours of sleep. Sleeping in complete 90-minute cycles may help reduce morning grogginess and improve daytime energy.",
+  "calc.explain.body":
+    "Most adults function best with 7.5–9 hours of sleep. Sleeping in complete 90-minute cycles may help reduce morning grogginess and improve daytime energy.",
   "program.title": "The CBT-I Program",
   "program.sub": "A 6-week gentle journey to rebuild your sleep, one small step at a time.",
   "assess.title": "Sleep Assessment",
@@ -88,7 +93,8 @@ const en: Dict = {
   "assess.q3": "Roughly how many hours do you sleep?",
   "assess.q4": "How would you describe your bedtime anxiety?",
   "assess.q5": "How rested do you feel when you wake up?",
-  "assess.support": "Many people experience this. Sleep can improve gradually with structure and consistency.",
+  "assess.support":
+    "Many people experience this. Sleep can improve gradually with structure and consistency.",
   "assess.result": "Your sleep profile",
   "assess.result.sub": "A starting point, not a diagnosis. Your CBT-I plan is built around this.",
   "assess.cta.program": "Start program",
@@ -162,6 +168,7 @@ const en: Dict = {
   "share.reddit": "Reddit",
   "share.x": "X",
   "share.pinterest": "Pinterest",
+  "share.pinterestFallback": "Please download the image first, then share it to Pinterest.",
   "share.copyLink": "Copy Link",
   "share.copied": "Link copied",
   "share.shareLesson": "Share This Lesson",
@@ -177,7 +184,7 @@ const en: Dict = {
   "share.sleepProfile": "Sleep Profile",
   "share.sleepType": "Sleep Type",
   "share.lang": "EN",
-  "lang": "EN",
+  lang: "EN",
 };
 
 const zh: Dict = {
@@ -201,7 +208,8 @@ const zh: Dict = {
   "features.3.t": "放松与入眠",
   "features.3.d": "呼吸、冥想与平静的睡前仪式。",
   "trust.title": "由科学支持,为平静而生。",
-  "trust.sub": "CBT-I 是被全球睡眠专家推荐的、无药物的一线方法。每一个微小、温柔的改变,都会逐步重建你的自然节律。",
+  "trust.sub":
+    "CBT-I 是被全球睡眠专家推荐的、无药物的一线方法。每一个微小、温柔的改变,都会逐步重建你的自然节律。",
   "trust.1.t": "循证有效",
   "trust.1.d": "数十年临床研究支持 CBT-I 作为慢性失眠的首选疗法。",
   "trust.2.t": "无需药物",
@@ -231,7 +239,8 @@ const zh: Dict = {
   "calc.badge.recommended": "⭐ 推荐",
   "calc.badge.recovery": "恢复",
   "calc.explain.title": "为什么推荐 5 或 6 个睡眠周期？",
-  "calc.explain.body": "大多数成年人在 7.5–9 小时睡眠时状态最佳。按照完整的 90 分钟周期安排睡眠，有助于减少起床后的疲惫感，提高白天精力。",
+  "calc.explain.body":
+    "大多数成年人在 7.5–9 小时睡眠时状态最佳。按照完整的 90 分钟周期安排睡眠，有助于减少起床后的疲惫感，提高白天精力。",
   "program.title": "CBT-I 课程",
   "program.sub": "为期 6 周的温柔旅程,一步一步重建你的睡眠。",
   "assess.title": "睡眠测评",
@@ -320,6 +329,7 @@ const zh: Dict = {
   "share.reddit": "Reddit",
   "share.x": "X",
   "share.pinterest": "Pinterest",
+  "share.pinterestFallback": "请先生成分享图片，再分享到 Pinterest。",
   "share.copyLink": "复制链接",
   "share.copied": "链接已复制",
   "share.shareLesson": "分享这一课",
@@ -335,7 +345,7 @@ const zh: Dict = {
   "share.sleepProfile": "睡眠档案",
   "share.sleepType": "睡眠类型",
   "share.lang": "中",
-  "lang": "中",
+  lang: "中",
 };
 
 const es: Dict = {
@@ -350,22 +360,29 @@ const es: Dict = {
   "cta.start": "Comenzar plan de sueño",
   "cta.calc": "Probar calculadora de sueño",
   "hero.title": "Duerme mejor, desde esta noche",
-  "hero.sub": "Una plataforma de sueño basada en CBT-I, diseñada para ayudarte a recuperar patrones de sueño saludables de forma natural.",
+  "hero.sub":
+    "Una plataforma de sueño basada en CBT-I, diseñada para ayudarte a recuperar patrones de sueño saludables de forma natural.",
   "features.title": "Un camino suave de regreso a noches reparadoras",
   "features.1.t": "Programa CBT-I",
-  "features.1.d": "Guía paso a paso para mejorar hábitos y reconstruir un ritmo de sueño saludable.",
+  "features.1.d":
+    "Guía paso a paso para mejorar hábitos y reconstruir un ritmo de sueño saludable.",
   "features.2.t": "Calculadora de sueño",
-  "features.2.d": "Encuentra tu hora ideal para dormir y despertar usando ciclos naturales de sueño.",
+  "features.2.d":
+    "Encuentra tu hora ideal para dormir y despertar usando ciclos naturales de sueño.",
   "features.3.t": "Relajación y descanso",
   "features.3.d": "Respiración, meditación y rituales calmantes antes de dormir.",
   "trust.title": "Respaldado por la ciencia. Hecho para la calma.",
-  "trust.sub": "CBT-I es el método estándar sin medicamentos recomendado por especialistas del sueño en todo el mundo. Pequeños cambios suaves, durante semanas, reconstruyen tu ritmo natural.",
+  "trust.sub":
+    "CBT-I es el método estándar sin medicamentos recomendado por especialistas del sueño en todo el mundo. Pequeños cambios suaves, durante semanas, reconstruyen tu ritmo natural.",
   "trust.1.t": "Basado en evidencia",
-  "trust.1.d": "Décadas de investigación clínica respaldan a CBT-I como tratamiento de primera línea para el insomnio crónico.",
+  "trust.1.d":
+    "Décadas de investigación clínica respaldan a CBT-I como tratamiento de primera línea para el insomnio crónico.",
   "trust.2.t": "Sin medicamentos",
-  "trust.2.d": "Sin fármacos. Sin efectos secundarios. Solo hábitos estructurados que reentrenan tu cerebro.",
+  "trust.2.d":
+    "Sin fármacos. Sin efectos secundarios. Solo hábitos estructurados que reentrenan tu cerebro.",
   "trust.3.t": "Recuperación basada en hábitos",
-  "trust.3.d": "Pequeños ajustes sostenibles en tu rutina restauran un sueño saludable con el tiempo.",
+  "trust.3.d":
+    "Pequeños ajustes sostenibles en tu rutina restauran un sueño saludable con el tiempo.",
   "emo.title": "Si tus noches se sienten así…",
   "emo.1": "Despierto mucho tiempo después de apagar las luces",
   "emo.2": "Una mente acelerada que no se calma",
@@ -373,7 +390,8 @@ const es: Dict = {
   "emo.4": "La ansiedad aparece a medida que se acerca la hora de dormir",
   "emo.note": "No estás solo. El sueño puede reaprenderse, suavemente, gradualmente y sin presión.",
   "calc.title": "Calculadora de ciclos de sueño",
-  "calc.sub": "El sueño ocurre en ciclos de ~90 minutos. Despertar al final de un ciclo te ayuda a sentirte renovado.",
+  "calc.sub":
+    "El sueño ocurre en ciclos de ~90 minutos. Despertar al final de un ciclo te ayuda a sentirte renovado.",
   "calc.wake": "Quiero despertar a las",
   "calc.bed": "Quiero quedarme dormido a las",
   "calc.mode.wake": "Planificar por hora de despertar",
@@ -389,7 +407,8 @@ const es: Dict = {
   "calc.badge.recommended": "⭐ Recomendado",
   "calc.badge.recovery": "Recuperación",
   "calc.explain.title": "¿Por qué se recomiendan 5 o 6 ciclos?",
-  "calc.explain.body": "La mayoría de los adultos se sienten mejor con 7.5–9 horas de sueño. Dormir en ciclos completos de 90 minutos puede ayudar a reducir la somnolencia al despertar y mejorar la energía durante el día.",
+  "calc.explain.body":
+    "La mayoría de los adultos se sienten mejor con 7.5–9 horas de sueño. Dormir en ciclos completos de 90 minutos puede ayudar a reducir la somnolencia al despertar y mejorar la energía durante el día.",
   "program.title": "El programa CBT-I",
   "program.sub": "Un viaje suave de 6 semanas para reconstruir tu sueño, paso a paso.",
   "assess.title": "Evaluación del sueño",
@@ -403,9 +422,11 @@ const es: Dict = {
   "assess.q3": "¿Cuántas horas duermes aproximadamente?",
   "assess.q4": "¿Cómo describirías tu ansiedad al acostarte?",
   "assess.q5": "¿Qué tan descansado te sientes al despertar?",
-  "assess.support": "Mucha gente vive esto. El sueño puede mejorar gradualmente con estructura y constancia.",
+  "assess.support":
+    "Mucha gente vive esto. El sueño puede mejorar gradualmente con estructura y constancia.",
   "assess.result": "Tu perfil de sueño",
-  "assess.result.sub": "Un punto de partida, no un diagnóstico. Tu plan CBT-I se construye en torno a esto.",
+  "assess.result.sub":
+    "Un punto de partida, no un diagnóstico. Tu plan CBT-I se construye en torno a esto.",
   "assess.cta.program": "Comenzar programa",
   "assess.cta.dashboard": "Ir al panel",
   "assess.level.label": "Perfil de sueño",
@@ -467,7 +488,8 @@ const es: Dict = {
   "learn.sub": "Lecturas breves para entender el sueño y a ti mismo.",
   "footer.tag": "Un compañero de sueño suave guiado por la ciencia.",
   "footer.rights": "© 2026 somna. Todos los derechos reservados.",
-  "footer.disc": "No es consejo médico. Para problemas de sueño persistentes, consulta a un clínico.",
+  "footer.disc":
+    "No es consejo médico. Para problemas de sueño persistentes, consulta a un clínico.",
   "home.return.title": "Continúa tu viaje del sueño",
   "home.return.cta": "Ir al panel",
   "share.title": "Comparte tu progreso",
@@ -477,6 +499,8 @@ const es: Dict = {
   "share.reddit": "Reddit",
   "share.x": "X",
   "share.pinterest": "Pinterest",
+  "share.pinterestFallback":
+    "Primero genera la imagen para compartir y luego publícala en Pinterest.",
   "share.copyLink": "Copiar enlace",
   "share.copied": "Enlace copiado",
   "share.shareLesson": "Comparte esta lección",
@@ -492,13 +516,15 @@ const es: Dict = {
   "share.sleepProfile": "Perfil de sueño",
   "share.sleepType": "Tipo de sueño",
   "share.lang": "ES",
-  "lang": "ES",
+  lang: "ES",
 };
 
 const dicts = { en, zh, es };
 
 const Ctx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: string) => string }>({
-  lang: "en", setLang: () => {}, t: (k) => k,
+  lang: "en",
+  setLang: () => {},
+  t: (k) => k,
 });
 
 export function I18nProvider({ children }: { children: ReactNode }) {

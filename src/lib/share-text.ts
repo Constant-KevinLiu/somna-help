@@ -46,12 +46,26 @@ export function xShareUrl(lang: Lang, efficiency: number): string {
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
 }
 
-/** Build the Pinterest pin create URL. */
-export function pinterestShareUrl(imageDataUrl: string, lang: Lang): string {
-  // Pinterest requires a publicly hosted image URL; we cannot upload a data URL.
-  // Fall back to the site URL with description.
+/**
+ * Build the Pinterest pin create URL.
+ *
+ * Pinterest requires a publicly hosted image. Pass the public image URL
+ * returned by uploadShareImage() as `imageUrl`. If `imageUrl` is empty,
+ * the caller MUST NOT open Pinterest — instead show the fallback message
+ * telling the user to download the image first.
+ *
+ * @param pageUrl     The page URL to attach to the Pin (the "url" param).
+ * @param imageUrl    Public https:// URL of the PNG to pin (the "media" param).
+ * @param lang        Language for the description.
+ */
+export function pinterestShareUrl(pageUrl: string, imageUrl: string, lang: Lang): string {
   const desc = pinterestDescription(lang);
-  return `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(SITE_URL)}&description=${encodeURIComponent(desc)}`;
+  const params = new URLSearchParams({
+    url: pageUrl,
+    media: imageUrl,
+    description: desc,
+  });
+  return `https://www.pinterest.com/pin/create/button/?${params.toString()}`;
 }
 
 /** Copy a URL to clipboard, returning true on success. */
