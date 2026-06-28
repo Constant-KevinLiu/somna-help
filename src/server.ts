@@ -8,6 +8,20 @@ type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
 
+/**
+ * Cloudflare R2 bucket configuration for Share Service v2.
+ *
+ * Bucket name: somna-share
+ * S3 API endpoint: https://3d4f80a05f92c6244f8553442ae243e.r2.cloudflarestorage.com/somna-share
+ * Public Development URL: https://pub-d4e88771abf4204879658307182abe9.r2.dev
+ *
+ * Setup steps for maintainers:
+ *   1. Create bucket: wrangler r2 bucket create somna-share --location=wnam
+ *   2. Enable public access on the bucket (r2.dev subdomain or custom domain).
+ *   3. Bind the bucket in wrangler.jsonc as SHARE_BUCKET.
+ *   4. Set PUBLIC_SHARE_BASE_URL to the public URL (custom domain or r2.dev).
+ */
+
 // Cloudflare Worker env shape for the share-image upload endpoint.
 // Only the binding we use is declared; the rest of `env` is opaque.
 // `R2Bucket` is normally provided by @cloudflare/workers-types; we declare a
@@ -23,14 +37,28 @@ interface R2Bucket {
   ): Promise<unknown>;
   get(key: string): Promise<unknown>;
   delete(key: string): Promise<void>;
+  head(key: string): Promise<unknown>;
 }
 
 interface ShareEnv {
   SHARE_BUCKET?: R2Bucket;
 }
 
-const UPLOAD_PATH = "/api/share-image";
-const MAX_UPLOAD_BYTES = 4 * 1024 * 1024; // 4 MB cap on uploaded PNGs
+const LEGACY_UPLOAD_PATH = "/api/share-image";
+const UPLOAD_PATH = "/api/share/upload";
+const MAX_UPLOAD_BYTES = 5 * 1024 * 1024; // 5 MB cap on uploaded PNGs
+
+/**
+ * Official Cloudflare R2 S3 API endpoint for the somna-share bucket.
+ * Hardcoded per the Share Service v2 architecture diagram.
+ * This private endpoint is used only inside the Worker and must never be
+ * exposed to the client bundle.
+ */
+const R2_S3_ENDPOINT =
+  "https://3d4f80a05f92c6244f8553442ae243e.r2.cloudflarestorage.com/somna-share";
+
+/** Private S3 API endpoint pattern — must never be exposed to the client. */
+const PRIVATE_R2_ENDPOINT = /r2\.cloudflarestorage\.com/i;
 
 function json(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -39,16 +67,138 @@ function json(status: number, body: unknown): Response {
   });
 }
 
+/** Validate server-side upload constraints: PNG only, <= 5MB, safe filename. */
+function validateUpload(file: File, filename: string): { ok: true } | { ok: false; error: string } {
+  if (file.type !== "image/png") {
+    return { ok: false, error: "invalid_format" };
+  }
+  if (file.size > MAX_UPLOAD_BYTES) {
+    return { ok: false, error: "too_large" };
+  }
+  if (!/^[a-z0-9._-]+\.png$/i.test(filename)) {
+    return { ok: false, error: "invalid_filename" };
+  }
+  if (PRIVATE_R2_ENDPOINT.test(filename)) {
+    return { ok: false, error: "invalid_filename" };
+  }
+  return { ok: true };
+}
+
+/** Extract a stable user identity from the request for upload isolation. */
+function getUserId(request: Request): string | null {
+  const cookie = request.headers.get("cookie") || "";
+  const match = /somna_uid=([^;]+)/.exec(cookie);
+  return match?.[1] ?? null;
+}
+
+/** Standardize upload key format: {pageType}-{user-uuid}.png */
+function buildUploadKey(filename: string, userId: string | null): string {
+  const safeName = filename.replace(/[^a-z0-9._-]/gi, "");
+  const identity = userId ? userId.slice(0, 12) : "anon";
+  const base = safeName.replace(/\.png$/i, "");
+  return `${base}-${identity}.png`;
+}
+
 /**
- * Handle POST /api/share-image.
+ * Handle POST /api/share/upload.
  *
- * Body: { "image": "<data-url or base64 PNG>", "filename": "<name>.png" }
+ * Content-Type: multipart/form-data
+ * Body: { file: PNG Binary Blob, filename: "dashboard-84-7.png" }
+ *
  * Stores the PNG in R2 (binding SHARE_BUCKET) and returns its public URL.
  *
- * Returns 503 when R2 hosting is disabled or the bucket is not bound, so the
- * client can fall back to the "download image first" Pinterest workflow.
+ * Returns 503 when R2 hosting is disabled or the bucket is not bound.
  */
-async function handleShareImageUpload(request: Request, env: ShareEnv): Promise<Response> {
+async function handleShareUpload(request: Request, env: ShareEnv): Promise<Response> {
+  if (!SHARE_IMAGE_HOSTING_ENABLED) {
+    return json(503, {
+      success: false,
+      error: "hosting_disabled",
+      message: "Share image hosting is not configured.",
+    });
+  }
+
+  const bucket = env.SHARE_BUCKET;
+  if (!bucket) {
+    return json(503, {
+      success: false,
+      error: "bucket_not_bound",
+      message: "R2 bucket is not bound to this worker.",
+    });
+  }
+
+  const userId = getUserId(request);
+  // Require a user identity so one user cannot overwrite another user's images.
+  if (!userId) {
+    return json(401, {
+      success: false,
+      error: "unauthorized",
+      message: "Missing user identity. Set somna_uid cookie before uploading.",
+    });
+  }
+
+  let form: FormData;
+  try {
+    form = await request.formData();
+  } catch {
+    return json(400, { success: false, error: "invalid_form_data" });
+  }
+
+  const file = form.get("file");
+  const requestedFilename = form.get("filename");
+
+  if (!file || !(file instanceof File) || typeof requestedFilename !== "string") {
+    return json(400, { success: false, error: "missing_fields" });
+  }
+
+  const validation = validateUpload(file, requestedFilename);
+  if (!validation.ok) {
+    return json(400, { success: false, error: validation.error });
+  }
+
+  const filename = buildUploadKey(requestedFilename, userId);
+
+  // Deduplication: skip re-upload if the same key already exists.
+  try {
+    const existing = await bucket.head(filename);
+    if (existing) {
+      return json(200, {
+        success: true,
+        key: filename,
+        url: shareImageUrl(filename),
+        deduplicated: true,
+      });
+    }
+  } catch {
+    // Object does not exist — proceed with upload.
+  }
+
+  try {
+    await bucket.put(filename, file, {
+      httpMetadata: {
+        contentType: "image/png",
+        cacheControl: "public, max-age=31536000, immutable",
+      },
+    });
+  } catch (err) {
+    console.error("R2 put failed:", err);
+    return json(500, { success: false, error: "upload_failed" });
+  }
+
+  return json(200, {
+    success: true,
+    key: filename,
+    url: shareImageUrl(filename),
+  });
+}
+
+/**
+ * Handle POST /api/share-image (legacy JSON endpoint).
+ *
+ * Body: { "image": "<data-url or base64 PNG>", "filename": "<name>.png" }
+ * Kept for backward compatibility with existing ShareModal upload flow.
+ */
+async function handleLegacyShareImageUpload(request: Request, env: ShareEnv): Promise<Response> {
   if (!SHARE_IMAGE_HOSTING_ENABLED) {
     return json(503, {
       ok: false,
@@ -79,7 +229,6 @@ async function handleShareImageUpload(request: Request, env: ShareEnv): Promise<
     return json(400, { ok: false, error: "invalid_payload" });
   }
 
-  // Accept either a data URL (data:image/png;base64,....) or raw base64.
   const match = /^data:image\/png;base64,([A-Za-z0-9+/=]+)$/.exec(image);
   const base64 = match ? match[1] : /^[A-Za-z0-9+/=]+$/.test(image) ? image : null;
   if (!base64) {
@@ -88,7 +237,6 @@ async function handleShareImageUpload(request: Request, env: ShareEnv): Promise<
 
   let bytes: Uint8Array;
   try {
-    // atob is available in the Workers runtime.
     const binary = atob(base64);
     bytes = new Uint8Array(binary.length);
     for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
@@ -181,7 +329,7 @@ export default {
       // Start. This gives us direct access to the R2 binding on `env` and
       // avoids server-function serialization for a raw binary upload.
       const url = new URL(request.url);
-      if (url.pathname === UPLOAD_PATH) {
+      if (url.pathname === UPLOAD_PATH || url.pathname === LEGACY_UPLOAD_PATH) {
         if (request.method === "OPTIONS") {
           return new Response(null, {
             status: 204,
@@ -195,7 +343,9 @@ export default {
         if (request.method !== "POST") {
           return json(405, { ok: false, error: "method_not_allowed" });
         }
-        const uploadResponse = await handleShareImageUpload(request, (env ?? {}) as ShareEnv);
+        const handler =
+          url.pathname === UPLOAD_PATH ? handleShareUpload : handleLegacyShareImageUpload;
+        const uploadResponse = await handler(request, (env ?? {}) as ShareEnv);
         uploadResponse.headers.set("access-control-allow-origin", "*");
         return uploadResponse;
       }

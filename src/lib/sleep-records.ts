@@ -232,6 +232,16 @@ export function weeklyAverageEfficiency(records: SleepRecord[]): number | null {
   return avg;
 }
 
+/** Compute the weekly average sleep score from available records. */
+export function weeklyAverageScore(records: SleepRecord[]): number | null {
+  const validRecords = records.filter(
+    (r) => r.sleepScore !== null && r.sleepScore !== undefined,
+  );
+  if (validRecords.length === 0) return null;
+  const sum = validRecords.reduce((s, r) => s + r.sleepScore, 0);
+  return Math.round(sum / validRecords.length);
+}
+
 /** Streak of consecutive days ending today (or yesterday if no entry yet today). */
 export function currentStreak(records: SleepRecord[]): number {
   const dates = new Set(records.map((r) => r.date));

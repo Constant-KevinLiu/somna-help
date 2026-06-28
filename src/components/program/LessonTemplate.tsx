@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -9,10 +10,12 @@ import {
   HelpCircle,
   Lightbulb,
   ListChecks,
+  Share2,
   Sparkles,
 } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { FAQ } from "@/components/FAQ";
+import { ShareModal } from "@/components/ShareModal";
 import { useI18n } from "@/lib/i18n";
 import {
   getAdjacentLessons,
@@ -23,18 +26,58 @@ import {
 import { getProgramLessonUI } from "@/lib/program-lessons-i18n";
 import { useProgramProgress } from "@/lib/program-progress";
 import { getWeekByNumber } from "@/lib/program-weeks";
+import { trackShare } from "@/lib/share-analytics";
+import { generateOGImageUrl } from "@/lib/share/shareService";
+import { loadLesson } from "@/lib/program-lessons";
 
 type Props = {
   lesson: LessonContent;
 };
 
 export function LessonTemplate({ lesson }: Props) {
-  const { lang } = useI18n();
+  const { lang, t } = useI18n();
   const ui = getProgramLessonUI(lang);
   const { progress, toggle, hydrated } = useProgramProgress();
   const c = lesson.i18n[lang] ?? lesson.i18n.en;
   const meta = getLessonMeta(lesson.slug)!;
   const { prev, next } = getAdjacentLessons(lesson.slug);
+  const [shareOpen, setShareOpen] = useState(false);
+
+  const pageUrl = useMemo(
+    () =>
+      typeof window !== "undefined"
+        ? window.location.href
+        : `https://somna.help${lessonPath(lesson.weekSlug, lesson.slug)}`,
+    [],
+  );
+
+  // Generate and upload a real OG image for this lesson, then update meta tags.
+  useEffect(() => {
+    const c = lesson.i18n[lang] ?? lesson.i18n.en;
+    let cancelled = false;
+    const updateOg = async () => {
+      try {
+        const ogUrl = await generateOGImageUrl({
+          type: "program",
+          resourceId: `${lesson.weekNumber}-${meta.lessonNumber}`,
+          title: c.seoTitle,
+          description: c.seoDescription,
+          lang,
+        });
+        if (cancelled) return;
+        const ogImage = document.querySelector('meta[property="og:image"]');
+        if (ogImage) ogImage.setAttribute("content", ogUrl);
+        const twitterImage = document.querySelector('meta[name="twitter:image"]');
+        if (twitterImage) twitterImage.setAttribute("content", ogUrl);
+      } catch {
+        // OG generation is best-effort; leave fallback meta in place.
+      }
+    };
+    void updateOg();
+    return () => {
+      cancelled = true;
+    };
+  }, [lesson, meta.lessonNumber, lang]);
 
   const completed = hydrated && progress.completedLessons.includes(lesson.slug);
   const relatedLessons = meta.relatedLessonSlugs
@@ -80,9 +123,7 @@ export function LessonTemplate({ lesson }: Props) {
         <div className="mx-auto mt-6 max-w-md">
           <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
             <span>{ui.progressLabel}</span>
-            <span>
-              {progress.completedLessons.length} / 18
-            </span>
+            <span>{progress.completedLessons.length} / 18</span>
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
             <div
@@ -105,7 +146,10 @@ export function LessonTemplate({ lesson }: Props) {
             <article key={i} className="glass rounded-2xl p-6 md:p-8 animate-fade-up">
               <h2 className="font-display text-xl text-foreground md:text-2xl">{s.heading}</h2>
               {s.paras.map((p, j) => (
-                <p key={j} className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+                <p
+                  key={j}
+                  className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base"
+                >
                   {p}
                 </p>
               ))}
@@ -176,8 +220,23 @@ export function LessonTemplate({ lesson }: Props) {
               aria-label={completed ? ui.markIncomplete : ui.markCompleted}
               className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/10 disabled:opacity-50"
             >
-              <CheckCircle2 className={`h-4 w-4 ${completed ? "text-success" : "text-muted-foreground"}`} />
+              <CheckCircle2
+                className={`h-4 w-4 ${completed ? "text-success" : "text-muted-foreground"}`}
+              />
               {completed ? ui.completedLabel : ui.markCompleted}
+            </button>
+
+            {/* Share lesson button */}
+            <button
+              type="button"
+              onClick={() => {
+                trackShare("share_click", "program-lesson", pageUrl);
+                setShareOpen(true);
+              }}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/10"
+            >
+              <Share2 className="h-4 w-4" />
+              {t("share.share")}
             </button>
 
             {/* Next lesson button */}
@@ -200,6 +259,15 @@ export function LessonTemplate({ lesson }: Props) {
               </Link>
             )}
           </div>
+
+          <ShareModal
+            open={shareOpen}
+            onOpenChange={setShareOpen}
+            context="program-lesson"
+            efficiency={75}
+            url={pageUrl}
+            imageFilename={`somna-program-w${lesson.weekNumber}-l${meta.lessonNumber}-${lesson.slug}.png`}
+          />
         </div>
       </section>
 
@@ -265,10 +333,11 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
 // Lightweight cache for related-lesson titles keyed by `${weekSlug}/${lessonSlug}/${lang}`.
 const titleCache = new Map<string, string>();
 
-import { useEffect, useState } from "react";
-import { loadLesson } from "@/lib/program-lessons";
-
-function useRelatedLessonTitle(weekSlug: string, lessonSlug: string, lang: "en" | "zh" | "es"): string | null {
+function useRelatedLessonTitle(
+  weekSlug: string,
+  lessonSlug: string,
+  lang: "en" | "zh" | "es",
+): string | null {
   const cacheKey = `${weekSlug}/${lessonSlug}/${lang}`;
   const [title, setTitle] = useState<string | null>(() => titleCache.get(cacheKey) ?? null);
 

@@ -1,15 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
 import { PageHero } from "@/components/PageHero";
 import { AssessmentShareCard } from "@/components/AssessmentShareCard";
+import { generateOGImageUrl } from "@/lib/share/shareService";
 
 export const Route = createFileRoute("/assessment")({
   component: AssessPage,
   head: () => ({
     meta: [
       { title: "Sleep Assessment — somna" },
-      { name: "description", content: "A short, supportive CBT-I check-in to understand your sleep." },
+      {
+        name: "description",
+        content: "A short, supportive CBT-I check-in to understand your sleep.",
+      },
     ],
   }),
 });
@@ -68,36 +72,51 @@ function healthPercent(score: number, max: number) {
 }
 
 const questions = [
-  { key: "assess.q1", options: [
-    { en: "Under 15 min", zh: "少于 15 分钟", score: 0 },
-    { en: "15–30 min", zh: "15–30 分钟", score: 1 },
-    { en: "30–60 min", zh: "30–60 分钟", score: 2 },
-    { en: "Over an hour", zh: "超过一小时", score: 3 },
-  ]},
-  { key: "assess.q2", options: [
-    { en: "Rarely", zh: "很少", score: 0 },
-    { en: "Once", zh: "1 次", score: 1 },
-    { en: "2–3 times", zh: "2–3 次", score: 2 },
-    { en: "Many times", zh: "多次", score: 3 },
-  ]},
-  { key: "assess.q3", options: [
-    { en: "7–9 hours", zh: "7–9 小时", score: 0 },
-    { en: "6–7 hours", zh: "6–7 小时", score: 1 },
-    { en: "5–6 hours", zh: "5–6 小时", score: 2 },
-    { en: "Under 5 hours", zh: "少于 5 小时", score: 3 },
-  ]},
-  { key: "assess.q4", options: [
-    { en: "Calm", zh: "平静", score: 0 },
-    { en: "A little tense", zh: "略有紧张", score: 1 },
-    { en: "Often anxious", zh: "经常焦虑", score: 2 },
-    { en: "Very anxious", zh: "非常焦虑", score: 3 },
-  ]},
-  { key: "assess.q5", options: [
-    { en: "Refreshed", zh: "精神饱满", score: 0 },
-    { en: "Okay", zh: "还行", score: 1 },
-    { en: "Tired", zh: "疲惫", score: 2 },
-    { en: "Exhausted", zh: "极度疲惫", score: 3 },
-  ]},
+  {
+    key: "assess.q1",
+    options: [
+      { en: "Under 15 min", zh: "少于 15 分钟", score: 0 },
+      { en: "15–30 min", zh: "15–30 分钟", score: 1 },
+      { en: "30–60 min", zh: "30–60 分钟", score: 2 },
+      { en: "Over an hour", zh: "超过一小时", score: 3 },
+    ],
+  },
+  {
+    key: "assess.q2",
+    options: [
+      { en: "Rarely", zh: "很少", score: 0 },
+      { en: "Once", zh: "1 次", score: 1 },
+      { en: "2–3 times", zh: "2–3 次", score: 2 },
+      { en: "Many times", zh: "多次", score: 3 },
+    ],
+  },
+  {
+    key: "assess.q3",
+    options: [
+      { en: "7–9 hours", zh: "7–9 小时", score: 0 },
+      { en: "6–7 hours", zh: "6–7 小时", score: 1 },
+      { en: "5–6 hours", zh: "5–6 小时", score: 2 },
+      { en: "Under 5 hours", zh: "少于 5 小时", score: 3 },
+    ],
+  },
+  {
+    key: "assess.q4",
+    options: [
+      { en: "Calm", zh: "平静", score: 0 },
+      { en: "A little tense", zh: "略有紧张", score: 1 },
+      { en: "Often anxious", zh: "经常焦虑", score: 2 },
+      { en: "Very anxious", zh: "非常焦虑", score: 3 },
+    ],
+  },
+  {
+    key: "assess.q5",
+    options: [
+      { en: "Refreshed", zh: "精神饱满", score: 0 },
+      { en: "Okay", zh: "还行", score: 1 },
+      { en: "Tired", zh: "疲惫", score: 2 },
+      { en: "Exhausted", zh: "极度疲惫", score: 3 },
+    ],
+  },
 ];
 
 function AssessPage() {
@@ -125,13 +144,48 @@ function AssessPage() {
   const levelKey = `assess.level${level.id}` as const;
   const health = healthPercent(score, max);
 
+  // Generate and upload a real OG image when assessment is complete.
+  useEffect(() => {
+    if (!done) return;
+
+    let cancelled = false;
+    const levelName = t(`${levelKey}.name`);
+    const resourceId = levelName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+
+    const updateOg = async () => {
+      try {
+        const ogUrl = await generateOGImageUrl({
+          type: "assessment",
+          resourceId,
+          title: levelName,
+          description: t("assess.result.sub"),
+          lang,
+        });
+        if (cancelled) return;
+        const ogImage = document.querySelector('meta[property="og:image"]');
+        if (ogImage) ogImage.setAttribute("content", ogUrl);
+        const twitterImage = document.querySelector('meta[name="twitter:image"]');
+        if (twitterImage) twitterImage.setAttribute("content", ogUrl);
+      } catch {
+        // OG generation is best-effort; leave fallback meta in place.
+      }
+    };
+    void updateOg();
+    return () => {
+      cancelled = true;
+    };
+  }, [done, levelKey, lang, t]);
+
   return (
     <>
       <PageHero eyebrow="ASSESSMENT" title={t("assess.title")} sub={t("assess.sub")} />
       <section className="px-5 pb-20">
         <div className="mx-auto max-w-xl">
           <div className="mb-6 h-1.5 overflow-hidden rounded-full bg-white/5">
-            <div className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-500" style={{ width: `${progress}%` }} />
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
           </div>
 
           {!done ? (
@@ -156,7 +210,9 @@ function AssessPage() {
                 ))}
               </div>
               {answers[step] >= 2 && (
-                <p className="mt-5 rounded-xl bg-success/10 px-4 py-3 text-sm text-success">{t("assess.support")}</p>
+                <p className="mt-5 rounded-xl bg-success/10 px-4 py-3 text-sm text-success">
+                  {t("assess.support")}
+                </p>
               )}
               <div className="mt-6 flex justify-between">
                 <button
@@ -170,7 +226,9 @@ function AssessPage() {
             </div>
           ) : (
             <div className="glass-strong rounded-3xl p-8 text-center animate-fade-up">
-              <div className="text-xs uppercase tracking-[0.2em] text-accent">{t("assess.result")}</div>
+              <div className="text-xs uppercase tracking-[0.2em] text-accent">
+                {t("assess.result")}
+              </div>
 
               {/* Profile ring — no raw score, only the level name */}
               <div
@@ -190,9 +248,7 @@ function AssessPage() {
               <div className="mt-5 text-xs uppercase tracking-[0.2em] text-muted-foreground">
                 {t("assess.level.label")}
               </div>
-              <h2 className="mt-2 font-display text-3xl text-gradient">
-                {t(`${levelKey}.name`)}
-              </h2>
+              <h2 className="mt-2 font-display text-3xl text-gradient">{t(`${levelKey}.name`)}</h2>
               <p className="mx-auto mt-3 max-w-sm text-sm text-muted-foreground">
                 {t(`${levelKey}.desc`)}
               </p>
@@ -244,8 +300,18 @@ function AssessPage() {
               </div>
 
               <div className="mt-7 flex flex-wrap justify-center gap-3">
-                <Link to="/program" className="rounded-full bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-medium text-primary-foreground">{t("assess.cta.program")}</Link>
-                <Link to="/dashboard" className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm">{t("assess.cta.dashboard")}</Link>
+                <Link
+                  to="/program"
+                  className="rounded-full bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-medium text-primary-foreground"
+                >
+                  {t("assess.cta.program")}
+                </Link>
+                <Link
+                  to="/dashboard"
+                  className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm"
+                >
+                  {t("assess.cta.dashboard")}
+                </Link>
               </div>
 
               <div className="mt-8">

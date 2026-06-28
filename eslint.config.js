@@ -32,9 +32,26 @@ export default tseslint.config(
           ],
         },
       ],
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "Literal[value=/.r2.cloudflarestorage.com/]",
+          message:
+            "Private R2 S3 API endpoints must not be used in frontend code. Use the public R2 development URL or a custom public domain instead.",
+        },
+      ],
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
   eslintPluginPrettier,
+  {
+    files: ["src/server.ts"],
+    rules: {
+      // The private R2 S3 endpoint is intentionally hardcoded in the Worker
+      // per the Share Service v2 architecture diagram and must never reach the
+      // client bundle. The frontend rule above remains active for all other files.
+      "no-restricted-syntax": "off",
+    },
+  },
 );
