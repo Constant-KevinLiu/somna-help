@@ -55,7 +55,11 @@ export type SharePlatform =
   | "facebook"
   | "linkedin"
   | "whatsapp"
-  | "copy";
+  | "wechat"
+  | "weibo"
+  | "qq"
+  | "copy"
+  | "download";
 
 /** Built-in Canvas template kinds. */
 export type ShareTemplate =
@@ -962,6 +966,39 @@ export function share(
     case "whatsapp":
       url = whatsAppShareUrl(lang, efficiency, pageUrl);
       break;
+    case "weibo": {
+      // Weibo share URL with title + public R2 image as `pic`.
+      const weiboParams = new URLSearchParams({ url: pageUrl, title: title || desc });
+      if (imageUrl && imageUrl.startsWith("http")) weiboParams.set("pic", imageUrl);
+      url = `https://service.weibo.com/share/share.php?${weiboParams.toString()}`;
+      break;
+    }
+    case "qq": {
+      // QQ share URL with title, summary, and public R2 image as `pics`.
+      const qqParams = new URLSearchParams({
+        url: pageUrl,
+        title: title || desc,
+        summary: desc,
+      });
+      if (imageUrl && imageUrl.startsWith("http")) qqParams.set("pics", imageUrl);
+      url = `https://connect.qq.com/widget/shareqq/index.html?${qqParams.toString()}`;
+      break;
+    }
+    case "wechat":
+      // WeChat is handled by the ShareModal via a QR code (desktop) or
+      // long-press hint (mobile WeChat browser). No window is opened here.
+      trackShareClick(SharePlatformType.WeChat, context, pageUrl, {
+        pageRoute: context,
+        templateType: contentType,
+      });
+      return;
+    case "download":
+      // Download is handled by the ShareModal via the Canvas blob.
+      trackShareClick(SharePlatformType.Download, context, pageUrl, {
+        pageRoute: context,
+        templateType: contentType,
+      });
+      return;
     case "copy":
     default:
       void navigator.clipboard.writeText(pageUrl);
@@ -992,7 +1029,11 @@ function normalizePlatform(
     facebook: SharePlatformType.Facebook,
     linkedin: SharePlatformType.LinkedIn,
     whatsapp: SharePlatformType.WhatsApp,
+    wechat: SharePlatformType.WeChat,
+    weibo: SharePlatformType.Weibo,
+    qq: SharePlatformType.QQ,
     copy: SharePlatformType.Copy,
+    download: SharePlatformType.Download,
   };
   return map[platform] ?? platform;
 }
