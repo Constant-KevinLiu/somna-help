@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { useSleepI18n } from "@/lib/sleep-i18n";
 import { PageHero } from "@/components/PageHero";
@@ -12,12 +12,10 @@ import {
   saveRecord,
   todayISO,
   weeklyAverageEfficiency,
-  weeklyAverageScore,
   type SleepRecord,
 } from "@/lib/sleep-records";
 import { ShareModal } from "@/components/ShareModal";
 import { trackShare } from "@/lib/share-analytics";
-import { generateOGImageUrl } from "@/lib/share/shareService";
 import { Share2 } from "lucide-react";
 
 export const Route = createFileRoute("/diary")({
@@ -45,44 +43,8 @@ function DiaryPage() {
   const [shareOpen, setShareOpen] = useState(false);
 
   // Load existing records so we can share the latest weekly summary.
-  const records = useMemo(() => loadRecords(), [feedback]);
+  const records = useMemo(() => loadRecords(), []);
   const avgEfficiency = useMemo(() => weeklyAverageEfficiency(records), [records]);
-  const avgScore = useMemo(() => weeklyAverageScore(records), [records]);
-  const dateRange = useMemo(() => {
-    if (records.length === 0) return "";
-    const start = records[0]?.date.slice(5) ?? "";
-    const end = records[records.length - 1]?.date.slice(5) ?? "";
-    return `${start} – ${end}`;
-  }, [records]);
-
-  // Generate and upload a real OG image, then update meta tags client-side.
-  useEffect(() => {
-    if (records.length === 0 || avgEfficiency === null) return;
-
-    let cancelled = false;
-    const updateOg = async () => {
-      try {
-        const ogUrl = await generateOGImageUrl({
-          type: "dashboard",
-          resourceId: `${Math.round(avgEfficiency)}-${records.length}`,
-          title: t("diary.title"),
-          description: t("diary.sub"),
-          lang,
-        });
-        if (cancelled) return;
-        const ogImage = document.querySelector('meta[property="og:image"]');
-        if (ogImage) ogImage.setAttribute("content", ogUrl);
-        const twitterImage = document.querySelector('meta[name="twitter:image"]');
-        if (twitterImage) twitterImage.setAttribute("content", ogUrl);
-      } catch {
-        // OG generation is best-effort; leave fallback meta in place.
-      }
-    };
-    void updateOg();
-    return () => {
-      cancelled = true;
-    };
-  }, [records, avgEfficiency, lang, t]);
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();

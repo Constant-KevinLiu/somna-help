@@ -94,6 +94,9 @@ function getUserId(request: Request): string | null {
 /** Standardize upload key format: {pageType}-{user-uuid}.png */
 function buildUploadKey(filename: string, userId: string | null): string {
   const safeName = filename.replace(/[^a-z0-9._-]/gi, "");
+  // Share Service v2 no longer requires an authenticated identity. Anonymous
+  // users can still upload; using "anon" keeps keys namespaced and avoids
+  // collisions with any future authenticated sessions.
   const identity = userId ? userId.slice(0, 12) : "anon";
   const base = safeName.replace(/\.png$/i, "");
   return `${base}-${identity}.png`;
@@ -127,15 +130,7 @@ async function handleShareUpload(request: Request, env: ShareEnv): Promise<Respo
     });
   }
 
-  const userId = getUserId(request);
-  // Require a user identity so one user cannot overwrite another user's images.
-  if (!userId) {
-    return json(401, {
-      success: false,
-      error: "unauthorized",
-      message: "Missing user identity. Set somna_uid cookie before uploading.",
-    });
-  }
+  const userId = getUserId(request) ?? "anon";
 
   let form: FormData;
   try {

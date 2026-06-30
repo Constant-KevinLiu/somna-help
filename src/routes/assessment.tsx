@@ -1,9 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import { PageHero } from "@/components/PageHero";
 import { AssessmentShareCard } from "@/components/AssessmentShareCard";
-import { generateOGImageUrl } from "@/lib/share/shareService";
 
 export const Route = createFileRoute("/assessment")({
   component: AssessPage,
@@ -143,38 +142,6 @@ function AssessPage() {
   const level = getLevel(score);
   const levelKey = `assess.level${level.id}` as const;
   const health = healthPercent(score, max);
-
-  // Generate and upload a real OG image when assessment is complete.
-  useEffect(() => {
-    if (!done) return;
-
-    let cancelled = false;
-    const levelName = t(`${levelKey}.name`);
-    const resourceId = levelName.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-
-    const updateOg = async () => {
-      try {
-        const ogUrl = await generateOGImageUrl({
-          type: "assessment",
-          resourceId,
-          title: levelName,
-          description: t("assess.result.sub"),
-          lang,
-        });
-        if (cancelled) return;
-        const ogImage = document.querySelector('meta[property="og:image"]');
-        if (ogImage) ogImage.setAttribute("content", ogUrl);
-        const twitterImage = document.querySelector('meta[name="twitter:image"]');
-        if (twitterImage) twitterImage.setAttribute("content", ogUrl);
-      } catch {
-        // OG generation is best-effort; leave fallback meta in place.
-      }
-    };
-    void updateOg();
-    return () => {
-      cancelled = true;
-    };
-  }, [done, levelKey, lang, t]);
 
   return (
     <>

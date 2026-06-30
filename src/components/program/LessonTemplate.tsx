@@ -27,7 +27,6 @@ import { getProgramLessonUI } from "@/lib/program-lessons-i18n";
 import { useProgramProgress } from "@/lib/program-progress";
 import { getWeekByNumber } from "@/lib/program-weeks";
 import { trackShare } from "@/lib/share-analytics";
-import { generateOGImageUrl } from "@/lib/share/shareService";
 import { loadLesson } from "@/lib/program-lessons";
 
 type Props = {
@@ -50,34 +49,6 @@ export function LessonTemplate({ lesson }: Props) {
         : `https://somna.help${lessonPath(lesson.weekSlug, lesson.slug)}`,
     [],
   );
-
-  // Generate and upload a real OG image for this lesson, then update meta tags.
-  useEffect(() => {
-    const c = lesson.i18n[lang] ?? lesson.i18n.en;
-    let cancelled = false;
-    const updateOg = async () => {
-      try {
-        const ogUrl = await generateOGImageUrl({
-          type: "program",
-          resourceId: `${lesson.weekNumber}-${meta.lessonNumber}`,
-          title: c.seoTitle,
-          description: c.seoDescription,
-          lang,
-        });
-        if (cancelled) return;
-        const ogImage = document.querySelector('meta[property="og:image"]');
-        if (ogImage) ogImage.setAttribute("content", ogUrl);
-        const twitterImage = document.querySelector('meta[name="twitter:image"]');
-        if (twitterImage) twitterImage.setAttribute("content", ogUrl);
-      } catch {
-        // OG generation is best-effort; leave fallback meta in place.
-      }
-    };
-    void updateOg();
-    return () => {
-      cancelled = true;
-    };
-  }, [lesson, meta.lessonNumber, lang]);
 
   const completed = hydrated && progress.completedLessons.includes(lesson.slug);
   const relatedLessons = meta.relatedLessonSlugs
