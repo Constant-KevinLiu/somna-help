@@ -100,11 +100,7 @@ export async function generateQrSvg(
  * @param fallbackUrl  - Public R2 image URL used when no page URL is available.
  * @returns The URL to encode into the QR code.
  */
-export function resolveQrContent(
-  pageUrl: string,
-  shareId?: string,
-  fallbackUrl?: string,
-): string {
+export function resolveQrContent(pageUrl: string, shareId?: string, fallbackUrl?: string): string {
   if (pageUrl) {
     try {
       const url = new URL(pageUrl);

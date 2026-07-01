@@ -77,7 +77,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "somna — Sleep Better, Starting Tonight" },
-      { name: "description", content: "A science-based CBT-I sleep platform that gently helps you restore healthy sleep patterns — drug-free, calming, and built around you." },
+      {
+        name: "description",
+        content:
+          "A science-based CBT-I sleep platform that gently helps you restore healthy sleep patterns — drug-free, calming, and built around you.",
+      },
       { name: "author", content: "somna" },
       // ==============================================
       // ✅ OPEN GRAPH（Facebook / WhatsApp / Telegram / 微信 / 搜索引擎）
@@ -85,11 +89,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://somna.help/" },
       { property: "og:title", content: "somna — Sleep Better, Starting Tonight" },
-      { property: "og:description", content: "Science-based CBT-I sleep companion. Calm, gentle, evidence-backed." },
-      { property: "og:image", content: `${import.meta.env.PUBLIC_SHARE_BASE_URL || "https://somna.help"}/og-default.png` },
+      {
+        property: "og:description",
+        content: "Science-based CBT-I sleep companion. Calm, gentle, evidence-backed.",
+      },
+      {
+        property: "og:image",
+        content: `${import.meta.env.PUBLIC_SHARE_BASE_URL || "https://somna.help"}/og-cover.jpg`,
+      },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:type", content: "image/png" },
+      { property: "og:image:type", content: "image/jpeg" },
       { property: "og:site_name", content: "somna" },
       { property: "og:locale", content: "en_US" },
 
@@ -98,21 +108,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       // ==============================================
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "somna — Sleep Better, Starting Tonight" },
-      { name: "twitter:description", content: "Science-based CBT-I sleep companion. Calm, gentle, evidence-backed." },
-      { name: "twitter:image", content: `${import.meta.env.PUBLIC_SHARE_BASE_URL || "https://somna.help"}/og-default.png` },
+      {
+        name: "twitter:description",
+        content: "Science-based CBT-I sleep companion. Calm, gentle, evidence-backed.",
+      },
+      {
+        name: "twitter:image",
+        content: `${import.meta.env.PUBLIC_SHARE_BASE_URL || "https://somna.help"}/og-cover.jpg`,
+      },
       { name: "twitter:site", content: "@somna" },
       { name: "twitter:creator", content: "@somna" },
 
       // 浏览器主题颜色（标签栏颜色）
       { name: "theme-color", content: "#1E1B4B" },
       { name: "apple-mobile-web-app-status-bar-style", content: "#1E1B4B" },
-
-      // { property: "og:title", content: "somna — Sleep Better, Starting Tonight" },
-      // { property: "og:description", content: "Science-based CBT-I sleep companion. Calm, gentle, evidence-backed." },
-      // { property: "og:type", content: "website" },
-      // { property: "og:image", content: `${import.meta.env.PUBLIC_SHARE_BASE_URL || "https://somna.help"}/og-default.png` },
-      // { name: "twitter:card", content: "summary" },
-      // { name: "twitter:site", content: "@somna" },
     ],
     links: [
       // 👇 这里是新增的 canonical 标签，全站统一指向权威URL
@@ -129,7 +138,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;600;700&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,

@@ -10,7 +10,11 @@ export const week2Lessons: LessonContent[] = [
     weekSlug: "week-2",
     lessonNumber: 4,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["stimulus-control-science", "leaving-bed-without-frustration", "trying-harder-makes-sleep-worse"],
+    relatedLessonSlugs: [
+      "stimulus-control-science",
+      "leaving-bed-without-frustration",
+      "trying-harder-makes-sleep-worse",
+    ],
     i18n: {
       en: {
         title: "Why Your Brain No Longer Associates Bed With Sleep",
@@ -54,7 +58,13 @@ export const week2Lessons: LessonContent[] = [
         seoTitle: "Why Your Brain No Longer Associates Bed With Sleep | Somna CBT-I",
         seoDescription:
           "Learn how classical conditioning breaks the bed–sleep link in chronic insomnia, and how Stimulus Control Therapy rebuilds it.",
-        keywords: ["bed sleep association", "stimulus control", "classical conditioning sleep", "CBT-I bed", "insomnia bed"],
+        keywords: [
+          "bed sleep association",
+          "stimulus control",
+          "classical conditioning sleep",
+          "CBT-I bed",
+          "insomnia bed",
+        ],
       },
       zh: {
         title: "为什么你的大脑不再把床和睡眠联系在一起",
@@ -96,13 +106,15 @@ export const week2Lessons: LessonContent[] = [
         ],
         ctaLabel: "开始我的床铺再训练",
         seoTitle: "为什么大脑不再把床和睡眠联系在一起｜Somna CBT-I",
-        seoDescription: "了解慢性失眠中经典条件反射如何打破床与睡眠的联结,以及刺激控制疗法如何重建它。",
+        seoDescription:
+          "了解慢性失眠中经典条件反射如何打破床与睡眠的联结,以及刺激控制疗法如何重建它。",
         keywords: ["床与睡眠联结", "刺激控制", "经典条件反射睡眠", "CBT-I 床", "失眠 床"],
       },
       es: {
         title: "Por qué tu cerebro ya no asocia la cama con el sueño",
         eyebrow: "SEMANA 2 · LECCIÓN 4",
-        subtitle: "Cómo el condicionamiento clásico rompe el vínculo cama–sueño — y cómo reconstruirlo.",
+        subtitle:
+          "Cómo el condicionamiento clásico rompe el vínculo cama–sueño — y cómo reconstruirlo.",
         difficulty: "Inicial",
         readingTime: "6 min de lectura",
         content: [
@@ -141,7 +153,13 @@ export const week2Lessons: LessonContent[] = [
         seoTitle: "Por qué tu cerebro ya no asocia la cama con el sueño | Somna CBT-I",
         seoDescription:
           "Aprende cómo el condicionamiento clásico rompe el vínculo cama–sueño en el insomnio crónico y cómo la Terapia de Control de Estímulos lo reconstruye.",
-        keywords: ["asociación cama sueño", "control de estímulos", "condicionamiento clásico sueño", "CBT-I cama", "insomnio cama"],
+        keywords: [
+          "asociación cama sueño",
+          "control de estímulos",
+          "condicionamiento clásico sueño",
+          "CBT-I cama",
+          "insomnio cama",
+        ],
       },
     },
   },
@@ -153,7 +171,11 @@ export const week2Lessons: LessonContent[] = [
     weekSlug: "week-2",
     lessonNumber: 5,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["bed-sleep-association", "leaving-bed-without-frustration", "sleep-restriction-therapy"],
+    relatedLessonSlugs: [
+      "bed-sleep-association",
+      "leaving-bed-without-frustration",
+      "sleep-restriction-therapy",
+    ],
     i18n: {
       en: {
         title: "The Science of Stimulus Control Therapy",
@@ -199,7 +221,13 @@ export const week2Lessons: LessonContent[] = [
         seoTitle: "The Science of Stimulus Control Therapy | Somna CBT-I",
         seoDescription:
           "Understand the behavioral psychology behind Stimulus Control and the 20-minute rule — one of the most powerful interventions in CBT-I.",
-        keywords: ["stimulus control therapy", "20 minute rule sleep", "CBT-I science", "Pavlov sleep", "behavioral insomnia treatment"],
+        keywords: [
+          "stimulus control therapy",
+          "20 minute rule sleep",
+          "CBT-I science",
+          "Pavlov sleep",
+          "behavioral insomnia treatment",
+        ],
       },
       zh: {
         title: "刺激控制疗法的科学",
@@ -244,12 +272,19 @@ export const week2Lessons: LessonContent[] = [
         ctaLabel: "深化我的科学练习",
         seoTitle: "刺激控制疗法的科学｜Somna CBT-I",
         seoDescription: "理解刺激控制与 20 分钟法则背后的行为心理学——CBT-I 中最有效的干预之一。",
-        keywords: ["刺激控制疗法", "20分钟法则 睡眠", "CBT-I 科学", "巴甫洛夫 睡眠", "行为失眠治疗"],
+        keywords: [
+          "刺激控制疗法",
+          "20分钟法则 睡眠",
+          "CBT-I 科学",
+          "巴甫洛夫 睡眠",
+          "行为失眠治疗",
+        ],
       },
       es: {
         title: "La ciencia de la Terapia de Control de Estímulos",
         eyebrow: "SEMANA 2 · LECCIÓN 5",
-        subtitle: "Por qué funciona la regla de los 20 minutos — la psicología conductual detrás de la práctica.",
+        subtitle:
+          "Por qué funciona la regla de los 20 minutos — la psicología conductual detrás de la práctica.",
         difficulty: "Intermedio",
         readingTime: "6 min de lectura",
         content: [
@@ -290,7 +325,13 @@ export const week2Lessons: LessonContent[] = [
         seoTitle: "La ciencia de la Terapia de Control de Estímulos | Somna CBT-I",
         seoDescription:
           "Comprende la psicología conductual detrás del Control de Estímulos y la regla de los 20 minutos — una de las intervenciones más potentes de la CBT-I.",
-        keywords: ["terapia de control de estímulos", "regla de 20 minutos sueño", "ciencia CBT-I", "Pavlov sueño", "tratamiento conductual del insomnio"],
+        keywords: [
+          "terapia de control de estímulos",
+          "regla de 20 minutos sueño",
+          "ciencia CBT-I",
+          "Pavlov sueño",
+          "tratamiento conductual del insomnio",
+        ],
       },
     },
   },
@@ -302,7 +343,11 @@ export const week2Lessons: LessonContent[] = [
     weekSlug: "week-2",
     lessonNumber: 6,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["bed-sleep-association", "stimulus-control-science", "relaxation-techniques"],
+    relatedLessonSlugs: [
+      "bed-sleep-association",
+      "stimulus-control-science",
+      "relaxation-techniques",
+    ],
     i18n: {
       en: {
         title: "How to Leave the Bed Without Frustration",
@@ -330,7 +375,7 @@ export const week2Lessons: LessonContent[] = [
         ],
         actionStepTitle: "Action Step",
         actionStep:
-          "Today, during the bright daylight hours, curate your personal \"Getting-Up Kit.\" Set up a comfortable chair with a warm blanket, a low-wattage reading lamp, and a physical book or magazine. Having this inviting setup ready removes all friction when you need it at night.",
+          'Today, during the bright daylight hours, curate your personal "Getting-Up Kit." Set up a comfortable chair with a warm blanket, a low-wattage reading lamp, and a physical book or magazine. Having this inviting setup ready removes all friction when you need it at night.',
         reflectionTitle: "Reflection",
         reflection:
           "What specific emotions or fears flood your mind when you realize you need to get up? How can you gently reframe those fears to support your healing journey?",
@@ -348,7 +393,13 @@ export const week2Lessons: LessonContent[] = [
         seoTitle: "How to Leave the Bed Without Frustration | Somna CBT-I",
         seoDescription:
           "Turn midnight wakefulness into self-care with a getting-up kit — calming activities, low light, and a gentle mindset for Stimulus Control.",
-        keywords: ["leaving bed insomnia", "getting up kit", "stimulus control night", "CBT-I midnight waking", "can't sleep at 3am"],
+        keywords: [
+          "leaving bed insomnia",
+          "getting up kit",
+          "stimulus control night",
+          "CBT-I midnight waking",
+          "can't sleep at 3am",
+        ],
       },
       zh: {
         title: "如何不带挫败感地离开床",
@@ -392,13 +443,15 @@ export const week2Lessons: LessonContent[] = [
         ],
         ctaLabel: "下载我的夜间指南",
         seoTitle: "如何不带挫败感地离开床｜Somna CBT-I",
-        seoDescription: "用「起身工具包」把半夜清醒变成自我关怀——平静活动、低光与温柔心态,助力刺激控制。",
+        seoDescription:
+          "用「起身工具包」把半夜清醒变成自我关怀——平静活动、低光与温柔心态,助力刺激控制。",
         keywords: ["失眠 离床", "起身工具包", "刺激控制 夜间", "CBT-I 半夜醒来", "凌晨三点睡不着"],
       },
       es: {
         title: "Cómo salir de la cama sin frustración",
         eyebrow: "SEMANA 2 · LECCIÓN 6",
-        subtitle: "Convierte la vigilia de medianoche en un acto de autocuidado con un kit de levantarse.",
+        subtitle:
+          "Convierte la vigilia de medianoche en un acto de autocuidado con un kit de levantarse.",
         difficulty: "Inicial",
         readingTime: "6 min de lectura",
         content: [
@@ -421,7 +474,7 @@ export const week2Lessons: LessonContent[] = [
         ],
         actionStepTitle: "Paso de acción",
         actionStep:
-          "Hoy, durante las horas de luz diurna, prepara tu \"Kit de Levantarse\" personal. Dispón una silla cómoda con una manta cálida, una lámpara de lectura de bajo vatiaje y un libro o revista físicos. Tener este rincón acogedor listo elimina toda fricción cuando lo necesites de noche.",
+          'Hoy, durante las horas de luz diurna, prepara tu "Kit de Levantarse" personal. Dispón una silla cómoda con una manta cálida, una lámpara de lectura de bajo vatiaje y un libro o revista físicos. Tener este rincón acogedor listo elimina toda fricción cuando lo necesites de noche.',
         reflectionTitle: "Reflexión",
         reflection:
           "¿Qué emociones o miedos específicos inundan tu mente cuando te das cuenta de que necesitas levantarte? ¿Cómo puedes reencuadrar suavemente esos miedos para apoyar tu viaje de sanación?",
@@ -439,7 +492,13 @@ export const week2Lessons: LessonContent[] = [
         seoTitle: "Cómo salir de la cama sin frustración | Somna CBT-I",
         seoDescription:
           "Convierte la vigilia de medianoche en autocuidado con un kit de levantarse — actividades calmantes, luz baja y mentalidad amable para el Control de Estímulos.",
-        keywords: ["salir de la cama insomnio", "kit de levantarse", "control de estímulos noche", "CBT-I despertar medianoche", "no puedo dormir 3am"],
+        keywords: [
+          "salir de la cama insomnio",
+          "kit de levantarse",
+          "control de estímulos noche",
+          "CBT-I despertar medianoche",
+          "no puedo dormir 3am",
+        ],
       },
     },
   },

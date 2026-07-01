@@ -23,14 +23,17 @@ export type WeekContent = {
   i18n: Record<Lang, WeekLocale>;
 };
 
-export const programLabels: Record<Lang, {
-  prev: string;
-  next: string;
-  back: string;
-  other: string;
-  startAssessment: string;
-  weekLabel: string;
-}> = {
+export const programLabels: Record<
+  Lang,
+  {
+    prev: string;
+    next: string;
+    back: string;
+    other: string;
+    startAssessment: string;
+    weekLabel: string;
+  }
+> = {
   en: {
     prev: "Previous",
     next: "Next",
@@ -88,10 +91,7 @@ export const programWeeks: WeekContent[] = [
           "Create a relaxing evening routine.",
         ],
         actionsTitle: "Today's actions",
-        actions: [
-          "Wake up at the same time",
-          "Reduce screens before bedtime",
-        ],
+        actions: ["Wake up at the same time", "Reduce screens before bedtime"],
         encouragementTitle: "A gentle reminder",
         encouragement: "Healthy sleep is rebuilt gradually.",
         shortDesc: "Set a consistent wake time and start a gentle routine.",
@@ -103,16 +103,9 @@ export const programWeeks: WeekContent[] = [
         seoDescription: "通过规律的习惯与温柔的 CBT-I 练习,建立健康睡眠的基础。",
         intro: "健康睡眠始于理解睡眠机制。建立稳定规律,比强迫入睡更加有效。",
         whyTitle: "为什么重要",
-        whyPoints: [
-          "睡眠受到昼夜节律和睡眠压力调节。",
-          "规律性能够帮助大脑重新学习健康睡眠。",
-        ],
+        whyPoints: ["睡眠受到昼夜节律和睡眠压力调节。", "规律性能够帮助大脑重新学习健康睡眠。"],
         practicesTitle: "核心练习",
-        practices: [
-          "固定起床时间。",
-          "下午减少咖啡因。",
-          "建立睡前放松仪式。",
-        ],
+        practices: ["固定起床时间。", "下午减少咖啡因。", "建立睡前放松仪式。"],
         actionsTitle: "今日行动",
         actions: ["固定起床时间", "睡前减少电子屏幕"],
         encouragementTitle: "温柔提醒",
@@ -139,10 +132,7 @@ export const programWeeks: WeekContent[] = [
           "Crear una rutina relajante por la noche.",
         ],
         actionsTitle: "Acciones de hoy",
-        actions: [
-          "Levantarse a la misma hora",
-          "Reducir las pantallas antes de dormir",
-        ],
+        actions: ["Levantarse a la misma hora", "Reducir las pantallas antes de dormir"],
         encouragementTitle: "Motivación",
         encouragement: "El sueño saludable se reconstruye gradualmente.",
         shortDesc: "Fija una hora de despertar y comienza una rutina suave.",
@@ -188,16 +178,9 @@ export const programWeeks: WeekContent[] = [
         seoDescription: "通过刺激控制重新建立床和睡眠之间的联系。",
         intro: "刺激控制帮助重新建立床和睡眠之间的联系。",
         whyTitle: "为什么重要",
-        whyPoints: [
-          "失眠会让大脑把床和清醒联系在一起。",
-          "刺激控制能够温柔地重建床与睡眠的连接。",
-        ],
+        whyPoints: ["失眠会让大脑把床和清醒联系在一起。", "刺激控制能够温柔地重建床与睡眠的连接。"],
         practicesTitle: "核心练习",
-        practices: [
-          "困倦时再上床。",
-          "醒着超过20分钟可以暂时离床。",
-          "不在床上玩手机。",
-        ],
+        practices: ["困倦时再上床。", "醒着超过20分钟可以暂时离床。", "不在床上玩手机。"],
         actionsTitle: "今日行动",
         actions: ["真正困倦时再上床", "长时间清醒就离床", "再次困倦时回到床上"],
         encouragementTitle: "温柔提醒",
@@ -208,8 +191,7 @@ export const programWeeks: WeekContent[] = [
         title: "Control de Estímulos",
         eyebrow: "SEMANA 2 · PROGRAMA CBT-I",
         seoTitle: "Control de Estímulos | Semana 2 del Programa CBT-I | Somna",
-        seoDescription:
-          "Vuelve a asociar la cama con el sueño mediante el control de estímulos.",
+        seoDescription: "Vuelve a asociar la cama con el sueño mediante el control de estímulos.",
         intro: "El control de estímulos ayuda a asociar nuevamente la cama con el sueño.",
         whyTitle: "Por qué es importante",
         whyPoints: [
@@ -242,8 +224,7 @@ export const programWeeks: WeekContent[] = [
         title: "Sleep Restriction",
         eyebrow: "WEEK 3 · CBT-I PROGRAM",
         seoTitle: "Sleep Restriction | Week 3 CBT-I Program | Somna",
-        seoDescription:
-          "Improve sleep efficiency by aligning time in bed with actual sleep.",
+        seoDescription: "Improve sleep efficiency by aligning time in bed with actual sleep.",
         intro: "Sleep restriction improves sleep efficiency.",
         whyTitle: "Why it matters",
         whyPoints: [
@@ -257,11 +238,7 @@ export const programWeeks: WeekContent[] = [
           "Follow the recommended sleep window.",
         ],
         actionsTitle: "Today's actions",
-        actions: [
-          "Keep a stable wake-up time",
-          "Follow your sleep window",
-          "Avoid long naps",
-        ],
+        actions: ["Keep a stable wake-up time", "Follow your sleep window", "Avoid long naps"],
         encouragementTitle: "A gentle reminder",
         encouragement: "Temporary sleepiness is expected.",
         shortDesc: "Compress time in bed to deepen your sleep drive.",
@@ -273,10 +250,7 @@ export const programWeeks: WeekContent[] = [
         seoDescription: "通过限制在床时间提升睡眠效率。",
         intro: "睡眠限制帮助提高睡眠效率。",
         whyTitle: "为什么重要",
-        whyPoints: [
-          "在床时间过长会削弱睡眠压力。",
-          "更紧凑的睡眠窗口能加深睡眠、减少醒来。",
-        ],
+        whyPoints: ["在床时间过长会削弱睡眠压力。", "更紧凑的睡眠窗口能加深睡眠、减少醒来。"],
         practicesTitle: "核心练习",
         practices: ["固定起床时间。", "避免长时间午睡。", "遵循推荐睡眠窗口。"],
         actionsTitle: "今日行动",
@@ -323,8 +297,7 @@ export const programWeeks: WeekContent[] = [
         title: "Calming the Mind",
         eyebrow: "WEEK 4 · CBT-I PROGRAM",
         seoTitle: "Calming the Mind | Week 4 CBT-I Program | Somna",
-        seoDescription:
-          "Quiet a racing mind with breathing, body scans, and mindful acceptance.",
+        seoDescription: "Quiet a racing mind with breathing, body scans, and mindful acceptance.",
         intro: "A busy mind is one of the most common causes of insomnia.",
         whyTitle: "Why it matters",
         whyPoints: [
@@ -334,11 +307,7 @@ export const programWeeks: WeekContent[] = [
         practicesTitle: "Key practices",
         practices: ["Deep breathing", "Body scan", "Relaxation audio"],
         actionsTitle: "Today's actions",
-        actions: [
-          "Practice 4-7-8 breathing",
-          "Try a body scan",
-          "Use relaxation audio",
-        ],
+        actions: ["Practice 4-7-8 breathing", "Try a body scan", "Use relaxation audio"],
         encouragementTitle: "A gentle reminder",
         encouragement: "Rest itself is valuable.",
         shortDesc: "Wind-down rituals, breathing, and worry release.",
@@ -350,10 +319,7 @@ export const programWeeks: WeekContent[] = [
         seoDescription: "通过呼吸、身体扫描与正念,温柔安抚夜间的思绪。",
         intro: "思绪过度活跃是失眠常见原因之一。",
         whyTitle: "为什么重要",
-        whyPoints: [
-          "压力会激活警觉系统,让入睡更困难。",
-          "放松练习能帮助神经系统切换到休息模式。",
-        ],
+        whyPoints: ["压力会激活警觉系统,让入睡更困难。", "放松练习能帮助神经系统切换到休息模式。"],
         practicesTitle: "核心练习",
         practices: ["深呼吸", "身体扫描", "放松音频"],
         actionsTitle: "今日行动",
@@ -396,8 +362,7 @@ export const programWeeks: WeekContent[] = [
         title: "Cognitive Reframing",
         eyebrow: "WEEK 5 · CBT-I PROGRAM",
         seoTitle: "Cognitive Reframing | Week 5 CBT-I Program | Somna",
-        seoDescription:
-          "Soften unhelpful thoughts about sleep with CBT-I cognitive reframing.",
+        seoDescription: "Soften unhelpful thoughts about sleep with CBT-I cognitive reframing.",
         intro: "Thoughts influence emotions, and emotions influence sleep.",
         whyTitle: "Why it matters",
         whyPoints: [
@@ -406,8 +371,8 @@ export const programWeeks: WeekContent[] = [
         ],
         practicesTitle: "Try this reframe",
         practices: [
-          "Common thought: \"I'll never sleep again.\"",
-          "Balanced response: \"One difficult night does not define my progress.\"",
+          'Common thought: "I\'ll never sleep again."',
+          'Balanced response: "One difficult night does not define my progress."',
         ],
         actionsTitle: "Today's actions",
         actions: [
@@ -426,14 +391,11 @@ export const programWeeks: WeekContent[] = [
         seoDescription: "通过 CBT-I 认知重建,温柔化解关于睡眠的卡点。",
         intro: "想法影响情绪,情绪影响睡眠。",
         whyTitle: "为什么重要",
-        whyPoints: [
-          "灾难化思维会增加焦虑、让大脑保持警觉。",
-          "平衡的视角能帮助身体安顿下来。",
-        ],
+        whyPoints: ["灾难化思维会增加焦虑、让大脑保持警觉。", "平衡的视角能帮助身体安顿下来。"],
         practicesTitle: "尝试重建",
         practices: [
-          "常见想法：\"我再也睡不好了。\"",
-          "平衡思维：\"一次糟糕的夜晚不能定义我的恢复过程。\"",
+          '常见想法："我再也睡不好了。"',
+          '平衡思维："一次糟糕的夜晚不能定义我的恢复过程。"',
         ],
         actionsTitle: "今日行动",
         actions: ["留意自动想法", "挑战极端预期", "用平衡的视角替换它们"],
@@ -455,8 +417,8 @@ export const programWeeks: WeekContent[] = [
         ],
         practicesTitle: "Prueba este reencuadre",
         practices: [
-          "Pensamiento común: \"Nunca volveré a dormir.\"",
-          "Respuesta equilibrada: \"Una mala noche no define mi progreso.\"",
+          'Pensamiento común: "Nunca volveré a dormir."',
+          'Respuesta equilibrada: "Una mala noche no define mi progreso."',
         ],
         actionsTitle: "Acciones de hoy",
         actions: [
@@ -509,16 +471,9 @@ export const programWeeks: WeekContent[] = [
         seoDescription: "长期维持健康睡眠,巩固 CBT-I 成果,重新信任身体的节律。",
         intro: "健康睡眠是一项长期能力。",
         whyTitle: "为什么重要",
-        whyPoints: [
-          "偶尔的糟糕夜晚不会抹去进步。",
-          "维持练习能保护你已建立的成果。",
-        ],
+        whyPoints: ["偶尔的糟糕夜晚不会抹去进步。", "维持练习能保护你已建立的成果。"],
         practicesTitle: "核心练习",
-        practices: [
-          "保持稳定的起床时间。",
-          "延续放松仪式。",
-          "信任身体自然的入睡能力。",
-        ],
+        practices: ["保持稳定的起床时间。", "延续放松仪式。", "信任身体自然的入睡能力。"],
         actionsTitle: "今日行动",
         actions: ["延续你的日常练习", "接纳偶尔的波动", "关注长期进展"],
         encouragementTitle: "温柔提醒",

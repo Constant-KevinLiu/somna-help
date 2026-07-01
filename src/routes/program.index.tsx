@@ -20,9 +20,17 @@ export const Route = createFileRoute("/program/")({
   head: () => ({
     meta: [
       { title: "CBT-I Program — somna" },
-      { name: "description", content: "An 18-lesson, 6-week CBT-I journey to rebuild your sleep, one gentle step at a time." },
+      {
+        name: "description",
+        content:
+          "An 18-lesson, 6-week CBT-I journey to rebuild your sleep, one gentle step at a time.",
+      },
       { property: "og:title", content: "CBT-I Program — somna" },
-      { property: "og:description", content: "An 18-lesson, 6-week CBT-I journey to rebuild your sleep, one gentle step at a time." },
+      {
+        property: "og:description",
+        content:
+          "An 18-lesson, 6-week CBT-I journey to rebuild your sleep, one gentle step at a time.",
+      },
       { property: "og:url", content: "/program" },
     ],
     links: [{ rel: "canonical", href: "/program" }],
@@ -35,12 +43,18 @@ function ProgramPage() {
   const ui = getProgramLessonUI(lang);
   const { progress, hydrated } = useProgramProgress();
 
-  const overallPct = hydrated ? Math.round((progress.completedLessons.length / TOTAL_LESSONS) * 100) : 0;
+  const overallPct = hydrated
+    ? Math.round((progress.completedLessons.length / TOTAL_LESSONS) * 100)
+    : 0;
   const badges = hydrated ? earnedBadges(progress) : [];
 
   return (
     <>
-      <PageHero eyebrow="6-WEEK PROGRAM · 18 LESSONS" title={t("program.title")} sub={ui.programHubSub}>
+      <PageHero
+        eyebrow="6-WEEK PROGRAM · 18 LESSONS"
+        title={t("program.title")}
+        sub={ui.programHubSub}
+      >
         {/* Overall progress */}
         {hydrated && (
           <div className="mx-auto mt-2 max-w-md">
@@ -77,7 +91,11 @@ function ProgramPage() {
                   className="inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs text-accent"
                 >
                   <Award className="h-3 w-3" />
-                  {b === "sleep-basics" ? ui.badgeSleepBasics : b === "sleep-consistency" ? ui.badgeSleepConsistency : ui.badgeCbtiGraduate}
+                  {b === "sleep-basics"
+                    ? ui.badgeSleepBasics
+                    : b === "sleep-consistency"
+                      ? ui.badgeSleepConsistency
+                      : ui.badgeCbtiGraduate}
                 </span>
               ))}
             </div>
@@ -150,7 +168,10 @@ function ProgramPage() {
             })}
           </ol>
           <div className="mt-10 text-center">
-            <Link to="/assessment" className="inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground">
+            <Link
+              to="/assessment"
+              className="inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground"
+            >
               {t("assess.start")}
             </Link>
           </div>

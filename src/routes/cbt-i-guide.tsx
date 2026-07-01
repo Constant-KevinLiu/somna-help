@@ -16,10 +16,22 @@ const weekLabels: Record<Lang, string[]> = {
 
 const weekContent: Record<Lang, { title: string; desc: string }[]> = {
   en: [
-    { title: "Baseline & Sleep Window", desc: "Start a sleep diary. Set a temporary, restricted time-in-bed window." },
-    { title: "Stimulus Control", desc: "Bed for sleep only. Get up if awake too long. Same wake time daily." },
-    { title: "Cognitive Work", desc: "Notice unhelpful sleep thoughts. Practice gentle reframes and acceptance." },
-    { title: "Consolidate & Expand", desc: "Gradually expand time in bed as sleep efficiency improves. Maintain the wins." },
+    {
+      title: "Baseline & Sleep Window",
+      desc: "Start a sleep diary. Set a temporary, restricted time-in-bed window.",
+    },
+    {
+      title: "Stimulus Control",
+      desc: "Bed for sleep only. Get up if awake too long. Same wake time daily.",
+    },
+    {
+      title: "Cognitive Work",
+      desc: "Notice unhelpful sleep thoughts. Practice gentle reframes and acceptance.",
+    },
+    {
+      title: "Consolidate & Expand",
+      desc: "Gradually expand time in bed as sleep efficiency improves. Maintain the wins.",
+    },
   ],
   zh: [
     { title: "基线与睡眠窗口", desc: "开始睡眠日记。设置一个暂时性的、受限的卧床时间窗口。" },
@@ -28,10 +40,22 @@ const weekContent: Record<Lang, { title: string; desc: string }[]> = {
     { title: "巩固与扩展", desc: "随着睡眠效率提高,逐步扩展卧床时间。维持成果。" },
   ],
   es: [
-    { title: "Línea base y ventana de sueño", desc: "Inicia un diario de sueño. Define una ventana de tiempo en cama restringida temporal." },
-    { title: "Control de estímulos", desc: "La cama solo para dormir. Levántate si llevas mucho despierto. Misma hora de despertar." },
-    { title: "Trabajo cognitivo", desc: "Detecta pensamientos poco útiles. Practica reencuadres suaves y aceptación." },
-    { title: "Consolidar y expandir", desc: "Amplía gradualmente el tiempo en cama según mejora la eficiencia. Mantén los logros." },
+    {
+      title: "Línea base y ventana de sueño",
+      desc: "Inicia un diario de sueño. Define una ventana de tiempo en cama restringida temporal.",
+    },
+    {
+      title: "Control de estímulos",
+      desc: "La cama solo para dormir. Levántate si llevas mucho despierto. Misma hora de despertar.",
+    },
+    {
+      title: "Trabajo cognitivo",
+      desc: "Detecta pensamientos poco útiles. Practica reencuadres suaves y aceptación.",
+    },
+    {
+      title: "Consolidar y expandir",
+      desc: "Amplía gradualmente el tiempo en cama según mejora la eficiencia. Mantén los logros.",
+    },
   ],
 };
 

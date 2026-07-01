@@ -22,7 +22,9 @@ export function loadProgress(): ProgramProgress {
     const raw = window.localStorage.getItem(PROGRAM_PROGRESS_KEY);
     if (!raw) return { ...EMPTY };
     const parsed = JSON.parse(raw) as Partial<ProgramProgress>;
-    const completed = Array.isArray(parsed.completedLessons) ? parsed.completedLessons.filter((s): s is string => typeof s === "string") : [];
+    const completed = Array.isArray(parsed.completedLessons)
+      ? parsed.completedLessons.filter((s): s is string => typeof s === "string")
+      : [];
     return { completedLessons: Array.from(new Set(completed)) };
   } catch {
     return { ...EMPTY };
@@ -54,7 +56,9 @@ export function markLessonComplete(slug: string): ProgramProgress {
 
 export function unmarkLessonComplete(slug: string): ProgramProgress {
   const current = loadProgress();
-  const next: ProgramProgress = { completedLessons: current.completedLessons.filter((s) => s !== slug) };
+  const next: ProgramProgress = {
+    completedLessons: current.completedLessons.filter((s) => s !== slug),
+  };
   saveProgress(next);
   return next;
 }
@@ -84,7 +88,8 @@ export function weekCompletionPercent(progress: ProgramProgress, weekSlug: strin
 export function weekCompletedCount(progress: ProgramProgress, weekSlug: string): number {
   const shortSlug = resolveWeekSlug(weekSlug);
   if (!shortSlug) return 0;
-  return getLessonsByWeek(shortSlug).filter((l) => progress.completedLessons.includes(l.slug)).length;
+  return getLessonsByWeek(shortSlug).filter((l) => progress.completedLessons.includes(l.slug))
+    .length;
 }
 
 export type WeekStatus = "locked" | "available" | "completed";

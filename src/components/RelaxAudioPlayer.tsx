@@ -10,9 +10,30 @@ interface Props {
 const SPEEDS = [0.75, 1, 1.25, 1.5];
 
 const labels = {
-  en: { play: "Play", pause: "Pause", back: "Back 15s", fwd: "Forward 15s", speed: "Speed", missing: "This audio will be available soon." },
-  zh: { play: "播放", pause: "暂停", back: "后退 15 秒", fwd: "前进 15 秒", speed: "速度", missing: "此音频即将上线。" },
-  es: { play: "Reproducir", pause: "Pausar", back: "Atrás 15s", fwd: "Adelante 15s", speed: "Velocidad", missing: "Este audio estará disponible pronto." },
+  en: {
+    play: "Play",
+    pause: "Pause",
+    back: "Back 15s",
+    fwd: "Forward 15s",
+    speed: "Speed",
+    missing: "This audio will be available soon.",
+  },
+  zh: {
+    play: "播放",
+    pause: "暂停",
+    back: "后退 15 秒",
+    fwd: "前进 15 秒",
+    speed: "速度",
+    missing: "此音频即将上线。",
+  },
+  es: {
+    play: "Reproducir",
+    pause: "Pausar",
+    back: "Atrás 15s",
+    fwd: "Adelante 15s",
+    speed: "Velocidad",
+    missing: "Este audio estará disponible pronto.",
+  },
 };
 
 function fmt(s: number) {
@@ -52,14 +73,18 @@ export function RelaxAudioPlayer({ src, title }: Props) {
     if (playing) {
       a.pause();
     } else {
-      try { await a.play(); } catch { /* ignore */ }
+      try {
+        await a.play();
+      } catch {
+        /* ignore */
+      }
     }
   };
 
   const skip = (delta: number) => {
     const a = audioRef.current;
     if (!a) return;
-    a.currentTime = Math.max(0, Math.min((a.duration || 0), a.currentTime + delta));
+    a.currentTime = Math.max(0, Math.min(a.duration || 0, a.currentTime + delta));
   };
 
   const onSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,9 +94,16 @@ export function RelaxAudioPlayer({ src, title }: Props) {
   };
 
   const onKey = (e: React.KeyboardEvent) => {
-    if (e.key === " " || e.key === "k") { e.preventDefault(); toggle(); }
-    else if (e.key === "ArrowLeft" || e.key === "j") { e.preventDefault(); skip(-15); }
-    else if (e.key === "ArrowRight" || e.key === "l") { e.preventDefault(); skip(15); }
+    if (e.key === " " || e.key === "k") {
+      e.preventDefault();
+      toggle();
+    } else if (e.key === "ArrowLeft" || e.key === "j") {
+      e.preventDefault();
+      skip(-15);
+    } else if (e.key === "ArrowRight" || e.key === "l") {
+      e.preventDefault();
+      skip(15);
+    }
   };
 
   if (missing) {
@@ -143,7 +175,9 @@ export function RelaxAudioPlayer({ src, title }: Props) {
       </div>
 
       <div className="mt-4 flex items-center gap-3">
-        <span className="w-10 text-right font-mono text-xs text-muted-foreground tabular-nums">{fmt(current)}</span>
+        <span className="w-10 text-right font-mono text-xs text-muted-foreground tabular-nums">
+          {fmt(current)}
+        </span>
         <input
           type="range"
           min={0}
@@ -153,9 +187,13 @@ export function RelaxAudioPlayer({ src, title }: Props) {
           onChange={onSeek}
           aria-label="Seek"
           className="h-1.5 flex-1 cursor-pointer appearance-none rounded-full bg-white/10 accent-[oklch(0.78_0.12_285)]"
-          style={{ background: `linear-gradient(to right, oklch(0.78 0.12 285) ${pct}%, oklch(1 0 0 / 12%) ${pct}%)` }}
+          style={{
+            background: `linear-gradient(to right, oklch(0.78 0.12 285) ${pct}%, oklch(1 0 0 / 12%) ${pct}%)`,
+          }}
         />
-        <span className="w-10 font-mono text-xs text-muted-foreground tabular-nums">{fmt(duration)}</span>
+        <span className="w-10 font-mono text-xs text-muted-foreground tabular-nums">
+          {fmt(duration)}
+        </span>
       </div>
     </div>
   );

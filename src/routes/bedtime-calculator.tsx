@@ -24,7 +24,9 @@ export const Route = createFileRoute("/bedtime-calculator")({
         { property: "og:type", content: "website" },
       ],
       links: [{ rel: "canonical", href: "/bedtime-calculator" }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(faqJsonLd(d.bedtime.faqs)) }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(faqJsonLd(d.bedtime.faqs)) },
+      ],
     };
   },
 });
@@ -63,7 +65,9 @@ function BedtimeCalculatorPage() {
             </label>
           </div>
 
-          <h2 className="mt-10 mb-5 text-center font-display text-xl text-foreground/90">{d.suggested}</h2>
+          <h2 className="mt-10 mb-5 text-center font-display text-xl text-foreground/90">
+            {d.suggested}
+          </h2>
           <div className="grid gap-3">
             {results.map((r) => (
               <div
@@ -78,7 +82,9 @@ function BedtimeCalculatorPage() {
                   </span>
                   <div>
                     <div className="font-display text-2xl">{r.time}</div>
-                    <div className="text-xs text-muted-foreground">{d.cyclesSuffix(r.hours, r.cycles)}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {d.cyclesSuffix(r.hours, r.cycles)}
+                    </div>
                   </div>
                 </div>
                 {r.best && (

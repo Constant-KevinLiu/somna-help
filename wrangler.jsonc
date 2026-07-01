@@ -7,9 +7,7 @@
 
   "compatibility_date": "2025-09-24",
 
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
+  "compatibility_flags": ["nodejs_compat"],
 
   // R2 bucket for storing generated share images so Pinterest can fetch them
   // via a public URL. Create this bucket with:
@@ -19,11 +17,11 @@
   "r2_buckets": [
     {
       "binding": "SHARE_BUCKET",
-      "bucket_name": "somna-share"
-    }
+      "bucket_name": "somna-share",
+    },
   ],
 
   "assets": {
-    "directory": "dist/client"
-  }
+    "directory": "dist/client",
+  },
 }

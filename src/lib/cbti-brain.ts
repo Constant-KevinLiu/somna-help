@@ -1,12 +1,7 @@
 // CBT-I Brain: adaptive logic that turns sleepRecords into actionable guidance.
 // Pure functions, no UI. Consumed by dashboard, Week 3, and future cloud sync.
 
-import {
-  type SleepRecord,
-  minutesInBed,
-  isoDaysAgo,
-  buildSafeSleepWindow,
-} from "./sleep-records";
+import { type SleepRecord, minutesInBed, isoDaysAgo, buildSafeSleepWindow } from "./sleep-records";
 
 export { buildSafeSleepWindow } from "./sleep-records";
 
@@ -14,15 +9,14 @@ export { buildSafeSleepWindow } from "./sleep-records";
 export function avgEfficiency7d(records: SleepRecord[]): number | null {
   // Use all records, not just 7 days, to be more flexible for small datasets
   const validRecords = records.filter(
-    (r) => r.sleepEfficiency !== null && r.sleepEfficiency !== undefined
+    (r) => r.sleepEfficiency !== null && r.sleepEfficiency !== undefined,
   );
-  
+
   if (validRecords.length === 0) return null;
-  
+
   const avg = Math.round(
-    validRecords.reduce((s, r) => s + r.sleepEfficiency, 0) / validRecords.length
+    validRecords.reduce((s, r) => s + r.sleepEfficiency, 0) / validRecords.length,
   );
-  console.log("avgEfficiency7d:", { recordCount: validRecords.length, average: avg });
   return avg;
 }
 
@@ -45,8 +39,7 @@ export interface Recommendation {
  */
 export function recommend(records: SleepRecord[]): Recommendation {
   const eff = avgEfficiency7d(records);
-  console.log("recommend() called with", { recordCount: records.length, avgEfficiency: eff });
-  
+
   // Generate recommendation even with limited data
   if (eff === null) {
     return {
@@ -57,9 +50,8 @@ export function recommend(records: SleepRecord[]): Recommendation {
       reasonKey: "cbti.rec.reason.collect",
     };
   }
-  
+
   if (eff > 85) {
-    console.log("recommend: expanding window (+15 min)");
     return {
       action: "expand",
       adjustmentMinutes: 15,
@@ -68,9 +60,8 @@ export function recommend(records: SleepRecord[]): Recommendation {
       reasonKey: "cbti.rec.reason.expand",
     };
   }
-  
+
   if (eff >= 80) {
-    console.log("recommend: maintaining current plan");
     return {
       action: "maintain",
       adjustmentMinutes: 0,
@@ -79,8 +70,7 @@ export function recommend(records: SleepRecord[]): Recommendation {
       reasonKey: "cbti.rec.reason.maintain",
     };
   }
-  
-  console.log("recommend: consistency focus (<80%)");
+
   return {
     action: "consistency",
     adjustmentMinutes: 0,
@@ -104,7 +94,7 @@ function avgClock(records: SleepRecord[], key: "bedtime" | "wakeUpTime"): string
 
 function shiftClock(hhmm: string, minutes: number): string {
   const [h, m] = hhmm.split(":").map(Number);
-  let total = (h * 60 + m + minutes + 24 * 60) % (24 * 60);
+  const total = (h * 60 + m + minutes + 24 * 60) % (24 * 60);
   return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
 }
 
@@ -128,16 +118,6 @@ export function sleepWindow(records: SleepRecord[]): SleepWindow {
   const adjustedBedtime = shiftClock(baseBed, -rec.adjustmentMinutes);
   const safePlan = buildSafeSleepWindow(adjustedBedtime, wake);
 
-  console.log("recommendedBedtime", safePlan.bedtime);
-  console.log("recommendedWakeUp", safePlan.wakeUpTime);
-  console.log("sleepWindow", safePlan.timeInBedMinutes);
-  console.log("sleepWindow:", {
-    adjustmentMinutes: rec.adjustmentMinutes,
-    bedtime: safePlan.bedtime,
-    wake: safePlan.wakeUpTime,
-    timeInBed: safePlan.timeInBedMinutes,
-  });
-
   return {
     bedtime: safePlan.bedtime,
     wakeUpTime: safePlan.wakeUpTime,
@@ -151,40 +131,32 @@ export function coachMessageKey(records: SleepRecord[]): {
   key: string;
   vars?: Record<string, string | number>;
 } {
-  console.log("coachMessageKey() called with", records.length, "records");
-  
   if (!records.length) {
-    console.log("coachMessageKey: no records, returning empty");
     return { key: "coach.empty" };
   }
-  
+
   const last = records[records.length - 1];
   const rec = recommend(records);
-  
+
   // If we can't compute average, show collecting message
   if (rec.efficiency === null) {
-    console.log("coachMessageKey: no efficiency data, showing collect message");
     return { key: "coach.collect" };
   }
-  
+
   // Generate message based on recommendation
   if (rec.action === "expand") {
-    console.log("coachMessageKey: expand action");
     return { key: "coach.expand", vars: { n: rec.adjustmentMinutes } };
   }
-  
+
   if (rec.action === "maintain") {
-    console.log("coachMessageKey: maintain action");
     return { key: "coach.maintain" };
   }
-  
+
   // For low efficiency or consistency action
   if (last.sleepEfficiency < 70) {
-    console.log("coachMessageKey: low night efficiency");
     return { key: "coach.lowNight" };
   }
-  
-  console.log("coachMessageKey: consistency message");
+
   return { key: "coach.consistency" };
 }
 

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/sleep-anxiety")({
 const cycleSteps: Record<Lang, { title: string; desc: string }[]> = {
   en: [
     { title: "Bad night", desc: "Sleep was poor or fragmented." },
-    { title: "Worry rises", desc: "\"What if tonight is bad too?\"" },
+    { title: "Worry rises", desc: '"What if tonight is bad too?"' },
     { title: "Body activates", desc: "Cortisol up, heart rate up, hard to wind down." },
     { title: "Sleep gets harder", desc: "Next night is worse — confirming the fear." },
   ],

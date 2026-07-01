@@ -1,15 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
-import { Moon, Calculator, Wind, Sparkles, Heart, ShieldCheck, Leaf, ArrowRight } from "lucide-react";
-import { SLEEP_RECORDS_KEY } from "@/lib/sleep-records";
+import {
+  Moon,
+  Calculator,
+  Wind,
+  Sparkles,
+  Heart,
+  ShieldCheck,
+  Leaf,
+  ArrowRight,
+} from "lucide-react";
+import { loadRecords } from "@/lib/sleep-records";
 
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
       { title: "somna — Sleep Better, Starting Tonight" },
-      { name: "description", content: "Science-based CBT-I sleep companion. Drug-free, gentle, and built for calm." },
+      {
+        name: "description",
+        content: "Science-based CBT-I sleep companion. Drug-free, gentle, and built for calm.",
+      },
     ],
   }),
 });
@@ -20,9 +32,10 @@ function Index() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const hasRecords = !!window.localStorage.getItem(SLEEP_RECORDS_KEY);
-    const hasProfile = !!window.localStorage.getItem("sleepProfile");
-    setIsReturning(hasRecords || hasProfile);
+    // Use the validated loader so corrupted/invalid storage can't flip the
+    // hero into the "returning user" state. The legacy "sleepProfile" key was
+    // never written by any code path and has been removed.
+    setIsReturning(loadRecords().length > 0);
   }, []);
 
   return (
@@ -69,7 +82,9 @@ function Index() {
             <div className="relative flex h-56 w-56 items-center justify-center rounded-full bg-gradient-to-br from-primary/40 to-accent/40 animate-breathe md:h-72 md:w-72">
               <div className="flex h-40 w-40 items-center justify-center rounded-full glass-strong md:h-52 md:w-52">
                 <div className="text-center">
-                  <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground">breathe</div>
+                  <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                    breathe
+                  </div>
                   <div className="mt-2 font-display text-2xl text-foreground">in · out</div>
                 </div>
               </div>
@@ -92,7 +107,9 @@ function Index() {
                   <Moon className="h-5 w-5 text-primary-foreground" />
                 </span>
                 <div>
-                  <div className="font-display text-lg text-foreground">{t("home.return.title")}</div>
+                  <div className="font-display text-lg text-foreground">
+                    {t("home.return.title")}
+                  </div>
                   <div className="mt-0.5 text-sm text-accent">{t("home.return.cta")}</div>
                 </div>
               </div>
@@ -105,11 +122,23 @@ function Index() {
       {/* FEATURES */}
       <section className="px-5 py-16 md:py-24">
         <div className="mx-auto max-w-6xl">
-          <h2 className="mb-12 text-center font-display text-3xl text-gradient md:text-4xl">{t("features.title")}</h2>
+          <h2 className="mb-12 text-center font-display text-3xl text-gradient md:text-4xl">
+            {t("features.title")}
+          </h2>
           <div className="grid gap-6 md:grid-cols-3">
             {[
-              { icon: Sparkles, t: t("features.1.t"), d: t("features.1.d"), to: "/program" as const },
-              { icon: Calculator, t: t("features.2.t"), d: t("features.2.d"), to: "/calculator" as const },
+              {
+                icon: Sparkles,
+                t: t("features.1.t"),
+                d: t("features.1.d"),
+                to: "/program" as const,
+              },
+              {
+                icon: Calculator,
+                t: t("features.2.t"),
+                d: t("features.2.d"),
+                to: "/calculator" as const,
+              },
               { icon: Wind, t: t("features.3.t"), d: t("features.3.d"), to: "/relax" as const },
             ].map((f) => (
               <Link
@@ -160,7 +189,10 @@ function Index() {
           <h2 className="font-display text-3xl text-gradient md:text-4xl">{t("emo.title")}</h2>
           <div className="mt-10 grid gap-3 sm:grid-cols-2">
             {["emo.1", "emo.2", "emo.3", "emo.4"].map((k) => (
-              <div key={k} className="glass rounded-2xl px-5 py-4 text-left text-sm text-muted-foreground">
+              <div
+                key={k}
+                className="glass rounded-2xl px-5 py-4 text-left text-sm text-muted-foreground"
+              >
                 {t(k)}
               </div>
             ))}

@@ -54,11 +54,7 @@ function SleepCalculatorPage() {
 
   return (
     <>
-      <PageHero
-        eyebrow={d.eyebrow}
-        title={d.title}
-        sub={d.sub}
-      />
+      <PageHero eyebrow={d.eyebrow} title={d.title} sub={d.sub} />
 
       <section className="px-5 pb-12">
         <div className="mx-auto max-w-2xl">
@@ -129,7 +125,9 @@ function SleepCalculatorPage() {
         <div className="mx-auto max-w-3xl glass-strong rounded-3xl p-6 md:p-8">
           <h2 className="font-display text-2xl">{d.whyTitle}</h2>
           <div className="mt-4 space-y-3 text-sm text-muted-foreground">
-            {d.whyParas.map((p, i) => (<p key={i}>{p}</p>))}
+            {d.whyParas.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
           </div>
         </div>
       </section>

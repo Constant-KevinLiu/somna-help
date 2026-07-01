@@ -4,16 +4,37 @@ import { useI18n } from "@/lib/i18n";
 import { useSleepI18n } from "@/lib/sleep-i18n";
 import { PageHero } from "@/components/PageHero";
 import { DashboardShareCard } from "@/components/DashboardShareCard";
-import { Flame, Moon, Sparkles, Sun, TrendingUp, Wind, BookOpen, Activity, ArrowRight, GraduationCap } from "lucide-react";
-import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { SafeLink } from "@/components/common/SafeLink";
+import {
+  Flame,
+  Moon,
+  Sparkles,
+  Sun,
+  TrendingUp,
+  Wind,
+  BookOpen,
+  Activity,
+  ArrowRight,
+  GraduationCap,
+  Bell,
+} from "lucide-react";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import {
   currentStreak,
   efficiencyTrend,
   loadRecords,
-  tonightPlan,
   type SleepRecord,
   weeklyAverageEfficiency,
 } from "@/lib/sleep-records";
+import { sleepWindow } from "@/lib/cbti-brain";
 import { getProgramLessonUI } from "@/lib/program-lessons-i18n";
 import { TOTAL_LESSONS } from "@/lib/program-lessons";
 import { getWeekByNumber, programWeeks } from "@/lib/program-weeks";
@@ -45,11 +66,16 @@ function Dash() {
     setHydrated(true);
   }, []);
 
-  const sortedRecords = useMemo(() => [...records].sort((a, b) => a.date.localeCompare(b.date)), [records]);
-  const plan = tonightPlan(sortedRecords);
-  const weeklyAvg = weeklyAverageEfficiency(sortedRecords);
-  const streak = currentStreak(sortedRecords);
-  const trend = efficiencyTrend(sortedRecords);
+  const sortedRecords = useMemo(
+    () => [...records].sort((a, b) => a.date.localeCompare(b.date)),
+    [records],
+  );
+  // Derived values are pure functions of sortedRecords — memoize so they don't
+  // recompute on unrelated re-renders (e.g. opening the share modal).
+  const plan = useMemo(() => sleepWindow(sortedRecords), [sortedRecords]);
+  const weeklyAvg = useMemo(() => weeklyAverageEfficiency(sortedRecords), [sortedRecords]);
+  const streak = useMemo(() => currentStreak(sortedRecords), [sortedRecords]);
+  const trend = useMemo(() => efficiencyTrend(sortedRecords), [sortedRecords]);
   const latest = sortedRecords[sortedRecords.length - 1] ?? null;
   const chartData = useMemo(
     () =>
@@ -62,10 +88,12 @@ function Dash() {
   );
 
   // Screen cutoff = 60 minutes before bedtime, with a safe default for new users
-  const screenCutoff = useMemo(() => (records.length === 0 ? "22:00" : shiftClock(plan.bedtime, -60)), [plan.bedtime, records.length]);
+  const screenCutoff = useMemo(
+    () => (records.length === 0 ? "22:00" : shiftClock(plan.bedtime, -60)),
+    [plan.bedtime, records.length],
+  );
 
-  const greeting =
-    lang === "zh" ? "晚上好，Kevin" : lang === "es" ? "Buenas noches, Kevin" : "Good evening, Kevin";
+  const greeting = t("dash.greeting");
 
   if (!hydrated) {
     return <PageHero eyebrow={baseT("nav.dashboard")} title={greeting} />;
@@ -86,7 +114,10 @@ function Dash() {
               </div>
               <h2 className="font-display text-2xl text-gradient">{t("dash.chart.empty")}</h2>
               <p className="mt-3 text-sm text-muted-foreground">{t("dash.empty.body")}</p>
-              <Link to="/diary" className="mt-6 inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]">
+              <Link
+                to="/diary"
+                className="mt-6 inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"
+              >
                 {t("dash.empty.cta")}
               </Link>
             </div>
@@ -127,7 +158,10 @@ function Dash() {
                   </div>
                 </div>
               </div>
-              <Link to="/relax" className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]">
+              <Link
+                to="/relax"
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"
+              >
                 <Wind className="h-4 w-4" />
                 {t("dash.startWindDown")}
               </Link>
@@ -155,14 +189,16 @@ function Dash() {
                   trend === null
                     ? t("trend.flat")
                     : trend > 0
-                    ? t("trend.up", { n: Math.abs(trend) })
-                    : trend < 0
-                    ? t("trend.down", { n: Math.abs(trend) })
-                    : t("trend.flat")
+                      ? t("trend.up", { n: Math.abs(trend) })
+                      : trend < 0
+                        ? t("trend.down", { n: Math.abs(trend) })
+                        : t("trend.flat")
                 }
               />
             </div>
-            <p className="mt-5 max-w-3xl text-base leading-relaxed text-foreground/90">{brainExplanation}</p>
+            <p className="mt-5 max-w-3xl text-base leading-relaxed text-foreground/90">
+              {brainExplanation}
+            </p>
           </div>
 
           {/* SECTION 2b — CBT-I Program Progress */}
@@ -170,15 +206,29 @@ function Dash() {
 
           {/* SECTION 3 — Last 7 Days Trend */}
           <div className="glass-strong rounded-3xl p-6 md:p-8 animate-fade-up">
-            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.last7")}</div>
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              {t("dash.last7")}
+            </div>
             <div className="mt-1 text-sm text-muted-foreground">{t("dash.last7Subtitle")}</div>
             {chartData.length > 0 && chartData.some((item) => item.efficiency !== null) ? (
               <div className="mt-4 h-64 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={chartData} margin={{ top: 10, right: 10, left: -16, bottom: 0 }}>
                     <CartesianGrid stroke="oklch(1 0 0 / 8%)" vertical={false} />
-                    <XAxis dataKey="label" stroke="oklch(0.78 0.03 270)" fontSize={11} tickLine={false} axisLine={false} />
-                    <YAxis domain={[0, 100]} stroke="oklch(0.78 0.03 270)" fontSize={11} tickLine={false} axisLine={false} />
+                    <XAxis
+                      dataKey="label"
+                      stroke="oklch(0.78 0.03 270)"
+                      fontSize={11}
+                      tickLine={false}
+                      axisLine={false}
+                    />
+                    <YAxis
+                      domain={[0, 100]}
+                      stroke="oklch(0.78 0.03 270)"
+                      fontSize={11}
+                      tickLine={false}
+                      axisLine={false}
+                    />
                     <Tooltip
                       contentStyle={{
                         background: "oklch(0.22 0.045 270)",
@@ -215,7 +265,9 @@ function Dash() {
               <TrendingUp className="h-3.5 w-3.5 text-accent" />
               {t("dash.insight")}
             </div>
-            <p className="mt-3 text-base leading-relaxed text-foreground/90">{getWeeklyInsight(sortedRecords, trend, t)}</p>
+            <p className="mt-3 text-base leading-relaxed text-foreground/90">
+              {getWeeklyInsight(sortedRecords, trend, t)}
+            </p>
           </div>
 
           {/* SECTION 5 — Streak */}
@@ -230,12 +282,19 @@ function Dash() {
             </div>
             <div className="mt-5 grid gap-2 sm:grid-cols-4">
               {[3, 7, 14, 30].map((days) => (
-                <div key={days} className={`rounded-2xl border px-3 py-3 text-center ${streak >= days ? "border-accent/40 bg-accent/10" : "border-white/10 bg-white/5"}`}>
+                <div
+                  key={days}
+                  className={`rounded-2xl border px-3 py-3 text-center ${streak >= days ? "border-accent/40 bg-accent/10" : "border-white/10 bg-white/5"}`}
+                >
                   <div className="flex items-center justify-center gap-1 text-sm font-medium">
-                    <Flame className={`h-4 w-4 ${streak >= days ? "text-accent" : "text-muted-foreground"}`} />
+                    <Flame
+                      className={`h-4 w-4 ${streak >= days ? "text-accent" : "text-muted-foreground"}`}
+                    />
                     {days}
                   </div>
-                  <div className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">{t("dash.streak.days")}</div>
+                  <div className="mt-1 text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {t("dash.streak.days")}
+                  </div>
                 </div>
               ))}
             </div>
@@ -246,11 +305,14 @@ function Dash() {
 
           {/* SECTION 6 — Quick Actions */}
           <div className="glass-strong rounded-3xl p-6 md:p-8 animate-fade-up">
-            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">{t("dash.actions.title")}</div>
-            <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              {t("dash.actions.title")}
+            </div>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <QuickAction to="/diary" icon={Moon} label={t("dash.actions.log")} />
               <QuickAction to="/relax" icon={Wind} label={t("dash.actions.relax")} />
               <QuickAction to="/program" icon={BookOpen} label={t("dash.actions.program")} />
+              <QuickAction to="/reminder" icon={Bell} label={t("dash.actions.reminder")} />
             </div>
           </div>
         </div>
@@ -259,9 +321,21 @@ function Dash() {
   );
 }
 
-function PlanTile({ icon: Icon, label, value, highlight }: { icon: typeof Moon; label: string; value: string; highlight?: boolean }) {
+function PlanTile({
+  icon: Icon,
+  label,
+  value,
+  highlight,
+}: {
+  icon: typeof Moon;
+  label: string;
+  value: string;
+  highlight?: boolean;
+}) {
   return (
-    <div className={`rounded-2xl border p-5 ${highlight ? "border-accent/30 bg-white/10" : "border-white/10 bg-white/5"}`}>
+    <div
+      className={`rounded-2xl border p-5 ${highlight ? "border-accent/30 bg-white/10" : "border-white/10 bg-white/5"}`}
+    >
       <div className="flex items-center gap-3">
         <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5">
           <Icon className="h-4 w-4 text-accent" />
@@ -284,15 +358,15 @@ function BrainMetric({ label, value }: { label: string; value: string }) {
 
 function QuickAction({ to, icon: Icon, label }: { to: string; icon: typeof Moon; label: string }) {
   return (
-    <Link
-      to={to as any}
+    <SafeLink
+      to={to}
       className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-5 transition hover:-translate-y-0.5 hover:border-accent/40 hover:bg-white/10"
     >
       <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary/30 to-accent/30">
         <Icon className="h-4 w-4 text-accent" />
       </span>
       <span className="text-sm font-medium text-foreground">{label}</span>
-    </Link>
+    </SafeLink>
   );
 }
 
@@ -302,12 +376,19 @@ function shiftClock(hhmm: string, minutes: number): string {
   return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
 }
 
-function buildBrainExplanation(trend: number | null, t: (key: string, vars?: Record<string, string | number>) => string) {
+function buildBrainExplanation(
+  trend: number | null,
+  t: (key: string, vars?: Record<string, string | number>) => string,
+) {
   if (trend === null) return t("dash.brain.collecting");
   return `${t("dash.brain.improved")} ${t("dash.brain.maintain")}`;
 }
 
-function getWeeklyInsight(records: SleepRecord[], trend: number | null, t: (key: string, vars?: Record<string, string | number>) => string) {
+function getWeeklyInsight(
+  records: SleepRecord[],
+  trend: number | null,
+  t: (key: string, vars?: Record<string, string | number>) => string,
+) {
   if (records.length === 0) return t("dash.chart.empty");
   if (trend === null) return t("insight.collecting");
   if (trend >= 3) return t("insight.improving", { n: trend });
@@ -350,10 +431,15 @@ function ProgramProgressCard() {
       </div>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-3">
-        <BrainMetric label={ui.dashCurrentWeek} value={weekLocale ? `${ui.weekLabel} ${weekNumber}` : "—"} />
+        <BrainMetric
+          label={ui.dashCurrentWeek}
+          value={weekLocale ? `${ui.weekLabel} ${weekNumber}` : "—"}
+        />
         <BrainMetric
           label={ui.dashCurrentLesson}
-          value={nextLesson ? `${ui.lessonLabel} ${nextLesson.lessonNumber}` : ui.dashProgramComplete}
+          value={
+            nextLesson ? `${ui.lessonLabel} ${nextLesson.lessonNumber}` : ui.dashProgramComplete
+          }
         />
         <BrainMetric label={ui.dashCompletion} value={`${pct}%`} />
       </div>
@@ -361,7 +447,9 @@ function ProgramProgressCard() {
       {/* Progress bar */}
       <div className="mt-5">
         <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
-          <span>{progress.completedLessons.length} / {TOTAL_LESSONS}</span>
+          <span>
+            {progress.completedLessons.length} / {TOTAL_LESSONS}
+          </span>
           <span>{pct}%</span>
         </div>
         <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
@@ -388,7 +476,9 @@ function ProgramProgressCard() {
             <BookOpen className="h-4 w-4 text-foreground" />
           </span>
           <div className="min-w-0 flex-1">
-            <div className="text-xs uppercase tracking-wider text-muted-foreground">{ui.dashRecommended}</div>
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">
+              {ui.dashRecommended}
+            </div>
             <div className="mt-0.5 font-display text-base text-foreground">
               {ui.lessonLabel} {nextLesson.lessonNumber}
             </div>
@@ -405,10 +495,7 @@ function ProgramProgressCard() {
         </div>
       )}
 
-      {isComplete && (
-        <p className="mt-3 text-sm text-muted-foreground">{ui.dashProgramComplete}</p>
-      )}
+      {isComplete && <p className="mt-3 text-sm text-muted-foreground">{ui.dashProgramComplete}</p>}
     </div>
   );
 }
-

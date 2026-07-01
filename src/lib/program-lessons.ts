@@ -60,29 +60,233 @@ export type WeekSlug = (typeof WEEK_SLUGS)[number];
 /** All 18 lesson metadata entries (no heavy content — safe to import everywhere). */
 export const lessonMetas: LessonMeta[] = [
   // Week 1 — Sleep Foundations
-  { slug: "what-is-insomnia", weekNumber: 1, weekSlug: "week-1", lessonNumber: 1, estimatedMinutes: 6, difficultyKey: "beginner", relatedLessonSlugs: ["how-sleep-works", "trying-harder-makes-sleep-worse", "what-is-sleep-efficiency"] },
-  { slug: "how-sleep-works", weekNumber: 1, weekSlug: "week-1", lessonNumber: 2, estimatedMinutes: 6, difficultyKey: "beginner", relatedLessonSlugs: ["what-is-insomnia", "trying-harder-makes-sleep-worse", "racing-thoughts-at-night"] },
-  { slug: "trying-harder-makes-sleep-worse", weekNumber: 1, weekSlug: "week-1", lessonNumber: 3, estimatedMinutes: 5, difficultyKey: "beginner", relatedLessonSlugs: ["what-is-insomnia", "how-sleep-works", "bed-sleep-association"] },
+  {
+    slug: "what-is-insomnia",
+    weekNumber: 1,
+    weekSlug: "week-1",
+    lessonNumber: 1,
+    estimatedMinutes: 6,
+    difficultyKey: "beginner",
+    relatedLessonSlugs: [
+      "how-sleep-works",
+      "trying-harder-makes-sleep-worse",
+      "what-is-sleep-efficiency",
+    ],
+  },
+  {
+    slug: "how-sleep-works",
+    weekNumber: 1,
+    weekSlug: "week-1",
+    lessonNumber: 2,
+    estimatedMinutes: 6,
+    difficultyKey: "beginner",
+    relatedLessonSlugs: [
+      "what-is-insomnia",
+      "trying-harder-makes-sleep-worse",
+      "racing-thoughts-at-night",
+    ],
+  },
+  {
+    slug: "trying-harder-makes-sleep-worse",
+    weekNumber: 1,
+    weekSlug: "week-1",
+    lessonNumber: 3,
+    estimatedMinutes: 5,
+    difficultyKey: "beginner",
+    relatedLessonSlugs: ["what-is-insomnia", "how-sleep-works", "bed-sleep-association"],
+  },
   // Week 2 — Stimulus Control
-  { slug: "bed-sleep-association", weekNumber: 2, weekSlug: "week-2", lessonNumber: 4, estimatedMinutes: 6, difficultyKey: "beginner", relatedLessonSlugs: ["stimulus-control-science", "leaving-bed-without-frustration", "trying-harder-makes-sleep-worse"] },
-  { slug: "stimulus-control-science", weekNumber: 2, weekSlug: "week-2", lessonNumber: 5, estimatedMinutes: 6, difficultyKey: "intermediate", relatedLessonSlugs: ["bed-sleep-association", "leaving-bed-without-frustration", "sleep-restriction-therapy"] },
-  { slug: "leaving-bed-without-frustration", weekNumber: 2, weekSlug: "week-2", lessonNumber: 6, estimatedMinutes: 6, difficultyKey: "beginner", relatedLessonSlugs: ["bed-sleep-association", "stimulus-control-science", "relaxation-techniques"] },
+  {
+    slug: "bed-sleep-association",
+    weekNumber: 2,
+    weekSlug: "week-2",
+    lessonNumber: 4,
+    estimatedMinutes: 6,
+    difficultyKey: "beginner",
+    relatedLessonSlugs: [
+      "stimulus-control-science",
+      "leaving-bed-without-frustration",
+      "trying-harder-makes-sleep-worse",
+    ],
+  },
+  {
+    slug: "stimulus-control-science",
+    weekNumber: 2,
+    weekSlug: "week-2",
+    lessonNumber: 5,
+    estimatedMinutes: 6,
+    difficultyKey: "intermediate",
+    relatedLessonSlugs: [
+      "bed-sleep-association",
+      "leaving-bed-without-frustration",
+      "sleep-restriction-therapy",
+    ],
+  },
+  {
+    slug: "leaving-bed-without-frustration",
+    weekNumber: 2,
+    weekSlug: "week-2",
+    lessonNumber: 6,
+    estimatedMinutes: 6,
+    difficultyKey: "beginner",
+    relatedLessonSlugs: [
+      "bed-sleep-association",
+      "stimulus-control-science",
+      "relaxation-techniques",
+    ],
+  },
   // Week 3 — Sleep Restriction
-  { slug: "what-is-sleep-efficiency", weekNumber: 3, weekSlug: "week-3", lessonNumber: 7, estimatedMinutes: 6, difficultyKey: "intermediate", relatedLessonSlugs: ["sleep-restriction-therapy", "sleep-restriction-mistakes", "how-sleep-works"] },
-  { slug: "sleep-restriction-therapy", weekNumber: 3, weekSlug: "week-3", lessonNumber: 8, estimatedMinutes: 7, difficultyKey: "intermediate", relatedLessonSlugs: ["what-is-sleep-efficiency", "sleep-restriction-mistakes", "stimulus-control-science"] },
-  { slug: "sleep-restriction-mistakes", weekNumber: 3, weekSlug: "week-3", lessonNumber: 9, estimatedMinutes: 6, difficultyKey: "intermediate", relatedLessonSlugs: ["sleep-restriction-therapy", "what-is-sleep-efficiency", "leaving-bed-without-frustration"] },
+  {
+    slug: "what-is-sleep-efficiency",
+    weekNumber: 3,
+    weekSlug: "week-3",
+    lessonNumber: 7,
+    estimatedMinutes: 6,
+    difficultyKey: "intermediate",
+    relatedLessonSlugs: [
+      "sleep-restriction-therapy",
+      "sleep-restriction-mistakes",
+      "how-sleep-works",
+    ],
+  },
+  {
+    slug: "sleep-restriction-therapy",
+    weekNumber: 3,
+    weekSlug: "week-3",
+    lessonNumber: 8,
+    estimatedMinutes: 7,
+    difficultyKey: "intermediate",
+    relatedLessonSlugs: [
+      "what-is-sleep-efficiency",
+      "sleep-restriction-mistakes",
+      "stimulus-control-science",
+    ],
+  },
+  {
+    slug: "sleep-restriction-mistakes",
+    weekNumber: 3,
+    weekSlug: "week-3",
+    lessonNumber: 9,
+    estimatedMinutes: 6,
+    difficultyKey: "intermediate",
+    relatedLessonSlugs: [
+      "sleep-restriction-therapy",
+      "what-is-sleep-efficiency",
+      "leaving-bed-without-frustration",
+    ],
+  },
   // Week 4 — Calming the Mind
-  { slug: "racing-thoughts-at-night", weekNumber: 4, weekSlug: "week-4", lessonNumber: 10, estimatedMinutes: 6, difficultyKey: "intermediate", relatedLessonSlugs: ["relaxation-techniques", "breathing-exercises-for-sleep", "common-insomnia-thoughts"] },
-  { slug: "relaxation-techniques", weekNumber: 4, weekSlug: "week-4", lessonNumber: 11, estimatedMinutes: 7, difficultyKey: "intermediate", relatedLessonSlugs: ["racing-thoughts-at-night", "breathing-exercises-for-sleep", "leaving-bed-without-frustration"] },
-  { slug: "breathing-exercises-for-sleep", weekNumber: 4, weekSlug: "week-4", lessonNumber: 12, estimatedMinutes: 6, difficultyKey: "beginner", relatedLessonSlugs: ["relaxation-techniques", "racing-thoughts-at-night", "how-sleep-works"] },
+  {
+    slug: "racing-thoughts-at-night",
+    weekNumber: 4,
+    weekSlug: "week-4",
+    lessonNumber: 10,
+    estimatedMinutes: 6,
+    difficultyKey: "intermediate",
+    relatedLessonSlugs: [
+      "relaxation-techniques",
+      "breathing-exercises-for-sleep",
+      "common-insomnia-thoughts",
+    ],
+  },
+  {
+    slug: "relaxation-techniques",
+    weekNumber: 4,
+    weekSlug: "week-4",
+    lessonNumber: 11,
+    estimatedMinutes: 7,
+    difficultyKey: "intermediate",
+    relatedLessonSlugs: [
+      "racing-thoughts-at-night",
+      "breathing-exercises-for-sleep",
+      "leaving-bed-without-frustration",
+    ],
+  },
+  {
+    slug: "breathing-exercises-for-sleep",
+    weekNumber: 4,
+    weekSlug: "week-4",
+    lessonNumber: 12,
+    estimatedMinutes: 6,
+    difficultyKey: "beginner",
+    relatedLessonSlugs: ["relaxation-techniques", "racing-thoughts-at-night", "how-sleep-works"],
+  },
   // Week 5 — Cognitive Reframing
-  { slug: "common-insomnia-thoughts", weekNumber: 5, weekSlug: "week-5", lessonNumber: 13, estimatedMinutes: 7, difficultyKey: "intermediate", relatedLessonSlugs: ["cbti-changes-sleep-beliefs", "realistic-sleep-expectations", "racing-thoughts-at-night"] },
-  { slug: "cbti-changes-sleep-beliefs", weekNumber: 5, weekSlug: "week-5", lessonNumber: 14, estimatedMinutes: 7, difficultyKey: "advanced", relatedLessonSlugs: ["common-insomnia-thoughts", "realistic-sleep-expectations", "sleep-restriction-therapy"] },
-  { slug: "realistic-sleep-expectations", weekNumber: 5, weekSlug: "week-5", lessonNumber: 15, estimatedMinutes: 6, difficultyKey: "intermediate", relatedLessonSlugs: ["common-insomnia-thoughts", "cbti-changes-sleep-beliefs", "trying-harder-makes-sleep-worse"] },
+  {
+    slug: "common-insomnia-thoughts",
+    weekNumber: 5,
+    weekSlug: "week-5",
+    lessonNumber: 13,
+    estimatedMinutes: 7,
+    difficultyKey: "intermediate",
+    relatedLessonSlugs: [
+      "cbti-changes-sleep-beliefs",
+      "realistic-sleep-expectations",
+      "racing-thoughts-at-night",
+    ],
+  },
+  {
+    slug: "cbti-changes-sleep-beliefs",
+    weekNumber: 5,
+    weekSlug: "week-5",
+    lessonNumber: 14,
+    estimatedMinutes: 7,
+    difficultyKey: "advanced",
+    relatedLessonSlugs: [
+      "common-insomnia-thoughts",
+      "realistic-sleep-expectations",
+      "sleep-restriction-therapy",
+    ],
+  },
+  {
+    slug: "realistic-sleep-expectations",
+    weekNumber: 5,
+    weekSlug: "week-5",
+    lessonNumber: 15,
+    estimatedMinutes: 6,
+    difficultyKey: "intermediate",
+    relatedLessonSlugs: [
+      "common-insomnia-thoughts",
+      "cbti-changes-sleep-beliefs",
+      "trying-harder-makes-sleep-worse",
+    ],
+  },
   // Week 6 — Maintain & Flourish
-  { slug: "preventing-relapse", weekNumber: 6, weekSlug: "week-6", lessonNumber: 16, estimatedMinutes: 6, difficultyKey: "intermediate", relatedLessonSlugs: ["travel-jet-lag-sleep", "long-term-sleep-health", "sleep-restriction-mistakes"] },
-  { slug: "travel-jet-lag-sleep", weekNumber: 6, weekSlug: "week-6", lessonNumber: 17, estimatedMinutes: 6, difficultyKey: "intermediate", relatedLessonSlugs: ["preventing-relapse", "long-term-sleep-health", "how-sleep-works"] },
-  { slug: "long-term-sleep-health", weekNumber: 6, weekSlug: "week-6", lessonNumber: 18, estimatedMinutes: 6, difficultyKey: "beginner", relatedLessonSlugs: ["preventing-relapse", "travel-jet-lag-sleep", "realistic-sleep-expectations"] },
+  {
+    slug: "preventing-relapse",
+    weekNumber: 6,
+    weekSlug: "week-6",
+    lessonNumber: 16,
+    estimatedMinutes: 6,
+    difficultyKey: "intermediate",
+    relatedLessonSlugs: [
+      "travel-jet-lag-sleep",
+      "long-term-sleep-health",
+      "sleep-restriction-mistakes",
+    ],
+  },
+  {
+    slug: "travel-jet-lag-sleep",
+    weekNumber: 6,
+    weekSlug: "week-6",
+    lessonNumber: 17,
+    estimatedMinutes: 6,
+    difficultyKey: "intermediate",
+    relatedLessonSlugs: ["preventing-relapse", "long-term-sleep-health", "how-sleep-works"],
+  },
+  {
+    slug: "long-term-sleep-health",
+    weekNumber: 6,
+    weekSlug: "week-6",
+    lessonNumber: 18,
+    estimatedMinutes: 6,
+    difficultyKey: "beginner",
+    relatedLessonSlugs: [
+      "preventing-relapse",
+      "travel-jet-lag-sleep",
+      "realistic-sleep-expectations",
+    ],
+  },
 ];
 
 export const TOTAL_LESSONS = lessonMetas.length; // 18
@@ -99,11 +303,17 @@ export function getLessonsByWeek(weekSlug: string): LessonMeta[] {
   return lessonMetas.filter((l) => l.weekSlug === weekSlug);
 }
 
-export function getLessonMetaByWeekAndSlug(weekSlug: string, lessonSlug: string): LessonMeta | undefined {
+export function getLessonMetaByWeekAndSlug(
+  weekSlug: string,
+  lessonSlug: string,
+): LessonMeta | undefined {
   return lessonMetas.find((l) => l.weekSlug === weekSlug && l.slug === lessonSlug);
 }
 
-export function getAdjacentLessons(slug: string): { prev: LessonMeta | null; next: LessonMeta | null } {
+export function getAdjacentLessons(slug: string): {
+  prev: LessonMeta | null;
+  next: LessonMeta | null;
+} {
   const idx = lessonMetas.findIndex((l) => l.slug === slug);
   return {
     prev: idx > 0 ? lessonMetas[idx - 1] : null,
@@ -136,7 +346,10 @@ export async function loadWeekLessons(weekSlug: string): Promise<LessonContent[]
 }
 
 /** Load a single lesson's full content by week + lesson slug. */
-export async function loadLesson(weekSlug: string, lessonSlug: string): Promise<LessonContent | null> {
+export async function loadLesson(
+  weekSlug: string,
+  lessonSlug: string,
+): Promise<LessonContent | null> {
   const lessons = await loadWeekLessons(weekSlug);
   return lessons.find((l) => l.slug === lessonSlug) ?? null;
 }

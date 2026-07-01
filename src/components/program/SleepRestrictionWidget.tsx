@@ -20,9 +20,7 @@ export function SleepRestrictionWidget() {
   const rec = recommend(records);
   const win = sleepWindow(records);
   const adjLabel =
-    win.adjustmentMinutes > 0
-      ? `+${win.adjustmentMinutes} min`
-      : t("cbti.window.adjust.hold");
+    win.adjustmentMinutes > 0 ? `+${win.adjustmentMinutes} min` : t("cbti.window.adjust.hold");
 
   return (
     <article className="glass-strong rounded-3xl p-6 md:p-8">
@@ -30,11 +28,12 @@ export function SleepRestrictionWidget() {
         <Activity className="h-3.5 w-3.5" />
         {t("cbti.week3.live")}
       </div>
-      <h2 className="mt-3 font-display text-2xl text-foreground/95">
-        {t("cbti.week3.title")}
-      </h2>
+      <h2 className="mt-3 font-display text-2xl text-foreground/95">{t("cbti.week3.title")}</h2>
       <div className="mt-5 grid gap-3 sm:grid-cols-3">
-        <Tile label={t("cbti.week3.efficiency")} value={rec.efficiency !== null ? `${rec.efficiency}%` : "—"} />
+        <Tile
+          label={t("cbti.week3.efficiency")}
+          value={rec.efficiency !== null ? `${rec.efficiency}%` : "—"}
+        />
         <Tile label={t("cbti.week3.window")} value={`${win.bedtime} → ${win.wakeUpTime}`} />
         <Tile label={t("cbti.week3.adjust")} value={adjLabel} accent />
       </div>
@@ -49,7 +48,9 @@ function Tile({ label, value, accent }: { label: string; value: string; accent?:
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
       <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
-      <div className={`mt-1 font-display text-xl ${accent ? "text-accent" : "text-gradient"}`}>{value}</div>
+      <div className={`mt-1 font-display text-xl ${accent ? "text-accent" : "text-gradient"}`}>
+        {value}
+      </div>
     </div>
   );
 }

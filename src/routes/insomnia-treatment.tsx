@@ -16,9 +16,17 @@ const compare: Record<Lang, { heading: string; cbtiCol: string; medCol: string; 
     cbtiCol: "CBT-I",
     medCol: "Sleep medication",
     rows: [
-      { label: "Effectiveness", cbti: "Strong — 70–80% respond", med: "Strong short-term, fades long-term" },
+      {
+        label: "Effectiveness",
+        cbti: "Strong — 70–80% respond",
+        med: "Strong short-term, fades long-term",
+      },
       { label: "Side effects", cbti: "None", med: "Possible — grogginess, dependence" },
-      { label: "Long-term results", cbti: "Durable for 1–3+ years", med: "Often rebound when stopped" },
+      {
+        label: "Long-term results",
+        cbti: "Durable for 1–3+ years",
+        med: "Often rebound when stopped",
+      },
       { label: "Cost", cbti: "Varies; digital is affordable", med: "Ongoing prescription cost" },
       { label: "Relapse risk", cbti: "Low", med: "Higher when discontinued" },
     ],
@@ -40,9 +48,17 @@ const compare: Record<Lang, { heading: string; cbtiCol: string; medCol: string; 
     cbtiCol: "TCC-I",
     medCol: "Medicación",
     rows: [
-      { label: "Eficacia", cbti: "Alta — 70–80% responde", med: "Alta a corto plazo, decae a largo plazo" },
+      {
+        label: "Eficacia",
+        cbti: "Alta — 70–80% responde",
+        med: "Alta a corto plazo, decae a largo plazo",
+      },
       { label: "Efectos secundarios", cbti: "Ninguno", med: "Posibles — somnolencia, dependencia" },
-      { label: "Resultados a largo plazo", cbti: "Duraderos 1–3+ años", med: "A menudo rebote al parar" },
+      {
+        label: "Resultados a largo plazo",
+        cbti: "Duraderos 1–3+ años",
+        med: "A menudo rebote al parar",
+      },
       { label: "Coste", cbti: "Variable; digital es asequible", med: "Coste continuo de receta" },
       { label: "Riesgo de recaída", cbti: "Bajo", med: "Mayor al suspender" },
     ],

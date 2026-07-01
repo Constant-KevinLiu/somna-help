@@ -10,7 +10,11 @@ export const week3Lessons: LessonContent[] = [
     weekSlug: "week-3",
     lessonNumber: 7,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["sleep-restriction-therapy", "sleep-restriction-mistakes", "how-sleep-works"],
+    relatedLessonSlugs: [
+      "sleep-restriction-therapy",
+      "sleep-restriction-mistakes",
+      "how-sleep-works",
+    ],
     i18n: {
       en: {
         title: "What Is Sleep Efficiency?",
@@ -61,7 +65,13 @@ export const week3Lessons: LessonContent[] = [
         seoTitle: "What Is Sleep Efficiency? The CBT-I Metric Explained | Somna",
         seoDescription:
           "Learn what Sleep Efficiency is, how to calculate it, and why CBT-I shifts your focus from hours in bed to consolidated, quality sleep.",
-        keywords: ["sleep efficiency", "CBT-I metric", "calculate sleep efficiency", "sleep quality", "insomnia efficiency"],
+        keywords: [
+          "sleep efficiency",
+          "CBT-I metric",
+          "calculate sleep efficiency",
+          "sleep quality",
+          "insomnia efficiency",
+        ],
       },
       zh: {
         title: "什么是睡眠效率?",
@@ -110,7 +120,8 @@ export const week3Lessons: LessonContent[] = [
         ],
         ctaLabel: "计算我的睡眠效率",
         seoTitle: "什么是睡眠效率?CBT-I 指标详解｜Somna",
-        seoDescription: "了解睡眠效率是什么、如何计算,以及为什么 CBT-I 把关注点从在床时长转向整合的高质量睡眠。",
+        seoDescription:
+          "了解睡眠效率是什么、如何计算,以及为什么 CBT-I 把关注点从在床时长转向整合的高质量睡眠。",
         keywords: ["睡眠效率", "CBT-I 指标", "计算睡眠效率", "睡眠质量", "失眠 效率"],
       },
       es: {
@@ -162,7 +173,13 @@ export const week3Lessons: LessonContent[] = [
         seoTitle: "¿Qué es la eficiencia del sueño? La métrica de la CBT-I explicada | Somna",
         seoDescription:
           "Aprende qué es la Eficiencia del Sueño, cómo calcularla y por qué la CBT-I desplaza tu enfoque de las horas en cama al sueño consolidado y de calidad.",
-        keywords: ["eficiencia del sueño", "métrica CBT-I", "calcular eficiencia del sueño", "calidad del sueño", "insomnio eficiencia"],
+        keywords: [
+          "eficiencia del sueño",
+          "métrica CBT-I",
+          "calcular eficiencia del sueño",
+          "calidad del sueño",
+          "insomnio eficiencia",
+        ],
       },
     },
   },
@@ -174,7 +191,11 @@ export const week3Lessons: LessonContent[] = [
     weekSlug: "week-3",
     lessonNumber: 8,
     estimatedMinutes: 7,
-    relatedLessonSlugs: ["what-is-sleep-efficiency", "sleep-restriction-mistakes", "stimulus-control-science"],
+    relatedLessonSlugs: [
+      "what-is-sleep-efficiency",
+      "sleep-restriction-mistakes",
+      "stimulus-control-science",
+    ],
     i18n: {
       en: {
         title: "How Sleep Restriction Therapy Works",
@@ -187,7 +208,7 @@ export const week3Lessons: LessonContent[] = [
             heading: "A counterintuitive principle",
             paras: [
               "Sleep Restriction Therapy is undeniably one of the most counterintuitive aspects of CBT-I, yet it is profoundly effective. The core principle sounds radical: to cure your insomnia, we must temporarily limit the amount of time you are allowed to spend in bed.",
-              "When you sleep poorly, the natural temptation is to stay in bed longer to \"catch up\" on rest. However, this stretches out your sleep, leading to shallow, fragmented nights filled with long stretches of wakefulness.",
+              'When you sleep poorly, the natural temptation is to stay in bed longer to "catch up" on rest. However, this stretches out your sleep, leading to shallow, fragmented nights filled with long stretches of wakefulness.',
               "Sleep Restriction works like a dam, building up your natural Sleep Drive (your homeostatic sleep pressure). By narrowing your nightly window, we concentrate your sleep into a dense, unbroken block.",
             ],
           },
@@ -227,7 +248,13 @@ export const week3Lessons: LessonContent[] = [
         seoTitle: "How Sleep Restriction Therapy Works | Somna CBT-I",
         seoDescription:
           "Understand how Sleep Restriction Therapy compresses your sleep window to build sleep drive, deepen sleep, and gradually expand to your natural duration.",
-        keywords: ["sleep restriction therapy", "CBT-I sleep restriction", "sleep window", "sleep drive", "insomnia treatment"],
+        keywords: [
+          "sleep restriction therapy",
+          "CBT-I sleep restriction",
+          "sleep window",
+          "sleep drive",
+          "insomnia treatment",
+        ],
       },
       zh: {
         title: "睡眠限制疗法如何运作",
@@ -278,7 +305,8 @@ export const week3Lessons: LessonContent[] = [
         ],
         ctaLabel: "生成我的定制睡眠窗口",
         seoTitle: "睡眠限制疗法如何运作｜Somna CBT-I",
-        seoDescription: "了解睡眠限制疗法如何压缩睡眠窗口以蓄积睡眠驱动力、加深睡眠,并逐步扩展到你的自然时长。",
+        seoDescription:
+          "了解睡眠限制疗法如何压缩睡眠窗口以蓄积睡眠驱动力、加深睡眠,并逐步扩展到你的自然时长。",
         keywords: ["睡眠限制疗法", "CBT-I 睡眠限制", "睡眠窗口", "睡眠驱动力", "失眠治疗"],
       },
       es: {
@@ -292,7 +320,7 @@ export const week3Lessons: LessonContent[] = [
             heading: "Un principio contraintuitivo",
             paras: [
               "La Terapia de Restricción del Sueño es sin duda uno de los aspectos más contraintuitivos de la CBT-I, pero es profundamente eficaz. El principio central suena radical: para curar tu insomnio, debemos limitar temporalmente el tiempo que se te permite pasar en la cama.",
-              "Cuando duermes mal, la tentación natural es quedarte más tiempo en la cama para \"recuperar\" el descanso. Sin embargo, esto estira tu sueño y produce noches superficiales y fragmentadas, llenas de largos tramos de vigilia.",
+              'Cuando duermes mal, la tentación natural es quedarte más tiempo en la cama para "recuperar" el descanso. Sin embargo, esto estira tu sueño y produce noches superficiales y fragmentadas, llenas de largos tramos de vigilia.',
               "La Restricción del Sueño funciona como una presa, acumulando tu Presión de Sueño natural (la presión homeostática). Al estrechar tu ventana nocturna, concentramos tu sueño en un bloque denso e ininterrumpido.",
             ],
           },
@@ -332,7 +360,13 @@ export const week3Lessons: LessonContent[] = [
         seoTitle: "Cómo funciona la Terapia de Restricción del Sueño | Somna CBT-I",
         seoDescription:
           "Comprende cómo la Terapia de Restricción del Sueño comprime tu ventana para acumular presión de sueño, profundizar el sueño y expandirse gradualmente a tu duración natural.",
-        keywords: ["terapia de restricción del sueño", "CBT-I restricción del sueño", "ventana de sueño", "presión del sueño", "tratamiento del insomnio"],
+        keywords: [
+          "terapia de restricción del sueño",
+          "CBT-I restricción del sueño",
+          "ventana de sueño",
+          "presión del sueño",
+          "tratamiento del insomnio",
+        ],
       },
     },
   },
@@ -344,7 +378,11 @@ export const week3Lessons: LessonContent[] = [
     weekSlug: "week-3",
     lessonNumber: 9,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["sleep-restriction-therapy", "what-is-sleep-efficiency", "leaving-bed-without-frustration"],
+    relatedLessonSlugs: [
+      "sleep-restriction-therapy",
+      "what-is-sleep-efficiency",
+      "leaving-bed-without-frustration",
+    ],
     i18n: {
       en: {
         title: "Common Mistakes During Sleep Restriction",
@@ -390,7 +428,13 @@ export const week3Lessons: LessonContent[] = [
         seoTitle: "Common Mistakes During Sleep Restriction | Somna CBT-I",
         seoDescription:
           "Avoid the five most common Sleep Restriction mistakes — over-compressing, napping, skipping stimulus control, expanding too fast, and clock-watching.",
-        keywords: ["sleep restriction mistakes", "CBT-I errors", "sleep restriction tips", "insomnia therapy pitfalls", "sleep compression"],
+        keywords: [
+          "sleep restriction mistakes",
+          "CBT-I errors",
+          "sleep restriction tips",
+          "insomnia therapy pitfalls",
+          "sleep compression",
+        ],
       },
       zh: {
         title: "睡眠限制期间的常见错误",
@@ -434,7 +478,8 @@ export const week3Lessons: LessonContent[] = [
         ],
         ctaLabel: "加入 Somna 社区",
         seoTitle: "睡眠限制期间的常见错误｜Somna CBT-I",
-        seoDescription: "避免睡眠限制最常见的五个错误——过度压缩、小睡、跳过刺激控制、过快延长、盯钟。",
+        seoDescription:
+          "避免睡眠限制最常见的五个错误——过度压缩、小睡、跳过刺激控制、过快延长、盯钟。",
         keywords: ["睡眠限制 错误", "CBT-I 错误", "睡眠限制 技巧", "失眠疗法 陷阱", "睡眠压缩"],
       },
       es: {
@@ -481,7 +526,13 @@ export const week3Lessons: LessonContent[] = [
         seoTitle: "Errores comunes durante la restricción del sueño | Somna CBT-I",
         seoDescription:
           "Evita los cinco errores más comunes de la Restricción del Sueño — comprimir en exceso, siestas, omitir el control de estímulos, ampliar demasiado rápido y vigilar el reloj.",
-        keywords: ["errores restricción del sueño", "errores CBT-I", "consejos restricción del sueño", "trampas terapia insomnio", "compresión del sueño"],
+        keywords: [
+          "errores restricción del sueño",
+          "errores CBT-I",
+          "consejos restricción del sueño",
+          "trampas terapia insomnio",
+          "compresión del sueño",
+        ],
       },
     },
   },

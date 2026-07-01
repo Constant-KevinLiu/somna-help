@@ -1,10 +1,24 @@
-import { Link } from "@tanstack/react-router";
-import { Sparkles, Clock, BookOpen, CheckCircle2, FlaskConical, Lightbulb, ArrowRight } from "lucide-react";
+import {
+  Sparkles,
+  Clock,
+  BookOpen,
+  CheckCircle2,
+  FlaskConical,
+  Lightbulb,
+  ArrowRight,
+} from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { FAQ } from "@/components/FAQ";
 import { RelatedTools } from "@/components/RelatedTools";
+import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n } from "@/lib/i18n";
-import { getLearnDict, LEARN_SLUGS, learnPath, type LearnSlug, type LearnLesson } from "@/lib/learn-i18n";
+import {
+  getLearnDict,
+  LEARN_SLUGS,
+  learnPath,
+  type LearnSlug,
+  type LearnLesson,
+} from "@/lib/learn-i18n";
 import { getCbtiDict, cbtiPath } from "@/lib/cbti-i18n";
 
 export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson: LearnLesson }) {
@@ -35,7 +49,10 @@ export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson:
             </div>
             <ul className="space-y-3">
               {lesson.keyTakeaways.map((t, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm text-foreground/90 md:text-base">
+                <li
+                  key={i}
+                  className="flex items-start gap-3 text-sm text-foreground/90 md:text-base"
+                >
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
                   <span>{t}</span>
                 </li>
@@ -52,7 +69,10 @@ export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson:
             <article key={i} className="glass rounded-2xl p-6 md:p-8 animate-fade-up">
               <h2 className="font-display text-xl text-foreground md:text-2xl">{s.heading}</h2>
               {s.paras.map((p, j) => (
-                <p key={j} className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+                <p
+                  key={j}
+                  className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base"
+                >
                   {p}
                 </p>
               ))}
@@ -88,70 +108,88 @@ export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson:
       {/* Related tool + Related guide */}
       <section className="px-5 pb-10">
         <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2">
-          <Link
-            to={lesson.relatedTool.to as any}
+          <SafeLink
+            to={lesson.relatedTool.to}
             className="glass group rounded-2xl p-6 transition hover:bg-white/[0.06]"
           >
-            <div className="mb-1 text-xs uppercase tracking-widest text-muted-foreground">{dict.ui.relatedToolTitle}</div>
-            <div className="font-display text-lg text-foreground group-hover:text-accent">{lesson.relatedTool.label}</div>
+            <div className="mb-1 text-xs uppercase tracking-widest text-muted-foreground">
+              {dict.ui.relatedToolTitle}
+            </div>
+            <div className="font-display text-lg text-foreground group-hover:text-accent">
+              {lesson.relatedTool.label}
+            </div>
             <p className="mt-1 text-sm text-muted-foreground">{lesson.relatedTool.desc}</p>
-          </Link>
-          <Link
-            to={cbtiPath(lesson.relatedGuide.slug) as any}
+          </SafeLink>
+          <SafeLink
+            to={cbtiPath(lesson.relatedGuide.slug)}
             className="glass group rounded-2xl p-6 transition hover:bg-white/[0.06]"
           >
-            <div className="mb-1 text-xs uppercase tracking-widest text-muted-foreground">{dict.ui.relatedGuideTitle}</div>
-            <div className="font-display text-lg text-foreground group-hover:text-accent">{cbti.titles[lesson.relatedGuide.slug]}</div>
-            <p className="mt-1 text-sm text-muted-foreground">{cbti.summaries[lesson.relatedGuide.slug]}</p>
-          </Link>
+            <div className="mb-1 text-xs uppercase tracking-widest text-muted-foreground">
+              {dict.ui.relatedGuideTitle}
+            </div>
+            <div className="font-display text-lg text-foreground group-hover:text-accent">
+              {cbti.titles[lesson.relatedGuide.slug]}
+            </div>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {cbti.summaries[lesson.relatedGuide.slug]}
+            </p>
+          </SafeLink>
         </div>
       </section>
 
       {/* CTA */}
       <section className="px-5 pb-12">
         <div className="mx-auto max-w-3xl text-center">
-          <Link
-            to={lesson.cta.to as any}
+          <SafeLink
+            to={lesson.cta.to}
             className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
           >
             {lesson.cta.label} <ArrowRight className="h-4 w-4" />
-          </Link>
+          </SafeLink>
         </div>
       </section>
 
       {/* Next lesson */}
       <section className="px-5 pb-12">
         <div className="mx-auto max-w-3xl">
-          <Link
-            to={learnPath(lesson.nextLesson) as any}
+          <SafeLink
+            to={learnPath(lesson.nextLesson)}
             className="glass-strong group flex flex-col items-start justify-between gap-3 rounded-3xl p-6 transition hover:bg-white/[0.06] md:flex-row md:items-center"
           >
             <div>
-              <div className="text-xs uppercase tracking-widest text-accent">{dict.ui.nextLessonTitle}</div>
-              <div className="mt-1 font-display text-xl text-foreground group-hover:text-accent">{next.title}</div>
+              <div className="text-xs uppercase tracking-widest text-accent">
+                {dict.ui.nextLessonTitle}
+              </div>
+              <div className="mt-1 font-display text-xl text-foreground group-hover:text-accent">
+                {next.title}
+              </div>
               <p className="mt-1 text-sm text-muted-foreground">{next.subtitle}</p>
             </div>
             <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-foreground">
               {dict.ui.nextLessonCta} <ArrowRight className="h-4 w-4" />
             </span>
-          </Link>
+          </SafeLink>
         </div>
       </section>
 
       {/* More quick lessons */}
       <section className="px-5 pb-12">
         <div className="mx-auto max-w-5xl">
-          <h2 className="mb-6 text-center font-display text-2xl text-foreground/90">{dict.ui.quickLessons}</h2>
+          <h2 className="mb-6 text-center font-display text-2xl text-foreground/90">
+            {dict.ui.quickLessons}
+          </h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {LEARN_SLUGS.filter((s) => s !== slug).map((s) => (
-              <Link
+              <SafeLink
                 key={s}
-                to={learnPath(s) as any}
+                to={learnPath(s)}
                 className="glass group rounded-2xl p-5 transition hover:bg-white/[0.06]"
               >
-                <div className="font-display text-base text-foreground group-hover:text-accent">{dict.titles[s]}</div>
+                <div className="font-display text-base text-foreground group-hover:text-accent">
+                  {dict.titles[s]}
+                </div>
                 <p className="mt-1 text-xs text-muted-foreground">{dict.summaries[s]}</p>
-              </Link>
+              </SafeLink>
             ))}
           </div>
         </div>

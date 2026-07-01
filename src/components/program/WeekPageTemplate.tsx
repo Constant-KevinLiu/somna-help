@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Clock, Heart, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  CheckCircle2,
+  Clock,
+  Heart,
+  Sparkles,
+} from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { useI18n } from "@/lib/i18n";
 import { SleepRestrictionWidget } from "@/components/program/SleepRestrictionWidget";
@@ -23,16 +31,17 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
   const { prev, next } = getAdjacentWeeks(week.slug);
   const { progress, hydrated } = useProgramProgress();
 
-  const weekLessons = getLessonsByWeek(resolveWeekSlug(week.slug) ?? resolveWeekSlug(week.slug) ?? resolveWeekSlug(week.slug) ?? week.slug);
+  const weekLessons = getLessonsByWeek(
+    resolveWeekSlug(week.slug) ??
+      resolveWeekSlug(week.slug) ??
+      resolveWeekSlug(week.slug) ??
+      week.slug,
+  );
   const weekPct = hydrated ? weekCompletionPercent(progress, week.slug) : 0;
 
   return (
     <>
-      <PageHero
-        eyebrow={c.eyebrow}
-        title={weekHeading(lang, week.number, c.title)}
-        sub={c.intro}
-      />
+      <PageHero eyebrow={c.eyebrow} title={weekHeading(lang, week.number, c.title)} sub={c.intro} />
 
       {/* Lessons in this week */}
       <section className="px-5 pb-8" aria-label={ui.lessonsLabel}>
@@ -41,9 +50,7 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
             <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground">
               <BookOpen className="h-3.5 w-3.5 text-accent" /> {ui.lessonsLabel}
             </div>
-            {hydrated && (
-              <span className="text-xs text-muted-foreground">{weekPct}%</span>
-            )}
+            {hydrated && <span className="text-xs text-muted-foreground">{weekPct}%</span>}
           </div>
           {hydrated && (
             <div className="mb-4 h-1 w-full overflow-hidden rounded-full bg-white/10">
@@ -144,13 +151,9 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
           <article className="rounded-3xl bg-gradient-to-br from-primary/15 via-accent/10 to-transparent p-6 md:p-8">
             <div className="flex items-center gap-2">
               <Heart className="h-5 w-5 text-accent" />
-              <h2 className="font-display text-xl text-foreground/90">
-                {c.encouragementTitle}
-              </h2>
+              <h2 className="font-display text-xl text-foreground/90">{c.encouragementTitle}</h2>
             </div>
-            <p className="mt-3 text-base text-muted-foreground md:text-lg">
-              {c.encouragement}
-            </p>
+            <p className="mt-3 text-base text-muted-foreground md:text-lg">{c.encouragement}</p>
           </article>
         </div>
       </section>
@@ -167,19 +170,17 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
               .map((w) => {
                 const wc = w.i18n[lang] ?? w.i18n.en;
                 return (
-                <Link
-                  key={w.slug}
-                  to="/program/$slug"
-                  params={{ slug: w.slug }}
-                  className="glass rounded-2xl p-4 transition hover:bg-white/[0.06]"
-                >
-                  <div className="text-[10px] uppercase tracking-[0.18em] text-accent">
-                    {labels.weekLabel} {w.number}
-                  </div>
-                  <div className="mt-1 font-display text-base text-foreground/90">
-                    {wc.title}
-                  </div>
-                </Link>
+                  <Link
+                    key={w.slug}
+                    to="/program/$slug"
+                    params={{ slug: w.slug }}
+                    className="glass rounded-2xl p-4 transition hover:bg-white/[0.06]"
+                  >
+                    <div className="text-[10px] uppercase tracking-[0.18em] text-accent">
+                      {labels.weekLabel} {w.number}
+                    </div>
+                    <div className="mt-1 font-display text-base text-foreground/90">{wc.title}</div>
+                  </Link>
                 );
               })}
           </div>
@@ -196,7 +197,9 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
               className="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/[0.06]"
             >
               <ArrowLeft className="h-4 w-4" />
-              <span>{labels.prev} · {labels.weekLabel} {prev.number}</span>
+              <span>
+                {labels.prev} · {labels.weekLabel} {prev.number}
+              </span>
             </Link>
           ) : (
             <span />
@@ -215,7 +218,9 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
               params={{ slug: next.slug }}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-5 py-3 text-sm font-medium text-primary-foreground"
             >
-              <span>{labels.next} · {labels.weekLabel} {next.number}</span>
+              <span>
+                {labels.next} · {labels.weekLabel} {next.number}
+              </span>
               <ArrowRight className="h-4 w-4" />
             </Link>
           ) : (
@@ -240,7 +245,9 @@ const weekLessonTitleCache = new Map<string, string>();
 function WeekLessonTitle({ weekSlug, lessonSlug }: { weekSlug: string; lessonSlug: string }) {
   const { lang } = useI18n();
   const cacheKey = `${weekSlug}/${lessonSlug}/${lang}`;
-  const [title, setTitle] = useState<string | null>(() => weekLessonTitleCache.get(cacheKey) ?? null);
+  const [title, setTitle] = useState<string | null>(
+    () => weekLessonTitleCache.get(cacheKey) ?? null,
+  );
 
   useEffect(() => {
     if (weekLessonTitleCache.has(cacheKey)) {

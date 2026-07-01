@@ -31,9 +31,7 @@ export const Route = createFileRoute("/program/$slug")({
   notFoundComponent: () => (
     <div className="mx-auto max-w-3xl px-5 py-24 text-center">
       <h1 className="font-display text-3xl text-foreground/90">Week not found</h1>
-      <p className="mt-3 text-muted-foreground">
-        That week of the program doesn't exist.
-      </p>
+      <p className="mt-3 text-muted-foreground">That week of the program doesn't exist.</p>
     </div>
   ),
   component: WeekRoute,

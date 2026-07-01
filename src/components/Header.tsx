@@ -5,6 +5,7 @@ import { useI18n } from "@/lib/i18n";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { getCbtiDict, CBTI_SLUGS, cbtiPath } from "@/lib/cbti-i18n";
 import { getLearnDict, LEARN_SLUGS, learnPath } from "@/lib/learn-i18n";
+import { SafeLink } from "@/components/common/SafeLink";
 
 const navItems = [
   { to: "/", key: "nav.home" as const },
@@ -48,36 +49,43 @@ export function Header() {
 
           <nav className="hidden items-center gap-1 lg:flex">
             {navItems.slice(0, 4).map((item) => (
-              <Link
+              <SafeLink
                 key={item.to}
-                to={item.to as any}
+                to={item.to}
                 activeOptions={{ exact: item.to === "/" }}
                 className="rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
-                activeProps={{ className: "rounded-full px-3 py-1.5 text-sm bg-white/10 text-foreground" }}
+                activeProps={{
+                  className: "rounded-full px-3 py-1.5 text-sm bg-white/10 text-foreground",
+                }}
               >
                 {t(item.key)}
-              </Link>
+              </SafeLink>
             ))}
             {/* Highlighted Dashboard pill — primary accent, moon icon, glow */}
-            <Link
-              to={dashboardItem.to as any}
+            <SafeLink
+              to={dashboardItem.to}
               activeOptions={{ exact: false }}
               className="group relative mx-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1.5 text-sm font-medium text-primary-foreground shadow-[0_0_24px_-6px_oklch(0.72_0.13_280/70%)] transition hover:scale-[1.03] hover:shadow-[0_0_36px_-6px_oklch(0.72_0.13_280/90%)]"
-              activeProps={{ className: "group relative mx-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1.5 text-sm font-medium text-primary-foreground shadow-[0_0_28px_-4px_oklch(0.72_0.13_280/90%)] ring-2 ring-accent/40" }}
+              activeProps={{
+                className:
+                  "group relative mx-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1.5 text-sm font-medium text-primary-foreground shadow-[0_0_28px_-4px_oklch(0.72_0.13_280/90%)] ring-2 ring-accent/40",
+              }}
             >
               <Moon className="h-3.5 w-3.5" />
               {t(dashboardItem.key)}
-            </Link>
+            </SafeLink>
             {navItems.slice(4).map((item) => (
-              <Link
+              <SafeLink
                 key={item.to}
-                to={item.to as any}
+                to={item.to}
                 activeOptions={{ exact: item.to === "/" }}
                 className="rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
-                activeProps={{ className: "rounded-full px-3 py-1.5 text-sm bg-white/10 text-foreground" }}
+                activeProps={{
+                  className: "rounded-full px-3 py-1.5 text-sm bg-white/10 text-foreground",
+                }}
               >
                 {t(item.key)}
-              </Link>
+              </SafeLink>
             ))}
             <div
               className="relative"
@@ -97,14 +105,14 @@ export function Header() {
                       {calcDict.nav.section}
                     </div>
                     {calculatorItems.map((c) => (
-                      <Link
+                      <SafeLink
                         key={c.to}
-                        to={c.to as any}
+                        to={c.to}
                         className="block rounded-lg px-3 py-2 text-sm text-foreground/90 transition hover:bg-white/5"
                         onClick={() => setToolsOpen(false)}
                       >
                         {c.label}
-                      </Link>
+                      </SafeLink>
                     ))}
                   </div>
                 </div>
@@ -134,14 +142,14 @@ export function Header() {
                           {learnDict.ui.cbtiGuides}
                         </Link>
                         {guideItems.map((g) => (
-                          <Link
+                          <SafeLink
                             key={g.to}
-                            to={g.to as any}
+                            to={g.to}
                             className="block rounded-lg px-3 py-2 text-sm text-foreground/90 transition hover:bg-white/5"
                             onClick={() => setLearnOpen(false)}
                           >
                             {g.label}
-                          </Link>
+                          </SafeLink>
                         ))}
                       </div>
                       <div>
@@ -153,14 +161,14 @@ export function Header() {
                           {learnDict.ui.quickLessons}
                         </Link>
                         {lessonItems.map((l) => (
-                          <Link
+                          <SafeLink
                             key={l.to}
-                            to={l.to as any}
+                            to={l.to}
                             className="block rounded-lg px-3 py-2 text-sm text-foreground/90 transition hover:bg-white/5"
                             onClick={() => setLearnOpen(false)}
                           >
                             {l.label}
-                          </Link>
+                          </SafeLink>
                         ))}
                       </div>
                     </div>
@@ -201,52 +209,61 @@ export function Header() {
           <nav className="lg:hidden border-t border-white/5 px-5 py-3 animate-fade-up">
             <div className="flex flex-col">
               {navItems.slice(0, 4).map((item) => (
-                <Link
+                <SafeLink
                   key={item.to}
-                  to={item.to as any}
+                  to={item.to}
                   onClick={() => setOpen(false)}
                   className="rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                  activeProps={{ className: "rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground" }}
+                  activeProps={{
+                    className: "rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground",
+                  }}
                   activeOptions={{ exact: item.to === "/" }}
                 >
                   {t(item.key)}
-                </Link>
+                </SafeLink>
               ))}
-              <Link
-                to={dashboardItem.to as any}
+              <SafeLink
+                to={dashboardItem.to}
                 onClick={() => setOpen(false)}
                 className="my-1 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_0_24px_-6px_oklch(0.72_0.13_280/70%)]"
-                activeProps={{ className: "my-1 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2.5 text-sm font-medium text-primary-foreground ring-2 ring-accent/40" }}
+                activeProps={{
+                  className:
+                    "my-1 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2.5 text-sm font-medium text-primary-foreground ring-2 ring-accent/40",
+                }}
               >
                 <Moon className="h-4 w-4" />
                 {t(dashboardItem.key)}
-              </Link>
+              </SafeLink>
               {navItems.slice(4).map((item) => (
-                <Link
+                <SafeLink
                   key={item.to}
-                  to={item.to as any}
+                  to={item.to}
                   onClick={() => setOpen(false)}
                   className="rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                  activeProps={{ className: "rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground" }}
+                  activeProps={{
+                    className: "rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground",
+                  }}
                   activeOptions={{ exact: item.to === "/" }}
                 >
                   {t(item.key)}
-                </Link>
+                </SafeLink>
               ))}
               <div className="mt-2 border-t border-white/5 pt-2">
                 <div className="px-3 py-2 text-xs uppercase tracking-widest text-muted-foreground">
                   {calcDict.nav.section}
                 </div>
                 {calculatorItems.map((c) => (
-                  <Link
+                  <SafeLink
                     key={c.to}
-                    to={c.to as any}
+                    to={c.to}
                     onClick={() => setOpen(false)}
                     className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                    activeProps={{ className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground" }}
+                    activeProps={{
+                      className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground",
+                    }}
                   >
                     {c.label}
-                  </Link>
+                  </SafeLink>
                 ))}
               </div>
               <div className="mt-2 border-t border-white/5 pt-2">
@@ -254,15 +271,17 @@ export function Header() {
                   {learnDict.ui.cbtiGuides}
                 </div>
                 {guideItems.map((g) => (
-                  <Link
+                  <SafeLink
                     key={g.to}
-                    to={g.to as any}
+                    to={g.to}
                     onClick={() => setOpen(false)}
                     className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                    activeProps={{ className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground" }}
+                    activeProps={{
+                      className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground",
+                    }}
                   >
                     {g.label}
-                  </Link>
+                  </SafeLink>
                 ))}
               </div>
               <div className="mt-2 border-t border-white/5 pt-2">
@@ -277,15 +296,17 @@ export function Header() {
                   {learnDict.ui.hubTitle}
                 </Link>
                 {lessonItems.map((l) => (
-                  <Link
+                  <SafeLink
                     key={l.to}
-                    to={l.to as any}
+                    to={l.to}
                     onClick={() => setOpen(false)}
                     className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                    activeProps={{ className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground" }}
+                    activeProps={{
+                      className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground",
+                    }}
                   >
                     {l.label}
-                  </Link>
+                  </SafeLink>
                 ))}
               </div>
             </div>

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
 import { useSleepI18n } from "@/lib/sleep-i18n";
 import { PageHero } from "@/components/PageHero";
@@ -70,9 +71,21 @@ function DiaryPage() {
       sleepEfficiency: efficiency,
       sleepScore: score,
     };
-    saveRecord(record);
-    setFeedback(record);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+    try {
+      saveRecord(record);
+      setFeedback(record);
+      if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      // localStorage may be full (QuotaExceededError) or disabled — surface a
+      // friendly message so the user knows their entry was not saved.
+      toast.error(
+        lang === "zh"
+          ? "保存失败，请检查浏览器存储设置后重试"
+          : lang === "es"
+            ? "No se pudo guardar. Revisa el almacenamiento del navegador e inténtalo de nuevo."
+            : "Could not save your entry. Please check your browser storage settings and try again.",
+      );
+    }
   };
 
   return (

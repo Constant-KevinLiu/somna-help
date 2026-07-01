@@ -49,8 +49,10 @@ const en: Strings = {
   "dash.actions.log": "Log Sleep",
   "dash.actions.relax": "Relax",
   "dash.actions.program": "Program",
+  "dash.actions.reminder": "Reminders",
   "dash.latency.value": "{n} min",
-  "insight.firstEntry": "You've logged your first night. Keep going — patterns emerge after a few days.",
+  "insight.firstEntry":
+    "You've logged your first night. Keep going — patterns emerge after a few days.",
   "insight.improving": "Your sleep efficiency improved {n}% this week. Your rhythm is rebuilding.",
   "insight.steady": "Your sleep is steady this week. Consistency is the foundation of CBT-I.",
   "insight.declining": "Efficiency dipped {n}% this week. Try keeping a consistent wake-up time.",
@@ -64,9 +66,12 @@ const en: Strings = {
   "cbti.rec.title.maintain": "Keep tonight's schedule",
   "cbti.rec.title.consistency": "Hold steady — focus on consistency",
   "cbti.rec.title.collect": "Log a few more nights",
-  "cbti.rec.reason.expand": "Your 7-day efficiency is {n}%. Sleep is deep enough to gently widen your window.",
-  "cbti.rec.reason.maintain": "Your 7-day efficiency is {n}%. Stay with this schedule for another night.",
-  "cbti.rec.reason.consistency": "Your 7-day efficiency is {n}%. Keep the same wake-up time — consistency comes first.",
+  "cbti.rec.reason.expand":
+    "Your 7-day efficiency is {n}%. Sleep is deep enough to gently widen your window.",
+  "cbti.rec.reason.maintain":
+    "Your 7-day efficiency is {n}%. Stay with this schedule for another night.",
+  "cbti.rec.reason.consistency":
+    "Your 7-day efficiency is {n}%. Keep the same wake-up time — consistency comes first.",
   "cbti.rec.reason.collect": "Track a few nights and we'll personalize your sleep window.",
   "cbti.window.title": "Your Sleep Window",
   "cbti.window.tib": "Time in Bed",
@@ -76,10 +81,12 @@ const en: Strings = {
   "cbti.coach.title": "Sleep Coach",
   "coach.empty": "Log tonight to receive a personalized message tomorrow.",
   "coach.collect": "A few more nights of data will unlock your tailored guidance.",
-  "coach.expand": "Beautiful work — your sleep is deep enough to add {n} minutes back to your window.",
+  "coach.expand":
+    "Beautiful work — your sleep is deep enough to add {n} minutes back to your window.",
   "coach.maintain": "You're in a steady rhythm. Keep tonight identical to last night.",
   "coach.consistency": "Anchor your wake-up time. Consistency will rebuild your efficiency.",
-  "coach.lowNight": "One harder night doesn't undo your progress. Keep the same wake-up time tomorrow.",
+  "coach.lowNight":
+    "One harder night doesn't undo your progress. Keep the same wake-up time tomorrow.",
   "cbti.week3.title": "This week: Sleep Restriction",
   "cbti.week3.live": "Live from your diary",
   "cbti.week3.efficiency": "7-day efficiency",
@@ -137,6 +144,7 @@ const zh: Strings = {
   "dash.actions.log": "记录睡眠",
   "dash.actions.relax": "放松",
   "dash.actions.program": "课程",
+  "dash.actions.reminder": "提醒",
   "dash.latency.value": "{n} 分钟",
   "insight.firstEntry": "你完成了第一次记录。继续坚持,几天后会出现规律。",
   "insight.improving": "本周睡眠效率提升了 {n}%。你的节律正在重建。",
@@ -225,11 +233,14 @@ const es: Strings = {
   "dash.actions.log": "Registrar sueño",
   "dash.actions.relax": "Relajación",
   "dash.actions.program": "Programa",
+  "dash.actions.reminder": "Recordatorios",
   "dash.latency.value": "{n} min",
-  "insight.firstEntry": "Registraste tu primera noche. Sigue así: los patrones aparecen tras unos días.",
+  "insight.firstEntry":
+    "Registraste tu primera noche. Sigue así: los patrones aparecen tras unos días.",
   "insight.improving": "Tu eficiencia mejoró {n}% esta semana. Tu ritmo se está reconstruyendo.",
   "insight.steady": "Tu sueño se mantiene estable. La constancia es la base del CBT-I.",
-  "insight.declining": "La eficiencia bajó {n}% esta semana. Intenta una hora de despertar constante.",
+  "insight.declining":
+    "La eficiencia bajó {n}% esta semana. Intenta una hora de despertar constante.",
   "insight.collecting": "Sigue registrando: mostraremos tendencias en unas noches más.",
   "trend.up": "↑ {n}%",
   "trend.down": "↓ {n}%",
@@ -240,9 +251,12 @@ const es: Strings = {
   "cbti.rec.title.maintain": "Mantén el horario de esta noche",
   "cbti.rec.title.consistency": "Mantente firme — enfócate en la constancia",
   "cbti.rec.title.collect": "Registra unas noches más",
-  "cbti.rec.reason.expand": "Tu eficiencia de 7 días es {n}%. El sueño es lo bastante profundo para ampliar suavemente tu ventana.",
-  "cbti.rec.reason.maintain": "Tu eficiencia de 7 días es {n}%. Conserva este horario una noche más.",
-  "cbti.rec.reason.consistency": "Tu eficiencia de 7 días es {n}%. Mantén la misma hora de despertar — la constancia es lo primero.",
+  "cbti.rec.reason.expand":
+    "Tu eficiencia de 7 días es {n}%. El sueño es lo bastante profundo para ampliar suavemente tu ventana.",
+  "cbti.rec.reason.maintain":
+    "Tu eficiencia de 7 días es {n}%. Conserva este horario una noche más.",
+  "cbti.rec.reason.consistency":
+    "Tu eficiencia de 7 días es {n}%. Mantén la misma hora de despertar — la constancia es lo primero.",
   "cbti.rec.reason.collect": "Registra unas noches y personalizaremos tu ventana de sueño.",
   "cbti.window.title": "Tu ventana de sueño",
   "cbti.window.tib": "Tiempo en cama",
@@ -252,10 +266,12 @@ const es: Strings = {
   "cbti.coach.title": "Coach de sueño",
   "coach.empty": "Registra esta noche para recibir un mensaje personalizado mañana.",
   "coach.collect": "Unas noches más de datos desbloquearán tu guía personalizada.",
-  "coach.expand": "Buen trabajo — tu sueño es lo bastante profundo para añadir {n} minutos a tu ventana.",
+  "coach.expand":
+    "Buen trabajo — tu sueño es lo bastante profundo para añadir {n} minutos a tu ventana.",
   "coach.maintain": "Estás en un ritmo estable. Repite esta noche lo mismo que anoche.",
   "coach.consistency": "Ancla tu hora de despertar. La constancia recuperará tu eficiencia.",
-  "coach.lowNight": "Una noche difícil no borra tu progreso. Mantén la misma hora de despertar mañana.",
+  "coach.lowNight":
+    "Una noche difícil no borra tu progreso. Mantén la misma hora de despertar mañana.",
   "cbti.week3.title": "Esta semana: Restricción del sueño",
   "cbti.week3.live": "En vivo desde tu diario",
   "cbti.week3.efficiency": "Eficiencia 7 días",

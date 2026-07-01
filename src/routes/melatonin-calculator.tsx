@@ -24,7 +24,9 @@ export const Route = createFileRoute("/melatonin-calculator")({
         { property: "og:type", content: "website" },
       ],
       links: [{ rel: "canonical", href: "/melatonin-calculator" }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(faqJsonLd(d.melatonin.faqs)) }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(faqJsonLd(d.melatonin.faqs)) },
+      ],
     };
   },
 });
@@ -98,7 +100,9 @@ function MelatoninCalculatorPage() {
             <div className="mt-2 font-display text-3xl">
               {result.from} – {result.to}
             </div>
-            <p className="mt-2 text-sm text-muted-foreground">{d.windowNote(bedtime, result.onsetMin)}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {d.windowNote(bedtime, result.onsetMin)}
+            </p>
           </div>
 
           <div className="mt-8 text-center">

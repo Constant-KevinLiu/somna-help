@@ -94,7 +94,9 @@ function NapCalculatorPage() {
             </div>
           </div>
 
-          <h2 className="mt-10 mb-5 text-center font-display text-xl text-foreground/90">{d.wakeSuggestions}</h2>
+          <h2 className="mt-10 mb-5 text-center font-display text-xl text-foreground/90">
+            {d.wakeSuggestions}
+          </h2>
           <div className="grid gap-3">
             {results.map((r) => (
               <div key={r.mins} className="glass flex items-center justify-between rounded-2xl p-5">

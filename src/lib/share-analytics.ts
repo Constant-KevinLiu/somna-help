@@ -196,26 +196,17 @@ export function trackShareOpen(
 }
 
 /** Track when a share image is generated (Canvas → PNG). */
-export function trackShareImageGenerated(
-  context: string,
-  detail: Record<string, unknown> = {},
-) {
+export function trackShareImageGenerated(context: string, detail: Record<string, unknown> = {}) {
   trackShare("image_generated", context, "", detail);
 }
 
 /** Track a successful image upload to R2. */
-export function trackUploadSuccess(
-  context: string,
-  detail: Record<string, unknown> = {},
-) {
+export function trackUploadSuccess(context: string, detail: Record<string, unknown> = {}) {
   trackShare("upload_success", context, "", detail);
 }
 
 /** Track a failed image upload to R2. */
-export function trackUploadFailed(
-  context: string,
-  detail: Record<string, unknown> = {},
-) {
+export function trackUploadFailed(context: string, detail: Record<string, unknown> = {}) {
   trackShare("upload_failed", context, "", detail);
 }
 

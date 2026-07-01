@@ -10,7 +10,11 @@ export const week5Lessons: LessonContent[] = [
     weekSlug: "week-5",
     lessonNumber: 13,
     estimatedMinutes: 7,
-    relatedLessonSlugs: ["cbti-changes-sleep-beliefs", "realistic-sleep-expectations", "racing-thoughts-at-night"],
+    relatedLessonSlugs: [
+      "cbti-changes-sleep-beliefs",
+      "realistic-sleep-expectations",
+      "racing-thoughts-at-night",
+    ],
     i18n: {
       en: {
         title: "The Most Common Insomnia Thoughts",
@@ -29,9 +33,9 @@ export const week5Lessons: LessonContent[] = [
             heading: "Four cognitive traps",
             paras: [
               "1. Catastrophizing (The Worst-Case Scenario): \"If I don't fall asleep in the next ten minutes, my presentation tomorrow will be an absolute disaster and I'll ruin my career.\" The reality: while poor sleep is deeply uncomfortable, you have likely navigated tough days on minimal rest before and gotten through them successfully.",
-              "2. All-or-Nothing Thinking (The Binary Trap): \"If I don't get 8 hours of pristine, uninterrupted sleep tonight, my entire day is a total failure.\" The reality: sleep is fluid. A night with brief awakenings or 6 solid hours can still provide meaningful restoration.",
-              "3. Unfair Comparisons (The Isolation Illusion): \"Everyone else in the world is sleeping effortlessly right now. There is something fundamentally broken in my biology.\" The reality: millions of people navigate sleep challenges every single night. You are not alone, and your body retains its natural ability to sleep.",
-              "4. \"Should\" Statements (The Pressure Cooker): \"I should be able to fall asleep naturally without any effort. My body should just work.\" The reality: placing rigid expectations on a natural biological process only creates frustration, pushing sleep further away.",
+              '2. All-or-Nothing Thinking (The Binary Trap): "If I don\'t get 8 hours of pristine, uninterrupted sleep tonight, my entire day is a total failure." The reality: sleep is fluid. A night with brief awakenings or 6 solid hours can still provide meaningful restoration.',
+              '3. Unfair Comparisons (The Isolation Illusion): "Everyone else in the world is sleeping effortlessly right now. There is something fundamentally broken in my biology." The reality: millions of people navigate sleep challenges every single night. You are not alone, and your body retains its natural ability to sleep.',
+              '4. "Should" Statements (The Pressure Cooker): "I should be able to fall asleep naturally without any effort. My body should just work." The reality: placing rigid expectations on a natural biological process only creates frustration, pushing sleep further away.',
             ],
           },
           {
@@ -60,8 +64,14 @@ export const week5Lessons: LessonContent[] = [
         ctaLabel: "Download My Thought Diary Template",
         seoTitle: "The Most Common Insomnia Thoughts | Somna CBT-I",
         seoDescription:
-          "Learn the four most common cognitive traps of insomnia — catastrophizing, all-or-nothing thinking, unfair comparisons, and \"should\" statements.",
-        keywords: ["insomnia thoughts", "cognitive distortions sleep", "catastrophizing sleep", "CBT-I thought diary", "sleep anxiety thoughts"],
+          'Learn the four most common cognitive traps of insomnia — catastrophizing, all-or-nothing thinking, unfair comparisons, and "should" statements.',
+        keywords: [
+          "insomnia thoughts",
+          "cognitive distortions sleep",
+          "catastrophizing sleep",
+          "CBT-I thought diary",
+          "sleep anxiety thoughts",
+        ],
       },
       zh: {
         title: "最常见的失眠思维",
@@ -110,13 +120,15 @@ export const week5Lessons: LessonContent[] = [
         ],
         ctaLabel: "下载我的思维日记模板",
         seoTitle: "最常见的失眠思维｜Somna CBT-I",
-        seoDescription: "了解失眠最常见的四种认知陷阱——灾难化、全有或全无、不公平比较与「应该」陈述。",
+        seoDescription:
+          "了解失眠最常见的四种认知陷阱——灾难化、全有或全无、不公平比较与「应该」陈述。",
         keywords: ["失眠思维", "睡眠认知扭曲", "灾难化 睡眠", "CBT-I 思维日记", "睡眠焦虑 想法"],
       },
       es: {
         title: "Los pensamientos más comunes del insomnio",
         eyebrow: "SEMANA 5 · LECCIÓN 13",
-        subtitle: "Cuatro trampas cognitivas que alimentan la ansiedad del sueño — y cómo detectarlas.",
+        subtitle:
+          "Cuatro trampas cognitivas que alimentan la ansiedad del sueño — y cómo detectarlas.",
         difficulty: "Intermedio",
         readingTime: "7 min de lectura",
         content: [
@@ -129,10 +141,10 @@ export const week5Lessons: LessonContent[] = [
           {
             heading: "Cuatro trampas cognitivas",
             paras: [
-              "1. Catastrofización (el peor escenario): \"Si no me duermo en los próximos diez minutos, mi presentación de mañana será un desastre absoluto y arruinaré mi carrera.\" La realidad: aunque dormir mal es muy incómodo, probablemente ya has superado días difíciles con poco descanso y los has superado con éxito.",
-              "2. Pensamiento de todo o nada (la trampa binaria): \"Si esta noche no duermo 8 horas prístinas e ininterrumpidas, mi día entero es un fracaso total.\" La realidad: el sueño es fluido. Una noche con despertares breves o 6 horas sólidas puede aportar una restauración significativa.",
-              "3. Comparaciones injustas (la ilusión de aislamiento): \"Todos los demás en el mundo duermen sin esfuerzo ahora mismo. Hay algo fundamentalmente roto en mi biología.\" La realidad: millones de personas lidian con desafíos de sueño cada noche. No estás solo y tu cuerpo conserva su capacidad natural de dormir.",
-              "4. Declaraciones de \"debería\" (la olla a presión): \"Debería poder dormirme de forma natural sin ningún esfuerzo. Mi cuerpo simplemente debería funcionar.\" La realidad: imponer expectativas rígidas a un proceso biológico natural solo genera frustración y aleja más el sueño.",
+              '1. Catastrofización (el peor escenario): "Si no me duermo en los próximos diez minutos, mi presentación de mañana será un desastre absoluto y arruinaré mi carrera." La realidad: aunque dormir mal es muy incómodo, probablemente ya has superado días difíciles con poco descanso y los has superado con éxito.',
+              '2. Pensamiento de todo o nada (la trampa binaria): "Si esta noche no duermo 8 horas prístinas e ininterrumpidas, mi día entero es un fracaso total." La realidad: el sueño es fluido. Una noche con despertares breves o 6 horas sólidas puede aportar una restauración significativa.',
+              '3. Comparaciones injustas (la ilusión de aislamiento): "Todos los demás en el mundo duermen sin esfuerzo ahora mismo. Hay algo fundamentalmente roto en mi biología." La realidad: millones de personas lidian con desafíos de sueño cada noche. No estás solo y tu cuerpo conserva su capacidad natural de dormir.',
+              '4. Declaraciones de "debería" (la olla a presión): "Debería poder dormirme de forma natural sin ningún esfuerzo. Mi cuerpo simplemente debería funcionar." La realidad: imponer expectativas rígidas a un proceso biológico natural solo genera frustración y aleja más el sueño.',
             ],
           },
           {
@@ -161,8 +173,14 @@ export const week5Lessons: LessonContent[] = [
         ctaLabel: "Descargar mi plantilla de diario de pensamientos",
         seoTitle: "Los pensamientos más comunes del insomnio | Somna CBT-I",
         seoDescription:
-          "Conoce las cuatro trampas cognitivas más comunes del insomnio — catastrofización, pensamiento de todo o nada, comparaciones injustas y declaraciones de \"debería\".",
-        keywords: ["pensamientos de insomnio", "distorsiones cognitivas sueño", "catastrofización sueño", "CBT-I diario de pensamientos", "pensamientos ansiedad sueño"],
+          'Conoce las cuatro trampas cognitivas más comunes del insomnio — catastrofización, pensamiento de todo o nada, comparaciones injustas y declaraciones de "debería".',
+        keywords: [
+          "pensamientos de insomnio",
+          "distorsiones cognitivas sueño",
+          "catastrofización sueño",
+          "CBT-I diario de pensamientos",
+          "pensamientos ansiedad sueño",
+        ],
       },
     },
   },
@@ -174,7 +192,11 @@ export const week5Lessons: LessonContent[] = [
     weekSlug: "week-5",
     lessonNumber: 14,
     estimatedMinutes: 7,
-    relatedLessonSlugs: ["common-insomnia-thoughts", "realistic-sleep-expectations", "sleep-restriction-therapy"],
+    relatedLessonSlugs: [
+      "common-insomnia-thoughts",
+      "realistic-sleep-expectations",
+      "sleep-restriction-therapy",
+    ],
     i18n: {
       en: {
         title: "How CBT-I Changes Sleep Beliefs",
@@ -195,7 +217,7 @@ export const week5Lessons: LessonContent[] = [
             paras: [
               "The Automatic Thought: \"If I don't sleep well tonight, I won't be able to function at all tomorrow, and I'll make terrible mistakes at work.\"",
               "The Reality Check: let's look at the actual evidence. Have there been previous days where you slept poorly but still managed to complete your essential tasks? Yes, many times. Did you survive those days? Yes. Would you tell a dear friend who is struggling with sleep that they are completely incapable of functioning? Of course not.",
-              "The Balanced Reframe: \"I prefer a full night of sleep, but I know from experience that I can get through my workday even when I'm tired. One restless night does not mean tomorrow is a disaster.\"",
+              'The Balanced Reframe: "I prefer a full night of sleep, but I know from experience that I can get through my workday even when I\'m tired. One restless night does not mean tomorrow is a disaster."',
               "Notice how the reframed perspective doesn't sugarcoat the challenge. It is simply accurate, fair, and reassuring, which allows your body to relax and let sleep arrive naturally.",
             ],
           },
@@ -220,7 +242,13 @@ export const week5Lessons: LessonContent[] = [
         seoTitle: "How CBT-I Changes Sleep Beliefs | Somna Cognitive Restructuring",
         seoDescription:
           "Learn the three-phase Cognitive Restructuring process — identify, challenge, reframe — with a practical example that turns anxious sleep thoughts into balanced perspectives.",
-        keywords: ["cognitive restructuring", "CBT-I sleep beliefs", "reframe sleep thoughts", "cognitive restructuring example", "CBT-I cognitive therapy"],
+        keywords: [
+          "cognitive restructuring",
+          "CBT-I sleep beliefs",
+          "reframe sleep thoughts",
+          "cognitive restructuring example",
+          "CBT-I cognitive therapy",
+        ],
       },
       zh: {
         title: "CBT-I 如何改变睡眠信念",
@@ -264,7 +292,8 @@ export const week5Lessons: LessonContent[] = [
         ],
         ctaLabel: "尝试认知重建工具",
         seoTitle: "CBT-I 如何改变睡眠信念｜Somna 认知重建",
-        seoDescription: "学习三阶段认知重建流程——识别、挑战、重建——用一个实际例子把焦虑的睡眠想法转为平衡视角。",
+        seoDescription:
+          "学习三阶段认知重建流程——识别、挑战、重建——用一个实际例子把焦虑的睡眠想法转为平衡视角。",
         keywords: ["认知重建", "CBT-I 睡眠信念", "重建睡眠想法", "认知重建 例子", "CBT-I 认知疗法"],
       },
       es: {
@@ -284,9 +313,9 @@ export const week5Lessons: LessonContent[] = [
           {
             heading: "Un ejemplo práctico",
             paras: [
-              "El pensamiento automático: \"Si esta noche no duermo bien, mañana no podré funcionar en absoluto y cometeré errores terribles en el trabajo.\"",
+              'El pensamiento automático: "Si esta noche no duermo bien, mañana no podré funcionar en absoluto y cometeré errores terribles en el trabajo."',
               "La comprobación de la realidad: veamos las pruebas reales. ¿Ha habido días anteriores en los que dormiste mal pero aun así lograste completar tus tareas esenciales? Sí, muchas veces. ¿Sobreviviste a esos días? Sí. ¿Le dirías a un buen amigo que lucha con el sueño que es completamente incapaz de funcionar? Por supuesto que no.",
-              "El reencuadre equilibrado: \"Prefiero una noche completa de sueño, pero sé por experiencia que puedo superar mi jornada laboral incluso cuando estoy cansado. Una noche inquieta no significa que mañana sea un desastre.\"",
+              'El reencuadre equilibrado: "Prefiero una noche completa de sueño, pero sé por experiencia que puedo superar mi jornada laboral incluso cuando estoy cansado. Una noche inquieta no significa que mañana sea un desastre."',
               "Observa cómo la perspectiva reencuadrada no endulza el desafío. Es simplemente precisa, justa y tranquilizadora, lo que permite a tu cuerpo relajarse y dejar que el sueño llegue de forma natural.",
             ],
           },
@@ -308,10 +337,17 @@ export const week5Lessons: LessonContent[] = [
           },
         ],
         ctaLabel: "Probar la herramienta de reestructuración cognitiva",
-        seoTitle: "Cómo la CBT-I cambia las creencias sobre el sueño | Somna Reestructuración Cognitiva",
+        seoTitle:
+          "Cómo la CBT-I cambia las creencias sobre el sueño | Somna Reestructuración Cognitiva",
         seoDescription:
           "Aprende el proceso de Reestructuración Cognitiva en tres fases — identificar, desafiar, reencuadrar — con un ejemplo práctico que convierte pensamientos ansiosos en perspectivas equilibradas.",
-        keywords: ["reestructuración cognitiva", "CBT-I creencias sueño", "reencuadrar pensamientos sueño", "ejemplo reestructuración cognitiva", "CBT-I terapia cognitiva"],
+        keywords: [
+          "reestructuración cognitiva",
+          "CBT-I creencias sueño",
+          "reencuadrar pensamientos sueño",
+          "ejemplo reestructuración cognitiva",
+          "CBT-I terapia cognitiva",
+        ],
       },
     },
   },
@@ -323,7 +359,11 @@ export const week5Lessons: LessonContent[] = [
     weekSlug: "week-5",
     lessonNumber: 15,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["common-insomnia-thoughts", "cbti-changes-sleep-beliefs", "trying-harder-makes-sleep-worse"],
+    relatedLessonSlugs: [
+      "common-insomnia-thoughts",
+      "cbti-changes-sleep-beliefs",
+      "trying-harder-makes-sleep-worse",
+    ],
     i18n: {
       en: {
         title: "Building Realistic Sleep Expectations",
@@ -342,10 +382,10 @@ export const week5Lessons: LessonContent[] = [
           {
             heading: "Four myths, four truths",
             paras: [
-              "Myth: \"I must secure 8 hours of sleep every single night to stay healthy.\" Truth: sleep needs naturally vary based on your genetics, age, and activity. Quality and consistency matter far more than an arbitrary number.",
-              "Myth: \"I should drift off into sleep immediately after my head hits the pillow.\" Truth: a normal, healthy sleep onset period actually takes 10 to 20 minutes. Falling asleep instantly is often a sign of severe exhaustion.",
+              'Myth: "I must secure 8 hours of sleep every single night to stay healthy." Truth: sleep needs naturally vary based on your genetics, age, and activity. Quality and consistency matter far more than an arbitrary number.',
+              'Myth: "I should drift off into sleep immediately after my head hits the pillow." Truth: a normal, healthy sleep onset period actually takes 10 to 20 minutes. Falling asleep instantly is often a sign of severe exhaustion.',
               "Myth: \"Waking up during the night means my therapy isn't working.\" Truth: brief awakenings between sleep cycles are a natural part of human biology. Restful sleep isn't a solid block; it is a series of gentle waves.",
-              "Myth: \"A bad night of sleep will completely ruin my health and my week.\" Truth: the human body is remarkably resilient. Your biological sleep drive will naturally deepen tonight to make up for yesterday's restless hours.",
+              'Myth: "A bad night of sleep will completely ruin my health and my week." Truth: the human body is remarkably resilient. Your biological sleep drive will naturally deepen tonight to make up for yesterday\'s restless hours.',
             ],
           },
           {
@@ -375,7 +415,13 @@ export const week5Lessons: LessonContent[] = [
         seoTitle: "Building Realistic Sleep Expectations | Somna CBT-I",
         seoDescription:
           "Replace four rigid sleep myths with evidence-based expectations — and release the performance anxiety that keeps you awake.",
-        keywords: ["realistic sleep expectations", "sleep myths", "8 hours sleep myth", "CBT-I beliefs", "sleep perfectionism"],
+        keywords: [
+          "realistic sleep expectations",
+          "sleep myths",
+          "8 hours sleep myth",
+          "CBT-I beliefs",
+          "sleep perfectionism",
+        ],
       },
       zh: {
         title: "建立现实的睡眠期望",
@@ -445,10 +491,10 @@ export const week5Lessons: LessonContent[] = [
           {
             heading: "Cuatro mitos, cuatro verdades",
             paras: [
-              "Mito: \"Debo conseguir 8 horas de sueño cada noche para mantenerme sano.\" Verdad: las necesidades de sueño varían naturalmente según tu genética, edad y actividad. La calidad y la constancia importan mucho más que un número arbitrario.",
-              "Mito: \"Debería dormirme inmediatamente después de tocar la almohada.\" Verdad: un periodo de inicio del sueño sano y normal tarda de 10 a 20 minutos. Dormirse al instante suele ser señal de agotamiento severo.",
-              "Mito: \"Despertarse por la noche significa que mi terapia no funciona.\" Verdad: los despertares breves entre ciclos de sueño son parte natural de la biología humana. El sueño reparador no es un bloque sólido, sino una serie de olas suaves.",
-              "Mito: \"Una mala noche de sueño arruinará por completo mi salud y mi semana.\" Verdad: el cuerpo humano es notablemente resiliente. Tu presión biológica de sueño se profundizará esta noche de forma natural para compensar las horas inquietas de ayer.",
+              'Mito: "Debo conseguir 8 horas de sueño cada noche para mantenerme sano." Verdad: las necesidades de sueño varían naturalmente según tu genética, edad y actividad. La calidad y la constancia importan mucho más que un número arbitrario.',
+              'Mito: "Debería dormirme inmediatamente después de tocar la almohada." Verdad: un periodo de inicio del sueño sano y normal tarda de 10 a 20 minutos. Dormirse al instante suele ser señal de agotamiento severo.',
+              'Mito: "Despertarse por la noche significa que mi terapia no funciona." Verdad: los despertares breves entre ciclos de sueño son parte natural de la biología humana. El sueño reparador no es un bloque sólido, sino una serie de olas suaves.',
+              'Mito: "Una mala noche de sueño arruinará por completo mi salud y mi semana." Verdad: el cuerpo humano es notablemente resiliente. Tu presión biológica de sueño se profundizará esta noche de forma natural para compensar las horas inquietas de ayer.',
             ],
           },
           {
@@ -478,7 +524,13 @@ export const week5Lessons: LessonContent[] = [
         seoTitle: "Construir expectativas realistas sobre el sueño | Somna CBT-I",
         seoDescription:
           "Sustituye cuatro mitos rígidos del sueño por expectativas basadas en evidencia — y libera la ansiedad de rendimiento que te mantiene despierto.",
-        keywords: ["expectativas realistas del sueño", "mitos del sueño", "mito 8 horas sueño", "CBT-I creencias", "perfeccionismo del sueño"],
+        keywords: [
+          "expectativas realistas del sueño",
+          "mitos del sueño",
+          "mito 8 horas sueño",
+          "CBT-I creencias",
+          "perfeccionismo del sueño",
+        ],
       },
     },
   },

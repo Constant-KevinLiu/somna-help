@@ -10,12 +10,17 @@ export const week6Lessons: LessonContent[] = [
     weekSlug: "week-6",
     lessonNumber: 16,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["travel-jet-lag-sleep", "long-term-sleep-health", "sleep-restriction-mistakes"],
+    relatedLessonSlugs: [
+      "travel-jet-lag-sleep",
+      "long-term-sleep-health",
+      "sleep-restriction-mistakes",
+    ],
     i18n: {
       en: {
         title: "Preventing Relapse",
         eyebrow: "WEEK 6 · LESSON 16",
-        subtitle: "Three pillars of resilience — know your triggers, catch early signs, return to core tools.",
+        subtitle:
+          "Three pillars of resilience — know your triggers, catch early signs, return to core tools.",
         difficulty: "Intermediate",
         readingTime: "6 min read",
         content: [
@@ -56,7 +61,13 @@ export const week6Lessons: LessonContent[] = [
         seoTitle: "Preventing Relapse | Somna CBT-I Week 6",
         seoDescription:
           "Build long-term sleep resilience with three pillars — know your triggers, catch early signs, and return to your core CBT-I tools when sleep fragments.",
-        keywords: ["preventing relapse", "CBT-I relapse", "sleep resilience", "insomnia relapse prevention", "CBT-I maintenance"],
+        keywords: [
+          "preventing relapse",
+          "CBT-I relapse",
+          "sleep resilience",
+          "insomnia relapse prevention",
+          "CBT-I maintenance",
+        ],
       },
       zh: {
         title: "预防复发",
@@ -100,13 +111,15 @@ export const week6Lessons: LessonContent[] = [
         ],
         ctaLabel: "保存我的复发预防蓝图",
         seoTitle: "预防复发｜Somna CBT-I 第6周",
-        seoDescription: "用三大支柱建立长期睡眠韧性——识别诱因、捕捉早期信号、在睡眠破碎时回到核心 CBT-I 工具。",
+        seoDescription:
+          "用三大支柱建立长期睡眠韧性——识别诱因、捕捉早期信号、在睡眠破碎时回到核心 CBT-I 工具。",
         keywords: ["预防复发", "CBT-I 复发", "睡眠韧性", "失眠复发预防", "CBT-I 维持"],
       },
       es: {
         title: "Prevenir las recaídas",
         eyebrow: "SEMANA 6 · LECCIÓN 16",
-        subtitle: "Tres pilares de resiliencia — conoce tus detonantes, detecta las señales tempranas, vuelve a las herramientas centrales.",
+        subtitle:
+          "Tres pilares de resiliencia — conoce tus detonantes, detecta las señales tempranas, vuelve a las herramientas centrales.",
         difficulty: "Intermedio",
         readingTime: "6 min de lectura",
         content: [
@@ -147,7 +160,13 @@ export const week6Lessons: LessonContent[] = [
         seoTitle: "Prevenir las recaídas | Somna CBT-I Semana 6",
         seoDescription:
           "Construye resiliencia de sueño a largo plazo con tres pilares — conoce tus detonantes, detecta las señales tempranas y vuelve a tus herramientas centrales de CBT-I cuando el sueño se fragmente.",
-        keywords: ["prevenir recaídas", "CBT-I recaída", "resiliencia del sueño", "prevención de recaídas insomnio", "mantenimiento CBT-I"],
+        keywords: [
+          "prevenir recaídas",
+          "CBT-I recaída",
+          "resiliencia del sueño",
+          "prevención de recaídas insomnio",
+          "mantenimiento CBT-I",
+        ],
       },
     },
   },
@@ -164,7 +183,8 @@ export const week6Lessons: LessonContent[] = [
       en: {
         title: "Travel, Jet Lag and Sleep",
         eyebrow: "WEEK 6 · LESSON 17",
-        subtitle: "Protect your rest anywhere in the world with strategic light and routine alignment.",
+        subtitle:
+          "Protect your rest anywhere in the world with strategic light and routine alignment.",
         difficulty: "Intermediate",
         readingTime: "6 min read",
         content: [
@@ -210,7 +230,13 @@ export const week6Lessons: LessonContent[] = [
         seoTitle: "Travel, Jet Lag and Sleep | Somna CBT-I",
         seoDescription:
           "Protect your sleep anywhere with strategic light exposure, immediate routine alignment, and a travel sleep kit for unfamiliar environments.",
-        keywords: ["travel sleep", "jet lag", "circadian rhythm travel", "CBT-I travel", "first night effect"],
+        keywords: [
+          "travel sleep",
+          "jet lag",
+          "circadian rhythm travel",
+          "CBT-I travel",
+          "first night effect",
+        ],
       },
       zh: {
         title: "旅行、时差与睡眠",
@@ -265,7 +291,8 @@ export const week6Lessons: LessonContent[] = [
       es: {
         title: "Viajes, jet lag y sueño",
         eyebrow: "SEMANA 6 · LECCIÓN 17",
-        subtitle: "Protege tu descanso en cualquier lugar del mundo con luz estratégica y alineación de rutina.",
+        subtitle:
+          "Protege tu descanso en cualquier lugar del mundo con luz estratégica y alineación de rutina.",
         difficulty: "Intermedio",
         readingTime: "6 min de lectura",
         content: [
@@ -311,7 +338,13 @@ export const week6Lessons: LessonContent[] = [
         seoTitle: "Viajes, jet lag y sueño | Somna CBT-I",
         seoDescription:
           "Protege tu sueño en cualquier lugar con exposición estratégica a la luz, alineación inmediata de rutina y un kit de sueño para viajar para entornos desconocidos.",
-        keywords: ["sueño y viajes", "jet lag", "ritmo circadiano viajes", "CBT-I viajes", "efecto primera noche"],
+        keywords: [
+          "sueño y viajes",
+          "jet lag",
+          "ritmo circadiano viajes",
+          "CBT-I viajes",
+          "efecto primera noche",
+        ],
       },
     },
   },
@@ -323,12 +356,17 @@ export const week6Lessons: LessonContent[] = [
     weekSlug: "week-6",
     lessonNumber: 18,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["preventing-relapse", "travel-jet-lag-sleep", "realistic-sleep-expectations"],
+    relatedLessonSlugs: [
+      "preventing-relapse",
+      "travel-jet-lag-sleep",
+      "realistic-sleep-expectations",
+    ],
     i18n: {
       en: {
         title: "Long-Term Sleep Health",
         eyebrow: "WEEK 6 · LESSON 18",
-        subtitle: "Consolidated sleep nourishes every system in your body — and the tools are yours forever.",
+        subtitle:
+          "Consolidated sleep nourishes every system in your body — and the tools are yours forever.",
         difficulty: "Beginner",
         readingTime: "6 min read",
         content: [
@@ -374,7 +412,13 @@ export const week6Lessons: LessonContent[] = [
         seoTitle: "Long-Term Sleep Health | Somna CBT-I Graduation",
         seoDescription:
           "Celebrate completing your CBT-I program. Discover how consolidated sleep nourishes physical, mental, and cognitive health — and keep your tools forever.",
-        keywords: ["long-term sleep health", "CBT-I graduation", "sleep benefits", "consolidated sleep", "sleep and health"],
+        keywords: [
+          "long-term sleep health",
+          "CBT-I graduation",
+          "sleep benefits",
+          "consolidated sleep",
+          "sleep and health",
+        ],
       },
       zh: {
         title: "长期睡眠健康",
@@ -423,13 +467,15 @@ export const week6Lessons: LessonContent[] = [
         ],
         ctaLabel: "回顾我的睡眠旅程成果",
         seoTitle: "长期睡眠健康｜Somna CBT-I 毕业",
-        seoDescription: "庆祝完成 CBT-I 课程。了解整合的睡眠如何滋养身体、心理与认知健康——并永远保有你的工具。",
+        seoDescription:
+          "庆祝完成 CBT-I 课程。了解整合的睡眠如何滋养身体、心理与认知健康——并永远保有你的工具。",
         keywords: ["长期睡眠健康", "CBT-I 毕业", "睡眠益处", "整合睡眠", "睡眠与健康"],
       },
       es: {
         title: "Salud del sueño a largo plazo",
         eyebrow: "SEMANA 6 · LECCIÓN 18",
-        subtitle: "El sueño consolidado nutre todos los sistemas de tu cuerpo — y las herramientas son tuyas para siempre.",
+        subtitle:
+          "El sueño consolidado nutre todos los sistemas de tu cuerpo — y las herramientas son tuyas para siempre.",
         difficulty: "Inicial",
         readingTime: "6 min de lectura",
         content: [
@@ -475,7 +521,13 @@ export const week6Lessons: LessonContent[] = [
         seoTitle: "Salud del sueño a largo plazo | Somna CBT-I Graduación",
         seoDescription:
           "Celebra la finalización de tu programa de CBT-I. Descubre cómo el sueño consolidado nutre la salud física, mental y cognitiva — y conserva tus herramientas para siempre.",
-        keywords: ["salud del sueño a largo plazo", "graduación CBT-I", "beneficios del sueño", "sueño consolidado", "sueño y salud"],
+        keywords: [
+          "salud del sueño a largo plazo",
+          "graduación CBT-I",
+          "beneficios del sueño",
+          "sueño consolidado",
+          "sueño y salud",
+        ],
       },
     },
   },

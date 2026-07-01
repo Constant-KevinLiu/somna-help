@@ -1,11 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { LessonTemplate, lessonHead } from "@/components/program/LessonTemplate";
 import { useI18n } from "@/lib/i18n";
-import {
-  getLessonMetaByWeekAndSlug,
-  isValidWeekSlug,
-  loadLesson,
-} from "@/lib/program-lessons";
+import { getLessonMetaByWeekAndSlug, isValidWeekSlug, loadLesson } from "@/lib/program-lessons";
 
 export const Route = createFileRoute("/program/$week/$lesson")({
   // Lazy-load the week's full lesson content in the loader so each lesson
@@ -31,9 +27,7 @@ export const Route = createFileRoute("/program/$week/$lesson")({
   notFoundComponent: () => (
     <div className="mx-auto max-w-3xl px-5 py-24 text-center">
       <h1 className="font-display text-3xl text-foreground/90">Lesson not found</h1>
-      <p className="mt-3 text-muted-foreground">
-        That lesson of the program doesn't exist.
-      </p>
+      <p className="mt-3 text-muted-foreground">That lesson of the program doesn't exist.</p>
     </div>
   ),
   component: LessonRoute,

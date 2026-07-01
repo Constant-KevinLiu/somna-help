@@ -10,7 +10,11 @@ export const week1Lessons: LessonContent[] = [
     weekSlug: "week-1",
     lessonNumber: 1,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["how-sleep-works", "trying-harder-makes-sleep-worse", "what-is-sleep-efficiency"],
+    relatedLessonSlugs: [
+      "how-sleep-works",
+      "trying-harder-makes-sleep-worse",
+      "what-is-sleep-efficiency",
+    ],
     i18n: {
       en: {
         title: "What Is Insomnia?",
@@ -29,7 +33,7 @@ export const week1Lessons: LessonContent[] = [
           {
             heading: "The 3P Model",
             paras: [
-              "To understand why sleep became so difficult, we look at a highly validated scientific framework known as the \"3P\" Model:",
+              'To understand why sleep became so difficult, we look at a highly validated scientific framework known as the "3P" Model:',
               "Predisposing Factors: Your baseline vulnerability — genetics, natural sensitivity to stress, or simply being a deep thinker.",
               "Precipitating Factors: The initial triggers — life events, intense stress, illness, or major transitions that originally disrupted your rest.",
               "Perpetuating Factors: The accidental loops — behaviors or anxious thoughts we adopt to cope with poor sleep (like staying in bed longer or worrying about the next day) that inadvertently keep the insomnia alive long after the initial trigger has faded.",
@@ -62,7 +66,13 @@ export const week1Lessons: LessonContent[] = [
         seoTitle: "What Is Insomnia? The 3P Model Explained | Somna CBT-I",
         seoDescription:
           "Understand what insomnia really is through the science-backed 3P Model, and learn why CBT-I dismantles the patterns that keep insomnia alive.",
-        keywords: ["what is insomnia", "3P model insomnia", "chronic insomnia", "CBT-I insomnia", "insomnia definition"],
+        keywords: [
+          "what is insomnia",
+          "3P model insomnia",
+          "chronic insomnia",
+          "CBT-I insomnia",
+          "insomnia definition",
+        ],
       },
       zh: {
         title: "什么是失眠?",
@@ -112,13 +122,15 @@ export const week1Lessons: LessonContent[] = [
         ],
         ctaLabel: "下载免费睡眠日记",
         seoTitle: "什么是失眠?3P 模型详解｜Somna CBT-I",
-        seoDescription: "通过科学验证的 3P 模型理解失眠的真正含义,了解 CBT-I 如何拆解让失眠持续的模式。",
+        seoDescription:
+          "通过科学验证的 3P 模型理解失眠的真正含义,了解 CBT-I 如何拆解让失眠持续的模式。",
         keywords: ["什么是失眠", "失眠 3P 模型", "慢性失眠", "CBT-I 失眠", "失眠定义"],
       },
       es: {
         title: "¿Qué es el insomnio?",
         eyebrow: "SEMANA 1 · LECCIÓN 1",
-        subtitle: "Comprende qué es realmente el insomnio y por qué la CBT-I está diseñada para desmontarlo.",
+        subtitle:
+          "Comprende qué es realmente el insomnio y por qué la CBT-I está diseñada para desmontarlo.",
         difficulty: "Inicial",
         readingTime: "6 min de lectura",
         content: [
@@ -132,7 +144,7 @@ export const week1Lessons: LessonContent[] = [
           {
             heading: "El Modelo de las 3 P",
             paras: [
-              "Para entender por qué el sueño se volvió tan difícil, recurrimos a un marco científico muy validado conocido como el Modelo de las \"3 P\":",
+              'Para entender por qué el sueño se volvió tan difícil, recurrimos a un marco científico muy validado conocido como el Modelo de las "3 P":',
               "Factores predisponentes: tu vulnerabilidad de base — genética, sensibilidad natural al estrés o simplemente ser una persona reflexiva.",
               "Factores precipitantes: los detonantes iniciales — eventos de vida, estrés intenso, enfermedad o grandes transiciones que alteraron tu descanso al principio.",
               "Factores perpetuantes: los bucles accidentales — conductas o pensamientos ansiosos que adoptamos para lidiar con el mal dormir (como quedarnos más tiempo en la cama o preocuparnos por el día siguiente) que mantienen vivo el insomnio mucho después de que el detonante inicial desapareció.",
@@ -165,7 +177,13 @@ export const week1Lessons: LessonContent[] = [
         seoTitle: "¿Qué es el insomnio? El Modelo de las 3 P explicado | Somna CBT-I",
         seoDescription:
           "Comprende qué es realmente el insomnio mediante el Modelo de las 3 P respaldado por la ciencia y por qué la CBT-I desmonta los patrones que lo mantienen.",
-        keywords: ["qué es el insomnio", "modelo 3P insomnio", "insomnio crónico", "CBT-I insomnio", "definición de insomnio"],
+        keywords: [
+          "qué es el insomnio",
+          "modelo 3P insomnio",
+          "insomnio crónico",
+          "CBT-I insomnio",
+          "definición de insomnio",
+        ],
       },
     },
   },
@@ -177,7 +195,11 @@ export const week1Lessons: LessonContent[] = [
     weekSlug: "week-1",
     lessonNumber: 2,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["what-is-insomnia", "trying-harder-makes-sleep-worse", "racing-thoughts-at-night"],
+    relatedLessonSlugs: [
+      "what-is-insomnia",
+      "trying-harder-makes-sleep-worse",
+      "racing-thoughts-at-night",
+    ],
     i18n: {
       en: {
         title: "How Sleep Works",
@@ -205,7 +227,7 @@ export const week1Lessons: LessonContent[] = [
           {
             heading: "When the machinery gets hijacked",
             paras: [
-              "When you experience insomnia, this natural machinery gets hijacked by hyperarousal — a state of biological and mental alertness driven by anxiety. Even when your sleep drive is bursting, your nervous system's \"alert\" signal overrides it. CBT-I works beautifully because its core techniques are designed to strengthen your natural sleep drive and realign your internal clock.",
+              'When you experience insomnia, this natural machinery gets hijacked by hyperarousal — a state of biological and mental alertness driven by anxiety. Even when your sleep drive is bursting, your nervous system\'s "alert" signal overrides it. CBT-I works beautifully because its core techniques are designed to strengthen your natural sleep drive and realign your internal clock.',
             ],
           },
         ],
@@ -229,7 +251,13 @@ export const week1Lessons: LessonContent[] = [
         seoTitle: "How Sleep Works: Cycles, Circadian Rhythm & Sleep Drive | Somna",
         seoDescription:
           "Learn how 90-minute sleep cycles, your circadian rhythm, and sleep drive combine to create effortless sleep — and how CBT-I realigns them.",
-        keywords: ["how sleep works", "sleep cycles", "circadian rhythm", "sleep drive", "NREM REM sleep"],
+        keywords: [
+          "how sleep works",
+          "sleep cycles",
+          "circadian rhythm",
+          "sleep drive",
+          "NREM REM sleep",
+        ],
       },
       zh: {
         title: "睡眠是如何运作的",
@@ -279,7 +307,8 @@ export const week1Lessons: LessonContent[] = [
         ],
         ctaLabel: "探索我的睡眠节律",
         seoTitle: "睡眠如何运作:周期、昼夜节律与睡眠驱动力｜Somna",
-        seoDescription: "了解 90 分钟睡眠周期、昼夜节律与睡眠驱动力如何共同创造毫不费力的睡眠,以及 CBT-I 如何重新校准它们。",
+        seoDescription:
+          "了解 90 分钟睡眠周期、昼夜节律与睡眠驱动力如何共同创造毫不费力的睡眠,以及 CBT-I 如何重新校准它们。",
         keywords: ["睡眠如何运作", "睡眠周期", "昼夜节律", "睡眠驱动力", "NREM REM 睡眠"],
       },
       es: {
@@ -308,7 +337,7 @@ export const week1Lessons: LessonContent[] = [
           {
             heading: "Cuando la maquinaria es secuestrada",
             paras: [
-              "Cuando sufres insomnio, esta maquinaria natural es secuestrada por la hiperactivación — un estado de alerta biológica y mental impulsado por la ansiedad. Aunque tu presión de sueño esté al máximo, la señal de \"alerta\" de tu sistema nervioso la anula. La CBT-I funciona maravillosamente porque sus técnicas centrales están diseñadas para fortalecer tu presión natural de sueño y realinear tu reloj interno.",
+              'Cuando sufres insomnio, esta maquinaria natural es secuestrada por la hiperactivación — un estado de alerta biológica y mental impulsado por la ansiedad. Aunque tu presión de sueño esté al máximo, la señal de "alerta" de tu sistema nervioso la anula. La CBT-I funciona maravillosamente porque sus técnicas centrales están diseñadas para fortalecer tu presión natural de sueño y realinear tu reloj interno.',
             ],
           },
         ],
@@ -332,7 +361,13 @@ export const week1Lessons: LessonContent[] = [
         seoTitle: "Cómo funciona el sueño: ciclos, ritmo circadiano y presión del sueño | Somna",
         seoDescription:
           "Aprende cómo los ciclos de 90 minutos, el ritmo circadiano y la presión del sueño se combinan para crear un sueño sin esfuerzo — y cómo la CBT-I los realinea.",
-        keywords: ["cómo funciona el sueño", "ciclos de sueño", "ritmo circadiano", "presión del sueño", "sueño NREM REM"],
+        keywords: [
+          "cómo funciona el sueño",
+          "ciclos de sueño",
+          "ritmo circadiano",
+          "presión del sueño",
+          "sueño NREM REM",
+        ],
       },
     },
   },
@@ -357,7 +392,7 @@ export const week1Lessons: LessonContent[] = [
             heading: "The paradox of effort",
             paras: [
               "One of the most profound truths of sleep science is entirely paradoxical: the harder you try to sleep, the further it slips away. This psychological trap is known as sleep performance anxiety.",
-              "When rest becomes elusive, your natural instinct is to fight for it. You might go to bed exceptionally early to \"catch\" sleep, lie perfectly still forcing your eyes shut, or command your brain to \"just stop thinking.\"",
+              'When rest becomes elusive, your natural instinct is to fight for it. You might go to bed exceptionally early to "catch" sleep, lie perfectly still forcing your eyes shut, or command your brain to "just stop thinking."',
               "Unfortunately, sleep is a biological function governed by surrender, not effort. The moment you treat sleep as a goal to achieve, your brain perceives the effort as a high-stakes task. It releases cortisol and adrenaline, triggering a state of hyperarousal.",
             ],
           },
@@ -374,7 +409,7 @@ export const week1Lessons: LessonContent[] = [
           "This week, we practice the art of letting go. If you are lying in bed awake, feeling your frustration mount, do not stay there and fight. Gently step out of bed, move to a dimly lit room, and do something peaceful — read an engaging book, listen to an ambient podcast, or sketch. Return to your bed only when your eyelids feel heavy and authentic drowsiness washes over you.",
         reflectionTitle: "Reflection",
         reflection:
-          "Can you identify the specific ways you have been \"working hard\" to sleep lately? What would it feel like to completely resign from the job of forcing your rest tonight?",
+          'Can you identify the specific ways you have been "working hard" to sleep lately? What would it feel like to completely resign from the job of forcing your rest tonight?',
         faqs: [
           {
             q: "If I get out of bed when I can't sleep, won't I lose even more rest?",
@@ -389,7 +424,13 @@ export const week1Lessons: LessonContent[] = [
         seoTitle: "Why Trying Harder to Sleep Makes It Worse | Somna CBT-I",
         seoDescription:
           "Discover the paradox of sleep performance anxiety — why forcing sleep backfires — and how CBT-I helps you step out of the effort loop.",
-        keywords: ["sleep performance anxiety", "trying to sleep", "sleep effort paradox", "CBT-I sleep", "can't sleep"],
+        keywords: [
+          "sleep performance anxiety",
+          "trying to sleep",
+          "sleep effort paradox",
+          "CBT-I sleep",
+          "can't sleep",
+        ],
       },
       zh: {
         title: "为什么越努力想睡,反而越睡不着",
@@ -432,7 +473,8 @@ export const week1Lessons: LessonContent[] = [
         ],
         ctaLabel: "准备好走出循环了吗?",
         seoTitle: "为什么越努力想睡反而越睡不着｜Somna CBT-I",
-        seoDescription: "了解睡眠表现焦虑的悖论——为什么强迫入睡会适得其反——以及 CBT-I 如何帮你走出努力循环。",
+        seoDescription:
+          "了解睡眠表现焦虑的悖论——为什么强迫入睡会适得其反——以及 CBT-I 如何帮你走出努力循环。",
         keywords: ["睡眠表现焦虑", "努力想睡", "睡眠努力悖论", "CBT-I 睡眠", "睡不着"],
       },
       es: {
@@ -446,7 +488,7 @@ export const week1Lessons: LessonContent[] = [
             heading: "La paradoja del esfuerzo",
             paras: [
               "Una de las verdades más profundas de la ciencia del sueño es totalmente paradójica: cuanto más te esfuerzas por dormir, más se aleja el sueño. Esta trampa psicológica se conoce como ansiedad por rendimiento del sueño.",
-              "Cuando el descanso se vuelve esquivo, tu instinto natural es luchar por él. Puede que te acuestes muy temprano para \"cazar\" el sueño, te quedes perfectamente quieto forzando el cierre de los ojos, o le ordenes a tu cerebro que \"deje de pensar\".",
+              'Cuando el descanso se vuelve esquivo, tu instinto natural es luchar por él. Puede que te acuestes muy temprano para "cazar" el sueño, te quedes perfectamente quieto forzando el cierre de los ojos, o le ordenes a tu cerebro que "deje de pensar".',
               "Por desgracia, el sueño es una función biológica regida por la rendición, no por el esfuerzo. En el momento en que tratas el sueño como una meta a alcanzar, tu cerebro percibe el esfuerzo como una tarea de alto riesgo. Libera cortisol y adrenalina, desencadenando un estado de hiperactivación.",
             ],
           },
@@ -463,7 +505,7 @@ export const week1Lessons: LessonContent[] = [
           "Esta semana practicamos el arte de soltar. Si estás despierto en la cama y sientes que la frustración aumenta, no te quedes ahí luchando. Levántate con suavidad, ve a una habitación con luz tenue y haz algo tranquilo — lee un libro absorbente, escucha un pódcast ambiental o dibuja. Vuelve a la cama solo cuando tus párpados pesen y te invada una somnolencia auténtica.",
         reflectionTitle: "Reflexión",
         reflection:
-          "¿Puedes identificar las formas concretas en que últimamente te has \"esforzado\" por dormir? ¿Cómo se sentiría renunciar por completo esta noche al trabajo de forzar tu descanso?",
+          '¿Puedes identificar las formas concretas en que últimamente te has "esforzado" por dormir? ¿Cómo se sentiría renunciar por completo esta noche al trabajo de forzar tu descanso?',
         faqs: [
           {
             q: "Si me levanto cuando no puedo dormir, ¿no perderé aún más descanso?",
@@ -478,7 +520,13 @@ export const week1Lessons: LessonContent[] = [
         seoTitle: "Por qué esforzarse más por dormir empeora el sueño | Somna CBT-I",
         seoDescription:
           "Descubre la paradoja de la ansiedad por rendimiento del sueño — por qué forzar el sueño resulta contraproducente — y cómo la CBT-I te ayuda a salir del bucle de esfuerzo.",
-        keywords: ["ansiedad por rendimiento del sueño", "esforzarse por dormir", "paradoja del esfuerzo del sueño", "CBT-I sueño", "no puedo dormir"],
+        keywords: [
+          "ansiedad por rendimiento del sueño",
+          "esforzarse por dormir",
+          "paradoja del esfuerzo del sueño",
+          "CBT-I sueño",
+          "no puedo dormir",
+        ],
       },
     },
   },

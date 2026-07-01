@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as WakeUpAt3amRouteImport } from './routes/wake-up-at-3am'
 import { Route as SleepCalculatorRouteImport } from './routes/sleep-calculator'
 import { Route as SleepAnxietyRouteImport } from './routes/sleep-anxiety'
+import { Route as ReminderRouteImport } from './routes/reminder'
 import { Route as RelaxRouteImport } from './routes/relax'
 import { Route as NapCalculatorRouteImport } from './routes/nap-calculator'
 import { Route as MelatoninCalculatorRouteImport } from './routes/melatonin-calculator'
@@ -48,6 +49,11 @@ const SleepCalculatorRoute = SleepCalculatorRouteImport.update({
 const SleepAnxietyRoute = SleepAnxietyRouteImport.update({
   id: '/sleep-anxiety',
   path: '/sleep-anxiety',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReminderRoute = ReminderRouteImport.update({
+  id: '/reminder',
+  path: '/reminder',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RelaxRoute = RelaxRouteImport.update({
@@ -175,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/melatonin-calculator': typeof MelatoninCalculatorRoute
   '/nap-calculator': typeof NapCalculatorRoute
   '/relax': typeof RelaxRoute
+  '/reminder': typeof ReminderRoute
   '/sleep-anxiety': typeof SleepAnxietyRoute
   '/sleep-calculator': typeof SleepCalculatorRoute
   '/wake-up-at-3am': typeof WakeUpAt3amRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/melatonin-calculator': typeof MelatoninCalculatorRoute
   '/nap-calculator': typeof NapCalculatorRoute
   '/relax': typeof RelaxRoute
+  '/reminder': typeof ReminderRoute
   '/sleep-anxiety': typeof SleepAnxietyRoute
   '/sleep-calculator': typeof SleepCalculatorRoute
   '/wake-up-at-3am': typeof WakeUpAt3amRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/melatonin-calculator': typeof MelatoninCalculatorRoute
   '/nap-calculator': typeof NapCalculatorRoute
   '/relax': typeof RelaxRoute
+  '/reminder': typeof ReminderRoute
   '/sleep-anxiety': typeof SleepAnxietyRoute
   '/sleep-calculator': typeof SleepCalculatorRoute
   '/wake-up-at-3am': typeof WakeUpAt3amRoute
@@ -259,6 +268,7 @@ export interface FileRouteTypes {
     | '/melatonin-calculator'
     | '/nap-calculator'
     | '/relax'
+    | '/reminder'
     | '/sleep-anxiety'
     | '/sleep-calculator'
     | '/wake-up-at-3am'
@@ -286,6 +296,7 @@ export interface FileRouteTypes {
     | '/melatonin-calculator'
     | '/nap-calculator'
     | '/relax'
+    | '/reminder'
     | '/sleep-anxiety'
     | '/sleep-calculator'
     | '/wake-up-at-3am'
@@ -313,6 +324,7 @@ export interface FileRouteTypes {
     | '/melatonin-calculator'
     | '/nap-calculator'
     | '/relax'
+    | '/reminder'
     | '/sleep-anxiety'
     | '/sleep-calculator'
     | '/wake-up-at-3am'
@@ -341,6 +353,7 @@ export interface RootRouteChildren {
   MelatoninCalculatorRoute: typeof MelatoninCalculatorRoute
   NapCalculatorRoute: typeof NapCalculatorRoute
   RelaxRoute: typeof RelaxRoute
+  ReminderRoute: typeof ReminderRoute
   SleepAnxietyRoute: typeof SleepAnxietyRoute
   SleepCalculatorRoute: typeof SleepCalculatorRoute
   WakeUpAt3amRoute: typeof WakeUpAt3amRoute
@@ -377,6 +390,13 @@ declare module '@tanstack/react-router' {
       path: '/sleep-anxiety'
       fullPath: '/sleep-anxiety'
       preLoaderRoute: typeof SleepAnxietyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reminder': {
+      id: '/reminder'
+      path: '/reminder'
+      fullPath: '/reminder'
+      preLoaderRoute: typeof ReminderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/relax': {
@@ -549,6 +569,7 @@ const rootRouteChildren: RootRouteChildren = {
   MelatoninCalculatorRoute: MelatoninCalculatorRoute,
   NapCalculatorRoute: NapCalculatorRoute,
   RelaxRoute: RelaxRoute,
+  ReminderRoute: ReminderRoute,
   SleepAnxietyRoute: SleepAnxietyRoute,
   SleepCalculatorRoute: SleepCalculatorRoute,
   WakeUpAt3amRoute: WakeUpAt3amRoute,

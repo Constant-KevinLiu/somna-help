@@ -92,20 +92,19 @@ export function ogDashboardImageUrl(efficiency: number | null, streak: number): 
  * Build the OG image URL for the Assessment / Sleep Profile page.
  */
 export function ogAssessmentImageUrl(level: string): string {
-  const safeLevel = level.toLowerCase().replace(/[^a-z0-9]/g, '-');
+  const safeLevel = level.toLowerCase().replace(/[^a-z0-9]/g, "-");
   return shareImageUrl(`somna-profile-${safeLevel}.png`);
 }
 
 /**
  * Build the OG image URL for Calculator pages (bedtime, nap, melatonin).
  */
-export function ogCalculatorImageUrl(
-  calculatorType: string,
-  resultValue: string | number
-): string {
-  return shareImageUrl(`somna-${calculatorType}-${String(resultValue)
-    .replace(/:/g, '-')
-    .replace(/[^a-z0-9]/g, '-')}.png`);
+export function ogCalculatorImageUrl(calculatorType: string, resultValue: string | number): string {
+  return shareImageUrl(
+    `somna-${calculatorType}-${String(resultValue)
+      .replace(/:/g, "-")
+      .replace(/[^a-z0-9]/g, "-")}.png`,
+  );
 }
 
 /**

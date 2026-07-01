@@ -4,8 +4,15 @@ import { Sparkles, Clock, ShieldCheck, CheckCircle2, Compass, ArrowRight } from 
 import { PageHero } from "@/components/PageHero";
 import { FAQ } from "@/components/FAQ";
 import { RelatedTools } from "@/components/RelatedTools";
+import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n } from "@/lib/i18n";
-import { getCbtiDict, type CbtiArticle, type CbtiSlug, CBTI_SLUGS, cbtiPath } from "@/lib/cbti-i18n";
+import {
+  getCbtiDict,
+  type CbtiArticle,
+  type CbtiSlug,
+  CBTI_SLUGS,
+  cbtiPath,
+} from "@/lib/cbti-i18n";
 
 export function CbtiArticleShell({
   slug,
@@ -41,7 +48,10 @@ export function CbtiArticleShell({
             </div>
             <ul className="space-y-3">
               {article.takeaways.map((t, i) => (
-                <li key={i} className="flex items-start gap-3 text-sm text-foreground/90 md:text-base">
+                <li
+                  key={i}
+                  className="flex items-start gap-3 text-sm text-foreground/90 md:text-base"
+                >
                   <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
                   <span>{t}</span>
                 </li>
@@ -58,14 +68,20 @@ export function CbtiArticleShell({
             <article key={i} className="glass rounded-2xl p-6 md:p-8 animate-fade-up">
               <h2 className="font-display text-xl text-foreground md:text-2xl">{s.heading}</h2>
               {s.paras?.map((p, j) => (
-                <p key={j} className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base">
+                <p
+                  key={j}
+                  className="mt-3 text-sm leading-relaxed text-muted-foreground md:text-base"
+                >
                   {p}
                 </p>
               ))}
               {s.bullets && (
                 <ul className="mt-4 space-y-2">
                   {s.bullets.map((b, j) => (
-                    <li key={j} className="flex items-start gap-3 text-sm text-foreground/90 md:text-base">
+                    <li
+                      key={j}
+                      className="flex items-start gap-3 text-sm text-foreground/90 md:text-base"
+                    >
                       <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent" />
                       <span>{b}</span>
                     </li>
@@ -92,7 +108,9 @@ export function CbtiArticleShell({
               <Compass className="h-3.5 w-3.5" /> {dict.ui.strategyTitle}
             </div>
             {article.strategyIntro && (
-              <p className="mb-5 text-sm text-foreground/85 md:text-base">{article.strategyIntro}</p>
+              <p className="mb-5 text-sm text-foreground/85 md:text-base">
+                {article.strategyIntro}
+              </p>
             )}
             <div className="grid gap-3 sm:grid-cols-2">
               {article.strategyItems.map((it, i) => (
@@ -104,12 +122,12 @@ export function CbtiArticleShell({
             </div>
 
             <div className="mt-6 text-center">
-              <Link
-                to={article.cta.to as any}
+              <SafeLink
+                to={article.cta.to}
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
               >
                 {article.cta.label} <ArrowRight className="h-4 w-4" />
-              </Link>
+              </SafeLink>
             </div>
           </div>
         </div>
@@ -123,16 +141,16 @@ export function CbtiArticleShell({
           </h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {CBTI_SLUGS.filter((s) => s !== slug).map((s) => (
-              <Link
+              <SafeLink
                 key={s}
-                to={cbtiPath(s) as any}
+                to={cbtiPath(s)}
                 className="glass group rounded-2xl p-5 transition hover:bg-white/[0.06]"
               >
                 <div className="font-display text-base text-foreground group-hover:text-accent">
                   {dict.titles[s]}
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">{dict.summaries[s]}</p>
-              </Link>
+              </SafeLink>
             ))}
             <Link
               to="/diary"

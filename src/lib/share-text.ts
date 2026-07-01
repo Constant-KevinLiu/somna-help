@@ -120,6 +120,44 @@ export function whatsAppShareUrl(lang: Lang, efficiency: number, pageUrl = SITE_
   return `https://wa.me/?text=${encodeURIComponent(text)}`;
 }
 
+/**
+ * Build the Weibo share URL.
+ *
+ * Weibo accepts a publicly hosted image URL as the `pic` param. When no image
+ * URL is available, `pic` is omitted and Weibo falls back to scraping the page.
+ *
+ * @param pageUrl   The page URL to attach (the "url" param).
+ * @param title     Share title (the "title" param).
+ * @param imageUrl  Optional public https:// URL of the PNG (the "pic" param).
+ */
+export function weiboShareUrl(pageUrl: string, title: string, imageUrl?: string): string {
+  const params = new URLSearchParams({ url: pageUrl, title });
+  if (imageUrl) params.set("pic", imageUrl);
+  return `https://service.weibo.com/share/share.php?${params.toString()}`;
+}
+
+/**
+ * Build the QQ share URL.
+ *
+ * QQ accepts a publicly hosted image URL as the `pics` param. When no image
+ * URL is available, `pics` is omitted and QQ falls back to scraping the page.
+ *
+ * @param pageUrl     The page URL to attach (the "url" param).
+ * @param title       Share title (the "title" param).
+ * @param summary     Share summary (the "summary" param).
+ * @param imageUrl    Optional public https:// URL of the PNG (the "pics" param).
+ */
+export function qqShareUrl(
+  pageUrl: string,
+  title: string,
+  summary: string,
+  imageUrl?: string,
+): string {
+  const params = new URLSearchParams({ url: pageUrl, title, summary });
+  if (imageUrl) params.set("pics", imageUrl);
+  return `https://connect.qq.com/widget/shareqq/index.html?${params.toString()}`;
+}
+
 /** Copy a URL to clipboard, returning true on success. */
 export async function copyToClipboard(text: string): Promise<boolean> {
   try {

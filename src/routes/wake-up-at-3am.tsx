@@ -17,7 +17,11 @@ const flow: Record<Lang, { heading: string; nodes: Node[]; yes: string; no: stri
     no: "No",
     nodes: [
       { q: "Did you wake up?", yes: "Stay still, breathe slowly.", no: "Keep resting." },
-      { q: "Still awake after ~20 minutes?", yes: "Leave the bed. Dim light. Calm activity.", no: "Drift back to sleep." },
+      {
+        q: "Still awake after ~20 minutes?",
+        yes: "Leave the bed. Dim light. Calm activity.",
+        no: "Drift back to sleep.",
+      },
       { q: "Feeling sleepy again?", yes: "Return to bed.", no: "Stay up until sleepy." },
       { action: "Wake at your usual time — don't sleep in." },
     ],
@@ -39,8 +43,16 @@ const flow: Record<Lang, { heading: string; nodes: Node[]; yes: string; no: stri
     no: "No",
     nodes: [
       { q: "¿Te despertaste?", yes: "Quédate quieto, respira lento.", no: "Sigue descansando." },
-      { q: "¿Aún despierto tras ~20 min?", yes: "Sal de la cama. Luz tenue. Actividad tranquila.", no: "Vuelve a dormirte." },
-      { q: "¿Sientes sueño de nuevo?", yes: "Vuelve a la cama.", no: "Quédate despierto hasta tener sueño." },
+      {
+        q: "¿Aún despierto tras ~20 min?",
+        yes: "Sal de la cama. Luz tenue. Actividad tranquila.",
+        no: "Vuelve a dormirte.",
+      },
+      {
+        q: "¿Sientes sueño de nuevo?",
+        yes: "Vuelve a la cama.",
+        no: "Quédate despierto hasta tener sueño.",
+      },
       { action: "Despierta a tu hora habitual — no duermas hasta tarde." },
     ],
   },

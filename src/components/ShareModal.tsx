@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
-import {
-  SharePlatformType,
-  trackShareClick,
-  trackShareOpen,
-} from "@/lib/share-analytics";
+import { SharePlatformType, trackShareClick, trackShareOpen } from "@/lib/share-analytics";
 import {
   redditShareUrl,
   xShareUrl,
@@ -14,6 +10,8 @@ import {
   facebookShareUrl,
   linkedInShareUrl,
   whatsAppShareUrl,
+  weiboShareUrl,
+  qqShareUrl,
   copyToClipboard,
 } from "@/lib/share-text";
 import { uploadShareImage } from "@/lib/share-image";
@@ -257,10 +255,8 @@ export function ShareModal({
       if (!imageUrl && previewUrl && SHARE_IMAGE_HOSTING_ENABLED) {
         imageUrl = (await ensureUploadedImageUrl()) ?? "";
       }
-      const title = title || t("share.sleepEfficiency");
-      const params = new URLSearchParams({ url: pageUrl, title });
-      if (imageUrl) params.set("pic", imageUrl);
-      const weiboUrl = `https://service.weibo.com/share/share.php?${params.toString()}`;
+      const weiboTitle = title || t("share.sleepEfficiency");
+      const weiboUrl = weiboShareUrl(pageUrl, weiboTitle, imageUrl || undefined);
       window.open(weiboUrl, "_blank", "noopener,noreferrer");
       onOpenChange(false);
     } catch (err) {
@@ -287,13 +283,7 @@ export function ShareModal({
       }
       const qqTitle = title || t("share.sleepEfficiency");
       const summary = description || t("share.sleepEfficiency");
-      const params = new URLSearchParams({
-        url: pageUrl,
-        title: qqTitle,
-        summary,
-      });
-      if (imageUrl) params.set("pics", imageUrl);
-      const qqUrl = `https://connect.qq.com/widget/shareqq/index.html?${params.toString()}`;
+      const qqUrl = qqShareUrl(pageUrl, qqTitle, summary, imageUrl || undefined);
       window.open(qqUrl, "_blank", "noopener,noreferrer");
       onOpenChange(false);
     } catch (err) {

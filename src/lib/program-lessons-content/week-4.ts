@@ -10,12 +10,17 @@ export const week4Lessons: LessonContent[] = [
     weekSlug: "week-4",
     lessonNumber: 10,
     estimatedMinutes: 6,
-    relatedLessonSlugs: ["relaxation-techniques", "breathing-exercises-for-sleep", "common-insomnia-thoughts"],
+    relatedLessonSlugs: [
+      "relaxation-techniques",
+      "breathing-exercises-for-sleep",
+      "common-insomnia-thoughts",
+    ],
     i18n: {
       en: {
         title: "Why Racing Thoughts Happen at Night",
         eyebrow: "WEEK 4 · LESSON 10",
-        subtitle: "The psychology of nighttime mental activation — and how to give worries a dedicated space.",
+        subtitle:
+          "The psychology of nighttime mental activation — and how to give worries a dedicated space.",
         difficulty: "Intermediate",
         readingTime: "6 min read",
         content: [
@@ -31,7 +36,7 @@ export const week4Lessons: LessonContent[] = [
             paras: [
               "The Loss of Distraction Buffers: during the day, your brain is fully occupied with work, conversations, and stimuli. When you turn off the lights, this cognitive noise vanishes. The stillness creates a natural vacuum, allowing suppressed worries to rush to the surface.",
               "The Cognitive Rebound Effect: actively trying not to think about your worries during the day uses significant mental energy. The moment your body attempts to relax at night, that conscious control slips away, triggering a natural rebound of active thoughts.",
-              "Conditioned Sleep Anxiety: because poor sleep has been distressing, the act of going to bed itself is perceived by your brain as a stressful event. Your nervous system treats the bedroom like a challenge, releasing cortisol and activating your problem-solving mind to keep you safe from the \"threat\" of wakefulness.",
+              'Conditioned Sleep Anxiety: because poor sleep has been distressing, the act of going to bed itself is perceived by your brain as a stressful event. Your nervous system treats the bedroom like a challenge, releasing cortisol and activating your problem-solving mind to keep you safe from the "threat" of wakefulness.',
             ],
           },
           {
@@ -43,7 +48,7 @@ export const week4Lessons: LessonContent[] = [
         ],
         actionStepTitle: "Action Step",
         actionStep:
-          "This week, introduce a restorative practice called \"Scheduled Worry Time.\" Every afternoon, set a timer for 15 minutes. Sit down with a notebook and write down every single worry, task, or anxious thought on your mind. If any of those familiar worries try to surface at 2:00 AM, gently remind yourself: \"I have already processed that during my worry time, and I will revisit it tomorrow afternoon.\"",
+          'This week, introduce a restorative practice called "Scheduled Worry Time." Every afternoon, set a timer for 15 minutes. Sit down with a notebook and write down every single worry, task, or anxious thought on your mind. If any of those familiar worries try to surface at 2:00 AM, gently remind yourself: "I have already processed that during my worry time, and I will revisit it tomorrow afternoon."',
         reflectionTitle: "Reflection",
         reflection:
           "Look at the recurring themes in your nighttime thoughts. Are they practical, everyday problem-solving tasks, or are they deeper anxieties about sleep itself? Categorizing them helps take away their power.",
@@ -61,7 +66,13 @@ export const week4Lessons: LessonContent[] = [
         seoTitle: "Why Racing Thoughts Happen at Night | Somna CBT-I",
         seoDescription:
           "Understand the three psychological mechanisms behind nighttime racing thoughts — and how Scheduled Worry Time gives them a dedicated space.",
-        keywords: ["racing thoughts at night", "nighttime anxiety", "scheduled worry time", "CBT-I racing thoughts", "can't sleep thinking"],
+        keywords: [
+          "racing thoughts at night",
+          "nighttime anxiety",
+          "scheduled worry time",
+          "CBT-I racing thoughts",
+          "can't sleep thinking",
+        ],
       },
       zh: {
         title: "为什么夜晚思绪纷飞",
@@ -110,13 +121,15 @@ export const week4Lessons: LessonContent[] = [
         ],
         ctaLabel: "打开我的数字担忧日记",
         seoTitle: "为什么夜晚思绪纷飞｜Somna CBT-I",
-        seoDescription: "理解夜间纷飞思绪背后的三种心理机制——以及「定时担忧时间」如何给它们专属空间。",
+        seoDescription:
+          "理解夜间纷飞思绪背后的三种心理机制——以及「定时担忧时间」如何给它们专属空间。",
         keywords: ["夜间思绪纷飞", "夜间焦虑", "定时担忧时间", "CBT-I 思绪", "睡不着 胡思乱想"],
       },
       es: {
         title: "Por qué aparecen pensamientos acelerados por la noche",
         eyebrow: "SEMANA 4 · LECCIÓN 10",
-        subtitle: "La psicología de la activación mental nocturna — y cómo dar a las preocupaciones un espacio dedicado.",
+        subtitle:
+          "La psicología de la activación mental nocturna — y cómo dar a las preocupaciones un espacio dedicado.",
         difficulty: "Intermedio",
         readingTime: "6 min de lectura",
         content: [
@@ -132,7 +145,7 @@ export const week4Lessons: LessonContent[] = [
             paras: [
               "La pérdida de los amortiguadores de distracción: durante el día, tu cerebro está plenamente ocupado con trabajo, conversaciones y estímulos. Al apagar la luz, ese ruido cognitivo desaparece. El silencio crea un vacío natural que permite que las preocupaciones reprimidas afloren.",
               "El efecto de rebote cognitivo: intentar activamente no pensar en tus preocupaciones durante el día consume mucha energía mental. En el momento en que tu cuerpo intenta relajarse por la noche, ese control consciente se afloja y desencadena un rebote natural de pensamientos activos.",
-              "Ansiedad condicionada del sueño: como el mal dormir ha sido angustioso, el acto de acostarse es percibido por tu cerebro como un evento estresante. Tu sistema nervioso trata el dormitorio como un desafío, libera cortisol y activa tu mente de resolución de problemas para mantenerte a salvo de la \"amenaza\" de la vigilia.",
+              'Ansiedad condicionada del sueño: como el mal dormir ha sido angustioso, el acto de acostarse es percibido por tu cerebro como un evento estresante. Tu sistema nervioso trata el dormitorio como un desafío, libera cortisol y activa tu mente de resolución de problemas para mantenerte a salvo de la "amenaza" de la vigilia.',
             ],
           },
           {
@@ -144,7 +157,7 @@ export const week4Lessons: LessonContent[] = [
         ],
         actionStepTitle: "Paso de acción",
         actionStep:
-          "Esta semana, introduce una práctica restauradora llamada \"Tiempo Programado de Preocupación\". Cada tarde, pon un temporizador de 15 minutos. Siéntate con un cuaderno y anota cada preocupación, tarea o pensamiento ansioso que tengas. Si alguna de esas preocupaciones familiares intenta asomar a las 2:00 a.m., recuérdate con suavidad: \"Ya procesé eso durante mi tiempo de preocupación y lo retomaré mañana por la tarde\".",
+          'Esta semana, introduce una práctica restauradora llamada "Tiempo Programado de Preocupación". Cada tarde, pon un temporizador de 15 minutos. Siéntate con un cuaderno y anota cada preocupación, tarea o pensamiento ansioso que tengas. Si alguna de esas preocupaciones familiares intenta asomar a las 2:00 a.m., recuérdate con suavidad: "Ya procesé eso durante mi tiempo de preocupación y lo retomaré mañana por la tarde".',
         reflectionTitle: "Reflexión",
         reflection:
           "Observa los temas recurrentes en tus pensamientos nocturnos. ¿Son tareas prácticas de resolución diaria o ansiedades más profundas sobre el propio sueño? Categorizarlos ayuda a quitarles poder.",
@@ -162,7 +175,13 @@ export const week4Lessons: LessonContent[] = [
         seoTitle: "Por qué aparecen pensamientos acelerados por la noche | Somna CBT-I",
         seoDescription:
           "Comprende los tres mecanismos psicológicos detrás de los pensamientos acelerados nocturnos — y cómo el Tiempo Programado de Preocupación les da un espacio dedicado.",
-        keywords: ["pensamientos acelerados de noche", "ansiedad nocturna", "tiempo programado de preocupación", "CBT-I pensamientos acelerados", "no puedo dormir pensando"],
+        keywords: [
+          "pensamientos acelerados de noche",
+          "ansiedad nocturna",
+          "tiempo programado de preocupación",
+          "CBT-I pensamientos acelerados",
+          "no puedo dormir pensando",
+        ],
       },
     },
   },
@@ -174,12 +193,17 @@ export const week4Lessons: LessonContent[] = [
     weekSlug: "week-4",
     lessonNumber: 11,
     estimatedMinutes: 7,
-    relatedLessonSlugs: ["racing-thoughts-at-night", "breathing-exercises-for-sleep", "leaving-bed-without-frustration"],
+    relatedLessonSlugs: [
+      "racing-thoughts-at-night",
+      "breathing-exercises-for-sleep",
+      "leaving-bed-without-frustration",
+    ],
     i18n: {
       en: {
         title: "Relaxation Techniques Backed by Research",
         eyebrow: "WEEK 4 · LESSON 11",
-        subtitle: "Four evidence-based methods to shift your nervous system into parasympathetic peace.",
+        subtitle:
+          "Four evidence-based methods to shift your nervous system into parasympathetic peace.",
         difficulty: "Intermediate",
         readingTime: "7 min read",
         content: [
@@ -201,7 +225,7 @@ export const week4Lessons: LessonContent[] = [
           {
             heading: "Creating a soft space",
             paras: [
-              "Remember: these practices are not meant to magically \"force\" sleep. They are designed to create a soft, calm physical space where sleep feels invited to enter naturally.",
+              'Remember: these practices are not meant to magically "force" sleep. They are designed to create a soft, calm physical space where sleep feels invited to enter naturally.',
             ],
           },
         ],
@@ -225,7 +249,13 @@ export const week4Lessons: LessonContent[] = [
         seoTitle: "Relaxation Techniques Backed by Research | Somna CBT-I",
         seoDescription:
           "Explore four evidence-based relaxation techniques — PMR, diaphragmatic breathing, guided imagery, and mindfulness — to calm hyperarousal before sleep.",
-        keywords: ["relaxation techniques sleep", "progressive muscle relaxation", "diaphragmatic breathing", "guided imagery", "mindfulness meditation CBT-I"],
+        keywords: [
+          "relaxation techniques sleep",
+          "progressive muscle relaxation",
+          "diaphragmatic breathing",
+          "guided imagery",
+          "mindfulness meditation CBT-I",
+        ],
       },
       zh: {
         title: "有研究支持的放松技巧",
@@ -274,13 +304,15 @@ export const week4Lessons: LessonContent[] = [
         ],
         ctaLabel: "访问 Somna 音频库",
         seoTitle: "有研究支持的放松技巧｜Somna CBT-I",
-        seoDescription: "探索四种循证放松技巧——渐进式肌肉放松、腹式呼吸、引导想象与正念——在睡前平息过度觉醒。",
+        seoDescription:
+          "探索四种循证放松技巧——渐进式肌肉放松、腹式呼吸、引导想象与正念——在睡前平息过度觉醒。",
         keywords: ["放松技巧 睡眠", "渐进式肌肉放松", "腹式呼吸", "引导想象", "正念冥想 CBT-I"],
       },
       es: {
         title: "Técnicas de relajación respaldadas por la ciencia",
         eyebrow: "SEMANA 4 · LECCIÓN 11",
-        subtitle: "Cuatro métodos basados en evidencia para llevar al sistema nervioso a la paz parasimpática.",
+        subtitle:
+          "Cuatro métodos basados en evidencia para llevar al sistema nervioso a la paz parasimpática.",
         difficulty: "Intermedio",
         readingTime: "7 min de lectura",
         content: [
@@ -302,7 +334,7 @@ export const week4Lessons: LessonContent[] = [
           {
             heading: "Crear un espacio suave",
             paras: [
-              "Recuerda: estas prácticas no pretenden \"forzar\" el sueño mágicamente. Están diseñadas para crear un espacio físico suave y calmado donde el sueño se sienta invitado a entrar de forma natural.",
+              'Recuerda: estas prácticas no pretenden "forzar" el sueño mágicamente. Están diseñadas para crear un espacio físico suave y calmado donde el sueño se sienta invitado a entrar de forma natural.',
             ],
           },
         ],
@@ -326,7 +358,13 @@ export const week4Lessons: LessonContent[] = [
         seoTitle: "Técnicas de relajación respaldadas por la ciencia | Somna CBT-I",
         seoDescription:
           "Explora cuatro técnicas de relajación basadas en evidencia — RMP, respiración diafragmática, imaginería guiada y mindfulness — para calmar la hiperactivación antes de dormir.",
-        keywords: ["técnicas de relajación sueño", "relajación muscular progresiva", "respiración diafragmática", "imaginería guiada", "meditación mindfulness CBT-I"],
+        keywords: [
+          "técnicas de relajación sueño",
+          "relajación muscular progresiva",
+          "respiración diafragmática",
+          "imaginería guiada",
+          "meditación mindfulness CBT-I",
+        ],
       },
     },
   },
@@ -382,7 +420,13 @@ export const week4Lessons: LessonContent[] = [
         seoTitle: "Breathing Exercises for Sleep: 4-7-8, Box & Coherent | Somna",
         seoDescription:
           "Learn three evidence-based breathing exercises for sleep — 4-7-8, box breathing, and coherent breathing — to soothe hyperarousal and invite rest.",
-        keywords: ["breathing exercises for sleep", "4-7-8 breathing", "box breathing", "coherent breathing", "sleep breathing techniques"],
+        keywords: [
+          "breathing exercises for sleep",
+          "4-7-8 breathing",
+          "box breathing",
+          "coherent breathing",
+          "sleep breathing techniques",
+        ],
       },
       zh: {
         title: "助眠呼吸练习",
@@ -424,13 +468,15 @@ export const week4Lessons: LessonContent[] = [
         ],
         ctaLabel: "开始我的呼吸练习",
         seoTitle: "助眠呼吸练习:4-7-8、方块与共振｜Somna",
-        seoDescription: "学习三种循证助眠呼吸练习——4-7-8、方块呼吸与共振呼吸——平息过度觉醒,邀请休息。",
+        seoDescription:
+          "学习三种循证助眠呼吸练习——4-7-8、方块呼吸与共振呼吸——平息过度觉醒,邀请休息。",
         keywords: ["助眠呼吸练习", "4-7-8 呼吸", "方块呼吸", "共振呼吸", "睡眠呼吸技巧"],
       },
       es: {
         title: "Ejercicios de respiración para el sueño",
         eyebrow: "SEMANA 4 · LECCIÓN 12",
-        subtitle: "Tres estructuras de respiración — 4-7-8, cuadrada y coherente — para calmar la hiperactivación.",
+        subtitle:
+          "Tres estructuras de respiración — 4-7-8, cuadrada y coherente — para calmar la hiperactivación.",
         difficulty: "Inicial",
         readingTime: "6 min de lectura",
         content: [
@@ -469,7 +515,13 @@ export const week4Lessons: LessonContent[] = [
         seoTitle: "Ejercicios de respiración para el sueño: 4-7-8, cuadrada y coherente | Somna",
         seoDescription:
           "Aprende tres ejercicios de respiración basados en evidencia para el sueño — 4-7-8, respiración cuadrada y coherente — para calmar la hiperactivación e invitar al descanso.",
-        keywords: ["ejercicios de respiración para dormir", "respiración 4-7-8", "respiración cuadrada", "respiración coherente", "técnicas de respiración para el sueño"],
+        keywords: [
+          "ejercicios de respiración para dormir",
+          "respiración 4-7-8",
+          "respiración cuadrada",
+          "respiración coherente",
+          "técnicas de respiración para el sueño",
+        ],
       },
     },
   },
