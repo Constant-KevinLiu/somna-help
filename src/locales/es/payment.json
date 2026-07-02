@@ -1,0 +1,61 @@
+{
+  "_meta": {
+    "idioma": "español (España, es-ES)",
+    "proposito": "Cadenas del flujo de pago Subotiz para la versión española. Redactadas directamente en español peninsular, con precios en euros.",
+    "moneda": "EUR (€), IVA 21 % incluido."
+  },
+
+  "pay.modal.title": "Hazte Premium",
+  "pay.modal.sub": "Desbloquea el programa completo de CBT-I y el análisis con IA.",
+  "pay.modal.trial.badge": "7 días gratis",
+  "pay.modal.trial.note": "Después 11,99 €/mes. Cancela cuando quieras.",
+
+  "pay.plan.monthly.label": "Mensual",
+  "pay.plan.monthly.price": "11,99 €",
+  "pay.plan.monthly.period": "/mes",
+  "pay.plan.monthly.desc": "Sin compromiso.",
+
+  "pay.plan.yearly.label": "Anual",
+  "pay.plan.yearly.price": "9,59 €",
+  "pay.plan.yearly.period": "/mes",
+  "pay.plan.yearly.desc": "Ahorra un 20 %.",
+  "pay.plan.yearly.billedAs": "Se cobran 115,08 € al año",
+
+  "pay.form.email": "Correo electrónico",
+  "pay.form.email.placeholder": "tu@email.com",
+  "pay.form.card": "Datos de la tarjeta",
+  "pay.form.card.number": "Número de tarjeta",
+  "pay.form.card.number.placeholder": "1234 5678 9012 3456",
+  "pay.form.card.expiry": "Caducidad",
+  "pay.form.card.expiry.placeholder": "MM/AA",
+  "pay.form.card.cvc": "CVC",
+  "pay.form.card.cvc.placeholder": "123",
+
+  "pay.submit": "Empezar 7 días gratis",
+  "pay.submit.paynow": "Pagar y empezar",
+  "pay.secure": "Pago seguro cifrado · gestionado por Subotiz",
+  "pay.terms": "Al continuar aceptas los {terms} y la {privacy}.",
+  "pay.terms.link": "Términos del servicio",
+  "pay.privacy.link": "Política de privacidad",
+
+  "pay.summary.title": "Resumen",
+  "pay.summary.plan": "Plan",
+  "pay.summary.price": "Precio",
+  "pay.summary.vat": "IVA (21 %) incluido",
+  "pay.summary.total": "Total hoy",
+  "pay.summary.trial": "Hoy no se cobra. Tras 7 días: 11,99 €/mes.",
+
+  "pay.success.title": "¡Bienvenido a Premium! 🌙",
+  "pay.success.body": "Ya tienes acceso a todo el programa. Empieza por tu primera semana de CBT-I.",
+  "pay.success.cta": "Empezar mi programa",
+
+  "pay.error.declined": "El pago ha sido rechazado. Revisa los datos de tu tarjeta o prueba con otra.",
+  "pay.error.invalid.card": "El número de tarjeta no es válido.",
+  "pay.error.invalid.email": "Introduce un correo electrónico válido.",
+  "pay.error.generic": "No se ha podido procesar el pago. Inténtalo de nuevo en unos minutos.",
+  "pay.error.network": "No hay conexión. Revisa tu internet e inténtalo otra vez.",
+
+  "pay.cancel": "Cancelar",
+  "pay.back": "Atrás",
+  "pay.change.plan": "Cambiar de plan"
+}

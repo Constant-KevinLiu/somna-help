@@ -18,6 +18,7 @@ import { Route as NapCalculatorRouteImport } from './routes/nap-calculator'
 import { Route as MelatoninCalculatorRouteImport } from './routes/melatonin-calculator'
 import { Route as InsomniaTreatmentRouteImport } from './routes/insomnia-treatment'
 import { Route as HowToFallAsleepFastRouteImport } from './routes/how-to-fall-asleep-fast'
+import { Route as EsRouteImport } from './routes/es'
 import { Route as DiaryRouteImport } from './routes/diary'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as CbtIGuideRouteImport } from './routes/cbt-i-guide'
@@ -27,6 +28,7 @@ import { Route as AssessmentRouteImport } from './routes/assessment'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProgramIndexRouteImport } from './routes/program.index'
 import { Route as LearnIndexRouteImport } from './routes/learn.index'
+import { Route as EsIndexRouteImport } from './routes/es/index'
 import { Route as ProgramSlugRouteImport } from './routes/program.$slug'
 import { Route as LearnWhatIsCbtiRouteImport } from './routes/learn.what-is-cbti'
 import { Route as LearnStimulusControlRouteImport } from './routes/learn.stimulus-control'
@@ -81,6 +83,11 @@ const HowToFallAsleepFastRoute = HowToFallAsleepFastRouteImport.update({
   path: '/how-to-fall-asleep-fast',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EsRoute = EsRouteImport.update({
+  id: '/es',
+  path: '/es',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DiaryRoute = DiaryRouteImport.update({
   id: '/diary',
   path: '/diary',
@@ -125,6 +132,11 @@ const LearnIndexRoute = LearnIndexRouteImport.update({
   id: '/learn/',
   path: '/learn/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const EsIndexRoute = EsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EsRoute,
 } as any)
 const ProgramSlugRoute = ProgramSlugRouteImport.update({
   id: '/program/$slug',
@@ -176,6 +188,7 @@ export interface FileRoutesByFullPath {
   '/cbt-i-guide': typeof CbtIGuideRoute
   '/dashboard': typeof DashboardRoute
   '/diary': typeof DiaryRoute
+  '/es': typeof EsRouteWithChildren
   '/how-to-fall-asleep-fast': typeof HowToFallAsleepFastRoute
   '/insomnia-treatment': typeof InsomniaTreatmentRoute
   '/melatonin-calculator': typeof MelatoninCalculatorRoute
@@ -192,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/learn/stimulus-control': typeof LearnStimulusControlRoute
   '/learn/what-is-cbti': typeof LearnWhatIsCbtiRoute
   '/program/$slug': typeof ProgramSlugRoute
+  '/es/': typeof EsIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/program/': typeof ProgramIndexRoute
   '/program/$week/$lesson': typeof ProgramWeekLessonRoute
@@ -220,6 +234,7 @@ export interface FileRoutesByTo {
   '/learn/stimulus-control': typeof LearnStimulusControlRoute
   '/learn/what-is-cbti': typeof LearnWhatIsCbtiRoute
   '/program/$slug': typeof ProgramSlugRoute
+  '/es': typeof EsIndexRoute
   '/learn': typeof LearnIndexRoute
   '/program': typeof ProgramIndexRoute
   '/program/$week/$lesson': typeof ProgramWeekLessonRoute
@@ -233,6 +248,7 @@ export interface FileRoutesById {
   '/cbt-i-guide': typeof CbtIGuideRoute
   '/dashboard': typeof DashboardRoute
   '/diary': typeof DiaryRoute
+  '/es': typeof EsRouteWithChildren
   '/how-to-fall-asleep-fast': typeof HowToFallAsleepFastRoute
   '/insomnia-treatment': typeof InsomniaTreatmentRoute
   '/melatonin-calculator': typeof MelatoninCalculatorRoute
@@ -249,6 +265,7 @@ export interface FileRoutesById {
   '/learn/stimulus-control': typeof LearnStimulusControlRoute
   '/learn/what-is-cbti': typeof LearnWhatIsCbtiRoute
   '/program/$slug': typeof ProgramSlugRoute
+  '/es/': typeof EsIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/program/': typeof ProgramIndexRoute
   '/program/$week/$lesson': typeof ProgramWeekLessonRoute
@@ -263,6 +280,7 @@ export interface FileRouteTypes {
     | '/cbt-i-guide'
     | '/dashboard'
     | '/diary'
+    | '/es'
     | '/how-to-fall-asleep-fast'
     | '/insomnia-treatment'
     | '/melatonin-calculator'
@@ -279,6 +297,7 @@ export interface FileRouteTypes {
     | '/learn/stimulus-control'
     | '/learn/what-is-cbti'
     | '/program/$slug'
+    | '/es/'
     | '/learn/'
     | '/program/'
     | '/program/$week/$lesson'
@@ -307,6 +326,7 @@ export interface FileRouteTypes {
     | '/learn/stimulus-control'
     | '/learn/what-is-cbti'
     | '/program/$slug'
+    | '/es'
     | '/learn'
     | '/program'
     | '/program/$week/$lesson'
@@ -319,6 +339,7 @@ export interface FileRouteTypes {
     | '/cbt-i-guide'
     | '/dashboard'
     | '/diary'
+    | '/es'
     | '/how-to-fall-asleep-fast'
     | '/insomnia-treatment'
     | '/melatonin-calculator'
@@ -335,6 +356,7 @@ export interface FileRouteTypes {
     | '/learn/stimulus-control'
     | '/learn/what-is-cbti'
     | '/program/$slug'
+    | '/es/'
     | '/learn/'
     | '/program/'
     | '/program/$week/$lesson'
@@ -348,6 +370,7 @@ export interface RootRouteChildren {
   CbtIGuideRoute: typeof CbtIGuideRoute
   DashboardRoute: typeof DashboardRoute
   DiaryRoute: typeof DiaryRoute
+  EsRoute: typeof EsRouteWithChildren
   HowToFallAsleepFastRoute: typeof HowToFallAsleepFastRoute
   InsomniaTreatmentRoute: typeof InsomniaTreatmentRoute
   MelatoninCalculatorRoute: typeof MelatoninCalculatorRoute
@@ -434,6 +457,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HowToFallAsleepFastRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es': {
+      id: '/es'
+      path: '/es'
+      fullPath: '/es'
+      preLoaderRoute: typeof EsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/diary': {
       id: '/diary'
       path: '/diary'
@@ -497,6 +527,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es/': {
+      id: '/es/'
+      path: '/'
+      fullPath: '/es/'
+      preLoaderRoute: typeof EsIndexRouteImport
+      parentRoute: typeof EsRoute
+    }
     '/program/$slug': {
       id: '/program/$slug'
       path: '/program/$slug'
@@ -556,6 +593,16 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface EsRouteChildren {
+  EsIndexRoute: typeof EsIndexRoute
+}
+
+const EsRouteChildren: EsRouteChildren = {
+  EsIndexRoute: EsIndexRoute,
+}
+
+const EsRouteWithChildren = EsRoute._addFileChildren(EsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssessmentRoute: AssessmentRoute,
@@ -564,6 +611,7 @@ const rootRouteChildren: RootRouteChildren = {
   CbtIGuideRoute: CbtIGuideRoute,
   DashboardRoute: DashboardRoute,
   DiaryRoute: DiaryRoute,
+  EsRoute: EsRouteWithChildren,
   HowToFallAsleepFastRoute: HowToFallAsleepFastRoute,
   InsomniaTreatmentRoute: InsomniaTreatmentRoute,
   MelatoninCalculatorRoute: MelatoninCalculatorRoute,

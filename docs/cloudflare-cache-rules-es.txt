@@ -1,0 +1,100 @@
+# ==========================================================================
+# Cloudflare — Reglas de caché aisladas para / (inglés) y /es/ (español)
+# ==========================================================================
+#
+# Objetivo: que las dos versiones lingüísticas vivan en líneas de caché
+# independientes. Así, actualizar el contenido en español no invalida el
+# caché inglés, y viceversa. Además, la cabecera Vary: Cookie evita servir
+# la versión equivocada a usuarios con preferencia guardada.
+#
+# Aplicar en: Cloudflare Dashboard → somna.help → Rules → Cache Rules.
+# Orden de aplicación: de arriba a abajo. La primera que coincide gana.
+# ==========================================================================
+
+# -------------------------------------------------------------------------
+# Regla 1 — Páginas en español (/es y /es/*)
+# -------------------------------------------------------------------------
+# Expresión de coincidencia (Cloudflare Rules language):
+#   (http.request.uri.path starts with "/es")
+#
+# Acciones:
+#   - Edge TTL: 1 hora (cache everything en el borde)
+#   - Browser TTL: 10 minutos
+#   - Vary: Cookie  (para respetar la preferencia somna_uid/lang)
+#   - Cache Key:
+#       * Ignorar query string (salvo ?utm_* que se excluyen por defecto)
+#       * Incluir la cabecera "Cookie" en la clave de caché NO (usar Vary)
+#
+# Configuración textual:
+When incoming requests match:
+  Custom filter expression:
+    (starts_with(http.request.uri.path, "/es"))
+Then:
+  Cache eligibility: Eligible for cache
+  Edge TTL:
+    Override origin: 1 hour
+  Browser TTL:
+    Override origin: 10 minutes
+  Cache Key:
+    URL: Only the path (ignore query string)
+    Headers: Vary by "Cookie"
+  Respect Strong ETags: On
+
+
+# -------------------------------------------------------------------------
+# Regla 2 — Páginas en inglés (raíz / y rutas que no empiezan por /es)
+# -------------------------------------------------------------------------
+# Expresión de coincidencia:
+#   (not starts_with(http.request.uri.path, "/es"))
+#
+# Acciones idénticas pero en línea de caché distinta.
+When incoming requests match:
+  Custom filter expression:
+    (not starts_with(http.request.uri.path, "/es"))
+Then:
+  Cache eligibility: Eligible for cache
+  Edge TTL:
+    Override origin: 1 hour
+  Browser TTL:
+    Override origin: 10 minutes
+  Cache Key:
+    URL: Only the path (ignore query string)
+    Headers: Vary by "Cookie"
+  Respect Strong ETags: On
+
+
+# -------------------------------------------------------------------------
+# Regla 3 — Assets estáticos (JS, CSS, imágenes, fuentes)
+# -------------------------------------------------------------------------
+# Expresión:
+#   (http.request.uri.path.extension in {"js" "css" "png" "jpg" "jpeg" "webp" "svg" "woff2" "ico"})
+When incoming requests match:
+  Custom filter expression:
+    (http.request.uri.path.extension in {"js" "css" "png" "jpg" "jpeg" "webp" "svg" "woff2" "ico"})
+Then:
+  Cache eligibility: Eligible for cache
+  Edge TTL:
+    Override origin: 1 month
+  Browser TTL:
+    Override origin: 7 days
+
+
+# -------------------------------------------------------------------------
+# Regla 4 — No cachear la API ni el endpoint de idioma
+# -------------------------------------------------------------------------
+# Expresión:
+#   (starts_with(http.request.uri.path, "/api/"))
+When incoming requests match:
+  Custom filter expression:
+    (starts_with(http.request.uri.path, "/api/"))
+Then:
+  Cache eligibility: Bypass cache
+
+
+# -------------------------------------------------------------------------
+# Configuración de Page Shield / Vary recomendada (Settings → Cache)
+# -------------------------------------------------------------------------
+# - Origin Cache Control: On
+# - Vary for images: Off (no usamos User-Agent)
+# - Cache Reserve: On (almacenamiento extendido en borde)
+# - Tiered Cache: On (Aruba + default tier)

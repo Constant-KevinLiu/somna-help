@@ -1,0 +1,75 @@
+{
+  "_meta": {
+    "idioma": "español (España, es-ES)",
+    "proposito": "Textos legales: política de privacidad (RGPD/UE) y términos del servicio. Redactados directamente en español jurídico peninsular, sin traducción desde el inglés.",
+    "jurisdiccion": "España / Unión Europea. Para México se usará la variante es-MX con LFPDPPP (fase 2).",
+    "aviso": "Texto orientativo. Debe ser revisado por un asesor legal antes de su publicación definitiva."
+  },
+
+  "legal.privacy.title": "Política de privacidad",
+  "legal.privacy.updated": "Última actualización: 2 de julio de 2026",
+
+  "legal.privacy.intro": "En somna nos importa tu privacidad. Esta política explica qué datos personales tratamos, con qué finalidad, durante cuánto tiempo y qué derechos tienes. Cumple con el Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD).",
+
+  "legal.privacy.responsible.title": "1. Responsable del tratamiento",
+  "legal.privacy.responsible.body": "Responsable: somna. Correo de contacto: privacidad@somna.help. Si tienes alguna duda sobre el tratamiento de tus datos, escríbenos a esa dirección.",
+
+  "legal.privacy.data.title": "2. Datos que tratamos",
+  "legal.privacy.data.body": "Tratamos los siguientes datos: (a) dirección de correo electrónico, cuando te registras o te suscribes a la newsletter; (b) datos de sueño que introduces en el diario y en el test de sueño (horas de acostarte y levantarte, calidad, ánimo, notas); (c) preferencia de idioma y un identificador anónimo almacenado en la cookie somna_uid; (d) datos de pago gestionados por nuestro proveedor de pagos, del que solo recibimos confirmación del cobro, nunca los datos de tu tarjeta.",
+
+  "legal.privacy.purpose.title": "3. Finalidad y legitimación",
+  "legal.privacy.purpose.body": "Tratamos tus datos para: (a) prestarte el servicio de diario y programa de sueño, sobre la base de la ejecución del contrato; (b) enviarte recordatorios e informes por correo electrónico, sobre la base del consentimiento que puedes retirar cuando quieras; (c) mejorar el servicio y elaborar estadísticas agregadas anónimas, sobre la base de nuestro interés legítimo; (d) gestionar la suscripción de pago, sobre la base de la ejecución del contrato.",
+
+  "legal.privacy.retention.title": "4. Conservación de los datos",
+  "legal.privacy.retention.body": "Conservamos tus datos mientras mantengas tu cuenta activa. Si la eliminas, borraremos tus datos de sueño en un plazo máximo de 30 días, salvo que exista una obligación legal de conservarlos. Los datos de facturación se conservan durante los plazos exigidos por la normativa fiscal y mercantil.",
+
+  "legal.privacy.recipients.title": "5. Destinatarios",
+  "legal.privacy.recipients.body": "No vendemos ni cedemos tus datos a terceros con fines comerciales. Usamos los siguientes proveedores de servicios, bajo contrato y con garantías adecuadas: proveedor de envío de correo electrónico, proveedor de pagos, proveedor de alojamiento (Cloudflare) y proveedor de almacenamiento de imágenes de compartir. Estos proveedores tratan los datos por cuenta nuestra y únicamente para prestarnos el servicio contratado.",
+
+  "legal.privacy.rights.title": "6. Tus derechos",
+  "legal.privacy.rights.body": "Puedes ejercer en cualquier momento tus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad de los datos, escribiendo a privacidad@somna.help. Si consideras que el tratamiento no se ajusta a la normativa, puedes presentar una reclamación ante la Agencia Española de Protección de Datos (www.aepd.es).",
+
+  "legal.privacy.international.title": "7. Transferencias internacionales",
+  "legal.privacy.international.body": "Algunos proveedores están situados fuera del Espacio Económico Europeo. En esos casos, las transferencias se realizan bajo cláusulas contractuales tipo aprobadas por la Comisión Europea o bajo un marco de protección de la privacidad reconocido, garantizando un nivel de protección adecuado.",
+
+  "legal.privacy.security.title": "8. Medidas de seguridad",
+  "legal.privacy.security.body": "Aplicamos medidas técnicas y organizativas apropiadas para proteger tus datos frente a acceso no autorizado, alteración o pérdida, incluyendo cifrado en tránsito y controles de acceso.",
+
+  "legal.privacy.cookies.title": "9. Cookies",
+  "legal.privacy.cookies.body": "Usamos una cookie esencial, somna_uid, para recordar tu preferencia de idioma y mantener tu sesión. No usamos cookies de publicidad ni de seguimiento de terceros. No es necesario un banner de consentimiento porque solo empleamos cookies técnicas esenciales.",
+
+  "legal.terms.title": "Términos del servicio",
+  "legal.terms.updated": "Última actualización: 2 de julio de 2026",
+
+  "legal.terms.intro": "Estos términos regulan el uso de somna. Al usar la aplicación, aceptas las condiciones aquí descritas.",
+
+  "legal.terms.service.title": "1. Naturaleza del servicio",
+  "legal.terms.service.body": "somna es una aplicación de acompañamiento del sueño basada en CBT-I. No es un servicio médico, no realiza diagnósticos y no sustituye la atención de un profesional sanitario. Si padeces un trastorno del sueño persistente o tienes preocupaciones de salud, consulta con un médico.",
+
+  "legal.terms.accounts.title": "2. Cuentas",
+  "legal.terms.accounts.body": "Para usar determinadas funciones necesitas crear una cuenta con tu correo electrónico. Eres responsable de mantener la confidencialidad de tu acceso y de las actividades realizadas desde tu cuenta.",
+
+  "legal.terms.subscription.title": "3. Suscripción Premium",
+  "legal.terms.subscription.body": "Premium es un servicio de pago por suscripción con renovación automática. Existen dos modalidades: mensual a 11,99 € (IVA incluido) y anual a 115,08 € (IVA incluido). Puedes cancelar la renovación en cualquier momento desde tu panel; mantendrás el acceso hasta el final del periodo ya pagado. Ofrecemos una garantía de devolución de 14 días para nuevas suscripciones anuales.",
+
+  "legal.terms.payment.title": "4. Pagos",
+  "legal.terms.payment.body": "Los pagos se gestionan a través de un proveedor externo de pagos. somna no almacena los datos de tu tarjeta. Los cobros se realizan por adelantado al inicio de cada periodo de facturación.",
+
+  "legal.terms.use.title": "5. Uso aceptable",
+  "legal.terms.use.body": "Te comprometes a usar somna de forma lícita y a no alterar, descompilar ni intentar acceder a partes no autorizadas del servicio. No está permitido usar la aplicación para fines comerciales sin autorización expresa.",
+
+  "legal.terms.ip.title": "6. Propiedad intelectual",
+  "legal.terms.ip.body": "El contenido de somna (textos, programas, ilustraciones, marcas) está protegido por derechos de propiedad intelectual. Los artículos del blog pueden compartirse citando la fuente. No se permite la reproducción total o parcial con fines comerciales sin autorización.",
+
+  "legal.terms.liability.title": "7. Limitación de responsabilidad",
+  "legal.terms.liability.body": "somna se ofrece tal cual. En la medida permitida por la ley, no respondemos de los daños directos o indirectos derivados del uso o la imposibilidad de uso del servicio. El servicio no constituye consejo médico.",
+
+  "legal.terms.changes.title": "8. Modificaciones",
+  "legal.terms.changes.body": "Podemos actualizar estos términos. Te avisaremos de los cambios relevantes por correo electrónico o mediante un aviso en la aplicación. El uso continuado tras la entrada en vigor implica la aceptación de los términos modificados.",
+
+  "legal.terms.law.title": "9. Ley aplicable",
+  "legal.terms.law.body": "Estos términos se rigen por la legislación española. Para cualquier controversia, las partes se someten a los juzgados y tribunales de Madrid, salvo que la normativa de consumo disponga otra cosa.",
+
+  "legal.terms.contact.title": "10. Contacto",
+  "legal.terms.contact.body": "Puedes escribirnos a hola@somna.help para cualquier consulta sobre estos términos."
+}

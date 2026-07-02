@@ -1,0 +1,65 @@
+{
+  "_meta": {
+    "idioma": "español (España, es-ES)",
+    "proposito": "FAQ completo del producto, redactado a partir de dudas reales de búsqueda de usuarios hispanohablantes. Sin copiar el FAQ inglés. Pensado para Schema FAQPage y para Google AI Overview.",
+    "tono": "Claro, directo, tuteo."
+  },
+
+  "faq.title": "Preguntas frecuentes",
+  "faq.sub": "Resolvemos las dudas más habituales sobre somna y sobre dormir mejor.",
+
+  "faq.section.producto.title": "Sobre somna",
+  "faq.section.sueno.title": "Sobre el sueño",
+  "faq.section.cuenta.title": "Sobre tu cuenta y suscripción",
+
+  "faq.producto.1.q": "¿Qué es somna?",
+  "faq.producto.1.a": "somna es una aplicación de acompañamiento del sueño basada en CBT-I, la terapia cognitivo-conductual considerada el tratamiento de primera línea para el insomnio. Combina un diario de sueño, un programa guiado de seis semanas, calculadoras de ciclos y herramientas de relajación.",
+
+  "faq.producto.2.q": "¿somna sirve para el insomnio crónico?",
+  "faq.producto.2.a": "La CBT-I que aplica somna es el tratamiento sin fármacos con más evidencia para el insomnio crónico. somna no sustituye a un profesional sanitario, pero te guía por los mismos hábitos que se trabajan en consulta.",
+
+  "faq.producto.3.q": "¿Necesito receta médica para usar somna?",
+  "faq.producto.3.a": "No. somna es una herramienta de hábitos de sueño y no requiere receta. Si tienes un trastorno del sueño diagnosticado o síntomas preocupantes, conviene que lo comentes con tu médico.",
+
+  "faq.producto.4.q": "¿somna es gratuito?",
+  "faq.producto.4.a": "Tiene una versión gratuita con el diario limitado, la calculadora de ciclos y el test inicial. El programa completo de CBT-I, el análisis con IA y los audios de relajación requieren Premium.",
+
+  "faq.producto.5.q": "¿En qué se diferencia somna de una app de meditación?",
+  "faq.producto.5.a": "Las apps de meditación se centran en relajación general. somna aplica CBT-I, un protocolo estructurado que trabaja hábitos concretos (horas de acostarte, eficiencia del sueño, control de estímulos) para reconstruir el ritmo de sueño.",
+
+  "faq.producto.6.q": "¿Mis datos de sueño son privados?",
+  "faq.producto.6.a": "Sí. Tus datos de sueño solo se usan para prestarte el servicio. No los vendemos ni los cedemos con fines comerciales. Puedes leer los detalles en nuestra política de privacidad y ejercer tus derechos en cualquier momento.",
+
+  "faq.sueno.1.q": "¿Cuántas horas tengo que dormir?",
+  "faq.sueno.1.a": "La mayoría de los adultos necesita entre 7 y 9 horas. La cantidad exacta varía según la persona; lo importante es despertarse descansado de forma constante. Nuestra calculadora de ciclos te ayuda a encontrar tu ventana ideal.",
+
+  "faq.sueno.2.q": "¿Por qué me despierto a las 3 de la madrugada?",
+  "faq.sueno.2.a": "Es muy común. Puede deberse a estrés, a un ambiente de sueño poco adecuado o a haberse acostado demasiado pronto. Si te despiertas y no duermes en 20 minutos, levántate, haz algo tranquilo con poca luz y vuelve a la cama cuando tengas sueño.",
+
+  "faq.sueno.3.q": "¿Es mala la siesta?",
+  "faq.sueno.3.a": "No, si es corta. Una siesta de 10-20 minutos antes de las 17:00 puede recargar sin estropear el sueño nocturno. Las siestas largas o tardías dificultan dormir por la noche.",
+
+  "faq.sueno.4.q": "¿La melatonina ayuda a dormir?",
+  "faq.sueno.4.a": "La melatonina puede ayudar en casos de desfase horario o ritmo alterado, pero no es la solución para el insomnio crónico. La CBT-I tiene mejor evidencia a largo plazo. Consulta con un farmacéutico o médico antes de tomarla.",
+
+  "faq.sueno.5.q": "¿Por qué tardo tanto en dormirme?",
+  "faq.sueno.5.a": "Las causas más habituales son una hora de acostarse irregular, uso de pantallas antes de dormir, cafeína por la tarde o ansiedad. Anotar tus noches en el diario ayuda a identificar tu patrón.",
+
+  "faq.sueno.6.q": "¿Qué es la eficiencia del sueño?",
+  "faq.sueno.6.a": "Es el porcentaje del tiempo que pasas en la cama realmente durmiendo. Por encima del 85% se considera bueno. Si es más baja, la CBT-I trabaja para subirla concentrando el sueño.",
+
+  "faq.cuenta.1.q": "¿Puedo cancelar Premium cuando quiera?",
+  "faq.cuenta.1.a": "Sí, no hay permanencia. Cancela desde tu panel con un clic y mantendrás Premium hasta el final del periodo ya pagado.",
+
+  "faq.cuenta.2.q": "¿Cómo funciona la garantía de 14 días?",
+  "faq.cuenta.2.a": "Si en los primeros 14 días no notas mejoría, escríbenos y te devolvemos el importe íntegro, sin preguntas.",
+
+  "faq.cuenta.3.q": "¿Puedo usar somna en varios dispositivos?",
+  "faq.cuenta.3.a": "Sí. Entra con el mismo correo y tu progreso se sincroniza. La preferencia de idioma se recuerda en cada dispositivo mediante la cookie somna_uid.",
+
+  "faq.cuenta.4.q": "¿Cómo borro mis datos?",
+  "faq.cuenta.4.a": "Puedes eliminar tu cuenta desde el panel. Borramos tus datos de sueño en un plazo máximo de 30 días. Si prefieres, puedes escribirnos a privacidad@somna.help.",
+
+  "faq.cuenta.5.q": "¿Recibiré spam si me registro?",
+  "faq.cuenta.5.a": "No. Solo te enviamos correos relacionados con tu cuenta: recordatorios de diario, informes semanales y avisos de suscripción. Puedes darte de baja de los correos en cualquier momento."
+}

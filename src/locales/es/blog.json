@@ -1,0 +1,46 @@
+{
+  "_meta": {
+    "idioma": "español (España, es-ES)",
+    "proposito": "Metacadenas del blog: títulos genéricos, plantillas de meta title/description, etiquetas de navegación. Los cuerpos de los artículos viven en src/content/blog/es/ como MDX/MD.",
+    "tono": "Divulgativo, cercano, basado en evidencia. Tuteo."
+  },
+
+  "blog.title": "Blog de sueño",
+  "blog.sub": "Consejos prácticos y basados en evidencia para dormir mejor, explicados en español claro.",
+  "blog.back": "Volver al blog",
+  "blog.readMore": "Leer artículo",
+  "blog.minRead": "min de lectura",
+  "blog.published": "Publicado el",
+  "blog.updated": "Actualizado el",
+  "blog.share": "Compartir artículo",
+  "blog.related": "Artículos relacionados",
+  "blog.category": "Categoría",
+  "blog.allCategories": "Todas",
+  "blog.search": "Buscar artículos",
+  "blog.empty": "No hay artículos que coincidan con tu búsqueda.",
+  "blog.faq.title": "Preguntas frecuentes",
+
+  "blog.category.insomnio": "Insomnio",
+  "blog.category.cbti": "CBT-I",
+  "blog.category.higiene": "Higiene del sueño",
+  "blog.category.ansiedad": "Ansiedad nocturna",
+  "blog.category.rutinas": "Rutinas y hábitos",
+  "blog.category.ciencia": "Ciencia del sueño",
+
+  "blog.meta.titleTemplate": "{title} | Blog de sueño de somna",
+  "blog.meta.descriptionDefault": "Consejos prácticos y basados en evidencia para dormir mejor.",
+
+  "blog.cta.title": "¿Quieres un plan de sueño personalizado?",
+  "blog.cta.body": "Haz el test de sueño y te crearemos un programa CBT-I adaptado a ti.",
+  "blog.cta.button": "Hacer el test de sueño",
+
+  "blog.author": "Equipo somna",
+  "blog.author.bio": "El equipo de somna redacta sobre sueño basándose en evidencia clínica, con revisión de especialistas en CBT-I.",
+
+  "blog.newsletter.title": "Recibe un consejo de sueño cada semana",
+  "blog.newsletter.sub": "Un email corto, sin spam, con una idea práctica para descansar mejor.",
+  "blog.newsletter.placeholder": "tu@email.com",
+  "blog.newsletter.button": "Suscribirme",
+  "blog.newsletter.success": "¡Listo! Revisa tu correo para confirmar.",
+  "blog.newsletter.privacy": "Al suscribirte aceptas nuestra política de privacidad. Puedes darte de baja cuando quieras."
+}
