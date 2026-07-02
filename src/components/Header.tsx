@@ -6,31 +6,59 @@ import { getCalcDict } from "@/lib/calc-i18n";
 import { getCbtiDict, CBTI_SLUGS, cbtiPath } from "@/lib/cbti-i18n";
 import { getLearnDict, LEARN_SLUGS, learnPath } from "@/lib/learn-i18n";
 import { SafeLink } from "@/components/common/SafeLink";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
-const navItems = [
-  { to: "/", key: "nav.home" as const },
-  { to: "/program", key: "nav.program" as const },
-  { to: "/assessment", key: "nav.assessment" as const },
-  { to: "/diary", key: "nav.diary" as const },
-  { to: "/relax", key: "nav.relax" as const },
-];
+// Rutas base por idioma. Usamos los mismos slugs en inglés y español
+// (1:1 mapping) para que switchRouteLang() pueda hacer el intercambio de
+// prefijo /es de forma fiable. Los textos del menú sí son nativos en cada
+// idioma (vía useI18n).
+const NAV_BY_LANG = {
+  en: [
+    { to: "/", key: "nav.home" as const },
+    { to: "/program", key: "nav.program" as const },
+    { to: "/assessment", key: "nav.assessment" as const },
+    { to: "/diary", key: "nav.diary" as const },
+    { to: "/relax", key: "nav.relax" as const },
+  ],
+  es: [
+    { to: "/es", key: "nav.home" as const },
+    { to: "/es/program", key: "nav.program" as const },
+    { to: "/es/assessment", key: "nav.assessment" as const },
+    { to: "/es/diary", key: "nav.diary" as const },
+    { to: "/es/relax", key: "nav.relax" as const },
+  ],
+  zh: [
+    { to: "/", key: "nav.home" as const },
+    { to: "/program", key: "nav.program" as const },
+    { to: "/assessment", key: "nav.assessment" as const },
+    { to: "/diary", key: "nav.diary" as const },
+    { to: "/relax", key: "nav.relax" as const },
+  ],
+};
 
-const dashboardItem = { to: "/dashboard", key: "nav.dashboard" as const };
+const DASHBOARD_BY_LANG = {
+  en: { to: "/dashboard", key: "nav.dashboard" as const },
+  es: { to: "/es/panel", key: "nav.dashboard" as const },
+  zh: { to: "/dashboard", key: "nav.dashboard" as const },
+};
 
 export function Header() {
-  const { t, lang, setLang } = useI18n();
+  const { t, lang } = useI18n();
+  const navItems = NAV_BY_LANG[lang];
+  const dashboardItem = DASHBOARD_BY_LANG[lang];
   const calcDict = getCalcDict(lang);
   const cbtiDict = getCbtiDict(lang);
   const learnDict = getLearnDict(lang);
+  const esPrefix = lang === "es" ? "/es" : "";
   const calculatorItems = [
-    { to: "/calculator", label: calcDict.nav.cycle },
-    { to: "/sleep-calculator", label: calcDict.nav.sleep },
-    { to: "/bedtime-calculator", label: calcDict.nav.bedtime },
-    { to: "/nap-calculator", label: calcDict.nav.nap },
-    { to: "/melatonin-calculator", label: calcDict.nav.melatonin },
+    { to: `${esPrefix}/calculator`, label: calcDict.nav.cycle },
+    { to: `${esPrefix}/sleep-calculator`, label: calcDict.nav.sleep },
+    { to: `${esPrefix}/bedtime-calculator`, label: calcDict.nav.bedtime },
+    { to: `${esPrefix}/nap-calculator`, label: calcDict.nav.nap },
+    { to: `${esPrefix}/melatonin-calculator`, label: calcDict.nav.melatonin },
   ];
-  const guideItems = CBTI_SLUGS.map((s) => ({ to: cbtiPath(s), label: cbtiDict.titles[s] }));
-  const lessonItems = LEARN_SLUGS.map((s) => ({ to: learnPath(s), label: learnDict.titles[s] }));
+  const guideItems = CBTI_SLUGS.map((s) => ({ to: cbtiPath(s, lang), label: cbtiDict.titles[s] }));
+  const lessonItems = LEARN_SLUGS.map((s) => ({ to: learnPath(s, lang), label: learnDict.titles[s] }));
   const [open, setOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
   const [learnOpen, setLearnOpen] = useState(false);
@@ -179,22 +207,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-0.5">
-              {(["en", "zh", "es"] as const).map((l) => (
-                <button
-                  key={l}
-                  onClick={() => setLang(l)}
-                  className={`rounded-full px-2.5 py-1 text-xs font-medium transition ${
-                    lang === l
-                      ? "bg-gradient-to-r from-primary to-accent text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                  aria-label={`Switch to ${l}`}
-                >
-                  {l === "en" ? "EN" : l === "zh" ? "中" : "ES"}
-                </button>
-              ))}
-            </div>
+            <LanguageSwitcher />
             <button
               className="lg:hidden rounded-full p-2 text-muted-foreground hover:bg-white/5"
               onClick={() => setOpen(!open)}

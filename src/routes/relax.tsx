@@ -52,7 +52,7 @@ const sectionSub = {
 };
 const playLabel = { en: "Play", zh: "播放", es: "Reproducir" };
 
-function RelaxPage() {
+export function RelaxPage() {
   const { t, lang } = useI18n();
   const [running, setRunning] = useState(false);
   const [phase, setPhase] = useState<number>(0);

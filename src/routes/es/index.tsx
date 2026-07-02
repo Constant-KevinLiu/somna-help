@@ -12,7 +12,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Moon, Calculator, Sparkles, ArrowRight } from "lucide-react";
 import { loadEsDict } from "@/locales/es";
-import { hreflangMeta } from "@/components/seo/Hreflang";
+import { hreflangLinks } from "@/components/seo/Hreflang";
 
 export const Route = createFileRoute("/es/")({
   head: () => ({
@@ -31,8 +31,8 @@ export const Route = createFileRoute("/es/")({
       },
       { property: "og:locale", content: "es_ES" },
       { property: "og:type", content: "website" },
-      ...hreflangMeta("/es"),
     ],
+    links: hreflangLinks("/es"),
   }),
   component: EsHome,
 });
@@ -102,17 +102,23 @@ function EsHome() {
           </h2>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
-              { t: t["features.1.t"], d: t["features.1.d"] },
-              { t: t["features.2.t"], d: t["features.2.d"] },
-              { t: t["features.3.t"], d: t["features.3.d"] },
+              { t: t["features.1.t"], d: t["features.1.d"], to: "/es/program" },
+              { t: t["features.2.t"], d: t["features.2.d"], to: "/es/calculator" },
+              { t: t["features.3.t"], d: t["features.3.d"], to: "/es/relax" },
             ].map((f, i) => (
-              <div
+              <Link
                 key={i}
-                className="glass rounded-3xl border border-white/10 p-6 transition hover:border-white/20"
+                to={f.to}
+                className="glass group rounded-3xl border border-white/10 p-6 transition hover:border-white/20 hover:bg-white/[0.04]"
               >
-                <h3 className="font-display text-xl text-foreground">{f.t}</h3>
+                <h3 className="font-display text-xl text-foreground group-hover:text-accent">
+                  {f.t}
+                </h3>
                 <p className="mt-3 text-sm text-muted-foreground">{f.d}</p>
-              </div>
+                <span className="mt-4 inline-flex items-center gap-1 text-xs text-accent">
+                  {t["cta.readMore"]} <ArrowRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
+                </span>
+              </Link>
             ))}
           </div>
         </div>

@@ -65,7 +65,7 @@ const compare: Record<Lang, { heading: string; cbtiCol: string; medCol: string; 
   },
 };
 
-function InsomniaTreatmentPage() {
+export function InsomniaTreatmentPage() {
   const { lang } = useI18n();
   const article = getCbtiDict(lang).articles["insomnia-treatment"];
   const c = compare[lang];

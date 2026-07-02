@@ -291,8 +291,9 @@ export const lessonMetas: LessonMeta[] = [
 
 export const TOTAL_LESSONS = lessonMetas.length; // 18
 
-export function lessonPath(weekSlug: string, lessonSlug: string): string {
-  return `/program/${weekSlug}/${lessonSlug}`;
+export function lessonPath(weekSlug: string, lessonSlug: string, lang?: "en" | "zh" | "es"): string {
+  const prefix = lang === "es" ? "/es" : "";
+  return `${prefix}/program/${weekSlug}/${lessonSlug}`;
 }
 
 export function getLessonMeta(slug: string): LessonMeta | undefined {

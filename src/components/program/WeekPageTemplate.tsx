@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
 import {
   ArrowLeft,
   ArrowRight,
@@ -10,6 +9,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
+import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n } from "@/lib/i18n";
 import { SleepRestrictionWidget } from "@/components/program/SleepRestrictionWidget";
 import {
@@ -30,6 +30,7 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
   const c = week.i18n[lang] ?? week.i18n.en;
   const { prev, next } = getAdjacentWeeks(week.slug);
   const { progress, hydrated } = useProgramProgress();
+  const esPrefix = lang === "es" ? "/es" : "";
 
   const weekLessons = getLessonsByWeek(
     resolveWeekSlug(week.slug) ??
@@ -69,10 +70,9 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
             {weekLessons.map((lm) => {
               const done = hydrated && progress.completedLessons.includes(lm.slug);
               return (
-                <Link
+                <SafeLink
                   key={lm.slug}
-                  to="/program/$week/$lesson"
-                  params={{ week: lm.weekSlug, lesson: lm.slug }}
+                  to={`${esPrefix}/program/${lm.weekSlug}/${lm.slug}`}
                   className="glass group flex items-center gap-3 rounded-2xl p-4 transition hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/40 to-accent/40 text-xs font-medium text-foreground">
@@ -95,7 +95,7 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
                     </div>
                   </div>
                   <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-accent" />
-                </Link>
+                </SafeLink>
               );
             })}
           </div>
@@ -170,17 +170,16 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
               .map((w) => {
                 const wc = w.i18n[lang] ?? w.i18n.en;
                 return (
-                  <Link
+                  <SafeLink
                     key={w.slug}
-                    to="/program/$slug"
-                    params={{ slug: w.slug }}
+                    to={`${esPrefix}/program/${w.slug}`}
                     className="glass rounded-2xl p-4 transition hover:bg-white/[0.06]"
                   >
                     <div className="text-[10px] uppercase tracking-[0.18em] text-accent">
                       {labels.weekLabel} {w.number}
                     </div>
                     <div className="mt-1 font-display text-base text-foreground/90">{wc.title}</div>
-                  </Link>
+                  </SafeLink>
                 );
               })}
           </div>
@@ -191,46 +190,44 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
       <section className="px-5 pb-20">
         <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {prev ? (
-            <Link
-              to="/program/$slug"
-              params={{ slug: prev.slug }}
+            <SafeLink
+              to={`${esPrefix}/program/${prev.slug}`}
               className="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/[0.06]"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>
                 {labels.prev} · {labels.weekLabel} {prev.number}
               </span>
-            </Link>
+            </SafeLink>
           ) : (
             <span />
           )}
 
-          <Link
-            to="/program"
+          <SafeLink
+            to={`${esPrefix}/program`}
             className="inline-flex items-center justify-center rounded-full bg-white/[0.06] px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/[0.1]"
           >
             {labels.back}
-          </Link>
+          </SafeLink>
 
           {next ? (
-            <Link
-              to="/program/$slug"
-              params={{ slug: next.slug }}
+            <SafeLink
+              to={`${esPrefix}/program/${next.slug}`}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-5 py-3 text-sm font-medium text-primary-foreground"
             >
               <span>
                 {labels.next} · {labels.weekLabel} {next.number}
               </span>
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </SafeLink>
           ) : (
-            <Link
-              to="/assessment"
+            <SafeLink
+              to={`${esPrefix}/assessment`}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-5 py-3 text-sm font-medium text-primary-foreground"
             >
               <span>{labels.startAssessment}</span>
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </SafeLink>
           )}
         </div>
       </section>

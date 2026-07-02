@@ -54,9 +54,10 @@ export const Route = createFileRoute("/dashboard")({
   }),
 });
 
-function Dash() {
+export function Dash() {
   const { lang, t: baseT } = useI18n();
   const { t } = useSleepI18n();
+  const esPrefix = lang === "es" ? "/es" : "";
   const [records, setRecords] = useState<SleepRecord[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
@@ -115,7 +116,7 @@ function Dash() {
               <h2 className="font-display text-2xl text-gradient">{t("dash.chart.empty")}</h2>
               <p className="mt-3 text-sm text-muted-foreground">{t("dash.empty.body")}</p>
               <Link
-                to="/diary"
+                to={`${esPrefix}/diary`}
                 className="mt-6 inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"
               >
                 {t("dash.empty.cta")}
@@ -159,7 +160,7 @@ function Dash() {
                 </div>
               </div>
               <Link
-                to="/relax"
+                to={`${esPrefix}/relax`}
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"
               >
                 <Wind className="h-4 w-4" />
@@ -309,10 +310,10 @@ function Dash() {
               {t("dash.actions.title")}
             </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <QuickAction to="/diary" icon={Moon} label={t("dash.actions.log")} />
-              <QuickAction to="/relax" icon={Wind} label={t("dash.actions.relax")} />
-              <QuickAction to="/program" icon={BookOpen} label={t("dash.actions.program")} />
-              <QuickAction to="/reminder" icon={Bell} label={t("dash.actions.reminder")} />
+              <QuickAction to={`${esPrefix}/diary`} icon={Moon} label={t("dash.actions.log")} />
+              <QuickAction to={`${esPrefix}/relax`} icon={Wind} label={t("dash.actions.relax")} />
+              <QuickAction to={`${esPrefix}/program`} icon={BookOpen} label={t("dash.actions.program")} />
+              <QuickAction to={`${esPrefix}/reminder`} icon={Bell} label={t("dash.actions.reminder")} />
             </div>
           </div>
         </div>

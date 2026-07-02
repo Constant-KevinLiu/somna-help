@@ -33,7 +33,7 @@ function nowHHMM() {
   return `${String(dt.getHours()).padStart(2, "0")}:${String(dt.getMinutes()).padStart(2, "0")}`;
 }
 
-function NapCalculatorPage() {
+export function NapCalculatorPage() {
   const { lang } = useI18n();
   const fmt = useFmtTime();
   const d = getCalcDict(lang).nap;

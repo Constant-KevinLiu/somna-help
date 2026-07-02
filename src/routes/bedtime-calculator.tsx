@@ -31,7 +31,7 @@ export const Route = createFileRoute("/bedtime-calculator")({
   },
 });
 
-function BedtimeCalculatorPage() {
+export function BedtimeCalculatorPage() {
   const { lang } = useI18n();
   const fmt = useFmtTime();
   const d = getCalcDict(lang).bedtime;

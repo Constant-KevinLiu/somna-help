@@ -19,8 +19,9 @@ export const LEARN_SLUGS: LearnSlug[] = [
   "stimulus-control",
 ];
 
-export function learnPath(slug: LearnSlug): string {
-  return "/learn/" + slug;
+export function learnPath(slug: LearnSlug, lang?: "en" | "zh" | "es"): string {
+  const prefix = lang === "es" ? "/es" : "";
+  return `${prefix}/learn/${slug}`;
 }
 
 export type LearnSection = { heading: string; paras: string[] };

@@ -35,7 +35,7 @@ const headingByLang: Record<Lang, string> = {
   es: "El ciclo sueño-ansiedad",
 };
 
-function SleepAnxietyPage() {
+export function SleepAnxietyPage() {
   const { lang } = useI18n();
   const article = getCbtiDict(lang).articles["sleep-anxiety"];
   const steps = cycleSteps[lang];

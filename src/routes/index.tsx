@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { loadRecords } from "@/lib/sleep-records";
+import { hreflangLinks } from "@/components/seo/Hreflang";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/")({
         content: "Science-based CBT-I sleep companion. Drug-free, gentle, and built for calm.",
       },
     ],
+    links: hreflangLinks("/"),
   }),
 });
 

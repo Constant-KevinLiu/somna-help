@@ -65,7 +65,7 @@ const headingByLang: Record<Lang, string> = {
   es: "Línea de tiempo TCC-I",
 };
 
-function CbtIGuidePage() {
+export function CbtIGuidePage() {
   const { lang } = useI18n();
   const article = getCbtiDict(lang).articles["cbt-i-guide"];
   const labels = weekLabels[lang];

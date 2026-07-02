@@ -35,7 +35,7 @@ export const Route = createFileRoute("/sleep-calculator")({
   },
 });
 
-function SleepCalculatorPage() {
+export function SleepCalculatorPage() {
   const { lang } = useI18n();
   const fmt = useFmtTime();
   const d = getCalcDict(lang).sleep;

@@ -46,7 +46,7 @@ const headingByLang: Record<Lang, string> = {
   es: "Lista para dormirse",
 };
 
-function FallAsleepFastPage() {
+export function FallAsleepFastPage() {
   const { lang } = useI18n();
   const article = getCbtiDict(lang).articles["how-to-fall-asleep-fast"];
   const items = checklist[lang];

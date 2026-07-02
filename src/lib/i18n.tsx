@@ -588,14 +588,25 @@ const Ctx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: strin
   t: (k) => k,
 });
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("en");
+export function I18nProvider({
+  children,
+  initialLang = "en",
+}: {
+  children: ReactNode;
+  initialLang?: Lang;
+}) {
+  // El idioma lo decide el componente raíz según la ruta actual (SSR + cliente),
+  // evitando mismatch de hidratación. initialLang viene de
+  // useRouter().state.location.pathname en __root.tsx.
+  const [lang, setLangState] = useState<Lang>(initialLang);
+
+  // Si la ruta cambia en cliente (SPA), el prop initialLang cambia y
+  // sincronizamos el estado.
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const stored = window.localStorage.getItem("lull.lang") as Lang | null;
-      if (stored === "en" || stored === "zh" || stored === "es") setLangState(stored);
-    }
-  }, []);
+    setLangState(initialLang);
+    if (typeof window !== "undefined") window.localStorage.setItem("lull.lang", initialLang);
+  }, [initialLang]);
+
   const setLang = (l: Lang) => {
     setLangState(l);
     if (typeof window !== "undefined") window.localStorage.setItem("lull.lang", l);

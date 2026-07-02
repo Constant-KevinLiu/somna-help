@@ -143,7 +143,7 @@ export function CbtiArticleShell({
             {CBTI_SLUGS.filter((s) => s !== slug).map((s) => (
               <SafeLink
                 key={s}
-                to={cbtiPath(s)}
+                to={cbtiPath(s, lang)}
                 className="glass group rounded-2xl p-5 transition hover:bg-white/[0.06]"
               >
                 <div className="font-display text-base text-foreground group-hover:text-accent">

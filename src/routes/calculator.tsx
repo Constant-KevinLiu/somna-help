@@ -59,7 +59,7 @@ const TIERS: CycleTier[] = [
   },
 ];
 
-function CalculatorPage() {
+export function CalculatorPage() {
   const { t, lang } = useI18n();
   const fmt = useFmtTime();
   const dict = getCalcDict(lang);

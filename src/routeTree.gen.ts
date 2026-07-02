@@ -36,7 +36,35 @@ import { Route as LearnRacingThoughtsAtNightRouteImport } from './routes/learn.r
 import { Route as LearnCircadianRhythmRouteImport } from './routes/learn.circadian-rhythm'
 import { Route as Learn90MinuteSleepCycleRouteImport } from './routes/learn.90-minute-sleep-cycle'
 import { Route as Learn478BreathingRouteImport } from './routes/learn.4-7-8-breathing'
+import { Route as EsWakeUpAt3amRouteImport } from './routes/es/wake-up-at-3am'
+import { Route as EsSleepCalculatorRouteImport } from './routes/es/sleep-calculator'
+import { Route as EsSleepAnxietyRouteImport } from './routes/es/sleep-anxiety'
+import { Route as EsRelaxRouteImport } from './routes/es/relax'
+import { Route as EsRelajacionRouteImport } from './routes/es/relajacion'
+import { Route as EsProgramRouteImport } from './routes/es/program'
+import { Route as EsPanelRouteImport } from './routes/es/panel'
+import { Route as EsNapCalculatorRouteImport } from './routes/es/nap-calculator'
+import { Route as EsMelatoninCalculatorRouteImport } from './routes/es/melatonin-calculator'
+import { Route as EsInsomniaTreatmentRouteImport } from './routes/es/insomnia-treatment'
+import { Route as EsHowToFallAsleepFastRouteImport } from './routes/es/how-to-fall-asleep-fast'
+import { Route as EsEvaluacionRouteImport } from './routes/es/evaluacion'
+import { Route as EsDiaryRouteImport } from './routes/es/diary'
+import { Route as EsDiarioRouteImport } from './routes/es/diario'
+import { Route as EsCbtIGuideRouteImport } from './routes/es/cbt-i-guide'
+import { Route as EsCalculatorRouteImport } from './routes/es/calculator'
+import { Route as EsBedtimeCalculatorRouteImport } from './routes/es/bedtime-calculator'
+import { Route as EsAssessmentRouteImport } from './routes/es/assessment'
+import { Route as EsProgramIndexRouteImport } from './routes/es/program.index'
+import { Route as EsLearnIndexRouteImport } from './routes/es/learn.index'
 import { Route as ProgramWeekLessonRouteImport } from './routes/program.$week.$lesson'
+import { Route as EsProgramSlugRouteImport } from './routes/es/program.$slug'
+import { Route as EsLearnWhatIsCbtiRouteImport } from './routes/es/learn.what-is-cbti'
+import { Route as EsLearnStimulusControlRouteImport } from './routes/es/learn.stimulus-control'
+import { Route as EsLearnRacingThoughtsAtNightRouteImport } from './routes/es/learn.racing-thoughts-at-night'
+import { Route as EsLearnCircadianRhythmRouteImport } from './routes/es/learn.circadian-rhythm'
+import { Route as EsLearn90MinuteSleepCycleRouteImport } from './routes/es/learn.90-minute-sleep-cycle'
+import { Route as EsLearn478BreathingRouteImport } from './routes/es/learn.4-7-8-breathing'
+import { Route as EsProgramWeekLessonRouteImport } from './routes/es/program.$week.$lesson'
 
 const WakeUpAt3amRoute = WakeUpAt3amRouteImport.update({
   id: '/wake-up-at-3am',
@@ -174,10 +202,152 @@ const Learn478BreathingRoute = Learn478BreathingRouteImport.update({
   path: '/learn/4-7-8-breathing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EsWakeUpAt3amRoute = EsWakeUpAt3amRouteImport.update({
+  id: '/wake-up-at-3am',
+  path: '/wake-up-at-3am',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsSleepCalculatorRoute = EsSleepCalculatorRouteImport.update({
+  id: '/sleep-calculator',
+  path: '/sleep-calculator',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsSleepAnxietyRoute = EsSleepAnxietyRouteImport.update({
+  id: '/sleep-anxiety',
+  path: '/sleep-anxiety',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsRelaxRoute = EsRelaxRouteImport.update({
+  id: '/relax',
+  path: '/relax',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsRelajacionRoute = EsRelajacionRouteImport.update({
+  id: '/relajacion',
+  path: '/relajacion',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsProgramRoute = EsProgramRouteImport.update({
+  id: '/program',
+  path: '/program',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsPanelRoute = EsPanelRouteImport.update({
+  id: '/panel',
+  path: '/panel',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsNapCalculatorRoute = EsNapCalculatorRouteImport.update({
+  id: '/nap-calculator',
+  path: '/nap-calculator',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsMelatoninCalculatorRoute = EsMelatoninCalculatorRouteImport.update({
+  id: '/melatonin-calculator',
+  path: '/melatonin-calculator',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsInsomniaTreatmentRoute = EsInsomniaTreatmentRouteImport.update({
+  id: '/insomnia-treatment',
+  path: '/insomnia-treatment',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsHowToFallAsleepFastRoute = EsHowToFallAsleepFastRouteImport.update({
+  id: '/how-to-fall-asleep-fast',
+  path: '/how-to-fall-asleep-fast',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsEvaluacionRoute = EsEvaluacionRouteImport.update({
+  id: '/evaluacion',
+  path: '/evaluacion',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsDiaryRoute = EsDiaryRouteImport.update({
+  id: '/diary',
+  path: '/diary',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsDiarioRoute = EsDiarioRouteImport.update({
+  id: '/diario',
+  path: '/diario',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsCbtIGuideRoute = EsCbtIGuideRouteImport.update({
+  id: '/cbt-i-guide',
+  path: '/cbt-i-guide',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsCalculatorRoute = EsCalculatorRouteImport.update({
+  id: '/calculator',
+  path: '/calculator',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsBedtimeCalculatorRoute = EsBedtimeCalculatorRouteImport.update({
+  id: '/bedtime-calculator',
+  path: '/bedtime-calculator',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsAssessmentRoute = EsAssessmentRouteImport.update({
+  id: '/assessment',
+  path: '/assessment',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsProgramIndexRoute = EsProgramIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EsProgramRoute,
+} as any)
+const EsLearnIndexRoute = EsLearnIndexRouteImport.update({
+  id: '/learn/',
+  path: '/learn/',
+  getParentRoute: () => EsRoute,
+} as any)
 const ProgramWeekLessonRoute = ProgramWeekLessonRouteImport.update({
   id: '/program/$week/$lesson',
   path: '/program/$week/$lesson',
   getParentRoute: () => rootRouteImport,
+} as any)
+const EsProgramSlugRoute = EsProgramSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => EsProgramRoute,
+} as any)
+const EsLearnWhatIsCbtiRoute = EsLearnWhatIsCbtiRouteImport.update({
+  id: '/learn/what-is-cbti',
+  path: '/learn/what-is-cbti',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsLearnStimulusControlRoute = EsLearnStimulusControlRouteImport.update({
+  id: '/learn/stimulus-control',
+  path: '/learn/stimulus-control',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsLearnRacingThoughtsAtNightRoute =
+  EsLearnRacingThoughtsAtNightRouteImport.update({
+    id: '/learn/racing-thoughts-at-night',
+    path: '/learn/racing-thoughts-at-night',
+    getParentRoute: () => EsRoute,
+  } as any)
+const EsLearnCircadianRhythmRoute = EsLearnCircadianRhythmRouteImport.update({
+  id: '/learn/circadian-rhythm',
+  path: '/learn/circadian-rhythm',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsLearn90MinuteSleepCycleRoute =
+  EsLearn90MinuteSleepCycleRouteImport.update({
+    id: '/learn/90-minute-sleep-cycle',
+    path: '/learn/90-minute-sleep-cycle',
+    getParentRoute: () => EsRoute,
+  } as any)
+const EsLearn478BreathingRoute = EsLearn478BreathingRouteImport.update({
+  id: '/learn/4-7-8-breathing',
+  path: '/learn/4-7-8-breathing',
+  getParentRoute: () => EsRoute,
+} as any)
+const EsProgramWeekLessonRoute = EsProgramWeekLessonRouteImport.update({
+  id: '/$week/$lesson',
+  path: '/$week/$lesson',
+  getParentRoute: () => EsProgramRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -198,6 +368,24 @@ export interface FileRoutesByFullPath {
   '/sleep-anxiety': typeof SleepAnxietyRoute
   '/sleep-calculator': typeof SleepCalculatorRoute
   '/wake-up-at-3am': typeof WakeUpAt3amRoute
+  '/es/assessment': typeof EsAssessmentRoute
+  '/es/bedtime-calculator': typeof EsBedtimeCalculatorRoute
+  '/es/calculator': typeof EsCalculatorRoute
+  '/es/cbt-i-guide': typeof EsCbtIGuideRoute
+  '/es/diario': typeof EsDiarioRoute
+  '/es/diary': typeof EsDiaryRoute
+  '/es/evaluacion': typeof EsEvaluacionRoute
+  '/es/how-to-fall-asleep-fast': typeof EsHowToFallAsleepFastRoute
+  '/es/insomnia-treatment': typeof EsInsomniaTreatmentRoute
+  '/es/melatonin-calculator': typeof EsMelatoninCalculatorRoute
+  '/es/nap-calculator': typeof EsNapCalculatorRoute
+  '/es/panel': typeof EsPanelRoute
+  '/es/program': typeof EsProgramRouteWithChildren
+  '/es/relajacion': typeof EsRelajacionRoute
+  '/es/relax': typeof EsRelaxRoute
+  '/es/sleep-anxiety': typeof EsSleepAnxietyRoute
+  '/es/sleep-calculator': typeof EsSleepCalculatorRoute
+  '/es/wake-up-at-3am': typeof EsWakeUpAt3amRoute
   '/learn/4-7-8-breathing': typeof Learn478BreathingRoute
   '/learn/90-minute-sleep-cycle': typeof Learn90MinuteSleepCycleRoute
   '/learn/circadian-rhythm': typeof LearnCircadianRhythmRoute
@@ -208,7 +396,17 @@ export interface FileRoutesByFullPath {
   '/es/': typeof EsIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/program/': typeof ProgramIndexRoute
+  '/es/learn/4-7-8-breathing': typeof EsLearn478BreathingRoute
+  '/es/learn/90-minute-sleep-cycle': typeof EsLearn90MinuteSleepCycleRoute
+  '/es/learn/circadian-rhythm': typeof EsLearnCircadianRhythmRoute
+  '/es/learn/racing-thoughts-at-night': typeof EsLearnRacingThoughtsAtNightRoute
+  '/es/learn/stimulus-control': typeof EsLearnStimulusControlRoute
+  '/es/learn/what-is-cbti': typeof EsLearnWhatIsCbtiRoute
+  '/es/program/$slug': typeof EsProgramSlugRoute
   '/program/$week/$lesson': typeof ProgramWeekLessonRoute
+  '/es/learn/': typeof EsLearnIndexRoute
+  '/es/program/': typeof EsProgramIndexRoute
+  '/es/program/$week/$lesson': typeof EsProgramWeekLessonRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -227,6 +425,23 @@ export interface FileRoutesByTo {
   '/sleep-anxiety': typeof SleepAnxietyRoute
   '/sleep-calculator': typeof SleepCalculatorRoute
   '/wake-up-at-3am': typeof WakeUpAt3amRoute
+  '/es/assessment': typeof EsAssessmentRoute
+  '/es/bedtime-calculator': typeof EsBedtimeCalculatorRoute
+  '/es/calculator': typeof EsCalculatorRoute
+  '/es/cbt-i-guide': typeof EsCbtIGuideRoute
+  '/es/diario': typeof EsDiarioRoute
+  '/es/diary': typeof EsDiaryRoute
+  '/es/evaluacion': typeof EsEvaluacionRoute
+  '/es/how-to-fall-asleep-fast': typeof EsHowToFallAsleepFastRoute
+  '/es/insomnia-treatment': typeof EsInsomniaTreatmentRoute
+  '/es/melatonin-calculator': typeof EsMelatoninCalculatorRoute
+  '/es/nap-calculator': typeof EsNapCalculatorRoute
+  '/es/panel': typeof EsPanelRoute
+  '/es/relajacion': typeof EsRelajacionRoute
+  '/es/relax': typeof EsRelaxRoute
+  '/es/sleep-anxiety': typeof EsSleepAnxietyRoute
+  '/es/sleep-calculator': typeof EsSleepCalculatorRoute
+  '/es/wake-up-at-3am': typeof EsWakeUpAt3amRoute
   '/learn/4-7-8-breathing': typeof Learn478BreathingRoute
   '/learn/90-minute-sleep-cycle': typeof Learn90MinuteSleepCycleRoute
   '/learn/circadian-rhythm': typeof LearnCircadianRhythmRoute
@@ -237,7 +452,17 @@ export interface FileRoutesByTo {
   '/es': typeof EsIndexRoute
   '/learn': typeof LearnIndexRoute
   '/program': typeof ProgramIndexRoute
+  '/es/learn/4-7-8-breathing': typeof EsLearn478BreathingRoute
+  '/es/learn/90-minute-sleep-cycle': typeof EsLearn90MinuteSleepCycleRoute
+  '/es/learn/circadian-rhythm': typeof EsLearnCircadianRhythmRoute
+  '/es/learn/racing-thoughts-at-night': typeof EsLearnRacingThoughtsAtNightRoute
+  '/es/learn/stimulus-control': typeof EsLearnStimulusControlRoute
+  '/es/learn/what-is-cbti': typeof EsLearnWhatIsCbtiRoute
+  '/es/program/$slug': typeof EsProgramSlugRoute
   '/program/$week/$lesson': typeof ProgramWeekLessonRoute
+  '/es/learn': typeof EsLearnIndexRoute
+  '/es/program': typeof EsProgramIndexRoute
+  '/es/program/$week/$lesson': typeof EsProgramWeekLessonRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -258,6 +483,24 @@ export interface FileRoutesById {
   '/sleep-anxiety': typeof SleepAnxietyRoute
   '/sleep-calculator': typeof SleepCalculatorRoute
   '/wake-up-at-3am': typeof WakeUpAt3amRoute
+  '/es/assessment': typeof EsAssessmentRoute
+  '/es/bedtime-calculator': typeof EsBedtimeCalculatorRoute
+  '/es/calculator': typeof EsCalculatorRoute
+  '/es/cbt-i-guide': typeof EsCbtIGuideRoute
+  '/es/diario': typeof EsDiarioRoute
+  '/es/diary': typeof EsDiaryRoute
+  '/es/evaluacion': typeof EsEvaluacionRoute
+  '/es/how-to-fall-asleep-fast': typeof EsHowToFallAsleepFastRoute
+  '/es/insomnia-treatment': typeof EsInsomniaTreatmentRoute
+  '/es/melatonin-calculator': typeof EsMelatoninCalculatorRoute
+  '/es/nap-calculator': typeof EsNapCalculatorRoute
+  '/es/panel': typeof EsPanelRoute
+  '/es/program': typeof EsProgramRouteWithChildren
+  '/es/relajacion': typeof EsRelajacionRoute
+  '/es/relax': typeof EsRelaxRoute
+  '/es/sleep-anxiety': typeof EsSleepAnxietyRoute
+  '/es/sleep-calculator': typeof EsSleepCalculatorRoute
+  '/es/wake-up-at-3am': typeof EsWakeUpAt3amRoute
   '/learn/4-7-8-breathing': typeof Learn478BreathingRoute
   '/learn/90-minute-sleep-cycle': typeof Learn90MinuteSleepCycleRoute
   '/learn/circadian-rhythm': typeof LearnCircadianRhythmRoute
@@ -268,7 +511,17 @@ export interface FileRoutesById {
   '/es/': typeof EsIndexRoute
   '/learn/': typeof LearnIndexRoute
   '/program/': typeof ProgramIndexRoute
+  '/es/learn/4-7-8-breathing': typeof EsLearn478BreathingRoute
+  '/es/learn/90-minute-sleep-cycle': typeof EsLearn90MinuteSleepCycleRoute
+  '/es/learn/circadian-rhythm': typeof EsLearnCircadianRhythmRoute
+  '/es/learn/racing-thoughts-at-night': typeof EsLearnRacingThoughtsAtNightRoute
+  '/es/learn/stimulus-control': typeof EsLearnStimulusControlRoute
+  '/es/learn/what-is-cbti': typeof EsLearnWhatIsCbtiRoute
+  '/es/program/$slug': typeof EsProgramSlugRoute
   '/program/$week/$lesson': typeof ProgramWeekLessonRoute
+  '/es/learn/': typeof EsLearnIndexRoute
+  '/es/program/': typeof EsProgramIndexRoute
+  '/es/program/$week/$lesson': typeof EsProgramWeekLessonRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -290,6 +543,24 @@ export interface FileRouteTypes {
     | '/sleep-anxiety'
     | '/sleep-calculator'
     | '/wake-up-at-3am'
+    | '/es/assessment'
+    | '/es/bedtime-calculator'
+    | '/es/calculator'
+    | '/es/cbt-i-guide'
+    | '/es/diario'
+    | '/es/diary'
+    | '/es/evaluacion'
+    | '/es/how-to-fall-asleep-fast'
+    | '/es/insomnia-treatment'
+    | '/es/melatonin-calculator'
+    | '/es/nap-calculator'
+    | '/es/panel'
+    | '/es/program'
+    | '/es/relajacion'
+    | '/es/relax'
+    | '/es/sleep-anxiety'
+    | '/es/sleep-calculator'
+    | '/es/wake-up-at-3am'
     | '/learn/4-7-8-breathing'
     | '/learn/90-minute-sleep-cycle'
     | '/learn/circadian-rhythm'
@@ -300,7 +571,17 @@ export interface FileRouteTypes {
     | '/es/'
     | '/learn/'
     | '/program/'
+    | '/es/learn/4-7-8-breathing'
+    | '/es/learn/90-minute-sleep-cycle'
+    | '/es/learn/circadian-rhythm'
+    | '/es/learn/racing-thoughts-at-night'
+    | '/es/learn/stimulus-control'
+    | '/es/learn/what-is-cbti'
+    | '/es/program/$slug'
     | '/program/$week/$lesson'
+    | '/es/learn/'
+    | '/es/program/'
+    | '/es/program/$week/$lesson'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -319,6 +600,23 @@ export interface FileRouteTypes {
     | '/sleep-anxiety'
     | '/sleep-calculator'
     | '/wake-up-at-3am'
+    | '/es/assessment'
+    | '/es/bedtime-calculator'
+    | '/es/calculator'
+    | '/es/cbt-i-guide'
+    | '/es/diario'
+    | '/es/diary'
+    | '/es/evaluacion'
+    | '/es/how-to-fall-asleep-fast'
+    | '/es/insomnia-treatment'
+    | '/es/melatonin-calculator'
+    | '/es/nap-calculator'
+    | '/es/panel'
+    | '/es/relajacion'
+    | '/es/relax'
+    | '/es/sleep-anxiety'
+    | '/es/sleep-calculator'
+    | '/es/wake-up-at-3am'
     | '/learn/4-7-8-breathing'
     | '/learn/90-minute-sleep-cycle'
     | '/learn/circadian-rhythm'
@@ -329,7 +627,17 @@ export interface FileRouteTypes {
     | '/es'
     | '/learn'
     | '/program'
+    | '/es/learn/4-7-8-breathing'
+    | '/es/learn/90-minute-sleep-cycle'
+    | '/es/learn/circadian-rhythm'
+    | '/es/learn/racing-thoughts-at-night'
+    | '/es/learn/stimulus-control'
+    | '/es/learn/what-is-cbti'
+    | '/es/program/$slug'
     | '/program/$week/$lesson'
+    | '/es/learn'
+    | '/es/program'
+    | '/es/program/$week/$lesson'
   id:
     | '__root__'
     | '/'
@@ -349,6 +657,24 @@ export interface FileRouteTypes {
     | '/sleep-anxiety'
     | '/sleep-calculator'
     | '/wake-up-at-3am'
+    | '/es/assessment'
+    | '/es/bedtime-calculator'
+    | '/es/calculator'
+    | '/es/cbt-i-guide'
+    | '/es/diario'
+    | '/es/diary'
+    | '/es/evaluacion'
+    | '/es/how-to-fall-asleep-fast'
+    | '/es/insomnia-treatment'
+    | '/es/melatonin-calculator'
+    | '/es/nap-calculator'
+    | '/es/panel'
+    | '/es/program'
+    | '/es/relajacion'
+    | '/es/relax'
+    | '/es/sleep-anxiety'
+    | '/es/sleep-calculator'
+    | '/es/wake-up-at-3am'
     | '/learn/4-7-8-breathing'
     | '/learn/90-minute-sleep-cycle'
     | '/learn/circadian-rhythm'
@@ -359,7 +685,17 @@ export interface FileRouteTypes {
     | '/es/'
     | '/learn/'
     | '/program/'
+    | '/es/learn/4-7-8-breathing'
+    | '/es/learn/90-minute-sleep-cycle'
+    | '/es/learn/circadian-rhythm'
+    | '/es/learn/racing-thoughts-at-night'
+    | '/es/learn/stimulus-control'
+    | '/es/learn/what-is-cbti'
+    | '/es/program/$slug'
     | '/program/$week/$lesson'
+    | '/es/learn/'
+    | '/es/program/'
+    | '/es/program/$week/$lesson'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -583,6 +919,146 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Learn478BreathingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es/wake-up-at-3am': {
+      id: '/es/wake-up-at-3am'
+      path: '/wake-up-at-3am'
+      fullPath: '/es/wake-up-at-3am'
+      preLoaderRoute: typeof EsWakeUpAt3amRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/sleep-calculator': {
+      id: '/es/sleep-calculator'
+      path: '/sleep-calculator'
+      fullPath: '/es/sleep-calculator'
+      preLoaderRoute: typeof EsSleepCalculatorRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/sleep-anxiety': {
+      id: '/es/sleep-anxiety'
+      path: '/sleep-anxiety'
+      fullPath: '/es/sleep-anxiety'
+      preLoaderRoute: typeof EsSleepAnxietyRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/relax': {
+      id: '/es/relax'
+      path: '/relax'
+      fullPath: '/es/relax'
+      preLoaderRoute: typeof EsRelaxRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/relajacion': {
+      id: '/es/relajacion'
+      path: '/relajacion'
+      fullPath: '/es/relajacion'
+      preLoaderRoute: typeof EsRelajacionRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/program': {
+      id: '/es/program'
+      path: '/program'
+      fullPath: '/es/program'
+      preLoaderRoute: typeof EsProgramRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/panel': {
+      id: '/es/panel'
+      path: '/panel'
+      fullPath: '/es/panel'
+      preLoaderRoute: typeof EsPanelRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/nap-calculator': {
+      id: '/es/nap-calculator'
+      path: '/nap-calculator'
+      fullPath: '/es/nap-calculator'
+      preLoaderRoute: typeof EsNapCalculatorRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/melatonin-calculator': {
+      id: '/es/melatonin-calculator'
+      path: '/melatonin-calculator'
+      fullPath: '/es/melatonin-calculator'
+      preLoaderRoute: typeof EsMelatoninCalculatorRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/insomnia-treatment': {
+      id: '/es/insomnia-treatment'
+      path: '/insomnia-treatment'
+      fullPath: '/es/insomnia-treatment'
+      preLoaderRoute: typeof EsInsomniaTreatmentRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/how-to-fall-asleep-fast': {
+      id: '/es/how-to-fall-asleep-fast'
+      path: '/how-to-fall-asleep-fast'
+      fullPath: '/es/how-to-fall-asleep-fast'
+      preLoaderRoute: typeof EsHowToFallAsleepFastRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/evaluacion': {
+      id: '/es/evaluacion'
+      path: '/evaluacion'
+      fullPath: '/es/evaluacion'
+      preLoaderRoute: typeof EsEvaluacionRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/diary': {
+      id: '/es/diary'
+      path: '/diary'
+      fullPath: '/es/diary'
+      preLoaderRoute: typeof EsDiaryRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/diario': {
+      id: '/es/diario'
+      path: '/diario'
+      fullPath: '/es/diario'
+      preLoaderRoute: typeof EsDiarioRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/cbt-i-guide': {
+      id: '/es/cbt-i-guide'
+      path: '/cbt-i-guide'
+      fullPath: '/es/cbt-i-guide'
+      preLoaderRoute: typeof EsCbtIGuideRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/calculator': {
+      id: '/es/calculator'
+      path: '/calculator'
+      fullPath: '/es/calculator'
+      preLoaderRoute: typeof EsCalculatorRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/bedtime-calculator': {
+      id: '/es/bedtime-calculator'
+      path: '/bedtime-calculator'
+      fullPath: '/es/bedtime-calculator'
+      preLoaderRoute: typeof EsBedtimeCalculatorRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/assessment': {
+      id: '/es/assessment'
+      path: '/assessment'
+      fullPath: '/es/assessment'
+      preLoaderRoute: typeof EsAssessmentRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/program/': {
+      id: '/es/program/'
+      path: '/'
+      fullPath: '/es/program/'
+      preLoaderRoute: typeof EsProgramIndexRouteImport
+      parentRoute: typeof EsProgramRoute
+    }
+    '/es/learn/': {
+      id: '/es/learn/'
+      path: '/learn'
+      fullPath: '/es/learn/'
+      preLoaderRoute: typeof EsLearnIndexRouteImport
+      parentRoute: typeof EsRoute
+    }
     '/program/$week/$lesson': {
       id: '/program/$week/$lesson'
       path: '/program/$week/$lesson'
@@ -590,15 +1066,137 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramWeekLessonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/es/program/$slug': {
+      id: '/es/program/$slug'
+      path: '/$slug'
+      fullPath: '/es/program/$slug'
+      preLoaderRoute: typeof EsProgramSlugRouteImport
+      parentRoute: typeof EsProgramRoute
+    }
+    '/es/learn/what-is-cbti': {
+      id: '/es/learn/what-is-cbti'
+      path: '/learn/what-is-cbti'
+      fullPath: '/es/learn/what-is-cbti'
+      preLoaderRoute: typeof EsLearnWhatIsCbtiRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/learn/stimulus-control': {
+      id: '/es/learn/stimulus-control'
+      path: '/learn/stimulus-control'
+      fullPath: '/es/learn/stimulus-control'
+      preLoaderRoute: typeof EsLearnStimulusControlRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/learn/racing-thoughts-at-night': {
+      id: '/es/learn/racing-thoughts-at-night'
+      path: '/learn/racing-thoughts-at-night'
+      fullPath: '/es/learn/racing-thoughts-at-night'
+      preLoaderRoute: typeof EsLearnRacingThoughtsAtNightRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/learn/circadian-rhythm': {
+      id: '/es/learn/circadian-rhythm'
+      path: '/learn/circadian-rhythm'
+      fullPath: '/es/learn/circadian-rhythm'
+      preLoaderRoute: typeof EsLearnCircadianRhythmRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/learn/90-minute-sleep-cycle': {
+      id: '/es/learn/90-minute-sleep-cycle'
+      path: '/learn/90-minute-sleep-cycle'
+      fullPath: '/es/learn/90-minute-sleep-cycle'
+      preLoaderRoute: typeof EsLearn90MinuteSleepCycleRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/learn/4-7-8-breathing': {
+      id: '/es/learn/4-7-8-breathing'
+      path: '/learn/4-7-8-breathing'
+      fullPath: '/es/learn/4-7-8-breathing'
+      preLoaderRoute: typeof EsLearn478BreathingRouteImport
+      parentRoute: typeof EsRoute
+    }
+    '/es/program/$week/$lesson': {
+      id: '/es/program/$week/$lesson'
+      path: '/$week/$lesson'
+      fullPath: '/es/program/$week/$lesson'
+      preLoaderRoute: typeof EsProgramWeekLessonRouteImport
+      parentRoute: typeof EsProgramRoute
+    }
   }
 }
 
+interface EsProgramRouteChildren {
+  EsProgramSlugRoute: typeof EsProgramSlugRoute
+  EsProgramIndexRoute: typeof EsProgramIndexRoute
+  EsProgramWeekLessonRoute: typeof EsProgramWeekLessonRoute
+}
+
+const EsProgramRouteChildren: EsProgramRouteChildren = {
+  EsProgramSlugRoute: EsProgramSlugRoute,
+  EsProgramIndexRoute: EsProgramIndexRoute,
+  EsProgramWeekLessonRoute: EsProgramWeekLessonRoute,
+}
+
+const EsProgramRouteWithChildren = EsProgramRoute._addFileChildren(
+  EsProgramRouteChildren,
+)
+
 interface EsRouteChildren {
+  EsAssessmentRoute: typeof EsAssessmentRoute
+  EsBedtimeCalculatorRoute: typeof EsBedtimeCalculatorRoute
+  EsCalculatorRoute: typeof EsCalculatorRoute
+  EsCbtIGuideRoute: typeof EsCbtIGuideRoute
+  EsDiarioRoute: typeof EsDiarioRoute
+  EsDiaryRoute: typeof EsDiaryRoute
+  EsEvaluacionRoute: typeof EsEvaluacionRoute
+  EsHowToFallAsleepFastRoute: typeof EsHowToFallAsleepFastRoute
+  EsInsomniaTreatmentRoute: typeof EsInsomniaTreatmentRoute
+  EsMelatoninCalculatorRoute: typeof EsMelatoninCalculatorRoute
+  EsNapCalculatorRoute: typeof EsNapCalculatorRoute
+  EsPanelRoute: typeof EsPanelRoute
+  EsProgramRoute: typeof EsProgramRouteWithChildren
+  EsRelajacionRoute: typeof EsRelajacionRoute
+  EsRelaxRoute: typeof EsRelaxRoute
+  EsSleepAnxietyRoute: typeof EsSleepAnxietyRoute
+  EsSleepCalculatorRoute: typeof EsSleepCalculatorRoute
+  EsWakeUpAt3amRoute: typeof EsWakeUpAt3amRoute
   EsIndexRoute: typeof EsIndexRoute
+  EsLearn478BreathingRoute: typeof EsLearn478BreathingRoute
+  EsLearn90MinuteSleepCycleRoute: typeof EsLearn90MinuteSleepCycleRoute
+  EsLearnCircadianRhythmRoute: typeof EsLearnCircadianRhythmRoute
+  EsLearnRacingThoughtsAtNightRoute: typeof EsLearnRacingThoughtsAtNightRoute
+  EsLearnStimulusControlRoute: typeof EsLearnStimulusControlRoute
+  EsLearnWhatIsCbtiRoute: typeof EsLearnWhatIsCbtiRoute
+  EsLearnIndexRoute: typeof EsLearnIndexRoute
 }
 
 const EsRouteChildren: EsRouteChildren = {
+  EsAssessmentRoute: EsAssessmentRoute,
+  EsBedtimeCalculatorRoute: EsBedtimeCalculatorRoute,
+  EsCalculatorRoute: EsCalculatorRoute,
+  EsCbtIGuideRoute: EsCbtIGuideRoute,
+  EsDiarioRoute: EsDiarioRoute,
+  EsDiaryRoute: EsDiaryRoute,
+  EsEvaluacionRoute: EsEvaluacionRoute,
+  EsHowToFallAsleepFastRoute: EsHowToFallAsleepFastRoute,
+  EsInsomniaTreatmentRoute: EsInsomniaTreatmentRoute,
+  EsMelatoninCalculatorRoute: EsMelatoninCalculatorRoute,
+  EsNapCalculatorRoute: EsNapCalculatorRoute,
+  EsPanelRoute: EsPanelRoute,
+  EsProgramRoute: EsProgramRouteWithChildren,
+  EsRelajacionRoute: EsRelajacionRoute,
+  EsRelaxRoute: EsRelaxRoute,
+  EsSleepAnxietyRoute: EsSleepAnxietyRoute,
+  EsSleepCalculatorRoute: EsSleepCalculatorRoute,
+  EsWakeUpAt3amRoute: EsWakeUpAt3amRoute,
   EsIndexRoute: EsIndexRoute,
+  EsLearn478BreathingRoute: EsLearn478BreathingRoute,
+  EsLearn90MinuteSleepCycleRoute: EsLearn90MinuteSleepCycleRoute,
+  EsLearnCircadianRhythmRoute: EsLearnCircadianRhythmRoute,
+  EsLearnRacingThoughtsAtNightRoute: EsLearnRacingThoughtsAtNightRoute,
+  EsLearnStimulusControlRoute: EsLearnStimulusControlRoute,
+  EsLearnWhatIsCbtiRoute: EsLearnWhatIsCbtiRoute,
+  EsLearnIndexRoute: EsLearnIndexRoute,
 }
 
 const EsRouteWithChildren = EsRoute._addFileChildren(EsRouteChildren)

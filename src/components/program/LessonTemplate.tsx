@@ -1,4 +1,3 @@
-import { Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
@@ -16,6 +15,7 @@ import {
 import { PageHero } from "@/components/PageHero";
 import { FAQ } from "@/components/FAQ";
 import { ShareModal } from "@/components/ShareModal";
+import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n } from "@/lib/i18n";
 import {
   getAdjacentLessons,
@@ -41,12 +41,13 @@ export function LessonTemplate({ lesson }: Props) {
   const meta = getLessonMeta(lesson.slug)!;
   const { prev, next } = getAdjacentLessons(lesson.slug);
   const [shareOpen, setShareOpen] = useState(false);
+  const esPrefix = lang === "es" ? "/es" : "";
 
   const pageUrl = useMemo(
     () =>
       typeof window !== "undefined"
         ? window.location.href
-        : `https://somna.help${lessonPath(lesson.weekSlug, lesson.slug)}`,
+        : `https://somna.help${lessonPath(lesson.weekSlug, lesson.slug, lang)}`,
     [],
   );
 
@@ -212,22 +213,21 @@ export function LessonTemplate({ lesson }: Props) {
 
             {/* Next lesson button */}
             {next ? (
-              <Link
-                to="/program/$week/$lesson"
-                params={{ week: next.weekSlug, lesson: next.slug }}
+              <SafeLink
+                to={`${esPrefix}/program/${next.weekSlug}/${next.slug}`}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
               >
                 {ui.nextLesson}
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </SafeLink>
             ) : (
-              <Link
-                to="/program"
+              <SafeLink
+                to={`${esPrefix}/program`}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
               >
                 {ui.backToProgram}
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </SafeLink>
             )}
           </div>
 
@@ -246,25 +246,23 @@ export function LessonTemplate({ lesson }: Props) {
       <section className="px-5 pb-20">
         <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {prev ? (
-            <Link
-              to="/program/$week/$lesson"
-              params={{ week: prev.weekSlug, lesson: prev.slug }}
+            <SafeLink
+              to={`${esPrefix}/program/${prev.weekSlug}/${prev.slug}`}
               className="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/[0.06]"
             >
               <ArrowLeft className="h-4 w-4" />
               <span>{ui.previousLesson}</span>
-            </Link>
+            </SafeLink>
           ) : (
             <span />
           )}
 
-          <Link
-            to="/program/$slug"
-            params={{ slug: getWeekByNumber(lesson.weekNumber)?.slug ?? lesson.weekSlug }}
+          <SafeLink
+            to={`${esPrefix}/program/${getWeekByNumber(lesson.weekNumber)?.slug ?? lesson.weekSlug}`}
             className="inline-flex items-center justify-center rounded-full bg-white/[0.06] px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/[0.1]"
           >
             {ui.backToWeek} {lesson.weekNumber}
-          </Link>
+          </SafeLink>
 
           <span className="hidden sm:block" />
         </div>
@@ -278,6 +276,7 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
   const { lang } = useI18n();
   const ui = getProgramLessonUI(lang);
   const meta = getLessonMeta(lessonSlug);
+  const esPrefix = lang === "es" ? "/es" : "";
   // Resolve localized title lazily. We use a synchronous lookup via a module-level
   // cache populated on first render of any lesson card. To avoid an extra network
   // round-trip per card, we read titles from the already-loaded current lesson when
@@ -286,9 +285,8 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
   const title = useRelatedLessonTitle(weekSlug, lessonSlug, lang);
   if (!meta) return null;
   return (
-    <Link
-      to="/program/$week/$lesson"
-      params={{ week: weekSlug, lesson: lessonSlug }}
+    <SafeLink
+      to={`${esPrefix}/program/${weekSlug}/${lessonSlug}`}
       className="glass group rounded-2xl p-4 transition hover:bg-white/[0.06]"
     >
       <div className="text-[10px] uppercase tracking-[0.18em] text-accent">
@@ -297,7 +295,7 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
       <div className="mt-1 font-display text-sm text-foreground group-hover:text-accent">
         {title ?? `${ui.lessonLabel} ${meta.lessonNumber}`}
       </div>
-    </Link>
+    </SafeLink>
   );
 }
 
@@ -339,7 +337,10 @@ function useRelatedLessonTitle(
 /** SEO head helper for lesson routes. */
 export function lessonHead(lesson: LessonContent, lang: "en" | "zh" | "es") {
   const c = lesson.i18n[lang] ?? lesson.i18n.en;
-  const url = lessonPath(lesson.weekSlug, lesson.slug);
+  const url = lessonPath(lesson.weekSlug, lesson.slug, lang);
+  const enUrl = lessonPath(lesson.weekSlug, lesson.slug, "en");
+  const esUrl = lessonPath(lesson.weekSlug, lesson.slug, "es");
+  const origin = "https://somna.help";
   return {
     meta: [
       { title: c.seoTitle },
@@ -347,11 +348,17 @@ export function lessonHead(lesson: LessonContent, lang: "en" | "zh" | "es") {
       { name: "keywords", content: c.keywords.join(", ") },
       { property: "og:title", content: c.seoTitle },
       { property: "og:description", content: c.seoDescription },
-      { property: "og:url", content: url },
+      { property: "og:url", content: `${origin}${url}` },
       { property: "og:type", content: "article" },
+      { property: "og:locale", content: lang === "es" ? "es_ES" : "en_US" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: url }],
+    links: [
+      { rel: "alternate", hrefLang: "en", href: `${origin}${enUrl}` },
+      { rel: "alternate", hrefLang: "es", href: `${origin}${esUrl}` },
+      { rel: "alternate", hrefLang: "x-default", href: `${origin}${enUrl}` },
+      { rel: "canonical", href: `${origin}${url}` },
+    ],
     scripts: [
       {
         type: "application/ld+json",
@@ -374,6 +381,6 @@ export function articleJsonLd(lesson: LessonContent, lang: "en" | "zh" | "es") {
     wordCount: c.content.reduce((n, s) => n + s.paras.join(" ").split(/\s+/).length, 0),
     author: { "@type": "Organization", name: "Somna" },
     publisher: { "@type": "Organization", name: "Somna" },
-    mainEntityOfPage: lessonPath(lesson.weekSlug, lesson.slug),
+    mainEntityOfPage: lessonPath(lesson.weekSlug, lesson.slug, lang),
   };
 }

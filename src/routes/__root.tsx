@@ -7,12 +7,18 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import appCss from "../styles.css?url";
 import { I18nProvider } from "@/lib/i18n";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import {
+  getSavedUserLang,
+  isEsRoute,
+  switchRouteLang,
+} from "@/lib/lang-detect";
 
 function NotFoundComponent() {
   return (
@@ -124,9 +130,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "apple-mobile-web-app-status-bar-style", content: "#1E1B4B" },
     ],
     links: [
-      // 👇 这里是新增的 canonical 标签，全站统一指向权威URL
-      // Canonical 标签
-      { rel: "canonical", href: "https://somna.help/" },
       // Favicon 相关
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
       { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" },
@@ -166,10 +169,33 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  const pathname = router.state.location.pathname;
+  // El idioma se deriva de la ruta: /es/** → "es", resto → "en".
+  // SSR y cliente usan el mismo valor, evitando mismatch de hidratación.
+  const routeLang: "en" | "es" =
+    pathname === "/es" || pathname.startsWith("/es/") ? "es" : "en";
+
+  // Auto-redirect basado en la cookie de preferencia (somna_lang).
+  // Solo en cliente: evita SSR 500 y mismatch de hidratación.
+  // - Si la cookie dice "es" pero estamos en ruta inglesa → /es/...
+  // - Si la cookie dice "en" pero estamos en /es/... → ruta inglesa.
+  useEffect(() => {
+    const saved = getSavedUserLang();
+    if (!saved) return;
+    const onEsRoute = isEsRoute(pathname);
+    if (saved === "es" && !onEsRoute) {
+      const target = switchRouteLang(pathname, "es");
+      if (target !== pathname) router.navigate({ to: target, replace: true });
+    } else if (saved === "en" && onEsRoute) {
+      const target = switchRouteLang(pathname, "en");
+      if (target !== pathname) router.navigate({ to: target, replace: true });
+    }
+  }, [pathname, router]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <I18nProvider>
+      <I18nProvider initialLang={routeLang}>
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">

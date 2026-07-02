@@ -20,6 +20,7 @@ import {
   type LearnLesson,
 } from "@/lib/learn-i18n";
 import { getCbtiDict, cbtiPath } from "@/lib/cbti-i18n";
+import { hreflangLinks } from "@/components/seo/Hreflang";
 
 export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson: LearnLesson }) {
   const { lang } = useI18n();
@@ -121,7 +122,7 @@ export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson:
             <p className="mt-1 text-sm text-muted-foreground">{lesson.relatedTool.desc}</p>
           </SafeLink>
           <SafeLink
-            to={cbtiPath(lesson.relatedGuide.slug)}
+            to={cbtiPath(lesson.relatedGuide.slug, lang)}
             className="glass group rounded-2xl p-6 transition hover:bg-white/[0.06]"
           >
             <div className="mb-1 text-xs uppercase tracking-widest text-muted-foreground">
@@ -153,7 +154,7 @@ export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson:
       <section className="px-5 pb-12">
         <div className="mx-auto max-w-3xl">
           <SafeLink
-            to={learnPath(lesson.nextLesson)}
+            to={learnPath(lesson.nextLesson, lang)}
             className="glass-strong group flex flex-col items-start justify-between gap-3 rounded-3xl p-6 transition hover:bg-white/[0.06] md:flex-row md:items-center"
           >
             <div>
@@ -182,7 +183,7 @@ export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson:
             {LEARN_SLUGS.filter((s) => s !== slug).map((s) => (
               <SafeLink
                 key={s}
-                to={learnPath(s)}
+                to={learnPath(s, lang)}
                 className="glass group rounded-2xl p-5 transition hover:bg-white/[0.06]"
               >
                 <div className="font-display text-base text-foreground group-hover:text-accent">
@@ -227,6 +228,41 @@ export function learnHead(slug: LearnSlug) {
       { name: "twitter:description", content: lesson.meta.desc },
     ],
     links: [{ rel: "canonical", href: url }],
+    scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
+  };
+}
+
+/**
+ * Versión en español de learnHead: usa el diccionario español para meta
+ * title/description y genera hreflang bidireccional + canonical /es/learn/...
+ */
+export function learnHeadEs(slug: LearnSlug) {
+  const es = getLearnDict("es");
+  const lesson = es.lessons[slug];
+  const url = `/es/learn/${slug}`;
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: lesson.faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  return {
+    meta: [
+      { title: lesson.meta.title },
+      { name: "description", content: lesson.meta.desc },
+      { property: "og:title", content: lesson.meta.title },
+      { property: "og:description", content: lesson.meta.desc },
+      { property: "og:url", content: `https://somna.help${url}` },
+      { property: "og:type", content: "article" },
+      { property: "og:locale", content: "es_ES" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: lesson.meta.title },
+      { name: "twitter:description", content: lesson.meta.desc },
+    ],
+    links: hreflangLinks(url),
     scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
   };
 }

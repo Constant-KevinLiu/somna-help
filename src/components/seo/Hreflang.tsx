@@ -44,18 +44,34 @@ export function buildAlternates(pathname: string) {
 }
 
 /**
- * Componente para usar dentro de `head.meta` de TanStack Router.
- * Devuelve un array de objetos meta que el router inyecta como <link>.
+ * Componente para usar dentro de `head.links` de TanStack Router.
+ * Devuelve un array de objetos link que el router inyecta como <link>.
+ *
+ * Uso:
+ *   head: () => ({
+ *     meta: [...],
+ *     links: hreflangLinks("/es/program"),
+ *   })
  */
-export function hreflangMeta(pathname: string) {
+export function hreflangLinks(pathname: string) {
   const alternates = buildAlternates(pathname);
   const canonical = `${SITE_ORIGIN}${pathname}`;
   return [
     ...alternates.map((a) => ({
       rel: "alternate",
-      hreflang: a.hreflang,
+      hrefLang: a.hreflang,
       href: a.href,
     })),
     { rel: "canonical", href: canonical },
   ];
+}
+
+/**
+ * Alias mantenido por compatibilidad. Devuelve el mismo contenido que
+ * hreflangLinks, para usar dentro de `head.links`.
+ *
+ * @deprecated Usar hreflangLinks() en su lugar.
+ */
+export function hreflangMeta(pathname: string) {
+  return hreflangLinks(pathname);
 }

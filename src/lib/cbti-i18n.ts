@@ -1824,6 +1824,7 @@ export const CBTI_SLUGS: CbtiSlug[] = [
   "insomnia-treatment",
 ];
 
-export function cbtiPath(slug: CbtiSlug): string {
-  return "/" + slug;
+export function cbtiPath(slug: CbtiSlug, lang?: "en" | "zh" | "es"): string {
+  const prefix = lang === "es" ? "/es" : "";
+  return `${prefix}/${slug}`;
 }

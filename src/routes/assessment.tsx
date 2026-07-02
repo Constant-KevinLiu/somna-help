@@ -74,51 +74,51 @@ const questions = [
   {
     key: "assess.q1",
     options: [
-      { en: "Under 15 min", zh: "少于 15 分钟", score: 0 },
-      { en: "15–30 min", zh: "15–30 分钟", score: 1 },
-      { en: "30–60 min", zh: "30–60 分钟", score: 2 },
-      { en: "Over an hour", zh: "超过一小时", score: 3 },
+      { en: "Under 15 min", zh: "少于 15 分钟", es: "Menos de 15 min", score: 0 },
+      { en: "15–30 min", zh: "15–30 分钟", es: "15–30 min", score: 1 },
+      { en: "30–60 min", zh: "30–60 分钟", es: "30–60 min", score: 2 },
+      { en: "Over an hour", zh: "超过一小时", es: "Más de una hora", score: 3 },
     ],
   },
   {
     key: "assess.q2",
     options: [
-      { en: "Rarely", zh: "很少", score: 0 },
-      { en: "Once", zh: "1 次", score: 1 },
-      { en: "2–3 times", zh: "2–3 次", score: 2 },
-      { en: "Many times", zh: "多次", score: 3 },
+      { en: "Rarely", zh: "很少", es: "Rara vez", score: 0 },
+      { en: "Once", zh: "1 次", es: "Una vez", score: 1 },
+      { en: "2–3 times", zh: "2–3 次", es: "2–3 veces", score: 2 },
+      { en: "Many times", zh: "多次", es: "Muchas veces", score: 3 },
     ],
   },
   {
     key: "assess.q3",
     options: [
-      { en: "7–9 hours", zh: "7–9 小时", score: 0 },
-      { en: "6–7 hours", zh: "6–7 小时", score: 1 },
-      { en: "5–6 hours", zh: "5–6 小时", score: 2 },
-      { en: "Under 5 hours", zh: "少于 5 小时", score: 3 },
+      { en: "7–9 hours", zh: "7–9 小时", es: "7–9 horas", score: 0 },
+      { en: "6–7 hours", zh: "6–7 小时", es: "6–7 horas", score: 1 },
+      { en: "5–6 hours", zh: "5–6 小时", es: "5–6 horas", score: 2 },
+      { en: "Under 5 hours", zh: "少于 5 小时", es: "Menos de 5 horas", score: 3 },
     ],
   },
   {
     key: "assess.q4",
     options: [
-      { en: "Calm", zh: "平静", score: 0 },
-      { en: "A little tense", zh: "略有紧张", score: 1 },
-      { en: "Often anxious", zh: "经常焦虑", score: 2 },
-      { en: "Very anxious", zh: "非常焦虑", score: 3 },
+      { en: "Calm", zh: "平静", es: "Tranquilo", score: 0 },
+      { en: "A little tense", zh: "略有紧张", es: "Algo tenso", score: 1 },
+      { en: "Often anxious", zh: "经常焦虑", es: "A menudo ansioso", score: 2 },
+      { en: "Very anxious", zh: "非常焦虑", es: "Muy ansioso", score: 3 },
     ],
   },
   {
     key: "assess.q5",
     options: [
-      { en: "Refreshed", zh: "精神饱满", score: 0 },
-      { en: "Okay", zh: "还行", score: 1 },
-      { en: "Tired", zh: "疲惫", score: 2 },
-      { en: "Exhausted", zh: "极度疲惫", score: 3 },
+      { en: "Refreshed", zh: "精神饱满", es: "Descansado", score: 0 },
+      { en: "Okay", zh: "还行", es: "Normal", score: 1 },
+      { en: "Tired", zh: "疲惫", es: "Cansado", score: 2 },
+      { en: "Exhausted", zh: "极度疲惫", es: "Exhausto", score: 3 },
     ],
   },
 ];
 
-function AssessPage() {
+export function AssessPage() {
   const { t, lang } = useI18n();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
@@ -172,7 +172,7 @@ function AssessPage() {
                         : "border-white/10 bg-white/5 text-muted-foreground hover:border-white/20 hover:text-foreground"
                     }`}
                   >
-                    {lang === "zh" ? o.zh : o.en}
+                    {lang === "zh" ? o.zh : lang === "es" ? o.es : o.en}
                   </button>
                 ))}
               </div>

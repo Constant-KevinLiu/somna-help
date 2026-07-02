@@ -31,7 +31,7 @@ export const Route = createFileRoute("/melatonin-calculator")({
   },
 });
 
-function MelatoninCalculatorPage() {
+export function MelatoninCalculatorPage() {
   const { lang } = useI18n();
   const fmt = useFmtTime();
   const d = getCalcDict(lang).melatonin;

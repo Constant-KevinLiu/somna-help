@@ -58,7 +58,7 @@ const flow: Record<Lang, { heading: string; nodes: Node[]; yes: string; no: stri
   },
 };
 
-function WakeUp3amPage() {
+export function WakeUp3amPage() {
   const { lang } = useI18n();
   const article = getCbtiDict(lang).articles["wake-up-at-3am"];
   const f = flow[lang];

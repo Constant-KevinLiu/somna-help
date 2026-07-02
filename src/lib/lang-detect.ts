@@ -1,54 +1,80 @@
 /**
  * Detección de idioma y persistencia de la preferencia del usuario.
  *
- * - La preferencia se guarda en la cookie `somna_uid` (vinculada al usuario),
- *   tal como exige el proyecto. Se complementa con localStorage para acceso
- *   rápido desde el cliente.
- * - La detección por IP se delega a Cloudflare (cabecera `cf-ipcountry`).
- *   Aquí solo interpretamos esa cabecera y la preferencia guardada.
+ * ⚠️ 100% cliente. Sin endpoints /api. Sin createAPIFileRoute. Sin SSR.
  *
- * No hay parámetro ?lang=. No hay subdominios por país. Solo rutas / y /es/.
+ * - La preferencia del usuario se guarda en la cookie `somna_lang` (1 año),
+ *   vinculada al identificador `somna_uid` cuando existe.
+ * - Detección automática por navegador (navigator.language) como respaldo.
+ * - No hay parámetro ?lang=. No hay subdominios por país. Solo rutas / y /es/.
  */
 
 export type Lang = "en" | "es";
 
-/** Países hispanohablantes que deben redirigir a /es/. */
-export const ES_COUNTRIES = new Set([
-  "ES", // España
-  "AR", "BO", "CL", "CO", "CR", "CU", "DO", "EC", "SV", "GT", "HN",
-  "MX", "NI", "PA", "PY", "PE", "PR", "UY", "VE",
-]);
-
-export const LANG_COOKIE = "somna_uid";
-export const LANG_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 * 2; // 2 años
+/** Nombre de la cookie que guarda la preferencia de idioma del usuario. */
+export const LANG_COOKIE = "somna_lang";
+/** Nombre de la cookie de identificador de usuario. */
+export const UID_COOKIE = "somna_uid";
+/** Validez de la cookie de idioma: 1 año. */
+export const LANG_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 /**
- * Lee la preferencia de idioma guardada en la cookie somna_uid.
- * El valor se guarda como `somna_uid=<uid>; lang=<es|en>` — aquí solo nos
- * interesa el segmento `lang`.
+ * Lee una cookie individual por su nombre desde document.cookie (cliente).
+ * Devuelve null si no existe o si se ejecuta en SSR sin document.
  */
-export function readLangFromCookie(cookieHeader: string | null | undefined): Lang | null {
-  if (!cookieHeader) return null;
-  const match = cookieHeader.match(/(?:^|;\s*)lang=(en|es)(?:;|$)/i);
-  if (!match) return null;
-  return match[1].toLowerCase() as Lang;
+function readCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(
+    new RegExp("(?:^|;\\s*)" + name + "=([^;]+)"),
+  );
+  return match ? decodeURIComponent(match[1]) : null;
 }
 
 /**
- * Construye el valor de la cookie somna_uid conservando el uid existente y
- * fijando el segmento `lang`.
+ * getBrowserLang: lee el idioma del navegador (navigator.language) y lo
+ * normaliza a "es" o "en". Si el navegador está en español (es-ES, es-MX,
+ * es-AR, etc.) devuelve "es"; en cualquier otro caso devuelve "en".
  */
-export function buildLangCookieValue(
-  existingCookie: string | null | undefined,
-  lang: Lang,
-): string {
-  let uid = "";
-  if (existingCookie) {
-    const uidMatch = existingCookie.match(/(?:^|;\s*)somna_uid=([^;]+)/);
-    if (uidMatch) uid = uidMatch[1];
+export function getBrowserLang(): Lang {
+  if (typeof navigator === "undefined") return "en";
+  const langs = [navigator.language, ...(navigator.languages ?? [])];
+  for (const l of langs) {
+    if (l && l.toLowerCase().startsWith("es")) return "es";
   }
-  if (!uid) uid = generateUid();
-  return `somna_uid=${uid}; lang=${lang}; Path=/; Max-Age=${LANG_COOKIE_MAX_AGE}; SameSite=Lax; Secure`;
+  return "en";
+}
+
+/**
+ * getSavedUserLang: lee la preferencia manual guardada por el usuario en la
+ * cookie somna_lang. Devuelve null si no hay preferencia guardada.
+ */
+export function getSavedUserLang(): Lang | null {
+  const v = readCookie(LANG_COOKIE);
+  if (v === "es" || v === "en") return v;
+  return null;
+}
+
+/**
+ * setUserLangCookie: escribe la cookie somna_lang con el idioma indicado.
+ * Validez 1 año, Path=/, SameSite=Lax. En http (dev) no marca Secure.
+ * También garantiza que exista somna_uid (lo crea si falta) para vincular
+ * la preferencia al usuario.
+ */
+export function setUserLangCookie(lang: Lang): void {
+  if (typeof document === "undefined") return;
+  const secure = typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
+  document.cookie = `${LANG_COOKIE}=${lang}; Path=/; Max-Age=${LANG_COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
+  if (!readCookie(UID_COOKIE)) {
+    document.cookie = `${UID_COOKIE}=${generateUid()}; Path=/; Max-Age=${LANG_COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
+  }
+}
+
+/**
+ * Devuelve el idioma efectivo del visitante en el cliente.
+ * Prioridad: cookie de preferencia manual > idioma del navegador > "en".
+ */
+export function resolveClientLang(): Lang {
+  return getSavedUserLang() ?? getBrowserLang();
 }
 
 /** Genera un identificador de usuario aleatorio (suficiente para vincular preferencia). */
@@ -59,26 +85,6 @@ export function generateUid(): string {
   return "xxxxxxxxxxxxxxxx".replace(/x/g, () =>
     Math.floor(Math.random() * 16).toString(16),
   );
-}
-
-/**
- * Decide el idioma inicial del visitante a partir de la cookie y del país
- * detectado por Cloudflare. Prioridad: cookie > país > 'en'.
- *
- * @param cookieHeader  Cabecera Cookie entrante.
- * @param cfIpCountry   Valor de la cabecera `cf-ipcountry` (código ISO 3166-1 alpha-2).
- */
-export function detectInitialLang(
-  cookieHeader: string | null | undefined,
-  cfIpCountry: string | null | undefined,
-): Lang {
-  const fromCookie = readLangFromCookie(cookieHeader);
-  if (fromCookie) return fromCookie;
-
-  const country = (cfIpCountry ?? "").toUpperCase();
-  if (ES_COUNTRIES.has(country)) return "es";
-
-  return "en";
 }
 
 /**
@@ -94,16 +100,51 @@ export function isEsRoute(pathname: string): boolean {
  * - toLang "es" sobre "/diary" -> "/es/diary"
  * - toLang "en" sobre "/es/diary" -> "/diary"
  * - toLang "en" sobre "/es" -> "/"
+ *
+ * Mapeo de slugs traducidos (legacy): algunas rutas españolas antiguas usaban
+ * slugs nativos (evaluacion, diario, relajacion, panel). Para que el
+ * conmutador de idioma y el auto-redirect funcionen en ambas direcciones,
+ * normalizamos esos slugs a sus equivalentes en inglés.
+ *
+ * Nota: /es/panel ↔ /dashboard es una correspondencia asimétrica (el slug
+ * español "panel" no coincide con el inglés "dashboard").
  */
+const ES_SLUG_TO_EN: Record<string, string> = {
+  evaluacion: "assessment",
+  diario: "diary",
+  relajacion: "relax",
+  panel: "dashboard",
+};
+const EN_SLUG_TO_ES: Record<string, string> = {
+  assessment: "assessment",
+  diary: "diary",
+  relax: "relax",
+  dashboard: "panel",
+};
+
+/** Convierte un segmento de ruta español (legacy) a su equivalente inglés. */
+function esSlugToEn(segment: string): string {
+  return ES_SLUG_TO_EN[segment] ?? segment;
+}
+/** Convierte un segmento de ruta inglés a su equivalente español. */
+function enSlugToEs(segment: string): string {
+  return EN_SLUG_TO_ES[segment] ?? segment;
+}
+
 export function switchRouteLang(pathname: string, toLang: Lang): string {
   const isEs = isEsRoute(pathname);
   if (toLang === "es") {
     if (isEs) return pathname;
     if (pathname === "/") return "/es";
-    return "/es" + pathname;
+    // 1:1 mapping con excepciones documentadas (dashboard → panel).
+    const segments = pathname.split("/").map((s) => enSlugToEs(s));
+    return "/es" + segments.join("/");
   }
   // toLang === "en"
   if (!isEs) return pathname;
   if (pathname === "/es") return "/";
-  return pathname.slice(3); // quita "/es"
+  // Quita "/es" y normaliza slugs españoles (legacy) a ingleses.
+  const rest = pathname.slice(3); // quita "/es"
+  const segments = rest.split("/").map((s) => esSlugToEn(s));
+  return segments.join("/");
 }

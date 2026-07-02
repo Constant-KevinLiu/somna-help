@@ -1,18 +1,24 @@
 /**
  * Conmutador de idioma para la cabecera.
  *
+ * ⚠️ 100% cliente. Sin endpoints /api. Sin createAPIFileRoute.
+ *
  * - Muestra el idioma actual y permite cambiar entre Español e English.
- * - Al cambiar, navega a la ruta equivalente en el otro idioma y guarda la
- *   preferencia en la cookie somna_uid (vía llamada al endpoint /api/lang).
- * - Prioriza Facebook/Instagram/TikTok en el resto de la app; aquí solo
- *   aparece el selector de idioma.
+ * - Al hacer clic:
+ *     • ES → escribe cookie somna_lang=es y router.navigate("/es/")
+ *     • EN → escribe cookie somna_lang=en y router.navigate("/")
+ * - La cookie dura 1 año y se vincula a somna_uid.
  */
 
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, useRouter } from "@tanstack/react-router";
+import { useRouter } from "@tanstack/react-router";
 import { Globe, Check, ChevronDown } from "lucide-react";
 import type { Lang } from "@/lib/lang-detect";
-import { switchRouteLang, isEsRoute } from "@/lib/lang-detect";
+import {
+  switchRouteLang,
+  isEsRoute,
+  setUserLangCookie,
+} from "@/lib/lang-detect";
 
 interface LangOption {
   value: Lang;
@@ -27,7 +33,6 @@ const OPTIONS: LangOption[] = [
 
 export function LanguageSwitcher() {
   const router = useRouter();
-  const navigate = useNavigate();
   const pathname = router.state.location.pathname;
   const current: Lang = isEsRoute(pathname) ? "es" : "en";
   const [open, setOpen] = useState(false);
@@ -41,24 +46,16 @@ export function LanguageSwitcher() {
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
 
-  async function choose(lang: Lang) {
+  function choose(lang: Lang) {
     setOpen(false);
     if (lang === current) return;
 
-    // 1. Guarda la preferencia en la cookie somna_uid.
-    try {
-      await fetch("/api/lang", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ lang }),
-      });
-    } catch {
-      // No bloqueamos la navegación si falla la cookie.
-    }
+    // 1. Guarda la preferencia en la cookie somna_lang (cliente puro).
+    setUserLangCookie(lang);
 
     // 2. Navega a la ruta equivalente en el otro idioma.
     const target = switchRouteLang(pathname, lang);
-    navigate({ to: target });
+    router.navigate({ to: target });
   }
 
   const currentOption = OPTIONS.find((o) => o.value === current)!;

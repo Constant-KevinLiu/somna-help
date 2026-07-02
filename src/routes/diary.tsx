@@ -31,7 +31,7 @@ export const Route = createFileRoute("/diary")({
 
 const moods = ["😴", "🙂", "😐", "😟", "😩"];
 
-function DiaryPage() {
+export function DiaryPage() {
   const { t, lang } = useI18n();
   const { t: ts } = useSleepI18n();
   const [bed, setBed] = useState("23:00");

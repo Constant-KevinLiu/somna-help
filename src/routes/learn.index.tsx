@@ -27,7 +27,7 @@ export const Route = createFileRoute("/learn/")({
   }),
 });
 
-function LearnHub() {
+export function LearnHub() {
   const { lang } = useI18n();
   const dict = getLearnDict(lang);
   const cbti = getCbtiDict(lang);
@@ -49,7 +49,7 @@ function LearnHub() {
             {CBTI_SLUGS.map((s) => (
               <SafeLink
                 key={s}
-                to={cbtiPath(s)}
+                to={cbtiPath(s, lang)}
                 className="glass group rounded-3xl p-6 transition hover:-translate-y-1 hover:bg-white/[0.06]"
               >
                 <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
@@ -83,7 +83,7 @@ function LearnHub() {
             {LEARN_SLUGS.map((s) => (
               <SafeLink
                 key={s}
-                to={learnPath(s)}
+                to={learnPath(s, lang)}
                 className="glass group rounded-3xl p-6 transition hover:-translate-y-1 hover:bg-white/[0.06]"
               >
                 <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
