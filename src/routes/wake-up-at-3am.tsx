@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { CbtiArticleShell, cbtiHead } from "@/components/cbti/CbtiArticleShell";
-import { useI18n, type Lang } from "@/lib/i18n";
+import { useI18n } from "@/lib/i18n";
 import { getCbtiDict } from "@/lib/cbti-i18n";
 
 export const Route = createFileRoute("/wake-up-at-3am")({
@@ -8,60 +8,11 @@ export const Route = createFileRoute("/wake-up-at-3am")({
   head: () => cbtiHead("wake-up-at-3am"),
 });
 
-type Node = { q?: string; yes?: string; no?: string; action?: string };
-
-const flow: Record<Lang, { heading: string; nodes: Node[]; yes: string; no: string }> = {
-  en: {
-    heading: "Nighttime Awakening Flowchart",
-    yes: "Yes",
-    no: "No",
-    nodes: [
-      { q: "Did you wake up?", yes: "Stay still, breathe slowly.", no: "Keep resting." },
-      {
-        q: "Still awake after ~20 minutes?",
-        yes: "Leave the bed. Dim light. Calm activity.",
-        no: "Drift back to sleep.",
-      },
-      { q: "Feeling sleepy again?", yes: "Return to bed.", no: "Stay up until sleepy." },
-      { action: "Wake at your usual time — don't sleep in." },
-    ],
-  },
-  zh: {
-    heading: "夜间醒来流程",
-    yes: "是",
-    no: "否",
-    nodes: [
-      { q: "你醒了吗?", yes: "保持安静,缓慢呼吸。", no: "继续休息。" },
-      { q: "约 20 分钟后仍清醒?", yes: "离开床。昏暗光线。安静活动。", no: "慢慢再入睡。" },
-      { q: "再次感到困倦?", yes: "回到床上。", no: "保持清醒直到困倦。" },
-      { action: "按正常时间起床 —— 不要赖床。" },
-    ],
-  },
-  es: {
-    heading: "Diagrama de despertar nocturno",
-    yes: "Sí",
-    no: "No",
-    nodes: [
-      { q: "¿Te despertaste?", yes: "Quédate quieto, respira lento.", no: "Sigue descansando." },
-      {
-        q: "¿Aún despierto tras ~20 min?",
-        yes: "Sal de la cama. Luz tenue. Actividad tranquila.",
-        no: "Vuelve a dormirte.",
-      },
-      {
-        q: "¿Sientes sueño de nuevo?",
-        yes: "Vuelve a la cama.",
-        no: "Quédate despierto hasta tener sueño.",
-      },
-      { action: "Despierta a tu hora habitual — no duermas hasta tarde." },
-    ],
-  },
-};
-
 export function WakeUp3amPage() {
   const { lang } = useI18n();
   const article = getCbtiDict(lang).articles["wake-up-at-3am"];
-  const f = flow[lang];
+  const f = article.flow;
+  if (!f) return null;
 
   return (
     <CbtiArticleShell slug="wake-up-at-3am" article={article}>

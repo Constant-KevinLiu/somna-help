@@ -3,11 +3,10 @@
  *
  * ⚠️ 100% cliente. Sin endpoints /api. Sin createAPIFileRoute.
  *
- * - Muestra el idioma actual y permite cambiar entre Español e English.
- * - Al hacer clic:
- *     • ES → escribe cookie somna_lang=es y router.navigate("/es/")
- *     • EN → escribe cookie somna_lang=en y router.navigate("/")
- * - La cookie dura 1 año y se vincula a somna_uid.
+ * - Muestra el idioma actual y permite cambiar entre los idiomas activos.
+ * - Idiomas activos: English, Español, Português (BR).
+ * - Reservados (desactivados): Deutsch, 日本語, 中文.
+ * - Al hacer clic: escribe cookie somna_lang y router.navigate a la ruta equivalente.
  */
 
 import { useState, useRef, useEffect } from "react";
@@ -16,25 +15,32 @@ import { Globe, Check, ChevronDown } from "lucide-react";
 import type { Lang } from "@/lib/lang-detect";
 import {
   switchRouteLang,
-  isEsRoute,
+  getLangFromPathname,
   setUserLangCookie,
 } from "@/lib/lang-detect";
+import { useI18n } from "@/lib/i18n";
 
 interface LangOption {
   value: Lang;
   label: string;
   flag: string;
+  active: boolean;
 }
 
 const OPTIONS: LangOption[] = [
-  { value: "es", label: "Español", flag: "🇪🇸" },
-  { value: "en", label: "English", flag: "🇬🇧" },
+  { value: "en", label: "English", flag: "🇬🇧", active: true },
+  { value: "es", label: "Español", flag: "🇪🇸", active: true },
+  { value: "pt", label: "Português (BR)", flag: "🇧🇷", active: true },
+  { value: "de", label: "Deutsch", flag: "🇩🇪", active: false },
+  { value: "ja", label: "日本語", flag: "🇯🇵", active: false },
+  { value: "zh", label: "中文", flag: "🇨🇳", active: false },
 ];
 
 export function LanguageSwitcher() {
   const router = useRouter();
+  const { t } = useI18n();
   const pathname = router.state.location.pathname;
-  const current: Lang = isEsRoute(pathname) ? "es" : "en";
+  const current: Lang = getLangFromPathname(pathname);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -45,6 +51,16 @@ export function LanguageSwitcher() {
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
+
+  // ESC closes the language menu.
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   function choose(lang: Lang) {
     setOpen(false);
@@ -58,16 +74,16 @@ export function LanguageSwitcher() {
     router.navigate({ to: target });
   }
 
-  const currentOption = OPTIONS.find((o) => o.value === current)!;
+  const currentOption = OPTIONS.find((o) => o.value === current) ?? OPTIONS[0];
 
   return (
     <div className="relative" ref={ref}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-label="Cambiar de idioma"
+        aria-label={t("lang.switch.aria")}
         aria-expanded={open}
-        className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/10 hover:text-foreground"
+        className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-sm font-medium text-white/85 transition hover:bg-accent/20 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         <Globe className="h-3.5 w-3.5" />
         <span className="hidden sm:inline">{currentOption.label}</span>
@@ -76,19 +92,21 @@ export function LanguageSwitcher() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-2xl border border-white/10 bg-card/95 p-1 shadow-xl backdrop-blur">
+        <div className="nav-surface absolute right-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-2xl p-1 animate-nav-dropdown">
           {OPTIONS.map((opt) => (
             <button
               key={opt.value}
               type="button"
-              onClick={() => choose(opt.value)}
-              className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-foreground/90 transition hover:bg-white/5"
+              onClick={() => opt.active && choose(opt.value)}
+              disabled={!opt.active}
+              className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-white/90 transition hover:bg-accent/20 hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
             >
               <span className="flex items-center gap-2">
                 <span>{opt.flag}</span>
                 {opt.label}
+                {!opt.active && <span className="text-[10px] text-white/60">em breve</span>}
               </span>
-              {opt.value === current && <Check className="h-3.5 w-3.5 text-accent" />}
+              {opt.value === current && opt.active && <Check className="h-3.5 w-3.5 text-accent" />}
             </button>
           ))}
         </div>

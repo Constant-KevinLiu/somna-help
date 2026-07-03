@@ -21,6 +21,7 @@ import {
 } from "@/lib/learn-i18n";
 import { getCbtiDict, cbtiPath } from "@/lib/cbti-i18n";
 import { hreflangLinks } from "@/components/seo/Hreflang";
+import { loadPtDict, getPtString } from "@/locales/pt";
 
 export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson: LearnLesson }) {
   const { lang } = useI18n();
@@ -261,6 +262,45 @@ export function learnHeadEs(slug: LearnSlug) {
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: lesson.meta.title },
       { name: "twitter:description", content: lesson.meta.desc },
+    ],
+    links: hreflangLinks(url),
+    scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
+  };
+}
+
+/**
+ * Versão em português brasileiro de learnHead: lê title/description de
+ * src/locales/pt/common.json (seo.learn.<slug>.*) e gera hreflang
+ * trilingue + canonical /pt/learn/...
+ */
+export function learnHeadPt(slug: LearnSlug) {
+  const pt = getLearnDict("pt");
+  const lesson = pt.lessons[slug];
+  const t = loadPtDict();
+  const title = getPtString(t, `seo.learn.${slug}.title`);
+  const description = getPtString(t, `seo.learn.${slug}.description`);
+  const url = `/pt/learn/${slug}`;
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: lesson.faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  return {
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:url", content: `https://somna.help${url}` },
+      { property: "og:type", content: "article" },
+      { property: "og:locale", content: "pt_BR" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
     ],
     links: hreflangLinks(url),
     scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],

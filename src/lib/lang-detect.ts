@@ -1,21 +1,38 @@
 /**
- * Detección de idioma y persistencia de la preferencia del usuario.
+ * Detecção de idioma e persistência da preferência do usuário.
  *
- * ⚠️ 100% cliente. Sin endpoints /api. Sin createAPIFileRoute. Sin SSR.
+ * ⚠️ 100% cliente. Sem endpoints /api. Sem createAPIFileRoute. Sem SSR.
  *
- * - La preferencia del usuario se guarda en la cookie `somna_lang` (1 año),
- *   vinculada al identificador `somna_uid` cuando existe.
- * - Detección automática por navegador (navigator.language) como respaldo.
- * - No hay parámetro ?lang=. No hay subdominios por país. Solo rutas / y /es/.
+ * Arquitetura multilíngue extensível:
+ * - A preferência do usuário é salva no cookie `somna_lang` (1 ano).
+ * - Detecção automática por navegador (navigator.language) como fallback.
+ * - Idiomas suportados: en, es, pt. Reservados para futuro: de, ja, zh.
+ * - Cada idioma tem seu próprio prefixo de rota: / (en), /es/, /pt/, /de/, /ja/, /zh/.
  */
 
-export type Lang = "en" | "es";
+export type Lang = "en" | "es" | "pt" | "de" | "ja" | "zh";
 
-/** Nombre de la cookie que guarda la preferencia de idioma del usuario. */
+/** Idiomas atualmente ativos (com rotas e locales criados). */
+export const ACTIVE_LANGS: Lang[] = ["en", "es", "pt"];
+
+/** Idiomas reservados para futuro (sem rotas ainda). */
+export const RESERVED_LANGS: Lang[] = ["de", "ja", "zh"];
+
+/** Mapeamento de idioma → prefixo de rota. en não tem prefixo. */
+export const LANG_PREFIX: Record<Lang, string> = {
+  en: "",
+  es: "/es",
+  pt: "/pt",
+  de: "/de",
+  ja: "/ja",
+  zh: "/zh",
+};
+
+/** Nome do cookie que guarda a preferência de idioma do usuário. */
 export const LANG_COOKIE = "somna_lang";
-/** Nombre de la cookie de identificador de usuario. */
+/** Nome do cookie de identificador de usuário. */
 export const UID_COOKIE = "somna_uid";
-/** Validez de la cookie de idioma: 1 año. */
+/** Validade do cookie de idioma: 1 ano. */
 export const LANG_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 /**
@@ -31,26 +48,36 @@ function readCookie(name: string): string | null {
 }
 
 /**
- * getBrowserLang: lee el idioma del navegador (navigator.language) y lo
- * normaliza a "es" o "en". Si el navegador está en español (es-ES, es-MX,
- * es-AR, etc.) devuelve "es"; en cualquier otro caso devuelve "en".
+ * getBrowserLang: lê o idioma do navegador (navigator.language) e o normaliza
+ * para um dos idiomas suportados. Retorna "en" como fallback.
+ * - pt-BR, pt-PT → "pt"
+ * - es-ES, es-MX, es-AR → "es"
+ * - de-DE, de-AT → "de"
+ * - ja-JP → "ja"
+ * - zh-CN, zh-TW → "zh"
  */
 export function getBrowserLang(): Lang {
   if (typeof navigator === "undefined") return "en";
   const langs = [navigator.language, ...(navigator.languages ?? [])];
   for (const l of langs) {
-    if (l && l.toLowerCase().startsWith("es")) return "es";
+    if (!l) continue;
+    const lower = l.toLowerCase();
+    if (lower.startsWith("pt")) return "pt";
+    if (lower.startsWith("es")) return "es";
+    if (lower.startsWith("de")) return "de";
+    if (lower.startsWith("ja")) return "ja";
+    if (lower.startsWith("zh")) return "zh";
   }
   return "en";
 }
 
 /**
- * getSavedUserLang: lee la preferencia manual guardada por el usuario en la
- * cookie somna_lang. Devuelve null si no hay preferencia guardada.
+ * getSavedUserLang: lê a preferência manual salva pelo usuário no cookie
+ * somna_lang. Retorna null se não houver preferência salva.
  */
 export function getSavedUserLang(): Lang | null {
   const v = readCookie(LANG_COOKIE);
-  if (v === "es" || v === "en") return v;
+  if (v === "en" || v === "es" || v === "pt" || v === "de" || v === "ja" || v === "zh") return v;
   return null;
 }
 
@@ -88,63 +115,106 @@ export function generateUid(): string {
 }
 
 /**
+ * Detecta o idioma de uma rota pelo seu prefixo.
+ * - "/" → "en"
+ * - "/es" ou "/es/..." → "es"
+ * - "/pt" ou "/pt/..." → "pt"
+ * - "/de/..." → "de", "/ja/..." → "ja", "/zh/..." → "zh"
+ */
+export function getLangFromPathname(pathname: string): Lang {
+  if (pathname === "/es" || pathname.startsWith("/es/")) return "es";
+  if (pathname === "/pt" || pathname.startsWith("/pt/")) return "pt";
+  if (pathname === "/de" || pathname.startsWith("/de/")) return "de";
+  if (pathname === "/ja" || pathname.startsWith("/ja/")) return "ja";
+  if (pathname === "/zh" || pathname.startsWith("/zh/")) return "zh";
+  return "en";
+}
+
+/**
  * Comprueba si una ruta pertenece a la versión en español (/es/...).
+ * @deprecated Usar getLangFromPathname() para suporte multilíngue.
  */
 export function isEsRoute(pathname: string): boolean {
   return pathname === "/es" || pathname.startsWith("/es/");
 }
 
 /**
- * Convierte una ruta a su equivalente en el idioma indicado.
- * - toLang "es" sobre "/"  -> "/es"
- * - toLang "es" sobre "/diary" -> "/es/diary"
- * - toLang "en" sobre "/es/diary" -> "/diary"
- * - toLang "en" sobre "/es" -> "/"
- *
- * Mapeo de slugs traducidos (legacy): algunas rutas españolas antiguas usaban
- * slugs nativos (evaluacion, diario, relajacion, panel). Para que el
- * conmutador de idioma y el auto-redirect funcionen en ambas direcciones,
- * normalizamos esos slugs a sus equivalentes en inglés.
- *
- * Nota: /es/panel ↔ /dashboard es una correspondencia asimétrica (el slug
- * español "panel" no coincide con el inglés "dashboard").
+ * Comprueba si una ruta pertenece a un idioma distinto del inglés.
  */
-const ES_SLUG_TO_EN: Record<string, string> = {
+export function isLocalizedRoute(pathname: string): boolean {
+  return getLangFromPathname(pathname) !== "en";
+}
+
+/**
+ * Mapeo de slugs traducidos (legacy): algunas rutas localizadas usan slugs
+ * nativos. Para que el conmutador de idioma y el auto-redirect funcionen en
+ * ambas direcciones, normalizamos esos slugs a sus equivalentes en inglés.
+ *
+ * Nota: /es/panel ↔ /dashboard y /pt/painel ↔ /dashboard son asimétricos.
+ */
+const LOCALIZED_SLUG_TO_EN: Record<string, string> = {
+  // Español (legacy)
   evaluacion: "assessment",
   diario: "diary",
   relajacion: "relax",
   panel: "dashboard",
+  // Portugués
+  avaliacao: "assessment",
+  relaxamento: "relax",
+  painel: "dashboard",
 };
-const EN_SLUG_TO_ES: Record<string, string> = {
-  assessment: "assessment",
-  diary: "diary",
-  relax: "relax",
-  dashboard: "panel",
+const EN_SLUG_TO_LOCALIZED: Record<string, Partial<Record<Lang, string>>> = {
+  dashboard: { es: "panel", pt: "painel" },
 };
 
-/** Convierte un segmento de ruta español (legacy) a su equivalente inglés. */
-function esSlugToEn(segment: string): string {
-  return ES_SLUG_TO_EN[segment] ?? segment;
+/** Convierte un segmento de ruta localizado a su equivalente inglés. */
+function localizedSlugToEn(segment: string): string {
+  return LOCALIZED_SLUG_TO_EN[segment] ?? segment;
 }
-/** Convierte un segmento de ruta inglés a su equivalente español. */
-function enSlugToEs(segment: string): string {
-  return EN_SLUG_TO_ES[segment] ?? segment;
+/** Convierte un segmento de ruta inglés a su equivalente en el idioma destino. */
+function enSlugToLocalized(segment: string, toLang: Lang): string {
+  const map = EN_SLUG_TO_LOCALIZED[segment];
+  return map ? (map[toLang] ?? segment) : segment;
 }
 
+/**
+ * Convierte una ruta a su equivalente en el idioma indicado.
+ * - toLang "pt" sobre "/"  -> "/pt"
+ * - toLang "pt" sobre "/diary" -> "/pt/diary"
+ * - toLang "en" sobre "/pt/diary" -> "/diary"
+ * - toLang "en" sobre "/pt" -> "/"
+ * - toLang "es" sobre "/pt/program" -> "/es/program"
+ *
+ * Funciona entre cualquier par de idiomas soportados.
+ */
 export function switchRouteLang(pathname: string, toLang: Lang): string {
-  const isEs = isEsRoute(pathname);
-  if (toLang === "es") {
-    if (isEs) return pathname;
-    if (pathname === "/") return "/es";
-    // 1:1 mapping con excepciones documentadas (dashboard → panel).
-    const segments = pathname.split("/").map((s) => enSlugToEs(s));
-    return "/es" + segments.join("/");
+  const currentLang = getLangFromPathname(pathname);
+  const currentPrefix = LANG_PREFIX[currentLang];
+  const targetPrefix = LANG_PREFIX[toLang];
+
+  // Quita el prefijo del idioma actual y normaliza slugs a inglés.
+  let rest = pathname;
+  if (currentPrefix && (pathname === currentPrefix || pathname.startsWith(currentPrefix + "/"))) {
+    rest = pathname.slice(currentPrefix.length);
   }
-  // toLang === "en"
-  if (!isEs) return pathname;
-  if (pathname === "/es") return "/";
-  // Quita "/es" y normaliza slugs españoles (legacy) a ingleses.
-  const rest = pathname.slice(3); // quita "/es"
-  const segments = rest.split("/").map((s) => esSlugToEn(s));
-  return segments.join("/");
+  // Normaliza slugs localizados (legacy) a ingleses canónicos.
+  const enSegments = rest.split("/").map((s) => localizedSlugToEn(s));
+  const enPath = enSegments.join("/");
+
+  // Aplica el prefijo del idioma destino y mapea slugs si es necesario.
+  if (toLang === "en") return enPath;
+  const targetSegments = enPath.split("/").map((s) => enSlugToLocalized(s, toLang));
+  return targetPrefix + targetSegments.join("/");
+}
+
+/**
+ * getAllLangAlternatePaths: genera las rutas equivalentes en TODOS los
+ * idiomas activos para una ruta dada. Usado por SeoHead/hreflang para
+ * renderizar las etiquetas <link rel="alternate" hreflang="...">.
+ */
+export function getAllLangAlternatePaths(pathname: string): Array<{ lang: Lang; path: string }> {
+  return ACTIVE_LANGS.map((lang) => ({
+    lang,
+    path: switchRouteLang(pathname, lang),
+  }));
 }

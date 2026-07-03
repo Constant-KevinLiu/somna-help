@@ -56,7 +56,7 @@ function EsLessonRoute() {
   // TanStack Router es principalmente para SSR; para cambios de idioma en
   // cliente el título del documento se actualiza aquí.
   if (typeof document !== "undefined") {
-    const c = lesson.i18n[lang] ?? lesson.i18n.en;
+    const c = lesson.i18n[lang] ?? lesson.i18n.en!;
     if (document.title !== c.seoTitle) document.title = c.seoTitle;
   }
   return <LessonTemplate lesson={lesson} />;

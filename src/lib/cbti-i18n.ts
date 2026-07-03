@@ -1,5 +1,6 @@
 import type { Lang } from "./i18n";
 import type { FAQ } from "./calc-i18n";
+import { ptCbtiDict } from "./cbti-pt-i18n";
 
 export type CbtiSlug =
   | "cbt-i-guide"
@@ -11,6 +12,9 @@ export type CbtiSlug =
 export type CbtiSection = { heading: string; paras?: string[]; bullets?: string[] };
 export type CbtiStrategyItem = { title: string; desc: string };
 
+export type FlowNode = { q?: string; yes?: string; no?: string; action?: string };
+export type ArticleFlow = { heading: string; yes: string; no: string; nodes: FlowNode[] };
+
 export type CbtiArticle = {
   meta: { title: string; desc: string };
   eyebrow: string;
@@ -21,6 +25,7 @@ export type CbtiArticle = {
   sections: CbtiSection[];
   strategyIntro?: string;
   strategyItems: CbtiStrategyItem[];
+  flow?: ArticleFlow;
   faqs: FAQ[];
   cta: { label: string; to: string };
 };
@@ -509,6 +514,21 @@ const en: CbtiDict = {
           desc: "Don't sleep in. Protecting wake time protects tomorrow night's sleep pressure.",
         },
       ],
+      flow: {
+        heading: "Nighttime Awakening Flowchart",
+        yes: "Yes",
+        no: "No",
+        nodes: [
+          { q: "Did you wake up?", yes: "Stay still, breathe slowly.", no: "Keep resting." },
+          {
+            q: "Still awake after ~20 minutes?",
+            yes: "Leave the bed. Dim light. Calm activity.",
+            no: "Drift back to sleep.",
+          },
+          { q: "Feeling sleepy again?", yes: "Return to bed.", no: "Stay up until sleepy." },
+          { action: "Wake at your usual time — don't sleep in." },
+        ],
+      },
       cta: { label: "Track Your Sleep Patterns", to: "/diary" },
       faqs: [
         {
@@ -1810,7 +1830,7 @@ const es: CbtiDict = {
   },
 };
 
-const dicts: Record<Lang, CbtiDict> = { en, zh, es };
+const dicts: Partial<Record<Lang, CbtiDict>> = { en, zh, es, pt: ptCbtiDict };
 
 export function getCbtiDict(lang: Lang): CbtiDict {
   return dicts[lang] ?? en;
@@ -1824,7 +1844,7 @@ export const CBTI_SLUGS: CbtiSlug[] = [
   "insomnia-treatment",
 ];
 
-export function cbtiPath(slug: CbtiSlug, lang?: "en" | "zh" | "es"): string {
-  const prefix = lang === "es" ? "/es" : "";
+export function cbtiPath(slug: CbtiSlug, lang?: "en" | "zh" | "es" | "pt"): string {
+  const prefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
   return `${prefix}/${slug}`;
 }

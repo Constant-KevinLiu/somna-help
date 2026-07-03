@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { PageHero } from "@/components/PageHero";
 import { RelatedTools } from "@/components/RelatedTools";
 import { FAQ, faqJsonLd } from "@/components/FAQ";
+import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n, useFmtTime } from "@/lib/i18n";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { Moon, Clock } from "lucide-react";
@@ -111,12 +112,12 @@ export function SleepCalculatorPage() {
           </div>
 
           <div className="mt-8 text-center">
-            <Link
-              to="/calculator"
+            <SafeLink
+              to={lang === "pt" ? "/pt/calculator" : lang === "es" ? "/es/calculator" : "/calculator"}
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
             >
               {d.cta}
-            </Link>
+            </SafeLink>
           </div>
         </div>
       </section>
@@ -133,7 +134,7 @@ export function SleepCalculatorPage() {
       </section>
 
       <FAQ items={d.faqs} />
-      <RelatedTools exclude="/sleep-calculator" />
+      <RelatedTools exclude={lang === "pt" ? "/pt/sleep-calculator" : lang === "es" ? "/es/sleep-calculator" : "/sleep-calculator"} />
     </>
   );
 }

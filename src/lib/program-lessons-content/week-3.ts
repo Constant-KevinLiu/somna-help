@@ -181,6 +181,63 @@ export const week3Lessons: LessonContent[] = [
           "insomnio eficiencia",
         ],
       },
+      pt: {
+        title: "O que é eficiência do sono?",
+        eyebrow: "SEMANA 3 · LIÇÃO 7",
+        subtitle: "A métrica fundamental que muda seu foco das horas para a qualidade.",
+        difficulty: "Intermediário",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "Qualidade acima de quantidade",
+            paras: [
+              "Para melhorar de verdade seu descanso, precisamos de uma métrica confiável que foque na qualidade real da sua noite, e não só no total de horas que você passa na cama. Na TCC-I, essa métrica fundamental se chama Eficiência do Sono (ES).",
+              "A Eficiência do Sono é a razão matemática exata entre o tempo total de sono real e o tempo total que você passa na cama, expressa em porcentagem: Eficiência do Sono = (Tempo Total de Sono Real ÷ Tempo Total na Cama) × 100%.",
+            ],
+          },
+          {
+            heading: "Uma comparação clara",
+            paras: [
+              "A noite inquieta: você passa 8 horas na cama, mas por ficar virando e acordar várias vezes, dorme só 6 horas. Sua Eficiência do Sono é de 75%.",
+              "A noite consolidada: você passa só 6,5 horas na cama, mas dorme profundamente por 6 horas. Sua Eficiência do Sono sobe para 92%.",
+              "Para quem dorme bem de forma constante, a Eficiência do Sono fica naturalmente acima de 85%. Para quem vive com insônia crônica, costuma cair abaixo de 75% — o que significa que boa parte da sua noite é gasta praticando vigília e preocupação dentro da cama.",
+            ],
+          },
+          {
+            heading: "Um novo objetivo",
+            paras: [
+              "A TCC-I transforma completamente sua meta. Tiramos o foco da busca estressante por quantidade (mais horas na cama) e focamos totalmente em maximizar a qualidade (sono consolidado e sem interrupções). Ao encolher seu tempo na cama para ficar perto da sua capacidade real de sono, eliminamos os buracos vazios e ansiosos da sua noite.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Vamos calcular sua linha de base. Olhe as anotações do seu diário do sono da semana passada. Faça a média do tempo total de sono real, divida pela média do tempo total na cama e multiplique por 100. Anote essa porcentagem no seu painel — vai servir de bússola para a próxima fase.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Como é olhar para sua noite pela lente da eficiência em vez das horas brutais? Dá um alívio descobrir que passar menos tempo na cama pode ser o segredo de um descanso mais profundo?",
+        faqs: [
+          {
+            q: "Qual é a nossa Eficiência dosono alvo?",
+            a: "Nossa meta é uma zona estável entre 85% e 90%. Assim que seu sono estiver comprimido e eficiente de forma constante nessa faixa, poderemos ampliar seu tempo na cama de forma segura e gradual.",
+          },
+          {
+            q: "E se minha Eficiência do Sono já for bem alta, mas eu ainda me sentir exausto?",
+            a: "Se sua eficiência for naturalmente acima de 85% mas você se sentir sem descanso, seus desafios podem vir de desalinhamentos circadianos, alterações na qualidade do sono ou estressores cognitivos específicos. Vamos abordar isso nos próximos módulos.",
+          },
+        ],
+        ctaLabel: "Calcular minha eficiência do sono",
+        seoTitle: "O que é eficiência do sono? A métrica da TCC-I explicada | Somna",
+        seoDescription:
+          "Aprenda o que é Eficiência do Sono, como calcular e por que a TCC-I muda seu foco das horas na cama para um sono consolidado e de qualidade.",
+        keywords: [
+          "eficiência do sono",
+          "métrica TCC-I",
+          "calcular eficiência do sono",
+          "qualidade do sono",
+          "insônia eficiência",
+        ],
+      },
     },
   },
 
@@ -368,6 +425,65 @@ export const week3Lessons: LessonContent[] = [
           "tratamiento del insomnio",
         ],
       },
+      pt: {
+        title: "Como funciona a Terapia de Restrição do Sono",
+        eyebrow: "SEMANA 3 · LIÇÃO 8",
+        subtitle: "Contraintuitiva, mas profunda — comprima sua janela para aprofundar o sono.",
+        difficulty: "Intermediário",
+        readingTime: "7 min de leitura",
+        content: [
+          {
+            heading: "Um princípio contraintuitivo",
+            paras: [
+              "A Terapia de Restrição do Sono é, sem dúvida, um dos aspectos mais contraintuitivos da TCC-I, mas é profundamente eficaz. O princípio central soa radical: para curar sua insônia, precisamos limitar temporariamente o tempo que você pode passar na cama.",
+              'Quando você dorme mal, a tentação natural é ficar mais tempo na cama para "recuperar" o descanso. Só que isso estica seu sono e gera noites rasas e fragmentadas, cheias de longos períodos de vigília.',
+              "A Restrição do Sono funciona como uma barragem, acumulando sua Pressão de Sono natural (a pressão homeostática). Ao estreitar sua janela noturna, concentramos seu sono em um bloco denso e ininterrupto.",
+            ],
+          },
+          {
+            heading: "Como funciona, passo a passo",
+            paras: [
+              "1. Estabeleça sua linha de base: se seu diário mostra que você dorme em média 5,5 horas, fixamos seu tempo inicial permitido na cama em exatamente 5,5 horas (ex.: 0h às 5h30).",
+              "2. Ancore seu horário de acordar: escolha um horário fixo de acordar conforme sua vida (ex.: 6h30) e conte para trás para determinar seu horário rigoroso de deitar (ex.: 1h).",
+              "3. Acumule pressão de sono: essa janela restrita cria um déficit de sono leve e seguro. Essa pressão age como um sedativo natural, sobrepondo-se à hiperativação e ajudando você a adormecer rápido e a dormir fundo.",
+              "4. Expansão gradual: assim que sua Eficiência do Sono passar de 85% por uma semana inteira, recompensamos seu corpo ampliando sua janela em 15 minutos. Repetimos esse processo gentil até encontrar sua duração natural ideal de sono.",
+            ],
+          },
+          {
+            heading: "Nota de segurança",
+            paras: [
+              "Para preservar a saúde cognitiva e a segurança no dia a dia, nunca comprimimos a janela de sono de alguém abaixo de um mínimo rigoroso de 5 horas.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Com suas métricas da lição anterior, calcule sua Janela Inicial de Sono personalizada. Fixe seu horário obrigatório de acordar, conte para trás pelo seu tempo médio real de sono e defina seu novo horário de deitar. Comprometa-se com esse cronograma de forma rigorosa pelos próximos sete dias.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Que resistências ou ansiedades internas surgem ao pensar em encurtar seu tempo na cama? Reconheça esses sentimentos — são totalmente naturais ao testar algo tão bonito e fora do comum.",
+        faqs: [
+          {
+            q: "Isso vai me deixar cansado durante o dia no começo?",
+            a: "Sim, é bem comum sentir mais sonolência diurna nos primeiros dias dessa fase. Esse cansaço diurno é um sinal claro de que sua pressão homeostática de sono está se acumulando bonitamente, preparando você para uma noite mais profunda.",
+          },
+          {
+            q: "Posso dormir mais nos fins de semana se tive uma semana especialmente puxada?",
+            a: "Para romper a insônia crônica, a constância é vital. Mudar sua janela nos fins de semana confunde seu ritmo circadiano e reseta seu progresso. Mantenha seu horário de acordar estável.",
+          },
+        ],
+        ctaLabel: "Gerar minha janela de sono personalizada",
+        seoTitle: "Como funciona a Terapia de Restrição do Sono | Somna TCC-I",
+        seoDescription:
+          "Entenda como a Terapia de Restrição do Sono comprime sua janela para acumular pressão de sono, aprofundar o sono e se expandir gradualmente até sua duração natural.",
+        keywords: [
+          "terapia de restrição do sono",
+          "TCC-I restrição do sono",
+          "janela de sono",
+          "pressão do sono",
+          "tratamento da insônia",
+        ],
+      },
     },
   },
 
@@ -532,6 +648,58 @@ export const week3Lessons: LessonContent[] = [
           "consejos restricción del sueño",
           "trampas terapia insomnio",
           "compresión del sueño",
+        ],
+      },
+      pt: {
+        title: "Erros comuns durante a restrição do sono",
+        eyebrow: "SEMANA 3 · LIÇÃO 9",
+        subtitle: "Cinco armadilhas de comportamento a evitar — e como proteger seu progresso.",
+        difficulty: "Intermediário",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "Erros 1–3",
+            paras: [
+              "A Terapia de Restrição do Sono é um catalisador poderosíssimo para um descanso mais profundo, mas, como desafia nossos instintos naturais, exige execução precisa.",
+              "Erro 1 — Comprimir a janela de forma agressiva demais: restringir seu tempo na cama com severidade excessiva gera privação exagerada, em vez de uma dívida de sono útil e controlada. Mantenha sempre uma base de pelo menos 5 a 5,5 horas na cama, salvo supervisão de um especialista.",
+              "Erro 2 — Esmagar sonecas durante o dia: a soneca funciona como uma válvula de escape, liberando a pressão de sono valiosa que você trabalha tanto para acumular durante o dia. Se precisar mesmo descansar por segurança, limite a no máximo 20 minutos antes das 15h.",
+              "Erro 3 — Esquecer o controle de estímulos: se você se pegar acordado dentro da sua janela restrita, não fique deitado forçando. A restrição do sono deve sempre andar junto com o controle de estímulos — se estiver claramente acordado, levante.",
+            ],
+          },
+          {
+            heading: "Erros 4–5",
+            paras: [
+              "Erro 4 — Ampliar seu tempo na cama rápido demais: devolver uma hora ao seu cronograma depois de uma única boa noite pode quebrar seu sono de novo na hora. Só aumente seu tempo na casa em incrementos de 15 minutos depois de manter uma eficiência semanal acima de 85%.",
+              "Erro 5 — Vigiar o relógio: ficar olhando o despertador para conferir se está cumprindo a janela direitinho dispara adrenalina. Programe seus alarmes, vire o relógio para a parede e confie na estrutura comportamental.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Dê uma olhada nas suas anotações dos últimos dias. Algum desses erros comuns se enfiou na sua rotina? Escolha só uma área vulnerável e escreva um plano claro e gentil para se proteger dela esta semana.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Qual desses erros parece mais tentador de cometer no seu dia a dia? Por que esse hábito específico parece reconfortante, e como podemos te apoiar para se afastar dele?",
+        faqs: [
+          {
+            q: "O que devo fazer se me sentir exausto demais para dirigir com segurança?",
+            a: "A segurança diária é sempre sua prioridade absoluta. Se o cansaço diurno colocar em risco sua segurança ao dirigir ou operar máquinas, amplie imediatamente sua janela de sono em 30 minutos e foque em se estabilizar.",
+          },
+          {
+            q: "E se eu seguir minha janela direitinho, mas ainda assim acordar no meio da noite?",
+            a: "Não entre em pânico. É padrão na fase inicial da terapia. Saia da cama, aplique suas ferramentas de controle de estímulos e deixe que a pressão de sono crescente te guie de volta de forma natural.",
+          },
+        ],
+        ctaLabel: "Conectar-se à comunidade Somna",
+        seoTitle: "Erros comuns durante a restrição do sono | Somna TCC-I",
+        seoDescription:
+          "Evite os cinco erros mais comuns da Restrição do Sono — comprimir demais, sonecas, pular o controle de estímulos, ampliar rápido demais e vigiar o relógio.",
+        keywords: [
+          "erros restrição do sono",
+          "erros TCC-I",
+          "dicas restrição do sono",
+          "armadilhas terapia insônia",
+          "compressão do sono",
         ],
       },
     },

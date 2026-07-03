@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { Link, useRouter } from "@tanstack/react-router";
+import { useState, useEffect, useRef } from "react";
 import { Menu, X, Moon, ChevronDown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { getCalcDict } from "@/lib/calc-i18n";
@@ -8,9 +8,9 @@ import { getLearnDict, LEARN_SLUGS, learnPath } from "@/lib/learn-i18n";
 import { SafeLink } from "@/components/common/SafeLink";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
-// Rutas base por idioma. Usamos los mismos slugs en inglés y español
+// Rutas base por idioma. Usamos los mismos slugs en todos los idiomas
 // (1:1 mapping) para que switchRouteLang() pueda hacer el intercambio de
-// prefijo /es de forma fiable. Los textos del menú sí son nativos en cada
+// prefijo de forma fiable. Los textos del menú sí son nativos en cada
 // idioma (vía useI18n).
 const NAV_BY_LANG = {
   en: [
@@ -27,6 +27,13 @@ const NAV_BY_LANG = {
     { to: "/es/diary", key: "nav.diary" as const },
     { to: "/es/relax", key: "nav.relax" as const },
   ],
+  pt: [
+    { to: "/pt", key: "nav.home" as const },
+    { to: "/pt/program", key: "nav.program" as const },
+    { to: "/pt/assessment", key: "nav.assessment" as const },
+    { to: "/pt/diary", key: "nav.diary" as const },
+    { to: "/pt/relax", key: "nav.relax" as const },
+  ],
   zh: [
     { to: "/", key: "nav.home" as const },
     { to: "/program", key: "nav.program" as const },
@@ -39,23 +46,26 @@ const NAV_BY_LANG = {
 const DASHBOARD_BY_LANG = {
   en: { to: "/dashboard", key: "nav.dashboard" as const },
   es: { to: "/es/panel", key: "nav.dashboard" as const },
+  pt: { to: "/pt/painel", key: "nav.dashboard" as const },
   zh: { to: "/dashboard", key: "nav.dashboard" as const },
 };
 
 export function Header() {
   const { t, lang } = useI18n();
+  const router = useRouter();
+  const pathname = router.state.location.pathname;
   const navItems = NAV_BY_LANG[lang];
   const dashboardItem = DASHBOARD_BY_LANG[lang];
   const calcDict = getCalcDict(lang);
   const cbtiDict = getCbtiDict(lang);
   const learnDict = getLearnDict(lang);
-  const esPrefix = lang === "es" ? "/es" : "";
+  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
   const calculatorItems = [
-    { to: `${esPrefix}/calculator`, label: calcDict.nav.cycle },
-    { to: `${esPrefix}/sleep-calculator`, label: calcDict.nav.sleep },
-    { to: `${esPrefix}/bedtime-calculator`, label: calcDict.nav.bedtime },
-    { to: `${esPrefix}/nap-calculator`, label: calcDict.nav.nap },
-    { to: `${esPrefix}/melatonin-calculator`, label: calcDict.nav.melatonin },
+    { to: `${langPrefix}/calculator`, label: calcDict.nav.cycle },
+    { to: `${langPrefix}/sleep-calculator`, label: calcDict.nav.sleep },
+    { to: `${langPrefix}/bedtime-calculator`, label: calcDict.nav.bedtime },
+    { to: `${langPrefix}/nap-calculator`, label: calcDict.nav.nap },
+    { to: `${langPrefix}/melatonin-calculator`, label: calcDict.nav.melatonin },
   ];
   const guideItems = CBTI_SLUGS.map((s) => ({ to: cbtiPath(s, lang), label: cbtiDict.titles[s] }));
   const lessonItems = LEARN_SLUGS.map((s) => ({ to: learnPath(s, lang), label: learnDict.titles[s] }));
@@ -63,16 +73,83 @@ export function Header() {
   const [toolsOpen, setToolsOpen] = useState(false);
   const [learnOpen, setLearnOpen] = useState(false);
 
+  const toolsRef = useRef<HTMLDivElement>(null);
+  const learnRef = useRef<HTMLDivElement>(null);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const drawerFirstRef = useRef<HTMLAnchorElement>(null);
+  // Any overlay panel currently open (drives the dim overlay + ESC handling).
+  const anyPanelOpen = open || toolsOpen || learnOpen;
+
+  // Helper: open exactly one dropdown, closing the other.
+  const openTools = () => {
+    setLearnOpen(false);
+    setToolsOpen(true);
+  };
+  const openLearn = () => {
+    setToolsOpen(false);
+    setLearnOpen(true);
+  };
+
+  // ESC closes every open panel.
+  useEffect(() => {
+    if (!anyPanelOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOpen(false);
+        setToolsOpen(false);
+        setLearnOpen(false);
+        // Return focus to the trigger that matches the closed panel.
+        if (open) hamburgerRef.current?.focus();
+      }
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [anyPanelOpen, open]);
+
+  // Click-outside closes the desktop dropdowns (mouse + touch).
+  useEffect(() => {
+    if (!toolsOpen && !learnOpen) return;
+    function onDown(e: MouseEvent) {
+      const t = e.target as Node;
+      if (toolsRef.current && !toolsRef.current.contains(t)) setToolsOpen(false);
+      if (learnRef.current && !learnRef.current.contains(t)) setLearnOpen(false);
+    }
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [toolsOpen, learnOpen]);
+
+  // Lock body scroll while the mobile drawer is open.
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    // Move focus into the drawer for accessibility.
+    const id = window.setTimeout(() => drawerFirstRef.current?.focus(), 50);
+    return () => {
+      document.body.style.overflow = prev;
+      window.clearTimeout(id);
+      // Return focus to the hamburger button when the drawer closes.
+      hamburgerRef.current?.focus();
+    };
+  }, [open]);
+
+  // Close panels on route change.
+  useEffect(() => {
+    setOpen(false);
+    setToolsOpen(false);
+    setLearnOpen(false);
+  }, [pathname]);
+
   return (
     <header className="sticky top-0 z-50">
-      <div className="glass-strong">
+      <div className="nav-bar">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
           <Link to="/" className="flex items-center gap-2">
             <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent">
               <Moon className="h-4 w-4 text-primary-foreground" />
               <span className="absolute inset-0 -z-10 rounded-full bg-primary/40 blur-xl" />
             </span>
-            <span className="font-display text-lg tracking-tight">somna</span>
+            <span className="font-display text-lg tracking-tight text-white">somna</span>
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex">
@@ -81,9 +158,10 @@ export function Header() {
                 key={item.to}
                 to={item.to}
                 activeOptions={{ exact: item.to === "/" }}
-                className="rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
+                className="rounded-full px-3 py-1.5 text-base font-medium text-white/80 transition hover:bg-accent/20 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 activeProps={{
-                  className: "rounded-full px-3 py-1.5 text-sm bg-white/10 text-foreground",
+                  className:
+                    "rounded-full px-3 py-1.5 text-base font-medium bg-accent/25 border border-accent/40 text-white",
                 }}
               >
                 {t(item.key)}
@@ -93,10 +171,10 @@ export function Header() {
             <SafeLink
               to={dashboardItem.to}
               activeOptions={{ exact: false }}
-              className="group relative mx-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1.5 text-sm font-medium text-primary-foreground shadow-[0_0_24px_-6px_oklch(0.72_0.13_280/70%)] transition hover:scale-[1.03] hover:shadow-[0_0_36px_-6px_oklch(0.72_0.13_280/90%)]"
+              className="group relative mx-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1.5 text-base font-medium text-primary-foreground shadow-[0_0_24px_-6px_oklch(0.72_0.13_280/70%)] transition hover:scale-[1.03] hover:shadow-[0_0_36px_-6px_oklch(0.72_0.13_280/90%)]"
               activeProps={{
                 className:
-                  "group relative mx-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1.5 text-sm font-medium text-primary-foreground shadow-[0_0_28px_-4px_oklch(0.72_0.13_280/90%)] ring-2 ring-accent/40",
+                  "group relative mx-1 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-1.5 text-base font-medium text-primary-foreground shadow-[0_0_28px_-4px_oklch(0.72_0.13_280/90%)] ring-2 ring-accent/40",
               }}
             >
               <Moon className="h-3.5 w-3.5" />
@@ -107,9 +185,10 @@ export function Header() {
                 key={item.to}
                 to={item.to}
                 activeOptions={{ exact: item.to === "/" }}
-                className="rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
+                className="rounded-full px-3 py-1.5 text-base font-medium text-white/80 transition hover:bg-accent/20 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 activeProps={{
-                  className: "rounded-full px-3 py-1.5 text-sm bg-white/10 text-foreground",
+                  className:
+                    "rounded-full px-3 py-1.5 text-base font-medium bg-accent/25 border border-accent/40 text-white",
                 }}
               >
                 {t(item.key)}
@@ -117,26 +196,35 @@ export function Header() {
             ))}
             <div
               className="relative"
-              onMouseEnter={() => setToolsOpen(true)}
+              ref={toolsRef}
+              onMouseEnter={() => openTools()}
               onMouseLeave={() => setToolsOpen(false)}
             >
               <button
-                className="flex items-center gap-1 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
-                onClick={() => setToolsOpen((v) => !v)}
+                className="flex items-center gap-1 rounded-full px-3 py-1.5 text-base font-medium text-white/80 transition hover:bg-accent/20 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                onClick={() => openTools()}
+                onKeyDown={(e) => {
+                  if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openTools();
+                  }
+                }}
+                aria-haspopup="menu"
+                aria-expanded={toolsOpen}
               >
-                {calcDict.nav.tools} <ChevronDown className="h-3.5 w-3.5" />
+                {t("nav.tools")} <ChevronDown className="h-3.5 w-3.5" />
               </button>
               {toolsOpen && (
                 <div className="absolute right-0 top-full pt-2">
-                  <div className="glass-strong w-64 rounded-2xl border border-white/10 p-2 shadow-xl">
-                    <div className="px-3 py-2 text-xs uppercase tracking-widest text-muted-foreground">
-                      {calcDict.nav.section}
+                  <div className="nav-surface w-64 rounded-2xl p-2 animate-nav-dropdown">
+                    <div className="nav-label px-3 py-2">
+                      {t("nav.tools.section")}
                     </div>
                     {calculatorItems.map((c) => (
                       <SafeLink
                         key={c.to}
                         to={c.to}
-                        className="block rounded-lg px-3 py-2 text-sm text-foreground/90 transition hover:bg-white/5"
+                        className="block rounded-lg px-3 py-2 text-sm text-white/90 transition hover:bg-accent/20 hover:text-white"
                         onClick={() => setToolsOpen(false)}
                       >
                         {c.label}
@@ -148,32 +236,41 @@ export function Header() {
             </div>
             <div
               className="relative"
-              onMouseEnter={() => setLearnOpen(true)}
+              ref={learnRef}
+              onMouseEnter={() => openLearn()}
               onMouseLeave={() => setLearnOpen(false)}
             >
               <button
-                className="flex items-center gap-1 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
-                onClick={() => setLearnOpen((v) => !v)}
+                className="flex items-center gap-1 rounded-full px-3 py-1.5 text-base font-medium text-white/80 transition hover:bg-accent/20 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                onClick={() => openLearn()}
+                onKeyDown={(e) => {
+                  if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    openLearn();
+                  }
+                }}
+                aria-haspopup="menu"
+                aria-expanded={learnOpen}
               >
-                {learnDict.ui.learn} <ChevronDown className="h-3.5 w-3.5" />
+                {t("nav.learn")} <ChevronDown className="h-3.5 w-3.5" />
               </button>
               {learnOpen && (
                 <div className="absolute right-0 top-full pt-2">
-                  <div className="glass-strong w-[34rem] rounded-2xl border border-white/10 p-3 shadow-xl">
+                  <div className="nav-surface w-[34rem] rounded-2xl p-3 animate-nav-dropdown">
                     <div className="grid grid-cols-2 gap-2">
                       <div>
                         <Link
-                          to="/learn"
+                          to={langPrefix ? `${langPrefix}/learn` : "/learn"}
                           onClick={() => setLearnOpen(false)}
                           className="block px-3 py-2 text-xs uppercase tracking-widest text-accent hover:underline"
                         >
-                          {learnDict.ui.cbtiGuides}
+                          {t("nav.guides")}
                         </Link>
                         {guideItems.map((g) => (
                           <SafeLink
                             key={g.to}
                             to={g.to}
-                            className="block rounded-lg px-3 py-2 text-sm text-foreground/90 transition hover:bg-white/5"
+                            className="block rounded-lg px-3 py-2 text-sm text-white/90 transition hover:bg-accent/20 hover:text-white"
                             onClick={() => setLearnOpen(false)}
                           >
                             {g.label}
@@ -182,17 +279,17 @@ export function Header() {
                       </div>
                       <div>
                         <Link
-                          to="/learn"
+                          to={langPrefix ? `${langPrefix}/learn` : "/learn"}
                           onClick={() => setLearnOpen(false)}
                           className="block px-3 py-2 text-xs uppercase tracking-widest text-accent hover:underline"
                         >
-                          {learnDict.ui.quickLessons}
+                          {t("nav.lessons")}
                         </Link>
                         {lessonItems.map((l) => (
                           <SafeLink
                             key={l.to}
                             to={l.to}
-                            className="block rounded-lg px-3 py-2 text-sm text-foreground/90 transition hover:bg-white/5"
+                            className="block rounded-lg px-3 py-2 text-sm text-white/90 transition hover:bg-accent/20 hover:text-white"
                             onClick={() => setLearnOpen(false)}
                           >
                             {l.label}
@@ -209,123 +306,154 @@ export function Header() {
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
             <button
-              className="lg:hidden rounded-full p-2 text-muted-foreground hover:bg-white/5"
+              ref={hamburgerRef}
+              className="lg:hidden rounded-full p-2 text-white/80 hover:bg-accent/20 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               onClick={() => setOpen(!open)}
               aria-label="Toggle menu"
+              aria-expanded={open}
             >
               {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
+      </div>
 
-        {open && (
-          <nav className="lg:hidden border-t border-white/5 px-5 py-3 animate-fade-up">
-            <div className="flex flex-col">
-              {navItems.slice(0, 4).map((item) => (
-                <SafeLink
-                  key={item.to}
-                  to={item.to}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                  activeProps={{
-                    className: "rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground",
-                  }}
-                  activeOptions={{ exact: item.to === "/" }}
-                >
-                  {t(item.key)}
-                </SafeLink>
-              ))}
+      {/* Mobile drawer backdrop — interactive so tapping outside closes the drawer. */}
+      {open && (
+        <div
+          className="nav-overlay fixed inset-0 z-40 lg:hidden"
+          onClick={() => setOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Desktop dropdown dim overlay — pointer-events-none so it never blocks
+          hover/click on the sticky header; click-outside is handled by the
+          document mousedown listener. */}
+      {(toolsOpen || learnOpen) && (
+        <div
+          className="nav-overlay pointer-events-none fixed inset-0 z-40 hidden lg:block"
+          aria-hidden="true"
+        />
+      )}
+
+      {open && (
+        <nav className="nav-drawer fixed right-0 top-0 h-full w-full max-w-sm z-40 overflow-y-auto px-5 pb-8 pt-[88px] animate-nav-drawer lg:hidden">
+          <div className="flex flex-col gap-2">
+            {navItems.slice(0, 4).map((item, idx) => (
               <SafeLink
-                to={dashboardItem.to}
+                key={item.to}
+                ref={idx === 0 ? drawerFirstRef : undefined}
+                to={item.to}
                 onClick={() => setOpen(false)}
-                className="my-1 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_0_24px_-6px_oklch(0.72_0.13_280/70%)]"
+                className="nav-item"
                 activeProps={{
-                  className:
-                    "my-1 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2.5 text-sm font-medium text-primary-foreground ring-2 ring-accent/40",
+                  className: "nav-item nav-item-active",
                 }}
+                activeOptions={{ exact: item.to === "/" }}
               >
-                <Moon className="h-4 w-4" />
-                {t(dashboardItem.key)}
+                {t(item.key)}
               </SafeLink>
-              {navItems.slice(4).map((item) => (
-                <SafeLink
-                  key={item.to}
-                  to={item.to}
-                  onClick={() => setOpen(false)}
-                  className="rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                  activeProps={{
-                    className: "rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground",
-                  }}
-                  activeOptions={{ exact: item.to === "/" }}
-                >
-                  {t(item.key)}
-                </SafeLink>
-              ))}
-              <div className="mt-2 border-t border-white/5 pt-2">
-                <div className="px-3 py-2 text-xs uppercase tracking-widest text-muted-foreground">
-                  {calcDict.nav.section}
-                </div>
+            ))}
+            <SafeLink
+              to={dashboardItem.to}
+              onClick={() => setOpen(false)}
+              className="nav-item justify-center gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-[0_0_24px_-6px_oklch(0.72_0.13_280/70%)]"
+              activeProps={{
+                className:
+                  "nav-item nav-item-active justify-center gap-2 bg-gradient-to-r from-primary to-accent text-primary-foreground ring-2 ring-accent/40",
+              }}
+            >
+              <Moon className="h-4 w-4" />
+              {t(dashboardItem.key)}
+            </SafeLink>
+            {navItems.slice(4).map((item) => (
+              <SafeLink
+                key={item.to}
+                to={item.to}
+                onClick={() => setOpen(false)}
+                className="nav-item"
+                activeProps={{
+                  className: "nav-item nav-item-active",
+                }}
+                activeOptions={{ exact: item.to === "/" }}
+              >
+                {t(item.key)}
+              </SafeLink>
+            ))}
+
+            <section className="nav-section">
+              <h2 className="nav-label mb-4">
+                {t("nav.tools.section")}
+              </h2>
+              <div className="flex flex-col gap-2">
                 {calculatorItems.map((c) => (
                   <SafeLink
                     key={c.to}
                     to={c.to}
                     onClick={() => setOpen(false)}
-                    className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                    className="nav-item"
                     activeProps={{
-                      className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground",
+                      className: "nav-item nav-item-active",
                     }}
                   >
                     {c.label}
                   </SafeLink>
                 ))}
               </div>
-              <div className="mt-2 border-t border-white/5 pt-2">
-                <div className="px-3 py-2 text-xs uppercase tracking-widest text-muted-foreground">
-                  {learnDict.ui.cbtiGuides}
-                </div>
+            </section>
+
+            <section className="nav-section">
+              <h2 className="nav-label mb-4">
+                {t("nav.guides")}
+              </h2>
+              <div className="flex flex-col gap-2">
                 {guideItems.map((g) => (
                   <SafeLink
                     key={g.to}
                     to={g.to}
                     onClick={() => setOpen(false)}
-                    className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                    className="nav-item"
                     activeProps={{
-                      className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground",
+                      className: "nav-item nav-item-active",
                     }}
                   >
                     {g.label}
                   </SafeLink>
                 ))}
               </div>
-              <div className="mt-2 border-t border-white/5 pt-2">
-                <div className="px-3 py-2 text-xs uppercase tracking-widest text-muted-foreground">
-                  {learnDict.ui.quickLessons}
-                </div>
+            </section>
+
+            <section className="nav-section">
+              <h2 className="nav-label mb-4">
+                {t("nav.lessons")}
+              </h2>
+              <div className="flex flex-col gap-2">
                 <Link
-                  to="/learn"
+                  to={langPrefix ? `${langPrefix}/learn` : "/learn"}
                   onClick={() => setOpen(false)}
-                  className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                  className="nav-item"
                 >
-                  {learnDict.ui.hubTitle}
+                  {t("nav.learn")}
                 </Link>
                 {lessonItems.map((l) => (
                   <SafeLink
                     key={l.to}
                     to={l.to}
                     onClick={() => setOpen(false)}
-                    className="block rounded-lg px-3 py-3 text-sm text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                    className="nav-item"
                     activeProps={{
-                      className: "block rounded-lg px-3 py-3 text-sm bg-white/10 text-foreground",
+                      className: "nav-item nav-item-active",
                     }}
                   >
                     {l.label}
                   </SafeLink>
                 ))}
               </div>
-            </div>
-          </nav>
-        )}
-      </div>
+            </section>
+          </div>
+        </nav>
+      )}
     </header>
   );
 }

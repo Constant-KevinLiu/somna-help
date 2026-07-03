@@ -10,7 +10,7 @@
 import { useState } from "react";
 import { Download, Loader2, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { loadEsDict } from "@/locales/es";
-import { uploadShareImageFromDataUrl } from "@/lib/share/uploadToR2";
+import { uploadImage } from "@/lib/share/shareService";
 
 interface ShareExportDialogEsProps {
   open: boolean;
@@ -39,7 +39,8 @@ export function ShareExportDialogEs({
     setStatuses((s) => ({ ...s, [img.id]: "uploading" }));
     setErrorMsg((m) => ({ ...m, [img.id]: "" }));
     try {
-      const r2Url = await uploadShareImageFromDataUrl(img.dataUrl, img.filename);
+      const blob = await (await fetch(img.dataUrl)).blob();
+      const r2Url = await uploadImage(blob, img.filename);
       setStatuses((s) => ({ ...s, [img.id]: "done" }));
       onUploaded?.(img.id, r2Url);
     } catch (err) {

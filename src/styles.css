@@ -108,6 +108,102 @@
     -webkit-backdrop-filter: blur(24px);
     border: 1px solid oklch(1 0 0 / 12%);
   }
+
+  /* =====================================================================
+   * Navigation UX v2 — Frosted Glass surface system
+   * Shared by Desktop, Tablet and Mobile (one visual identity).
+   * The menu floats above the page; the page behind is dimmed.
+   * ===================================================================== */
+
+  /* Frosted glass card used by every navigation surface
+     (dropdowns, language menu, tools menu, learn menu, mobile drawer). */
+  .nav-surface {
+    background: linear-gradient(
+      180deg,
+      rgba(34, 40, 72, 0.96),
+      rgba(18, 22, 40, 0.92)
+    );
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border: 1px solid oklch(1 0 0 / 14%);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  }
+
+  /* Mobile drawer surface — opaque so homepage Hero text never bleeds through. */
+  .nav-drawer {
+    background: rgba(15, 18, 34, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-left: 1px solid oklch(1 0 0 / 10%);
+    box-shadow: -24px 0 64px rgba(0, 0, 0, 0.35);
+  }
+
+  /* The sticky top app bar. Same gradient, but slightly thinner so it
+     doesn't overpower the page while still being legible. */
+  .nav-bar {
+    background: linear-gradient(
+      180deg,
+      rgba(34, 40, 72, 0.92),
+      rgba(18, 22, 40, 0.88)
+    );
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    border-bottom: 1px solid oklch(1 0 0 / 10%);
+  }
+
+  /* Full-screen dim overlay shown whenever any nav panel is open. */
+  .nav-overlay {
+    background: rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+
+  /* Mobile drawer list items — soft card rows, full width, single column. */
+  .nav-item {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56px;
+    padding: 16px 20px;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.92);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    transition: background-color 200ms ease-out, color 200ms ease-out;
+  }
+  .nav-item:hover,
+  .nav-item:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 1);
+    outline: none;
+  }
+  .nav-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .nav-item-active {
+    background: rgba(124, 140, 255, 0.2);
+    border: 1px solid rgba(124, 140, 255, 0.35);
+    color: rgba(255, 255, 255, 1);
+  }
+
+  /* Secondary labels (section headers inside dropdowns / mobile drawer). */
+  .nav-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .nav-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid oklch(1 0 0 / 10%);
+  }
+
   .text-gradient {
     background: linear-gradient(135deg, oklch(0.95 0.02 270), oklch(0.82 0.12 285));
     -webkit-background-clip: text;
@@ -155,6 +251,35 @@
   50% {
     opacity: 0.9;
   }
+}
+
+@keyframes nav-dropdown {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes nav-drawer {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-nav-dropdown {
+  animation: nav-dropdown 180ms ease-out both;
+}
+.animate-nav-drawer {
+  animation: nav-drawer 250ms ease-out both;
 }
 
 .animate-breathe {

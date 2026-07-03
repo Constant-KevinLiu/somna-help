@@ -168,6 +168,59 @@ export const week6Lessons: LessonContent[] = [
           "mantenimiento CBT-I",
         ],
       },
+      pt: {
+        title: "Prevenindo recaídas",
+        eyebrow: "SEMANA 6 · LIÇÃO 16",
+        subtitle:
+          "Três pilares de resiliência — conheça seus gatilhos, perceba os sinais precoces e volte às ferramentas centrais.",
+        difficulty: "Intermediário",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "Uma verdade fundamental",
+            paras: [
+              "Ao chegar à última semana da sua jornada de TCC-I, nosso foco se desloca para a resiliência de longo prazo. O objetivo deste programa não é apenas construir um sono melhor para hoje — é dar a você ferramentas para a vida toda para lidar com desafios futuros com total confiança.",
+              "Primeiro, vamos estabelecer uma verdade fundamental: noites ocasionalmente ruins de sono são completamente normais. Passar por uma noite inquieta em momentos de alto estresse, transições de vida ou doença não significa que você teve uma recaída. Significa simplesmente que você é humano.",
+            ],
+          },
+          {
+            heading: "Três pilares de resiliência",
+            paras: [
+              "Para manter seu progresso a longo prazo, concentre-se em três pilares de resiliência:",
+              "1. Conheça seus gatilhos: reconheça os eventos específicos da vida que naturalmente impactam seu sono — prazos de trabalho intensos, mudanças de estilo de vida, viagens ou mudanças familiares.",
+              "2. Capture os sinais precoces: perceba quando os velhos hábitos de enfrentamento úteis começam a escorregar. Você está ficando na cama tempo demais tentando forçar o sono? Aqueles pensamentos catastróficos antigos estão começando a voltar?",
+              "3. Volte diretamente às suas ferramentas centrais: você já sabe exatamente o que funciona para seu corpo. Se o sono parecer fragmentado por algumas noites, reaplique suas ferramentas centrais — use o controle de estímulos, comprima sua janela de sono por alguns dias e retome a sua hora marcada para preocupações à tarde.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Separe dez minutos hoje para escrever seu Plano Pessoal de Prevenção de Recaídas do Somna. Liste seus principais gatilhos de estresse, seus sinais de alerta precoces e as técnicas centrais específicas que você trará de volta se o sono ficar difícil. Mantenha esse guia por perto para sempre ter um plano.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Olhe para quem você era há seis semanas. Qual foi a sua percepção mais empoderadora durante esta jornada? Como você pode celebrar e proteger esse crescimento?",
+        faqs: [
+          {
+            q: "O que devo fazer se tiver três noites ruins seguidas no próximo mês?",
+            a: "Evite entrar em pânico ou ver isso como um fracasso. Trate isso simplesmente como um sinal para trazer de volta, por poucos dias, as ferramentas das semanas 2 e 3. Encurte seu tempo na cama e aplique a regra dos 20 minutos com rigor por alguns dias até seu sono se consolidar.",
+          },
+          {
+            q: "Preciso anotar meu sono em um diário pelo resto da vida?",
+            a: "De forma alguma. Assim que seu sono se sentir consistente e saudável, guarde o diário e viva livremente. Seu diário do sono é uma ferramenta de diagnóstico de apoio, não uma obrigação permanente.",
+          },
+        ],
+        ctaLabel: "Salvar meu plano de prevenção de recaídas",
+        seoTitle: "Prevenindo recaídas | Somna TCC-I Semana 6",
+        seoDescription:
+          "Construa resiliência de sono a longo prazo com três pilares — conheça seus gatilhos, perceba os sinais precoces e volte às suas ferramentas centrais de TCC-I quando o sono se fragmentar.",
+        keywords: [
+          "prevenir recaídas",
+          "TCC-I recaída",
+          "resiliência do sono",
+          "prevenção de recaídas insônia",
+          "manutenção TCC-I",
+        ],
+      },
     },
   },
 
@@ -344,6 +397,63 @@ export const week6Lessons: LessonContent[] = [
           "ritmo circadiano viajes",
           "CBT-I viajes",
           "efecto primera noche",
+        ],
+      },
+      pt: {
+        title: "Viagem, jet lag e sono",
+        eyebrow: "SEMANA 6 · LIÇÃO 17",
+        subtitle:
+          "Mantenha seu ritmo de sono estável no mundo todo — com luz estratégica, rotina de chegada e um kit de sono portátil.",
+        difficulty: "Intermediário",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "O sono não para quando você viaja",
+            paras: [
+              "Assim que você embarca em uma viagem, seu relógio interno entra em uma batalha silenciosa contra fusos horários, ambientes novos e rotinas desconhecidas. Para proteger seu sono, precisamos de um plano leve e portátil.",
+              "O desafio número um é o efeito da primeira noite: em um quarto de hotel, quarto de amigo ou qualquer lugar novo, seu cérebro fica parcialmente em alerta simplesmente porque o ambiente é desconhecido. Isso é biológico — e completamente normal.",
+            ],
+          },
+          {
+            heading: "Estratégia de luz e rotina",
+            paras: [
+              "Exponha-se à luz natural logo pela manhã no fuso horário de destino para acelerar o alinhamento do seu ritmo circadiano. À noite, reduza luzes fortes e telas para sinalizar ao cérebro que é hora de descansar.",
+              "Mantenha o horário de acordar o mais próximo possível do planejado, mesmo que isso signifique dormir menos na primeira noite. A constância do despertar é mais importante do que uma noite perfeita em viagem.",
+            ],
+          },
+          {
+            heading: "Kit de sono portátil",
+            paras: [
+              "Leve itens que criem uma sensação familiar: máscara de olhos, tampões de ouvido ou som ambiente, um travesseiro de viagem e algo com cheiro reconfortante. Esses pequenos objetivos acalmam o sistema nervoso em qualquer lugar.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Monte seu Kit de Sono para Viagem antes da próxima viagem: máscara, tampões ou som ambiente, travesseiro compacto e um lembrete do seu horário de acordar no destino. Assim que chegar, saia para luz natural pela manhã e mantenha a rotina noturna de relaxamento.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Quais viagens passadas bagunçaram mais seu sono: as de trabalho com agenda cheia ou as de lazer com mudança de fuso? Como você pode viajar de forma mais gentil com seu relógio interno da próxima vez?",
+        faqs: [
+          {
+            q: "Quanto tempo leva para meu corpo se adaptar a um novo fuso horário?",
+            a: "Como regra geral, seu relógio biológico interno se ajusta aproximadamente um dia para cada fuso horário cruzado. Você pode acelerar esse processo de forma bonita com exposição estratégica à luz.",
+          },
+          {
+            q: "Devo usar remédios para dormir a curto prazo ao viajar para o outro lado do mundo?",
+            a: "É uma escolha pessoal que deve ser conversada com seu médico. Muitas pessoas descobrem que combinar hábitos de luz estratégicos com controle de estímulos é totalmente suficiente para navegar as transições de viagem com fluidez.",
+          },
+        ],
+        ctaLabel: "Baixar minha lista de sono para viagem",
+        seoTitle: "Viagem, jet lag e sono | Somna TCC-I",
+        seoDescription:
+          "Proteja seu sono em qualquer lugar com exposição estratégica à luz, alinhamento imediato de rotina e um kit de sono para viagem para ambientes desconhecidos.",
+        keywords: [
+          "sono e viagem",
+          "jet lag",
+          "ritmo circadiano viagens",
+          "TCC-I viagens",
+          "efeito primeira noite",
         ],
       },
     },
@@ -527,6 +637,63 @@ export const week6Lessons: LessonContent[] = [
           "beneficios del sueño",
           "sueño consolidado",
           "sueño y salud",
+        ],
+      },
+      pt: {
+        title: "Saúde do sono a longo prazo",
+        eyebrow: "SEMANA 6 · LIÇÃO 18",
+        subtitle:
+          "Como o sono consolidado sustenta sua saúde física, mental e cognitiva — e como manter essas ferramentas para sempre.",
+        difficulty: "Intermediário",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "Você chegou",
+            paras: [
+              "Parabéns — você completou as seis semanas do Programa TCC-I do Somna. Mas este momento não é apenas um fim; é uma passagem. Você não foi \"curado\" do lado de fora. Você construiu habilidades novas, reconfigurou sua relação com a cama e treinou seu cérebro a dormir de novo.",
+              "O maior presente da TCC-I é a autoconfiança. Você agora sabe que, mesmo quando o sono vacilar, tem um caminho claro de volta ao descanso.",
+            ],
+          },
+          {
+            heading: "Por que o sono consolidado importa",
+            paras: [
+              "Sono consolidado e restaurador não é luxo — é manutenção biológica essencial. Durante noites profundas, seu corpo consolida memórias, regula hormônios, fortalece o sistema imunológico e processa emoções.",
+              "Pessoas que dormem de forma consistente tendem a ter melhor regulação de humor, maior clareza mental, resistência cardiovascular mais forte e até maior capacidade de tomar decisões. O sono é o alicerce invisível por trás de quase tudo que você faz de dia.",
+            ],
+          },
+          {
+            heading: "Manter o que funciona",
+            paras: [
+              "Você não precisa seguir todas as regras para sempre. O objetivo é que seus hábitos de sono se tornem automáticos e flexíveis. Guarde suas ferramentas centrais — controle de estímulos, janela de sono, rotina de relaxamento — como um kit de primeiros socorros para os momentos de estresse.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Hoje, reserve um momento para escrever três aprendizados que você levará para a vida. Pode ser uma frase, um horário ou uma crença nova sobre o sono. Guarde isso onde você possa revisar quando precisar de lembrete de que é capaz de dormir bem.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Se você pudesse conversar com a versão de si mesmo do início deste programa, o que diria? Qual a mensagem mais importante de encorajamento que levaria dessa jornada?",
+        faqs: [
+          {
+            q: "Preciso seguir todas essas regras da TCC-I à perfeição pelo resto da vida?",
+            a: "De forma alguma. O objetivo final deste programa é a flexibilidade, não regras rígidas. À medida que seu sono se estabiliza, seus hábitos se tornarão totalmente automáticos. Você só precisará trazer ativamente essas técnicas de volta durante períodos de estresse incomum.",
+          },
+          {
+            q: "O que devo fazer se meus padrões de sono se alterarem novamente no futuro?",
+            a: "Lembre-se de que você tem o plano completo de recuperação. Sempre pode voltar às suas ferramentas do Somna, realinhar sua janela de sono e acalmar sua mente quando precisar. Você sabe exatamente como guiar-se de volta ao descanso.",
+          },
+        ],
+        ctaLabel: "Celebrar os resultados da minha jornada do sono",
+        seoTitle: "Saúde do sono a longo prazo | Somna TCC-I Graduação",
+        seoDescription:
+          "Celebre a conclusão do seu programa de TCC-I. Descubra como o sono consolidado nutre a saúde física, mental e cognitiva — e guarde suas ferramentas para sempre.",
+        keywords: [
+          "saúde do sono a longo prazo",
+          "graduação TCC-I",
+          "benefícios do sono",
+          "sono consolidado",
+          "sono e saúde",
         ],
       },
     },

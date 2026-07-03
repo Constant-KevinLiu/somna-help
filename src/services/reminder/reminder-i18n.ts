@@ -122,13 +122,13 @@ const es: Strings = {
   "reminder.noindex": "Página de configuración personal — no indexada.",
 };
 
-const dicts: Record<Lang, Strings> = { en, zh, es };
+const dicts: Partial<Record<Lang, Strings>> = { en, zh, es, pt: en };
 
 /** Hook returning the reminder i18n translator with {var} interpolation. */
 export function useReminderI18n() {
   const { lang } = useI18n();
   const t = (k: string, vars?: Record<string, string | number>) => {
-    const raw = dicts[lang][k] ?? dicts.en[k] ?? k;
+    const raw = (dicts[lang] ?? dicts.en!)[k] ?? dicts.en![k] ?? k;
     if (!vars) return raw;
     return raw.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ""));
   };

@@ -153,7 +153,7 @@ export function CbtiArticleShell({
               </SafeLink>
             ))}
             <Link
-              to="/diary"
+              to={lang === "pt" ? "/pt/diary" : lang === "es" ? "/es/diary" : "/diary"}
               className="glass group rounded-2xl p-5 transition hover:bg-white/[0.06]"
             >
               <div className="font-display text-base text-foreground group-hover:text-accent">

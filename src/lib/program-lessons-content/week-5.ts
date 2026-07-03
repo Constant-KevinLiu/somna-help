@@ -182,6 +182,63 @@ export const week5Lessons: LessonContent[] = [
           "pensamientos ansiedad sueño",
         ],
       },
+      pt: {
+        title: "Os pensamentos mais comuns da insônia",
+        eyebrow: "SEMANA 5 · LIÇÃO 13",
+        subtitle: "Quatro armadilhas cognitivas que alimentam a ansiedade do sono — e como identificá-las.",
+        difficulty: "Intermediário",
+        readingTime: "7 min de leitura",
+        content: [
+          {
+            heading: "Pensamentos que te mantêm acordado",
+            paras: [
+              "A insônia não afeta só o corpo — ela colore ativamente o modo como você pensa. Quando luta com problemas de sono a longo prazo, seu cérebro desenvolve naturalmente hábitos de pensamento automáticos e muito distorcidos. Esses padrões parecem totalmente realistas na hora, mas geram ansiedade intensa que te mantém acordado.",
+            ],
+          },
+          {
+            heading: "Quatro armadilhas cognitivas",
+            paras: [
+              "1. Catastrofização (o pior cenário): \"Se eu não pegar no sono nos próximos dez minutos, minha apresentação amanhã vai ser um desastre absoluto e vou arruinar minha carreira.\" A realidade: embora o mau sono seja profundamente incômodo, você provavelmente já enfrentou dias difíceis com pouco descanso antes e superou eles com sucesso.",
+              "2. Pensamento de tudo ou nada (a armadilha binária): \"Se eu não conseguir 8 horas perfeitas de sono ininterrupto hoje, meu dia inteiro é um fracasso total.\" A realidade: o sono é fluido. Uma noite com despertares breves ou 6 horas sólidas ainda pode oferecer restauração significativa.",
+              "3. Comparações injustas (a ilusão do isolamento): \"Todo mundo no mundo está dormindo facilmente agora. Tem algo fundamentalmente quebrado na minha biologia.\" A realidade: milhões de pessoas enfrentam desafios de sono todas as noites. Você não está sozinho, e seu corpo mantém sua capacidade natural de dormir.",
+              "4. Afirmações de \"deveria\" (a panela de pressão): \"Eu deveria conseguir dormir naturalmente sem esforço. Meu corpo deveria simplesmente funcionar.\" A realidade: impor expectativas rígidas a um processo biológico natural só cria frustração, empurrando o sono para mais longe.",
+            ],
+          },
+          {
+            heading: "Preciso, não positivo",
+            paras: [
+              "A terapia cognitiva dentro da TCC-I não é sobre pensamento positivo forçado ou fingir que tudo está perfeito. É sobre pensamento preciso e equilibrado — dar um passo atrás das histórias catastróficas para que seu sistema nervoso finalmente possa se acalmar.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Esta semana, mantenha um Diário de Pensamentos ao lado da sua área de descanso diurno. No momento em que perceber ansiedade intensa sobre o sono, anote as palavras exatas que sua mente está dizendo. Veja se consegue identificar em qual das quatro armadilhas cognitivas ela se encaixa.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Qual desses quatro padrões cognitivos parece mais familiar para você? Como esse pensamento específico afeta seu corpo fisicamente quando você está deitado na cama?",
+        faqs: [
+          {
+            q: "As minhas preocupações sobre estar exausto amanhã não são completamente realistas?",
+            a: "O cansaço é real, mas a história catastrófica extrema que sua mente constrói em torno desse cansaço costuma ser distorcida. A reformulação cognitiva ajuda a separar desafios reais do dia a dia da exageração mental estressante.",
+          },
+          {
+            q: "Como posso fazer esses pensamentos pararem de aparecer na minha mente?",
+            a: "Você não pode impedir que os pensamentos cheguem. O objetivo é mudar como você reage a eles. Quando reconhece um pensamento como um padrão distorcido, você tira dele o poder emocional sobre seu corpo.",
+          },
+        ],
+        ctaLabel: "Baixar meu modelo de diário de pensamentos",
+        seoTitle: "Os pensamentos mais comuns da insônia | Somna TCC-I",
+        seoDescription:
+          "Conheça as quatro armadilhas cognitivas mais comuns da insônia — catastrofização, pensamento de tudo ou nada, comparações injustas e afirmações de \"deveria\".",
+        keywords: [
+          "pensamentos de insônia",
+          "distorções cognitivas sono",
+          "catastrofização sono",
+          "TCC-I diário de pensamentos",
+          "pensamentos ansiedade sono",
+        ],
+      },
     },
   },
 
@@ -347,6 +404,58 @@ export const week5Lessons: LessonContent[] = [
           "reencuadrar pensamientos sueño",
           "ejemplo reestructuración cognitiva",
           "CBT-I terapia cognitiva",
+        ],
+      },
+      pt: {
+        title: "Como a TCC-I muda as crenças sobre o sono",
+        eyebrow: "SEMANA 5 · LIÇÃO 14",
+        subtitle: "Reformulação Cognitiva em três fases — identificar, questionar, reenquadrar.",
+        difficulty: "Avançado",
+        readingTime: "7 min de leitura",
+        content: [
+          {
+            heading: "Um exercício estruturado",
+            paras: [
+              "Para mudar permanentemente sua relação com o sono, usamos um processo central da TCC-I chamado Reformulação Cognitiva. É um exercício estruturado em que você examina seus pensamentos ansiosos sobre o sono com curiosidade gentil, questiona sua precisão e os substitui por perspectivas realistas.",
+              "Esse processo passa por três fases claras: Passo 1 — Identificar: pegue o pensamento automático e ansioso. Passo 2 — Questionar: examine as evidências reais a favor e contra. Passo 3 — Reenquadrar: substitua-o por uma alternativa equilibrada e precisa.",
+            ],
+          },
+          {
+            heading: "Um exemplo prático",
+            paras: [
+              "O pensamento automático: \"Se eu não dormir bem hoje à noite, não vou conseguir funcionar amanhã e vou cometer erros terríveis no trabalho.\"",
+              "A verificação da realidade: vamos olhar para as evidências reais. Já houve dias em que você dormiu mal, mas ainda conseguiu completar suas tarefas essenciais? Sim, muitas vezes. Você sobreviveu a esses dias? Sim. Você diria a um amigo querido que está com dificuldades de sono que ele é completamente incapaz de funcionar? Claro que não.",
+              "O reenquadramento equilibrado: \"Eu prefiro uma noite inteira de sono, mas sei por experiência própria que consigo passar pelo dia de trabalho mesmo cansado. Uma noite inquieta não significa que amanhã será um desastre.\"",
+              "Note como a perspectiva reenquadrada não maqueia o desafio. Ela é simplesmente precisa, justa e reconfortante, o que permite ao seu corpo relaxar e deixar o sono chegar naturalmente.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Escolha um pensamento repetitivo e estressante sobre o sono que você tenha com frequência. Passe ele pelos três passos da Reformulação Cognitiva hoje: escreva-o, questione-o com evidências reais e crie uma alternativa equilibrada na qual possa confiar esta noite.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Como é questionar a verdade absoluta dos seus pensamentos ansiosos? Você notou alguma resistência sutil da mente durante o exercício? Isso é uma parte perfeitamente normal de mudar hábitos antigos.",
+        faqs: [
+          {
+            q: "A reformulação cognitiva é só uma forma de pensamento positivo?",
+            a: "Não, o pensamento positivo pode parecer artificial quando você está genuinamente cansado. A reformulação cognitiva foca em pensamento realista — ver sua situação claramente como ela realmente é, em vez de através de uma lente de medo.",
+          },
+          {
+            q: "Quanto tempo leva para mudar esses hábitos mentais arraigados?",
+            a: "Mudar hábitos mentais profundos é um processo gradual. Com prática constante, a maioria dos usuários nota uma queda significativa da ansiedade com o sono em 3 a 5 semanas.",
+          },
+        ],
+        ctaLabel: "Experimentar a ferramenta de reformulação cognitiva",
+        seoTitle: "Como a TCC-I muda as crenças sobre o sono | Somna Reformulação Cognitiva",
+        seoDescription:
+          "Aprenda o processo de Reformulação Cognitiva em três fases — identificar, questionar, reenquadrar — com um exemplo prático que transforma pensamentos ansiosos sobre o sono em perspectivas equilibradas.",
+        keywords: [
+          "reformulação cognitiva",
+          "TCC-I crenças sono",
+          "reenquadrar pensamentos sono",
+          "exemplo reformulação cognitiva",
+          "TCC-I terapia cognitiva",
         ],
       },
     },
@@ -530,6 +639,64 @@ export const week5Lessons: LessonContent[] = [
           "mito 8 horas sueño",
           "CBT-I creencias",
           "perfeccionismo del sueño",
+        ],
+      },
+      pt: {
+        title: "Construindo expectativas realistas sobre o sono",
+        eyebrow: "SEMANA 5 · LIÇÃO 15",
+        subtitle: "Substitua quatro mitos rígidos do sono por expectativas baseadas em evidência.",
+        difficulty: "Intermediário",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "A panela de pressão invisível",
+            paras: [
+              "Muitas pessoas que lidam com insônia crônica carregam expectativas rígidas e perfeccionistas sobre o sono. Essas expectativas agem como uma panela de pressão invisível, gerando a própria ansiedade de desempenho que perturba suas noites.",
+              "Vamos realinhar nossa perspectiva substituindo quatro mitos comuns do sono por expectativas baseadas em evidência.",
+            ],
+          },
+          {
+            heading: "Quatro mitos, quatro verdades",
+            paras: [
+              "Mito: \"Preciso garantir 8 horas de sono todas as noites para ficar saudável.\" Verdade: as necessidades de sono variam naturalmente conforme sua genética, idade e atividade. Qualidade e constância importam muito mais do que um número arbitrário.",
+              "Mito: \"Eu deveria adormecer imediatamente depois que minha cabeça toca o travesseiro.\" Verdade: um período normal e saudável para pegar no sono leva de 10 a 20 minutos. Adormecer instantaneamente costuma ser sinal de exaustão severa.",
+              "Mito: \"Acordar durante a noite significa que minha terapia não está funcionando.\" Verdade: despertares breves entre ciclos de sono são uma parte natural da biologia humana. O sono reparador não é um bloco sólido; é uma série de ondas gentis.",
+              "Mito: \"Uma noite ruim de sono vai arruinar completamente minha saúde e minha semana.\" Verdade: o corpo humano é notavelmente resiliente. Sua pressão natural de sono vai aprofundar o sono de hoje à noite para compensar as horas inquietas de ontem.",
+            ],
+          },
+          {
+            heading: "Convidar, não performar",
+            paras: [
+              "Ao se afastar da exigência por uma noite absolutamente perfeita, você remove a pressão pesada que te mantém acordado. O sono é um ritmo natural a ser convidado, e não uma performance a ser julgada.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Releia essas quatro verdades realistas sobre o sono. Escolha aquela que te traz a maior sensação de alívio e repita-a gentilmente para si mesmo sempre que sentir a ansiedade com o sono começar a crescer esta semana.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Como suas expectativas sobre o sono têm moldado suas rotinas noturnas ultimamente? O que muda quando você se dá permissão para simplesmente ter uma noite de descanso humana e imperfeita?",
+        faqs: [
+          {
+            q: "Se eu parar de buscar o sono perfeito, não vou me conformar com um descanso ruim?",
+            a: "Paradoxalmente, soltar a busca desesperada pelo sono perfeito é exatamente o que permite que a mecânica natural do sono do seu corpo assuma o controle e funcione maravilhosamente.",
+          },
+          {
+            q: "Tenho insônia há décadas. Será que consigo mesmo reescrever minhas crenças profundas?",
+            a: "Com certeza. A neuroplasticidade — a capacidade natural do seu cérebro de aprender e se adaptar — permanece ativa durante toda a vida. Crenças arraigadas mudam de forma linda com uma prática constante e compassiva.",
+          },
+        ],
+        ctaLabel: "Participar do workshop de crenças sobre o sono",
+        seoTitle: "Construindo expectativas realistas sobre o sono | Somna TCC-I",
+        seoDescription:
+          "Substitua quatro mitos rígidos do sono por expectativas baseadas em evidência — e libere a ansiedade de desempenho que te mantém acordado.",
+        keywords: [
+          "expectativas realistas do sono",
+          "mitos do sono",
+          "mito 8 horas de sono",
+          "TCC-I crenças",
+          "perfeccionismo do sono",
         ],
       },
     },

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/how-to-fall-asleep-fast")({
   head: () => cbtiHead("how-to-fall-asleep-fast"),
 });
 
-const checklist: Record<Lang, string[]> = {
+const checklist: Partial<Record<Lang, string[]>> = {
   en: [
     "Dim the lights",
     "Stop screens 60 min before bed",
@@ -40,7 +40,7 @@ const checklist: Record<Lang, string[]> = {
   ],
 };
 
-const headingByLang: Record<Lang, string> = {
+const headingByLang: Partial<Record<Lang, string>> = {
   en: "Fall-Asleep Checklist",
   zh: "入睡清单",
   es: "Lista para dormirse",
@@ -49,7 +49,7 @@ const headingByLang: Record<Lang, string> = {
 export function FallAsleepFastPage() {
   const { lang } = useI18n();
   const article = getCbtiDict(lang).articles["how-to-fall-asleep-fast"];
-  const items = checklist[lang];
+  const items = checklist[lang] ?? checklist.en!;
   const [checked, setChecked] = useState<Set<number>>(new Set());
 
   const toggle = (i: number) => {

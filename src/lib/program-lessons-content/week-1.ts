@@ -185,6 +185,65 @@ export const week1Lessons: LessonContent[] = [
           "definición de insomnio",
         ],
       },
+      pt: {
+        title: "O que é insônia?",
+        eyebrow: "SEMANA 1 · LIÇÃO 1",
+        subtitle:
+          "Entenda o que a insônia realmente é — e por que a TCC-I foi criada para desmontá-la.",
+        difficulty: "Iniciante",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "Muito mais do que uma noite ruim",
+            paras: [
+              "A insônia é bem mais do que uma simples noite mal dormida. É uma experiência profundamente frustrante em que corpo e mente parecem fora de sincronia: você não consegue pegar no sono, manter o sono ou acordar descansado — mesmo quando se deu tempo suficiente para descansar.",
+              "Se isso vem acontecendo pelo menos três vezes por semana, há três meses ou mais, e começa a nublar seus dias com cansaço, mudanças de humor ou neblina mental, você provavelmente está vivendo o que os profissionais chamam de insônia crônica.",
+            ],
+          },
+          {
+            heading: "O Modelo das 3 P",
+            paras: [
+              'Para entender por que o sono ficou tão difícil, recorremos a um arcabouço científico bastante validado, conhecido como "Modelo das 3 P":',
+              "Fatores predisponentes: sua vulnerabilidade de base — genética, sensibilidade natural ao estresse ou simplesmente ser uma pessoa que pensa demais.",
+              "Fatores precipitantes: os gatilhos iniciais — eventos de vida, estresse intenso, doença ou grandes transições que originalmente atrapalharam seu descanso.",
+              "Fatores perpetuantes: os ciclos acidentais — comportamentos ou pensamentos ansiosos que adotamos para lidar com o mau sono (como ficar mais tempo na cama ou se preocupar com o dia seguinte) e que acabam mantendo a insônia viva muito tempo depois de o gatilho inicial ter desaparecido.",
+            ],
+          },
+          {
+            heading: "A boa notícia",
+            paras: [
+              "A Terapia Cognitivo-Comportamental para Insônia (TCC-I) não apenas mascara os sintomas como um remédio para dormir temporário. Ela é desenhada especificamente para desmontar esses fatores perpetuantes, ajudando você a reescrever sua relação com o sono desde a raiz.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Esta semana, começamos com uma escuta amável. Baixe ou imprima seu Diário do Sono do somna. Toda manhã, gaste apenas dois minutos registrando a noite: quando apagou a luz, mais ou menos quanto tempo levou para pegar no sono, despertares no meio da noite e o horário final de levantar. Não mude absolutamente nada na sua rotina ainda — apenas observe com gentileza e curiosidade.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Abra seu diário e olhe com atenção. Quais padrões sutis estão escondidos na sua semana? Existem dias em que a mente parece mais barulhenta ou o corpo mais inquieto? Comece a notar essas conexões sem julgamento.",
+        faqs: [
+          {
+            q: "Como sei se tenho insônia ou apenas noites ruins de vez em quando?",
+            a: "Noites inquietas de vez em quando acontecem com todo mundo. A insônia acontece quando essas dificuldades aparecem pelo menos 3 vezes por semana durante 3 meses ou mais, afetando de forma significativa sua energia, concentração e bem-estar emocional durante o dia.",
+          },
+          {
+            q: "A insônia realmente pode ser resolvida sem medicação?",
+            a: "Com certeza. A pesquisa clínica mostra que a TCC-I é a abordagem de primeira linha e padrão-ouro para a insônia crônica, ajudando de 70 a 80% das pessoas a recuperar de forma sustentável seus ritmos naturais de sono.",
+          },
+        ],
+        ctaLabel: "Baixe seu diário do sono gratuito",
+        seoTitle: "O que é insônia? O Modelo das 3 P explicado | Somna TCC-I",
+        seoDescription:
+          "Entenda o que a insônia realmente é por meio do Modelo das 3 P, respaldado pela ciência, e por que a TCC-I desmonta os padrões que mantêm a insônia viva.",
+        keywords: [
+          "o que é insônia",
+          "modelo 3P insônia",
+          "insônia crônica",
+          "TCC-I insônia",
+          "definição de insônia",
+        ],
+      },
     },
   },
 
@@ -369,6 +428,64 @@ export const week1Lessons: LessonContent[] = [
           "sueño NREM REM",
         ],
       },
+      pt: {
+        title: "Como funciona o sono",
+        eyebrow: "SEMANA 1 · LIÇÃO 2",
+        subtitle: "Os ritmos internos — ciclos de sono, ritmo circadiano e pressão do sono.",
+        difficulty: "Iniciante",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "Uma dança ativa e orquestrada",
+            paras: [
+              "O sono está longe de ser um estado passivo de inconsciência. É uma dança altamente ativa e lindamente orquestrada, desenhada para restaurar seu corpo, organizar suas memórias e limpar a bagunça emocional.",
+              "Toda noite, seu cérebro percorre ciclos estruturais de cerca de 90 minutos. Em cada ciclo, você viaja por dois reinos distintos: o sono NREM (sono leve nas fases N1 e N2, e sono profundo de ondas lentas na fase N3, que repara seu sistema imunológico e seus tecidos) e o sono REM (a tela dos sonhos, vital para processar emoções e consolidar o que você aprendeu).",
+            ],
+          },
+          {
+            heading: "Duas forças internas",
+            paras: [
+              "O momento do seu sono é governado pelo alinhamento de duas forças internas:",
+              "O ritmo circadiano: seu relógio biológico de 24 horas, que bate suavemente no seu cérebro e responde à luz e à escuridão para sinalizar alerta de dia e sono à noite.",
+              "A pressão do sono: pressão homeostática — imagine uma ampulheta interna. Quanto mais tempo você fica acordado, mais pressão se acumula, pedindo para ser esvaziada à noite.",
+              "Pressão do sono alta + sinal circadiano noturno = sono sem esforço.",
+            ],
+          },
+          {
+            heading: "Quando a engrenagem é sequestrada",
+            paras: [
+              'Quando você sofre com insônia, essa engrenagem natural é sequestrada pela hiperativação — um estado de alerta biológico e mental movido pela ansiedade. Mesmo quando sua pressão de sono está no talo, o sinal de "alerta" do seu sistema nervoso a sobrepõe. A TCC-I funciona tão bem porque suas técnicas centrais são desenhadas para fortalecer sua pressão natural de sono e realinhar seu relógio interno.',
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Para estabilizar seu ritmo circadiano, escolha um horário realista para acordar que funcione na sua vida. Comprometa-se a acordar nesse horário exato todos os dias nesta semana — sim, inclusive nos fins de semana. A exposição à luz do sol pela manhã, dentro dos primeiros 30 minutos após acordar, vai ancorar seu relógio perfeitamente.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Como é olhar para o sono como um sistema biológico em vez de uma prova noturna que você está reprovando? Você consegue identificar momentos em que seus hábitos do dia podem estar confundindo seu relógio interno?",
+        faqs: [
+          {
+            q: "É verdade que todo mundo precisa de exatamente 8 horas de sono?",
+            a: "Não, esse é um mito rígido. As necessidades de sono são bem individuais. Embora a média adulta fique entre 7 e 9 horas, algumas pessoas se saem bem com 6, e outras realmente precisam de 9. Foque na qualidade e na constância do seu descanso, não em um número arbitrário.",
+          },
+          {
+            q: "Por que eu sempre acordo no meio da noite?",
+            a: "Despertares breves entre os ciclos de 90 minutos de sono são totalmente naturais. Pessoas que dormem bem se mexem, ajustam o travesseiro e voltam a dormir sem lembrar. O problema não é acordar, e sim a onda repentina de frustração ou ansiedade que impede você de voltar a dormir.",
+          },
+        ],
+        ctaLabel: "Explorar meus ritmos de sono",
+        seoTitle: "Como funciona o sono: ciclos, ritmo circadiano e pressão do sono | Somna",
+        seoDescription:
+          "Aprenda como os ciclos de 90 minutos, o ritmo circadiano e a pressão do sono se combinam para criar um sono sem esforço — e como a TCC-I os realinha.",
+        keywords: [
+          "como funciona o sono",
+          "ciclos de sono",
+          "ritmo circadiano",
+          "pressão do sono",
+          "sono NREM REM",
+        ],
+      },
     },
   },
 
@@ -526,6 +643,57 @@ export const week1Lessons: LessonContent[] = [
           "paradoja del esfuerzo del sueño",
           "CBT-I sueño",
           "no puedo dormir",
+        ],
+      },
+      pt: {
+        title: "Por que se esforçar demais para dormir piora o sono",
+        eyebrow: "SEMANA 1 · LIÇÃO 3",
+        subtitle: "O paradoxo do esforço pelo sono — e como sair desse ciclo.",
+        difficulty: "Iniciante",
+        readingTime: "5 min de leitura",
+        content: [
+          {
+            heading: "O paradoxo do esforço",
+            paras: [
+              "Uma das verdades mais profundas da ciência do sono é totalmente paradoxal: quanto mais você se esforça para dormir, mais o sono se afasta. Essa armadilha psicológica é conhecida como ansiedade de desempenho do sono.",
+              'Quando o descanso fica difícil, seu instinto natural é lutar por ele. Você pode deitar muito cedo para "caçar" o sono, ficar totalmente imóvel forçando os olhos a fechar, ou mandar seu cérebro "parar de pensar".',
+              "O problema é que o sono é uma função biológica regida pelo soltar, e não pelo esforço. No momento em que você trata o sono como uma meta a ser conquistada, seu cérebro interpreta o esforço como uma tarefa de alto risco. Ele libera cortisol e adrenalina, disparando um estado de hiperativação.",
+            ],
+          },
+          {
+            heading: "O ciclo doloroso",
+            paras: [
+              "Isso cria um ciclo doloroso: você tem dificuldade para dormir → se esforça mais → o sistema nervoso ativa → o sono se torna totalmente impossível.",
+              "Com o tempo, esse ciclo condiciona seu cérebro a enxergar a cama não como um santuário de descanso, mas como uma zona de frustração e perigo. A TCC-I rompe esse condicionamento ao retirar a pressão do esforço. Ensina você a parar de forçar o sono e, no lugar, a criar as condições gentis e acolhedoras que permitem que ele aconteça de forma natural.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Esta semana, praticamos a arte de soltar. Se você estiver acordado na cama, sentindo a frustração subir, não fique aí lutando. Levante com calma, vá para um cômodo com luz baixa e faça algo tranquilo — leia um livro que prende a atenção, ouça um podcast ambiente ou desenhe. Volte para a cama só quando suas pálpebras pesarem e uma sonolência de verdade te invadir.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          'Você consegue identificar as formas concretas pelas quais tem se "esforçado demais" para dormir ultimamente? Como seria renunciar, esta noite, ao trabalho de forçar seu descanso?',
+        faqs: [
+          {
+            q: "Se eu sair da cama quando não consigo dormir, não vou perder ainda mais descanso?",
+            a: "A curto prazo, você pode perder um pouco de tempo na cama. Mas, a longo prazo, ficar na cama frustrado só reforça a associação do cérebro entre a cama e a vigília. Sair da cama é um investimento para romper essa barreira de forma permanente.",
+          },
+          {
+            q: "E se eu não consigo parar de pensar na minha ansiedade com o sono?",
+            a: "É justamente aí que entra a reformulação cognitiva. Em vez de tentar forçar os pensamentos a parar, aprendemos a mudar nossa perspectiva sobre eles, tirando o poder emocional que mantém seu corpo acordado.",
+          },
+        ],
+        ctaLabel: "Pronto para sair do ciclo?",
+        seoTitle: "Por que se esforçar demais para dormir piora o sono | Somna TCC-I",
+        seoDescription:
+          "Descubra o paradoxo da ansiedade de desempenho do sono — por que forçar o sono dá errado — e como a TCC-I ajuda você a sair do ciclo de esforço.",
+        keywords: [
+          "ansiedade de desempenho do sono",
+          "esforço para dormir",
+          "paradoxo do esforço do sono",
+          "TCC-I sono",
+          "não consigo dormir",
         ],
       },
     },

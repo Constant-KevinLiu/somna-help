@@ -183,6 +183,64 @@ export const week4Lessons: LessonContent[] = [
           "no puedo dormir pensando",
         ],
       },
+      pt: {
+        title: "Por que os pensamentos acelerados aparecem à noite",
+        eyebrow: "SEMANA 4 · LIÇÃO 10",
+        subtitle:
+          "A psicologia da ativação mental noturna — e como dar um espaço dedicado às preocupações.",
+        difficulty: "Intermediário",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "Uma experiência familiar",
+            paras: [
+              "É uma experiência super familiar para quem vive com insônia: o mundo fica totalmente silencioso, sua cabeça toca o travesseiro e, de repente, a mente dispara. Você se pega revivendo conversas antigas, organizando a agenda de amanhã ou imaginando catástrofes sobre o cansaço que vai sentir.",
+              "Essa ativação mental noturna não é uma falha pessoal; ela é movida por mecanismos psicológicos previsíveis.",
+            ],
+          },
+          {
+            heading: "Três mecanismos",
+            paras: [
+              "A perda dos filtros de distração: durante o dia, seu cérebro está ocupado com trabalho, conversas e estímulos. Quando você apaga a luz, esse ruído cognitivo some. A quietude cria um vácuo natural, deixando as preocupações reprimidas aflorar.",
+              "O efeito de rebote cognitivo: tentar ativamente não pensar nas suas preocupações durante o dia consome muita energia mental. No momento em que o corpo tenta relaxar à noite, esse controle consciente afrouxa, disparando um rebote natural de pensamentos ativos.",
+              'Ansiedade condicionada pelo sono: como o mau sono tem sido angustiante, o ato de deitar é percebido pelo cérebro como um evento estressante. Seu sistema nervoso trata o quarto como um desafio, liberando cortisol e ativando a mente de resolução de problemas para te proteger da "ameaça" da vigília.',
+            ],
+          },
+          {
+            heading: "Uma abordagem estruturada",
+            paras: [
+              "Para acalmar esses pensamentos acelerados, não tentamos forçar a mente a ficar em silêncio. Em vez disso, usamos ferramentas estruturadas para dar aos pensamentos um espaço dedicado fora do horário de sono, baixando sistematicamente o volume do sistema nervoso.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          'Esta semana, introduza uma prática restauradora chamada "Hora Marcada para Preocupações". Toda tarde, programe um timer de 15 minutos. Sente-se com um caderno e anote cada preocupação, tarefa ou pensamento ansioso que vier à cabeça. Se alguma dessas preocupações familiares tentar surgir às 2h da manhã, lembre-se com gentileza: "Eu já processei isso na minha hora de preocupação e vou rever amanhã à tarde."',
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Olhe para os temas recorrentes nos seus pensamentos noturnos. São tarefas práticas de resolução de problemas do dia a dia, ou são ansiedades mais profundas sobre o próprio sono? Categorizá-los ajuda a tirar o poder deles.",
+        faqs: [
+          {
+            q: "Por que meus problemas parecem muito maiores e mais assustadores às 3h da manhã?",
+            a: "No fundo da noite, o centro emocional do seu cérebro (a amígdala) funciona sem o controle equilibrador completo do córtex pré-frontal lógico. Isso cria uma câmara de eco onde pequenas preocupações viram crises enormes.",
+          },
+          {
+            q: "Não posso usar pura força de vontade para silenciar a mente?",
+            a: "Tentar suprimir um pensamento, na verdade, sinaliza ao cérebro que ele é importantíssimo, fazendo o pensamento voltar com mais força. Focamos em reconhecer e redirecionar, e não em suprimir.",
+          },
+        ],
+        ctaLabel: "Abrir meu diário de preocupações digital",
+        seoTitle: "Por que os pensamentos acelerados aparecem à noite | Somna TCC-I",
+        seoDescription:
+          "Entenda os três mecanismos psicológicos por trás dos pensamentos acelerados noturnos — e como a Hora Marcada para Preocupações dá a eles um espaço dedicado.",
+        keywords: [
+          "pensamentos acelerados à noite",
+          "ansiedade noturna",
+          "hora marcada para preocupações",
+          "TCC-I pensamentos acelerados",
+          "não consigo dormir pensando",
+        ],
+      },
     },
   },
 
@@ -366,6 +424,64 @@ export const week4Lessons: LessonContent[] = [
           "meditación mindfulness CBT-I",
         ],
       },
+      pt: {
+        title: "Técnicas de relaxamento respaldadas pela ciência",
+        eyebrow: "SEMANA 4 · LIÇÃO 11",
+        subtitle:
+          "Quatro métodos baseados em evidência para levar o sistema nervoso à paz parassimpática.",
+        difficulty: "Intermediário",
+        readingTime: "7 min de leitura",
+        content: [
+          {
+            heading: "Reverter a resposta ao estresse",
+            paras: [
+              "As técnicas de relaxamento dentro da TCC-I não são sugestões casuais — são ferramentas precisas e baseadas em evidência, desenhadas para reverter a resposta fisiológica ao estresse do seu corpo. O objetivo é baixar os batimentos cardíacos, reduzir a tensão muscular e guiar o sistema nervoso da hiperativação para uma paz parassimpática profunda.",
+            ],
+          },
+          {
+            heading: "Quatro métodos validados",
+            paras: [
+              "Relaxamento Muscular Progressivo (RMP): você contrai sistematicamente grupos musculares específicos por 5 segundos e os solta completamente por 10 segundos. Esse contraste físico rompe a tensão somática e desvia sua atenção para sensações físicas reconfortantes, ancorando uma mente ocupada.",
+              "Respiração diafragmática (respiração na barriga): levar respirações lentas e fundas para o abdômen, em vez de curtas para o peito, estimula diretamente o nervo vago. Isso sinaliza ao cérebro para reduzir a produção de cortisol e baixar a pressão arterial.",
+              "Imagética guiada: você constrói na mente uma paisagem sensorial bem detalhada e profundamente reconfortante (ex.: uma trilha na floresta isolada ou uma praia aquecida pelo sol). Ao engajar visão, audição e tato, não sobra espaço para pensamentos ansiosos.",
+              "Meditação mindfulness: você repousa a atenção no momento presente — como a subida e descida da respiração — enquanto observa os pensamentos e preocupações que passam com neutralidade gentil, sem se prender a eles.",
+            ],
+          },
+          {
+            heading: "Criar um espaço suave",
+            paras: [
+              'Lembre-se: essas práticas não servem para "forçar" o sono magicamente. Elas são desenhadas para criar um espaço físico suave e calmo onde o sono se sinta convidado a entrar de forma natural.',
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Vamos experimentar esta semana. Teste uma técnica de relaxamento diferente da nossa biblioteca de áudio em quatro noites separadas. Anote qual método te traz mais sensação de calma e transforme-o na sua prática de destaque para o resto do módulo.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Como o estresse se mantém no seu corpo físico durante o dia? Seus ombros sobem ou sua mandíbula aperta? Conectar-se com esses sinais diurnos ajuda a liberar a tensão com mais eficácia à noite.",
+        faqs: [
+          {
+            q: "Quanto tempo devo dedicar a praticar essas técnicas de relaxamento?",
+            a: "Só 5 a 10 minutos de prática focada já podem criar uma mudança profunda no seu sistema nervoso. A constância é muito mais valiosa do que a duração.",
+          },
+          {
+            q: "E se praticar essas técnicas me deixar mais ansioso?",
+            a: "É um fenômeno comum chamado ansiedade induzida pelo relaxamento. Acontece quando focar intensamente no corpo te deixa hipersensível à sua inquietação. Se ocorrer, mude para um foco externo, como uma paisagem sonora ambiental ou um audiolivro envolvente.",
+          },
+        ],
+        ctaLabel: "Acessar a biblioteca de áudio do Somna",
+        seoTitle: "Técnicas de relaxamento respaldadas pela ciência | Somna TCC-I",
+        seoDescription:
+          "Explore quatro técnicas de relaxamento baseadas em evidência — RMP, respiração diafragmática, imagética guiada e mindfulness — para acalmar a hiperativação antes de dormir.",
+        keywords: [
+          "técnicas de relaxamento sono",
+          "relaxamento muscular progressivo",
+          "respiração diafragmática",
+          "imagética guiada",
+          "meditação mindfulness TCC-I",
+        ],
+      },
     },
   },
 
@@ -521,6 +637,57 @@ export const week4Lessons: LessonContent[] = [
           "respiración cuadrada",
           "respiración coherente",
           "técnicas de respiración para el sueño",
+        ],
+      },
+      pt: {
+        title: "Exercícios de respiração para o sono",
+        eyebrow: "SEMANA 4 · LIÇÃO 12",
+        subtitle:
+          "Três estruturas de respiração — 4-7-8, quadrada e coerente — para acalmar a hiperativação.",
+        difficulty: "Iniciante",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "A ponte para o sistema nervoso",
+            paras: [
+              "Sua respiração é a ponte mais acessível e imediata entre a mente consciente e o sistema nervoso autônomo. Quando a ansiedade com o sono toma conta, sua respiração fica naturalmente rápida e rasa, mantendo o cérebro em estado de alerta máximo. Ao mudar intencionalmente os padrões de respiração, você pode dizer instantaneamente ao sistema nervoso que está totalmente seguro.",
+            ],
+          },
+          {
+            heading: "Três estruturas eficazes",
+            paras: [
+              "1. A técnica 4-7-8 (desenvolvida pelo Dr. Andrew Weil): inspire suavemente pelo nariz por 4 segundos; segure a respiração de leve contando até 7 segundos; expire completamente pela boca com um som suave de sopro por 8 segundos. A expiração mais longa ativa diretamente o nervo vago, desacelerando naturalmente os batimentos cardíacos.",
+              "2. Respiração quadrada (caixa): usada por profissionais de alto estresse e atletas de elite — inspire por 4 segundos, segure por 4 segundos, expire por 4 segundos, segure por 4 segundos. A estrutura perfeitamente igual equilibra os níveis de oxigênio e dá à mente um ritmo estável para focar.",
+              "3. Respiração coerente (ressonante): inspire por 5 segundos e expire por 5 segundos, mantendo um ciclo suave e contínuo, sem pausas. Isso otimiza a Variabilidade da Frequência Cardíaca (VFC), colocando coração, pulmões e mente em harmonia perfeita.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Esta noite, escolha uma das três estruturas de respiração. Pratique por 5 ciclos completos antes de se deitar. Se a mente acelerada retornar à noite, volte gentilmente ao padrão escolhido — sem se julgar, apenas respirando.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Qual das três estruturas de respiração parece mais natural para você? Por quê? Confiar no seu instinto ajuda a construir uma prática que você vai manter a longo prazo.",
+        faqs: [
+          {
+            q: "Preciso fazer as três técnicas todas as noites?",
+            a: "Não. Escolha uma que se sinta bem para você e pratique com constância. A regularidade é muito mais importante do que a quantidade de técnicas diferentes.",
+          },
+          {
+            q: "Tenho dificuldade em segurar a respiração por 7 segundos. Tudo bem?",
+            a: "Com certeza. A duração absoluta importa menos do que a proporção relativa. Você pode acelerar a contagem (ex.: 2-3,5-4), desde que a expiração continue sendo o dobro da inspiração.",
+          },
+        ],
+        ctaLabel: "Começar minha prática de respiração",
+        seoTitle: "Exercícios de respiração para o sono: 4-7-8, quadrada e coerente | Somna",
+        seoDescription:
+          "Aprenda três exercícios de respiração baseados em evidência para o sono — 4-7-8, respiração quadrada e coerente — para acalmar a hiperativação e convidar o descanso.",
+        keywords: [
+          "exercícios de respiração para dormir",
+          "respiração 4-7-8",
+          "respiração quadrada",
+          "respiração coerente",
+          "técnicas de respiração para o sono",
         ],
       },
     },

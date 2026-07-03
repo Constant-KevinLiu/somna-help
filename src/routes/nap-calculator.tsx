@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { PageHero } from "@/components/PageHero";
 import { RelatedTools } from "@/components/RelatedTools";
 import { FAQ, faqJsonLd } from "@/components/FAQ";
+import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n, useFmtTime } from "@/lib/i18n";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { Coffee, Brain, Battery } from "lucide-react";
@@ -119,12 +120,12 @@ export function NapCalculatorPage() {
           </div>
 
           <div className="mt-8 text-center">
-            <Link
-              to="/learn"
+            <SafeLink
+              to={lang === "pt" ? "/pt/learn" : lang === "es" ? "/es/learn" : "/learn"}
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
             >
               {d.cta}
-            </Link>
+            </SafeLink>
           </div>
         </div>
       </section>
@@ -145,7 +146,7 @@ export function NapCalculatorPage() {
       </section>
 
       <FAQ items={d.faqs} />
-      <RelatedTools exclude="/nap-calculator" />
+      <RelatedTools exclude={lang === "pt" ? "/pt/nap-calculator" : lang === "es" ? "/es/nap-calculator" : "/nap-calculator"} />
     </>
   );
 }

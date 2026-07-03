@@ -38,7 +38,7 @@ export type LessonContent = {
   lessonNumber: number; // 1-18 (global)
   estimatedMinutes: number;
   relatedLessonSlugs: string[]; // 3 related lesson slugs (internal)
-  i18n: Record<Lang, LessonLocale>;
+  i18n: Partial<Record<Lang, LessonLocale>>;
 };
 
 /** Lightweight metadata used for cards, navigation, and SEO without loading full content. */
@@ -291,8 +291,8 @@ export const lessonMetas: LessonMeta[] = [
 
 export const TOTAL_LESSONS = lessonMetas.length; // 18
 
-export function lessonPath(weekSlug: string, lessonSlug: string, lang?: "en" | "zh" | "es"): string {
-  const prefix = lang === "es" ? "/es" : "";
+export function lessonPath(weekSlug: string, lessonSlug: string, lang?: Lang): string {
+  const prefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
   return `${prefix}/program/${weekSlug}/${lessonSlug}`;
 }
 

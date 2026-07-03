@@ -117,7 +117,7 @@ export function CalculatorPage() {
 
   return (
     <>
-      <PageHero eyebrow="CALCULATOR" title={t("calc.title")} sub={t("calc.sub")} />
+      <PageHero eyebrow={t("nav.calculator")} title={t("calc.title")} sub={t("calc.sub")} />
       <section className="px-5 pb-16">
         <div className="mx-auto max-w-2xl">
           <div className="glass-strong rounded-3xl p-6 md:p-8">

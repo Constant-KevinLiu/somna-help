@@ -156,7 +156,7 @@ export type AnyShareCanvasOptions =
 export type ShareTemplateRenderer<T extends ShareCanvasOptions = ShareCanvasOptions> = (
   ctx: CanvasRenderingContext2D,
   opts: T,
-  labels: (typeof LABELS)["en"],
+  labels: NonNullable<(typeof LABELS)["en"]>,
 ) => void;
 
 /** Options for OG preview image generation. */
@@ -222,22 +222,24 @@ export interface SharePlatformAdapter {
 // Localization
 // =============================================================================
 
-const LABELS: Record<
-  Lang,
-  {
-    sleepEfficiency: string;
-    dayStreak: string;
-    weeklyAverage: string;
-    sleepProfile: string;
-    sleepType: string;
-    result: string;
-    cbtiTraining: string;
-    lesson: string;
-    week: string;
-    somna: string;
-    tryAgain: string;
-    shareFallback: string;
-  }
+const LABELS: Partial<
+  Record<
+    Lang,
+    {
+      sleepEfficiency: string;
+      dayStreak: string;
+      weeklyAverage: string;
+      sleepProfile: string;
+      sleepType: string;
+      result: string;
+      cbtiTraining: string;
+      lesson: string;
+      week: string;
+      somna: string;
+      tryAgain: string;
+      shareFallback: string;
+    }
+  >
 > = {
   en: {
     sleepEfficiency: "Sleep Efficiency",
@@ -280,6 +282,20 @@ const LABELS: Record<
     somna: "SOMNA",
     tryAgain: "Inténtalo de nuevo",
     shareFallback: "Compañero de sueño basado en CBT-I.",
+  },
+  pt: {
+    sleepEfficiency: "Eficiência do sono",
+    dayStreak: "Dias seguidos",
+    weeklyAverage: "Média semanal",
+    sleepProfile: "Perfil de sono",
+    sleepType: "Tipo de sono",
+    result: "Resultado",
+    cbtiTraining: "Treinamento de sono TCC-I",
+    lesson: "Lição",
+    week: "Semana",
+    somna: "SOMNA",
+    tryAgain: "Tentar compartilhar novamente",
+    shareFallback: "Companheiro de sono baseado em TCC-I.",
   },
 };
 
@@ -432,7 +448,7 @@ function clamp(n: number, min: number, max: number) {
 function renderDashboard(
   ctx: CanvasRenderingContext2D,
   opts: DashboardCanvasOptions,
-  labels: (typeof LABELS)["en"],
+  labels: NonNullable<(typeof LABELS)["en"]>,
 ) {
   const cx = CANVAS.width / 2;
   const efficiency = clamp(Math.round(opts.efficiency), 0, 100);
@@ -477,7 +493,7 @@ function renderDashboard(
 function renderDiary(
   ctx: CanvasRenderingContext2D,
   opts: DiaryCanvasOptions,
-  labels: (typeof LABELS)["en"],
+  labels: NonNullable<(typeof LABELS)["en"]>,
 ) {
   const cx = CANVAS.width / 2;
 
@@ -502,7 +518,7 @@ function renderDiary(
 function renderAssessment(
   ctx: CanvasRenderingContext2D,
   opts: AssessmentCanvasOptions,
-  labels: (typeof LABELS)["en"],
+  labels: NonNullable<(typeof LABELS)["en"]>,
 ) {
   const cx = CANVAS.width / 2;
 
@@ -538,7 +554,7 @@ const LESSON_ACCENT_COLORS = [
 function renderProgram(
   ctx: CanvasRenderingContext2D,
   opts: ProgramCanvasOptions,
-  labels: (typeof LABELS)["en"],
+  labels: NonNullable<(typeof LABELS)["en"]>,
 ) {
   const cx = CANVAS.width / 2;
   const weekIndex = clamp(opts.weekNumber - 1, 0, 5);
@@ -596,7 +612,7 @@ function renderArticle(ctx: CanvasRenderingContext2D, opts: ArticleCanvasOptions
 function renderDefault(
   ctx: CanvasRenderingContext2D,
   _opts: DefaultCanvasOptions,
-  labels: (typeof LABELS)["en"],
+  labels: NonNullable<(typeof LABELS)["en"]>,
 ) {
   const cx = CANVAS.width / 2;
 
@@ -614,7 +630,7 @@ function renderDefault(
 function renderError(
   ctx: CanvasRenderingContext2D,
   opts: ErrorCanvasOptions,
-  labels: (typeof LABELS)["en"],
+  labels: NonNullable<(typeof LABELS)["en"]>,
 ) {
   const cx = CANVAS.width / 2;
 
@@ -651,7 +667,7 @@ const builtInTemplates: Record<ShareTemplate, ShareTemplateRenderer<AnyShareCanv
 function renderTemplate(
   ctx: CanvasRenderingContext2D,
   opts: AnyShareCanvasOptions,
-  labels: (typeof LABELS)["en"],
+  labels: NonNullable<(typeof LABELS)["en"]>,
 ) {
   const renderer =
     customTemplates.get(opts.template) ?? builtInTemplates[opts.template as ShareTemplate];
@@ -747,7 +763,7 @@ export async function generateImage(options: AnyShareCanvasOptions): Promise<Blo
     }
 
     const lang = options.lang ?? getActiveLang();
-    const labels = LABELS[lang];
+    const labels = LABELS[lang] ?? LABELS.en!;
     const params = options as unknown as Record<string, unknown>;
 
     drawBackground(ctx);

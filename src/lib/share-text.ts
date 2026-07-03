@@ -6,7 +6,7 @@ import type { SharePlatformParams } from "@/lib/share/shareService";
 const SITE_URL = "https://somna.help";
 
 /** Page-content-type hashtags for X (Twitter). */
-const HASHTAGS: Record<string, Record<Lang, string[]>> = {
+const HASHTAGS: Record<string, Partial<Record<Lang, string[]>>> = {
   dashboard: { en: ["SleepHealth", "CBTI"], zh: ["睡眠健康"], es: ["SaludDelSueño"] },
   assessment: { en: ["SleepProfile", "CBTI"], zh: ["睡眠档案"], es: ["PerfilDeSueño"] },
   diary: { en: ["SleepDiary", "CBTI"], zh: ["睡眠日记"], es: ["DiarioDeSueño"] },
@@ -16,7 +16,7 @@ const HASHTAGS: Record<string, Record<Lang, string[]>> = {
 };
 
 /** Localized WhatsApp share copy. */
-const WHATSAPP_COPY: Record<Lang, (eff: number, pageUrl: string) => string> = {
+const WHATSAPP_COPY: Partial<Record<Lang, (eff: number, pageUrl: string) => string>> = {
   en: (eff, pageUrl) => `My Sleep Efficiency is now ${eff}% — try Somna → ${pageUrl}`,
   zh: (eff, pageUrl) => `我的睡眠效率提升到了${eff}%。看看 Somna → ${pageUrl}`,
   es: (eff, pageUrl) => `Mi eficiencia del sueño mejoró al ${eff}%. Prueba Somna → ${pageUrl}`,
@@ -24,7 +24,7 @@ const WHATSAPP_COPY: Record<Lang, (eff: number, pageUrl: string) => string> = {
 
 /** Build hashtags string for X based on content type. */
 function xHashtags(contentType: string, lang: Lang): string {
-  const tags = HASHTAGS[contentType]?.[lang] ?? HASHTAGS.default[lang];
+  const tags = HASHTAGS[contentType]?.[lang] ?? HASHTAGS.default[lang] ?? HASHTAGS.default.en ?? [];
   return tags.map((t) => `#${t}`).join(" ");
 }
 
@@ -98,7 +98,7 @@ export function pinterestShareUrl(pageUrl: string, imageUrl: string, lang: Lang)
 /** WhatsApp share text per language. */
 export function whatsAppText(lang: Lang, efficiency: number, pageUrl = SITE_URL): string {
   const eff = Math.round(efficiency);
-  return WHATSAPP_COPY[lang](eff, pageUrl);
+  return (WHATSAPP_COPY[lang] ?? WHATSAPP_COPY.en)!(eff, pageUrl);
 }
 
 /** Facebook share URL (uses og tags at target URL, so we just send the URL). */

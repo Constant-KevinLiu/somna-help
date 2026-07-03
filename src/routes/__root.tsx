@@ -16,7 +16,8 @@ import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import {
   getSavedUserLang,
-  isEsRoute,
+  getLangFromPathname,
+  isLocalizedRoute,
   switchRouteLang,
 } from "@/lib/lang-detect";
 
@@ -154,8 +155,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: React.ReactNode }) {
+  // O atributo lang do <html> segue o idioma da rota atual (/pt/** → "pt",
+  // /es/** → "es", demais → "en"), para SEO e leitores de tela.
+  const router = useRouter();
+  const pathname = router.state.location.pathname;
+  const routeLang = getLangFromPathname(pathname);
   return (
-    <html lang="en">
+    <html lang={routeLang}>
       <head>
         <HeadContent />
       </head>
@@ -171,31 +177,28 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   const pathname = router.state.location.pathname;
-  // El idioma se deriva de la ruta: /es/** → "es", resto → "en".
-  // SSR y cliente usan el mismo valor, evitando mismatch de hidratación.
-  const routeLang: "en" | "es" =
-    pathname === "/es" || pathname.startsWith("/es/") ? "es" : "en";
+  // O idioma é derivado da rota: /es/** → "es", /pt/** → "pt", resto → "en".
+  // SSR e cliente usam o mesmo valor, evitando mismatch de hidratação.
+  const routeLang = getLangFromPathname(pathname);
 
-  // Auto-redirect basado en la cookie de preferencia (somna_lang).
-  // Solo en cliente: evita SSR 500 y mismatch de hidratación.
-  // - Si la cookie dice "es" pero estamos en ruta inglesa → /es/...
-  // - Si la cookie dice "en" pero estamos en /es/... → ruta inglesa.
+  // Auto-redirect baseado no cookie de preferência (somna_lang).
+  // Só no cliente: evita SSR 500 e mismatch de hidratação.
+  // - Se o cookie diz "pt" mas estamos em rota de outro idioma → /pt/...
+  // - Se o cookie diz "en" mas estamos em /es/... ou /pt/... → rota inglesa.
   useEffect(() => {
     const saved = getSavedUserLang();
     if (!saved) return;
-    const onEsRoute = isEsRoute(pathname);
-    if (saved === "es" && !onEsRoute) {
-      const target = switchRouteLang(pathname, "es");
-      if (target !== pathname) router.navigate({ to: target, replace: true });
-    } else if (saved === "en" && onEsRoute) {
-      const target = switchRouteLang(pathname, "en");
-      if (target !== pathname) router.navigate({ to: target, replace: true });
-    }
+    const currentLang = getLangFromPathname(pathname);
+    if (saved === currentLang) return;
+    // Só redireciona se o idioma salvo tem rotas ativas.
+    if (saved !== "en" && saved !== "es" && saved !== "pt") return;
+    const target = switchRouteLang(pathname, saved);
+    if (target !== pathname) router.navigate({ to: target, replace: true });
   }, [pathname, router]);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <I18nProvider initialLang={routeLang}>
+      <I18nProvider initialLang={routeLang as "en" | "es" | "pt" | "zh"}>
         <div className="flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">

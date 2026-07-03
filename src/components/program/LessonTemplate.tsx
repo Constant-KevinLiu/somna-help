@@ -16,7 +16,7 @@ import { PageHero } from "@/components/PageHero";
 import { FAQ } from "@/components/FAQ";
 import { ShareModal } from "@/components/ShareModal";
 import { SafeLink } from "@/components/common/SafeLink";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type Lang } from "@/lib/i18n";
 import {
   getAdjacentLessons,
   getLessonMeta,
@@ -37,11 +37,11 @@ export function LessonTemplate({ lesson }: Props) {
   const { lang, t } = useI18n();
   const ui = getProgramLessonUI(lang);
   const { progress, toggle, hydrated } = useProgramProgress();
-  const c = lesson.i18n[lang] ?? lesson.i18n.en;
+  const c = lesson.i18n[lang] ?? lesson.i18n.en!;
   const meta = getLessonMeta(lesson.slug)!;
   const { prev, next } = getAdjacentLessons(lesson.slug);
   const [shareOpen, setShareOpen] = useState(false);
-  const esPrefix = lang === "es" ? "/es" : "";
+  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
 
   const pageUrl = useMemo(
     () =>
@@ -214,7 +214,7 @@ export function LessonTemplate({ lesson }: Props) {
             {/* Next lesson button */}
             {next ? (
               <SafeLink
-                to={`${esPrefix}/program/${next.weekSlug}/${next.slug}`}
+                to={`${langPrefix}/program/${next.weekSlug}/${next.slug}`}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
               >
                 {ui.nextLesson}
@@ -222,7 +222,7 @@ export function LessonTemplate({ lesson }: Props) {
               </SafeLink>
             ) : (
               <SafeLink
-                to={`${esPrefix}/program`}
+                to={`${langPrefix}/program`}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
               >
                 {ui.backToProgram}
@@ -247,7 +247,7 @@ export function LessonTemplate({ lesson }: Props) {
         <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {prev ? (
             <SafeLink
-              to={`${esPrefix}/program/${prev.weekSlug}/${prev.slug}`}
+              to={`${langPrefix}/program/${prev.weekSlug}/${prev.slug}`}
               className="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/[0.06]"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -258,7 +258,7 @@ export function LessonTemplate({ lesson }: Props) {
           )}
 
           <SafeLink
-            to={`${esPrefix}/program/${getWeekByNumber(lesson.weekNumber)?.slug ?? lesson.weekSlug}`}
+            to={`${langPrefix}/program/${getWeekByNumber(lesson.weekNumber)?.slug ?? lesson.weekSlug}`}
             className="inline-flex items-center justify-center rounded-full bg-white/[0.06] px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/[0.1]"
           >
             {ui.backToWeek} {lesson.weekNumber}
@@ -276,7 +276,7 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
   const { lang } = useI18n();
   const ui = getProgramLessonUI(lang);
   const meta = getLessonMeta(lessonSlug);
-  const esPrefix = lang === "es" ? "/es" : "";
+  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
   // Resolve localized title lazily. We use a synchronous lookup via a module-level
   // cache populated on first render of any lesson card. To avoid an extra network
   // round-trip per card, we read titles from the already-loaded current lesson when
@@ -286,7 +286,7 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
   if (!meta) return null;
   return (
     <SafeLink
-      to={`${esPrefix}/program/${weekSlug}/${lessonSlug}`}
+      to={`${langPrefix}/program/${weekSlug}/${lessonSlug}`}
       className="glass group rounded-2xl p-4 transition hover:bg-white/[0.06]"
     >
       <div className="text-[10px] uppercase tracking-[0.18em] text-accent">
@@ -305,7 +305,7 @@ const titleCache = new Map<string, string>();
 function useRelatedLessonTitle(
   weekSlug: string,
   lessonSlug: string,
-  lang: "en" | "zh" | "es",
+  lang: Lang,
 ): string | null {
   const cacheKey = `${weekSlug}/${lessonSlug}/${lang}`;
   const [title, setTitle] = useState<string | null>(() => titleCache.get(cacheKey) ?? null);
@@ -319,7 +319,7 @@ function useRelatedLessonTitle(
     loadLesson(weekSlug, lessonSlug)
       .then((lesson) => {
         if (!lesson || !active) return;
-        const t = (lesson.i18n[lang] ?? lesson.i18n.en).title;
+        const t = (lesson.i18n[lang] ?? lesson.i18n.en!).title;
         titleCache.set(cacheKey, t);
         setTitle(t);
       })
@@ -335,11 +335,12 @@ function useRelatedLessonTitle(
 }
 
 /** SEO head helper for lesson routes. */
-export function lessonHead(lesson: LessonContent, lang: "en" | "zh" | "es") {
-  const c = lesson.i18n[lang] ?? lesson.i18n.en;
+export function lessonHead(lesson: LessonContent, lang: Lang) {
+  const c = lesson.i18n[lang] ?? lesson.i18n.en!;
   const url = lessonPath(lesson.weekSlug, lesson.slug, lang);
   const enUrl = lessonPath(lesson.weekSlug, lesson.slug, "en");
   const esUrl = lessonPath(lesson.weekSlug, lesson.slug, "es");
+  const ptUrl = lessonPath(lesson.weekSlug, lesson.slug, "pt");
   const origin = "https://somna.help";
   return {
     meta: [
@@ -350,12 +351,13 @@ export function lessonHead(lesson: LessonContent, lang: "en" | "zh" | "es") {
       { property: "og:description", content: c.seoDescription },
       { property: "og:url", content: `${origin}${url}` },
       { property: "og:type", content: "article" },
-      { property: "og:locale", content: lang === "es" ? "es_ES" : "en_US" },
+      { property: "og:locale", content: lang === "es" ? "es_ES" : lang === "pt" ? "pt_BR" : "en_US" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "alternate", hrefLang: "en", href: `${origin}${enUrl}` },
       { rel: "alternate", hrefLang: "es", href: `${origin}${esUrl}` },
+      { rel: "alternate", hrefLang: "pt", href: `${origin}${ptUrl}` },
       { rel: "alternate", hrefLang: "x-default", href: `${origin}${enUrl}` },
       { rel: "canonical", href: `${origin}${url}` },
     ],
@@ -369,15 +371,24 @@ export function lessonHead(lesson: LessonContent, lang: "en" | "zh" | "es") {
 }
 
 /** schema.org Article JSON-LD for a lesson. */
-export function articleJsonLd(lesson: LessonContent, lang: "en" | "zh" | "es") {
-  const c = lesson.i18n[lang] ?? lesson.i18n.en;
+export function articleJsonLd(lesson: LessonContent, lang: Lang) {
+  const c = lesson.i18n[lang] ?? lesson.i18n.en!;
+  const weekLabel =
+    lang === "es"
+      ? "Semana"
+      : lang === "pt"
+        ? "Semana"
+        : lang === "zh"
+          ? "第"
+          : "Week";
+  const weekSuffix = lang === "zh" ? "周" : "";
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: c.title,
     description: c.seoDescription,
     keywords: c.keywords.join(", "),
-    articleSection: `Week ${lesson.weekNumber}`,
+    articleSection: `${weekLabel} ${lesson.weekNumber}${weekSuffix}`,
     wordCount: c.content.reduce((n, s) => n + s.paras.join(" ").split(/\s+/).length, 0),
     author: { "@type": "Organization", name: "Somna" },
     publisher: { "@type": "Organization", name: "Somna" },

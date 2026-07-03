@@ -11,9 +11,12 @@ import type { Lang } from "@/lib/lang-detect";
 /** Variante regional dentro del español. */
 export type EsRegion = "es-ES" | "es-MX";
 
-const LOCALE_BY_LANG: Record<Lang, string> = {
+const LOCALE_BY_LANG: Partial<Record<Lang, string>> = {
   en: "en-US",
   es: "es-ES",
+  pt: "pt-BR",
+  de: "de-DE",
+  ja: "ja-JP",
 };
 
 const LOCALE_BY_ES_REGION: Record<EsRegion, string> = {
@@ -34,7 +37,7 @@ export function esRegionFromPathname(pathname: string): EsRegion {
  */
 export function formatDate(d: Date, lang: Lang, region?: EsRegion): string {
   const locale =
-    lang === "es" && region ? LOCALE_BY_ES_REGION[region] : LOCALE_BY_LANG[lang];
+    lang === "es" && region ? LOCALE_BY_ES_REGION[region] : LOCALE_BY_LANG[lang] ?? "en-US";
   return d.toLocaleDateString(locale, {
     day: "2-digit",
     month: "2-digit",
@@ -49,7 +52,7 @@ export function formatDate(d: Date, lang: Lang, region?: EsRegion): string {
  */
 export function formatTime(d: Date, lang: Lang, region?: EsRegion): string {
   const locale =
-    lang === "es" && region ? LOCALE_BY_ES_REGION[region] : LOCALE_BY_LANG[lang];
+    lang === "es" && region ? LOCALE_BY_ES_REGION[region] : LOCALE_BY_LANG[lang] ?? "en-US";
   const use12h = lang === "es" && region === "es-MX";
   return d.toLocaleTimeString(locale, {
     hour: "2-digit",

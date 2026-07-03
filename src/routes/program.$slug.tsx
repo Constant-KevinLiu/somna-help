@@ -15,7 +15,7 @@ export const Route = createFileRoute("/program/$slug")({
         meta: [{ title: "CBT-I Program — somna" }],
       };
     }
-    const en = week.i18n.en;
+    const en = week.i18n.en!;
     return {
       meta: [
         { title: en.seoTitle },

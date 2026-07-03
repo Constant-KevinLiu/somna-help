@@ -32,10 +32,10 @@ const phases = [
   { key: "relax.exhale", dur: 8 },
 ] as const;
 
-const catLabels: Record<RelaxCategory, { en: string; zh: string; es: string }> = {
-  guided: { en: "Guided", zh: "引导", es: "Guiada" },
-  nature: { en: "Nature", zh: "自然", es: "Naturaleza" },
-  noise: { en: "Noise", zh: "噪音", es: "Ruido" },
+const catLabels: Record<RelaxCategory, { en: string; zh: string; es: string; pt: string }> = {
+  guided: { en: "Guided", zh: "引导", es: "Guiada", pt: "Guiada" },
+  nature: { en: "Nature", zh: "自然", es: "Naturaleza", pt: "Natureza" },
+  noise: { en: "Noise", zh: "噪音", es: "Ruido", pt: "Ruído" },
 };
 
 const catIcon = { guided: Heart, nature: Wind, noise: Music } as const;
@@ -44,13 +44,36 @@ const sectionLabel = {
   en: "Sleep Audio Library",
   zh: "睡眠音频库",
   es: "Biblioteca de audio para dormir",
+  pt: "Biblioteca de áudio para dormir",
+  de: "Sleep Audio Library",
+  ja: "Sleep Audio Library",
 };
 const sectionSub = {
   en: "Guided sessions, nature ambiences and noise. Tap a session to open the player.",
   zh: "引导练习、自然音景与噪音。点击任一会话打开播放器。",
   es: "Sesiones guiadas, ambientes naturales y ruido. Toca una sesión para abrir el reproductor.",
+  pt: "Sessões guiadas, ambientes naturais e ruído. Toque numa sessão para abrir o player.",
+  de: "Guided sessions, nature ambiences and noise. Tap a session to open the player.",
+  ja: "Guided sessions, nature ambiences and noise. Tap a session to open the player.",
 };
-const playLabel = { en: "Play", zh: "播放", es: "Reproducir" };
+const playLabel = { en: "Play", zh: "播放", es: "Reproducir", pt: "Reproduzir", de: "Play", ja: "Play" };
+
+// Sufixo de duração por idioma (ex.: "8" + " min" ). "min" é usado em pt-BR
+// como abreviação de minutos, alinhado ao formato de hora 24h do Brasil.
+const durationSuffix = {
+  en: " min",
+  zh: " 分钟",
+  es: " min",
+  pt: " min",
+  de: " min",
+  ja: " min",
+};
+
+function formatDuration(raw: string, lang: keyof typeof durationSuffix): string {
+  const n = parseInt(raw, 10);
+  if (Number.isNaN(n)) return raw;
+  return `${n}${durationSuffix[lang] ?? durationSuffix.en}`;
+}
 
 export function RelaxPage() {
   const { t, lang } = useI18n();
@@ -82,7 +105,7 @@ export function RelaxPage() {
 
   return (
     <>
-      <PageHero eyebrow="RELAX" title={t("relax.title")} sub={t("relax.sub")} />
+      <PageHero eyebrow={t("nav.relax")} title={t("relax.title")} sub={t("relax.sub")} />
       <section className="px-5 pb-12">
         <div className="mx-auto max-w-2xl">
           <div className="glass-strong rounded-3xl p-8 text-center">
@@ -147,7 +170,7 @@ export function RelaxPage() {
                       </div>
                       <p className="mt-1 text-xs text-muted-foreground">{tr.description[lang]}</p>
                       {tr.duration && (
-                        <p className="mt-1 text-[11px] text-muted-foreground/80">{tr.duration}</p>
+                        <p className="mt-1 text-[11px] text-muted-foreground/80">{formatDuration(tr.duration, lang)}</p>
                       )}
                     </div>
                   </div>

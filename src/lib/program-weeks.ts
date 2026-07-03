@@ -20,19 +20,21 @@ export type WeekLocale = {
 export type WeekContent = {
   slug: string;
   number: number;
-  i18n: Record<Lang, WeekLocale>;
+  i18n: Partial<Record<Lang, WeekLocale>>;
 };
 
-export const programLabels: Record<
-  Lang,
-  {
-    prev: string;
-    next: string;
-    back: string;
-    other: string;
-    startAssessment: string;
-    weekLabel: string;
-  }
+export const programLabels: Partial<
+  Record<
+    Lang,
+    {
+      prev: string;
+      next: string;
+      back: string;
+      other: string;
+      startAssessment: string;
+      weekLabel: string;
+    }
+  >
 > = {
   en: {
     prev: "Previous",
@@ -58,11 +60,20 @@ export const programLabels: Record<
     startAssessment: "Comenzar evaluación",
     weekLabel: "Semana",
   },
+  pt: {
+    prev: "Semana anterior",
+    next: "Próxima semana",
+    back: "Voltar ao programa",
+    other: "Outras semanas do programa",
+    startAssessment: "Iniciar avaliação",
+    weekLabel: "Semana",
+  },
 };
 
 export function weekHeading(lang: Lang, number: number, title: string) {
   if (lang === "zh") return `第${number}周 · ${title}`;
   if (lang === "es") return `Semana ${number} · ${title}`;
+  if (lang === "pt") return `Semana ${number} · ${title}`;
   return `Week ${number} · ${title}`;
 }
 
@@ -136,6 +147,31 @@ export const programWeeks: WeekContent[] = [
         encouragementTitle: "Motivación",
         encouragement: "El sueño saludable se reconstruye gradualmente.",
         shortDesc: "Fija una hora de despertar y comienza una rutina suave.",
+      },
+      pt: {
+        title: "Fundamentos do Sono",
+        eyebrow: "SEMANA 1 · PROGRAMA TCC-I",
+        seoTitle: "Fundamentos do Sono | Semana 1 do Programa TCC-I | Somna",
+        seoDescription:
+          "Construa a base de um sono saudável com hábitos constantes e práticas suaves de TCC-I.",
+        intro:
+          "Dormir melhor começa por entender como o sono funciona. A constância costuma ser mais eficaz do que tentar forçar o sono.",
+        whyTitle: "Por que importa",
+        whyPoints: [
+          "O sono depende do ritmo circadiano e da pressão do sono.",
+          "A regularidade ajuda o cérebro a reaprender um sono saudável.",
+        ],
+        practicesTitle: "Práticas-chave",
+        practices: [
+          "Manter um horário fixo para acordar.",
+          "Reduzir cafeína à tarde.",
+          "Criar uma rotina relaxante à noite.",
+        ],
+        actionsTitle: "Ações de hoje",
+        actions: ["Acordar no mesmo horário", "Reduzir telas antes de dormir"],
+        encouragementTitle: "Um lembrete gentil",
+        encouragement: "O sono saudável se reconstrói aos poucos.",
+        shortDesc: "Defina um horário fixo para acordar e comece uma rotina suave.",
       },
     },
   },
@@ -214,6 +250,34 @@ export const programWeeks: WeekContent[] = [
         encouragement: "Salir de la cama no significa fracasar.",
         shortDesc: "Vuelve a asociar la cama con el sueño.",
       },
+      pt: {
+        title: "Controle de Estímulos",
+        eyebrow: "SEMANA 2 · PROGRAMA TCC-I",
+        seoTitle: "Controle de Estímulos | Semana 2 do Programa TCC-I | Somna",
+        seoDescription:
+          "Reconecte a cama ao sono por meio do controle de estímulos — uma das técnicas mais eficazes da TCC-I.",
+        intro: "O controle de estímulos ajuda a reconectar a cama ao sono.",
+        whyTitle: "Por que importa",
+        whyPoints: [
+          "A insônia pode ensinar o cérebro a associar a cama à vigília.",
+          "O controle de estímulos retreina essa associação para que a cama volte a sinalizar sono.",
+        ],
+        practicesTitle: "Práticas-chave",
+        practices: [
+          "Deitar apenas quando o sono chegar.",
+          "Sair da cama depois de uns 20 minutos acordado.",
+          "Evitar o celular na cama.",
+        ],
+        actionsTitle: "Ações de hoje",
+        actions: [
+          "Esperar até sentir sono de verdade",
+          "Sair da cama se estiver acordado há muito tempo",
+          "Voltar quando o sono retornar",
+        ],
+        encouragementTitle: "Um lembrete gentil",
+        encouragement: "Sair da cama não é um fracasso.",
+        shortDesc: "Reconecte a cama ao sono — e apenas ao sono.",
+      },
     },
   },
   {
@@ -287,6 +351,34 @@ export const programWeeks: WeekContent[] = [
         encouragement: "La somnolencia temporal es normal.",
         shortDesc: "Comprime el tiempo en cama para fortalecer el sueño.",
       },
+      pt: {
+        title: "Restrição do Sono",
+        eyebrow: "SEMANA 3 · PROGRAMA TCC-I",
+        seoTitle: "Restrição do Sono | Semana 3 do Programa TCC-I | Somna",
+        seoDescription:
+          "Melhore a eficiência do sono alinhando o tempo na cama ao sono real.",
+        intro: "A restrição do sono ajuda a melhorar a eficiência do sono.",
+        whyTitle: "Por que importa",
+        whyPoints: [
+          "Muito tempo na cama enfraquece a pressão do sono.",
+          "Uma janela mais ajustada aprofunda o sono e reduz os despertares.",
+        ],
+        practicesTitle: "Práticas-chave",
+        practices: [
+          "Manter um horário fixo para acordar.",
+          "Evitar sonecas longas.",
+          "Seguir a janela de sono recomendada.",
+        ],
+        actionsTitle: "Ações de hoje",
+        actions: [
+          "Manter um horário estável para acordar",
+          "Seguir sua janela de sono",
+          "Evitar sonecas longas",
+        ],
+        encouragementTitle: "Um lembrete gentil",
+        encouragement: "Alguma sonolência temporária é esperada.",
+        shortDesc: "Comprima o tempo na cama para fortalecer o sono.",
+      },
     },
   },
   {
@@ -351,6 +443,30 @@ export const programWeeks: WeekContent[] = [
         encouragementTitle: "Motivación",
         encouragement: "Descansar también tiene valor.",
         shortDesc: "Rituales de descanso, respiración y liberar la preocupación.",
+      },
+      pt: {
+        title: "Acalmar a Mente",
+        eyebrow: "SEMANA 4 · PROGRAMA TCC-I",
+        seoTitle: "Acalmar a Mente | Semana 4 do Programa TCC-I | Somna",
+        seoDescription:
+          "Acalme uma mente acelerada com respiração, scan corporal e aceitação consciente.",
+        intro: "Uma mente agitada é uma das causas mais comuns de insônia.",
+        whyTitle: "Por que importa",
+        whyPoints: [
+          "O estresse ativa o sistema de alerta e dificulta o sono.",
+          "Práticas de acalmar ajudam o sistema nervoso a entrar em modo de descanso.",
+        ],
+        practicesTitle: "Práticas-chave",
+        practices: ["Respiração profunda", "Scan corporal", "Áudio de relaxamento"],
+        actionsTitle: "Ações de hoje",
+        actions: [
+          "Pratique respiração 4-7-8",
+          "Experimente um scan corporal",
+          "Use áudio de relaxamento",
+        ],
+        encouragementTitle: "Um lembrete gentil",
+        encouragement: "Descansar também tem valor.",
+        shortDesc: "Rituais de desacelerar, respiração e liberar preocupações.",
       },
     },
   },
@@ -430,6 +546,33 @@ export const programWeeks: WeekContent[] = [
         encouragement: "El sueño no requiere un pensamiento perfecto.",
         shortDesc: "Suaviza los pensamientos poco útiles sobre el sueño.",
       },
+      pt: {
+        title: "Reformulação Cognitiva",
+        eyebrow: "SEMANA 5 · PROGRAMA TCC-I",
+        seoTitle: "Reformulação Cognitiva | Semana 5 do Programa TCC-I | Somna",
+        seoDescription:
+          "Suavize pensamentos pouco úteis sobre o sono com a reformulação cognitiva da TCC-I.",
+        intro: "Os pensamentos influenciam as emoções, e as emoções influenciam o sono.",
+        whyTitle: "Por que importa",
+        whyPoints: [
+          "O pensamento catastrófico aumenta a ansiedade e mantém o cérebro alerta.",
+          "Perspectivas equilibradas ajudam o corpo a se aquietar.",
+        ],
+        practicesTitle: "Experimente esta reformulação",
+        practices: [
+          'Pensamento comum: "Nunca mais vou conseguir dormir."',
+          'Resposta equilibrada: "Uma noite difícil não define meu progresso."',
+        ],
+        actionsTitle: "Ações de hoje",
+        actions: [
+          "Perceba os pensamentos automáticos",
+          "Questione previsões extremas",
+          "Substitua por perspectivas equilibradas",
+        ],
+        encouragementTitle: "Um lembrete gentil",
+        encouragement: "O sono não exige um pensamento perfeito.",
+        shortDesc: "Suavize pensamentos pouco úteis sobre o sono.",
+      },
     },
   },
   {
@@ -507,6 +650,34 @@ export const programWeeks: WeekContent[] = [
         encouragementTitle: "Motivación",
         encouragement: "Dormir bien significa resiliencia, no perfección.",
         shortDesc: "Conserva tus logros y vuelve a confiar en el sueño.",
+      },
+      pt: {
+        title: "Manter e Prosperar",
+        eyebrow: "SEMANA 6 · PROGRAMA TCC-I",
+        seoTitle: "Manter e Prosperar | Semana 6 do Programa TCC-I | Somna",
+        seoDescription:
+          "Mantenha um sono saudável a longo prazo. Consolidar os ganhos da TCC-I e confiar no ritmo natural do corpo.",
+        intro: "Dormir bem é uma habilidade para a vida toda.",
+        whyTitle: "Por que importa",
+        whyPoints: [
+          "Noites ruins ocasionais não apagam o progresso.",
+          "A manutenção protege os ganhos que você construiu.",
+        ],
+        practicesTitle: "Práticas-chave",
+        practices: [
+          "Manter horários estáveis para acordar.",
+          "Continuar com rituais de relaxamento.",
+          "Confiar na capacidade natural do corpo de dormir.",
+        ],
+        actionsTitle: "Ações de hoje",
+        actions: [
+          "Continue suas rotinas",
+          "Aceite recaídas ocasionais",
+          "Foque no progresso de longo prazo",
+        ],
+        encouragementTitle: "Um lembrete gentil",
+        encouragement: "Dormir bem é resiliência, não perfeição.",
+        shortDesc: "Mantenha seus ganhos. Volte a confiar no sono.",
       },
     },
   },

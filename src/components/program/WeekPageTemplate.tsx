@@ -25,12 +25,12 @@ import { useProgramProgress, weekCompletionPercent, resolveWeekSlug } from "@/li
 
 export function WeekPageTemplate({ week }: { week: WeekContent }) {
   const { lang } = useI18n();
-  const labels = programLabels[lang];
+  const labels = programLabels[lang] ?? programLabels.en!;
   const ui = getProgramLessonUI(lang);
-  const c = week.i18n[lang] ?? week.i18n.en;
+  const c = week.i18n[lang] ?? week.i18n.en!;
   const { prev, next } = getAdjacentWeeks(week.slug);
   const { progress, hydrated } = useProgramProgress();
-  const esPrefix = lang === "es" ? "/es" : "";
+  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
 
   const weekLessons = getLessonsByWeek(
     resolveWeekSlug(week.slug) ??
@@ -72,7 +72,7 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
               return (
                 <SafeLink
                   key={lm.slug}
-                  to={`${esPrefix}/program/${lm.weekSlug}/${lm.slug}`}
+                  to={`${langPrefix}/program/${lm.weekSlug}/${lm.slug}`}
                   className="glass group flex items-center gap-3 rounded-2xl p-4 transition hover:bg-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 >
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/40 to-accent/40 text-xs font-medium text-foreground">
@@ -168,11 +168,11 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
             {programWeeks
               .filter((w) => w.slug !== week.slug)
               .map((w) => {
-                const wc = w.i18n[lang] ?? w.i18n.en;
+                const wc = w.i18n[lang] ?? w.i18n.en!;
                 return (
                   <SafeLink
                     key={w.slug}
-                    to={`${esPrefix}/program/${w.slug}`}
+                    to={`${langPrefix}/program/${w.slug}`}
                     className="glass rounded-2xl p-4 transition hover:bg-white/[0.06]"
                   >
                     <div className="text-[10px] uppercase tracking-[0.18em] text-accent">
@@ -191,7 +191,7 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
         <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           {prev ? (
             <SafeLink
-              to={`${esPrefix}/program/${prev.slug}`}
+              to={`${langPrefix}/program/${prev.slug}`}
               className="glass inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/[0.06]"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -204,7 +204,7 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
           )}
 
           <SafeLink
-            to={`${esPrefix}/program`}
+            to={`${langPrefix}/program`}
             className="inline-flex items-center justify-center rounded-full bg-white/[0.06] px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/[0.1]"
           >
             {labels.back}
@@ -212,7 +212,7 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
 
           {next ? (
             <SafeLink
-              to={`${esPrefix}/program/${next.slug}`}
+              to={`${langPrefix}/program/${next.slug}`}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-5 py-3 text-sm font-medium text-primary-foreground"
             >
               <span>
@@ -222,7 +222,7 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
             </SafeLink>
           ) : (
             <SafeLink
-              to={`${esPrefix}/assessment`}
+              to={`${langPrefix}/assessment`}
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-5 py-3 text-sm font-medium text-primary-foreground"
             >
               <span>{labels.startAssessment}</span>
@@ -255,7 +255,7 @@ function WeekLessonTitle({ weekSlug, lessonSlug }: { weekSlug: string; lessonSlu
     loadLesson(weekSlug, lessonSlug)
       .then((lesson) => {
         if (!lesson || !active) return;
-        const t = (lesson.i18n[lang] ?? lesson.i18n.en).title;
+        const t = (lesson.i18n[lang] ?? lesson.i18n.en!).title;
         weekLessonTitleCache.set(cacheKey, t);
         setTitle(t);
       })

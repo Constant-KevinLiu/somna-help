@@ -57,7 +57,7 @@ export const Route = createFileRoute("/dashboard")({
 export function Dash() {
   const { lang, t: baseT } = useI18n();
   const { t } = useSleepI18n();
-  const esPrefix = lang === "es" ? "/es" : "";
+  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
   const [records, setRecords] = useState<SleepRecord[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
@@ -116,7 +116,7 @@ export function Dash() {
               <h2 className="font-display text-2xl text-gradient">{t("dash.chart.empty")}</h2>
               <p className="mt-3 text-sm text-muted-foreground">{t("dash.empty.body")}</p>
               <Link
-                to={`${esPrefix}/diary`}
+                to={`${langPrefix}/diary`}
                 className="mt-6 inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"
               >
                 {t("dash.empty.cta")}
@@ -160,7 +160,7 @@ export function Dash() {
                 </div>
               </div>
               <Link
-                to={`${esPrefix}/relax`}
+                to={`${langPrefix}/relax`}
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"
               >
                 <Wind className="h-4 w-4" />
@@ -310,10 +310,10 @@ export function Dash() {
               {t("dash.actions.title")}
             </div>
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <QuickAction to={`${esPrefix}/diary`} icon={Moon} label={t("dash.actions.log")} />
-              <QuickAction to={`${esPrefix}/relax`} icon={Wind} label={t("dash.actions.relax")} />
-              <QuickAction to={`${esPrefix}/program`} icon={BookOpen} label={t("dash.actions.program")} />
-              <QuickAction to={`${esPrefix}/reminder`} icon={Bell} label={t("dash.actions.reminder")} />
+              <QuickAction to={`${langPrefix}/diary`} icon={Moon} label={t("dash.actions.log")} />
+              <QuickAction to={`${langPrefix}/relax`} icon={Wind} label={t("dash.actions.relax")} />
+              <QuickAction to={`${langPrefix}/program`} icon={BookOpen} label={t("dash.actions.program")} />
+              <QuickAction to={`${langPrefix}/reminder`} icon={Bell} label={t("dash.actions.reminder")} />
             </div>
           </div>
         </div>
@@ -402,6 +402,7 @@ function ProgramProgressCard() {
   const { lang } = useI18n();
   const ui = getProgramLessonUI(lang);
   const { progress, hydrated } = useProgramProgress();
+  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
 
   if (!hydrated) {
     return (
@@ -468,9 +469,8 @@ function ProgramProgressCard() {
 
       {/* Recommended next lesson CTA */}
       {nextLesson ? (
-        <Link
-          to="/program/$week/$lesson"
-          params={{ week: nextLesson.weekSlug, lesson: nextLesson.slug }}
+        <SafeLink
+          to={`${langPrefix}/program/${nextLesson.weekSlug}/${nextLesson.slug}`}
           className="group mt-5 flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/[0.07] p-4 transition hover:bg-accent/[0.12]"
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary/40 to-accent/40">
@@ -488,7 +488,7 @@ function ProgramProgressCard() {
             {ui.dashContinueLearning}
             <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
           </span>
-        </Link>
+        </SafeLink>
       ) : (
         <div className="mt-5 flex items-center gap-3 rounded-2xl border border-success/30 bg-success/10 p-4">
           <GraduationCap className="h-5 w-5 shrink-0 text-success" />

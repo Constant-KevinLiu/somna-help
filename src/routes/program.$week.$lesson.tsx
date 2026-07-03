@@ -40,7 +40,7 @@ function LessonRoute() {
   // is primarily for SSR; for client-side language switches the document title
   // is updated here.
   if (typeof document !== "undefined") {
-    const c = lesson.i18n[lang] ?? lesson.i18n.en;
+    const c = lesson.i18n[lang] ?? lesson.i18n.en!;
     if (document.title !== c.seoTitle) document.title = c.seoTitle;
   }
   return <LessonTemplate lesson={lesson} />;

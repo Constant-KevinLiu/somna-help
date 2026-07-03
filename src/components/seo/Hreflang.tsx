@@ -16,13 +16,17 @@
  */
 
 import type { Lang } from "@/lib/lang-detect";
-import { switchRouteLang } from "@/lib/lang-detect";
+import { switchRouteLang, ACTIVE_LANGS } from "@/lib/lang-detect";
 
 export const SITE_ORIGIN = "https://somna.help";
 
 const HREFLANG_BY_LANG: Record<Lang, string> = {
   en: "en",
   es: "es",
+  pt: "pt",
+  de: "de",
+  ja: "ja",
+  zh: "zh",
 };
 
 interface HreflangProps {
@@ -31,15 +35,18 @@ interface HreflangProps {
 
 /**
  * Devuelve la lista de URLs alternativas para una ruta dada.
+ * Genera entradas para todos los idiomas activos (en, es, pt) + x-default.
  * Exportado para que el sitemap y el SSR puedan reutilizarlo.
  */
 export function buildAlternates(pathname: string) {
-  const enPath = switchRouteLang(pathname, "en");
-  const esPath = switchRouteLang(pathname, "es");
+  const alternates = ACTIVE_LANGS.map((lang) => ({
+    hreflang: HREFLANG_BY_LANG[lang],
+    href: `${SITE_ORIGIN}${switchRouteLang(pathname, lang)}`,
+  }));
+  // x-default apunta a la versión inglesa.
   return [
-    { hreflang: HREFLANG_BY_LANG.en, href: `${SITE_ORIGIN}${enPath}` },
-    { hreflang: HREFLANG_BY_LANG.es, href: `${SITE_ORIGIN}${esPath}` },
-    { hreflang: "x-default", href: `${SITE_ORIGIN}${enPath}` },
+    ...alternates,
+    { hreflang: "x-default", href: `${SITE_ORIGIN}${switchRouteLang(pathname, "en")}` },
   ];
 }
 

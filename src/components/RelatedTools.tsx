@@ -6,18 +6,19 @@ import { SafeLink } from "@/components/common/SafeLink";
 export function RelatedTools({ exclude }: { exclude?: string }) {
   const { lang } = useI18n();
   const d = getCalcDict(lang);
+  const prefix = lang === "pt" ? "/pt" : lang === "es" ? "/es" : "";
   const tools = [
-    { to: "/calculator", title: d.nav.cycle, desc: d.related.cycleDesc, icon: Moon },
-    { to: "/sleep-calculator", title: d.nav.sleep, desc: d.related.sleepDesc, icon: Calculator },
-    { to: "/bedtime-calculator", title: d.nav.bedtime, desc: d.related.bedtimeDesc, icon: Bed },
-    { to: "/nap-calculator", title: d.nav.nap, desc: d.related.napDesc, icon: Coffee },
+    { to: `${prefix}/calculator`, title: d.nav.cycle, desc: d.related.cycleDesc, icon: Moon },
+    { to: `${prefix}/sleep-calculator`, title: d.nav.sleep, desc: d.related.sleepDesc, icon: Calculator },
+    { to: `${prefix}/bedtime-calculator`, title: d.nav.bedtime, desc: d.related.bedtimeDesc, icon: Bed },
+    { to: `${prefix}/nap-calculator`, title: d.nav.nap, desc: d.related.napDesc, icon: Coffee },
     {
-      to: "/melatonin-calculator",
+      to: `${prefix}/melatonin-calculator`,
       title: d.nav.melatonin,
       desc: d.related.melatoninDesc,
       icon: Pill,
     },
-    { to: "/program", title: d.related.guide, desc: d.related.guideDesc, icon: BookOpen },
+    { to: `${prefix}/program`, title: d.related.guide, desc: d.related.guideDesc, icon: BookOpen },
   ];
   const items = tools.filter((t) => t.to !== exclude);
   return (

@@ -128,7 +128,7 @@ function EsProgramIndexPage() {
                       Semana {idx + 1}
                     </div>
                     <h3 className="mt-1 font-display text-lg text-foreground">
-                      {week.i18n.es.title}
+                      {week.i18n.es!.title}
                     </h3>
                   </div>
                   <ArrowRight className="h-4 w-4 text-muted-foreground" />

@@ -1,6 +1,7 @@
 import type { Lang } from "./i18n";
 import type { FAQ } from "./calc-i18n";
 import type { CbtiSlug } from "./cbti-i18n";
+import { ptLearnDict } from "./learn-pt-i18n";
 
 export type LearnSlug =
   | "what-is-cbti"
@@ -19,8 +20,8 @@ export const LEARN_SLUGS: LearnSlug[] = [
   "stimulus-control",
 ];
 
-export function learnPath(slug: LearnSlug, lang?: "en" | "zh" | "es"): string {
-  const prefix = lang === "es" ? "/es" : "";
+export function learnPath(slug: LearnSlug, lang?: "en" | "zh" | "es" | "pt"): string {
+  const prefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
   return `${prefix}/learn/${slug}`;
 }
 
@@ -1885,7 +1886,7 @@ const es: LearnDict = {
   },
 };
 
-const dicts: Record<Lang, LearnDict> = { en, zh, es };
+const dicts: Partial<Record<Lang, LearnDict>> = { en, zh, es, pt: ptLearnDict };
 
 export function getLearnDict(lang: Lang): LearnDict {
   return dicts[lang] ?? en;

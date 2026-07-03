@@ -8,13 +8,14 @@ export const Route = createFileRoute("/cbt-i-guide")({
   head: () => cbtiHead("cbt-i-guide"),
 });
 
-const weekLabels: Record<Lang, string[]> = {
+const weekLabels: Partial<Record<Lang, string[]>> = {
   en: ["Week 1–2", "Week 3–4", "Week 5–6", "Week 7–8"],
   zh: ["第 1–2 周", "第 3–4 周", "第 5–6 周", "第 7–8 周"],
   es: ["Semana 1–2", "Semana 3–4", "Semana 5–6", "Semana 7–8"],
+  pt: ["Semana 1–2", "Semana 3–4", "Semana 5–6", "Semana 7–8"],
 };
 
-const weekContent: Record<Lang, { title: string; desc: string }[]> = {
+const weekContent: Partial<Record<Lang, { title: string; desc: string }[]>> = {
   en: [
     {
       title: "Baseline & Sleep Window",
@@ -59,22 +60,23 @@ const weekContent: Record<Lang, { title: string; desc: string }[]> = {
   ],
 };
 
-const headingByLang: Record<Lang, string> = {
+const headingByLang: Partial<Record<Lang, string>> = {
   en: "CBT-I Journey Timeline",
   zh: "CBT-I 旅程时间线",
   es: "Línea de tiempo TCC-I",
+  pt: "Linha do tempo TCC-I",
 };
 
 export function CbtIGuidePage() {
   const { lang } = useI18n();
   const article = getCbtiDict(lang).articles["cbt-i-guide"];
-  const labels = weekLabels[lang];
-  const content = weekContent[lang];
+  const labels = weekLabels[lang] ?? weekLabels.en!;
+  const content = weekContent[lang] ?? weekContent.en!;
 
   return (
     <CbtiArticleShell slug="cbt-i-guide" article={article}>
       <div className="glass-strong rounded-3xl p-6 md:p-8">
-        <h3 className="font-display text-xl text-foreground">{headingByLang[lang]}</h3>
+        <h3 className="font-display text-xl text-foreground">{headingByLang[lang] ?? headingByLang.en!}</h3>
         <ol className="relative mt-6 space-y-6 border-l border-white/10 pl-6">
           {content.map((c, i) => (
             <li key={i} className="relative">

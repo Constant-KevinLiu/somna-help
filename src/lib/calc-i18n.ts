@@ -754,8 +754,225 @@ const es: CalcDict = {
   },
 };
 
-const dicts: Record<Lang, CalcDict> = { en, zh, es };
+const pt: CalcDict = {
+  nav: {
+    tools: "Ferramentas",
+    section: "Calculadoras de Sono",
+    cycle: "Calculadora de Ciclos de Sono",
+    sleep: "Calculadora de Sono",
+    bedtime: "Calculadora de Hora de Dormir",
+    nap: "Calculadora de Sonecas",
+    melatonin: "Calculadora de Melatonina",
+  },
+  related: {
+    title: "Ferramentas relacionadas",
+    cycleDesc: "Planeje com base em ciclos de 90 minutos.",
+    sleepDesc: "Quanto sono você precisa segundo a idade.",
+    bedtimeDesc: "O melhor momento para se deitar.",
+    napDesc: "Duração ideal da soneca para ter energia.",
+    melatoninDesc: "Quando tomar melatonina.",
+    guide: "Guia TCC-I",
+    guideDesc: "Programa sem remédios, baseado em ciência.",
+  },
+  common: {
+    faqTitle: "Perguntas frequentes",
+    bestBadge: "Recomendado",
+    cyclesWord: "ciclos",
+    hoursShort: " h de sono",
+    minShort: "min",
+  },
+  cycle: {
+    meta: {
+      title: "Calculadora de Ciclos de Sono — Somna",
+      desc: "Encontre seu horário ideal para dormir e acordar usando os ciclos naturais de 90 minutos.",
+    },
+  },
+  sleep: {
+    meta: {
+      title: "Calculadora de Sono — Encontre sua duração ideal | Somna",
+      desc: "Calcule quanto sono você precisa conforme sua idade e horário de acordar.",
+    },
+    eyebrow: "CALCULADORA DE SONO",
+    title: "Encontre sua duração ideal de sono",
+    sub: "Recomendações baseadas em ciência, conforme sua idade e horário desejado para acordar.",
+    ageLabel: "Faixa etária",
+    ages: {
+      teen: "Adolescente (13–17)",
+      young: "Adulto jovem (18–25)",
+      adult: "Adulto (26–64)",
+      older: "Idoso (65+)",
+    },
+    ageNotes: {
+      teen: "Adolescentes precisam de mais sono para o desenvolvimento físico e cerebral.",
+      young: "A maioria dos adultos jovens rende melhor com 7–9 horas de sono.",
+      adult: "Adultos costumam funcionar melhor com 7–9 horas de sono consistentes.",
+      older: "O sono costuma ficar mais leve com a idade — mire 7–8 horas.",
+    },
+    wakeLabel: "Horário desejado para acordar",
+    recommended: "Sono recomendado",
+    hoursWord: "horas",
+    suggestedBedtime: "Horário recomendado para deitar",
+    toWake: (t) => `Para acordar às ${t} se sentindo descansado.`,
+    cta: "Aprenda sobre os ciclos de sono",
+    whyTitle: "Por que o sono importa conforme a idade",
+    whyParas: [
+      "As necessidades de sono mudam ao longo da vida. Hormônios, desenvolvimento cerebral e o ritmo circadiano influenciam quanto descanso seu corpo precisa.",
+      "A constância costuma ser mais importante do que a quantidade exata de horas. Deitar e levantar no mesmo horário ajuda a estabilizar seu relógio interno.",
+      "Se você se sente cansado mesmo dentro dessas faixas, considere registrar seu sono por algumas semanas para detectar padrões.",
+    ],
+    faqs: [
+      {
+        q: "Quanto sono eu realmente preciso?",
+        a: "A maioria dos adultos precisa de 7–9 horas por noite. Adolescentes, 8–10, e idosos costumam ficar bem com 7–8 horas. A qualidade importa tanto quanto a quantidade.",
+      },
+      {
+        q: "O que acontece se eu dormir menos do que o recomendado?",
+        a: "A curto prazo, você pode se sentir grogue, irritado ou desconcentrado. A falta crônica de sono está associada a problemas de humor, metabólicos e cardiovasculares.",
+      },
+      {
+        q: "Posso recuperar o sono nos fins de semana?",
+        a: "Parcialmente, mas o mais confiável é um horário estável. Grandes mudanças no fim de semana podem bagunçar seu ritmo circadiano.",
+      },
+      {
+        q: "Dormir mais é sempre melhor?",
+        a: "Não. Dormir habitualmente mais de 9–10 horas também pode estar associado a problemas de saúde. Busque a faixa que te faça sentir descansado.",
+      },
+    ],
+  },
+  bedtime: {
+    meta: {
+      title: "Calculadora de Hora de Dormir — Melhor hora para se deitar | Somna",
+      desc: "Calcule seu horário ideal para deitar com base nos ciclos de sono e no seu horário de acordar.",
+    },
+    eyebrow: "CALCULADORA DE HORA DE DORMIR",
+    title: "Encontre o melhor horário para se deitar",
+    sub: "Acordar entre os ciclos de sono ajuda você a se sentir mais lúcido, calmo e descansado.",
+    wakeLabel: "Quero acordar às",
+    suggested: "Horários sugeridos para deitar",
+    cyclesSuffix: (h, c) => `${h} h de sono · ${c} ciclos`,
+    bestLabel: "Recomendado",
+    note: "Cada opção permite acordar entre os ciclos de sono. Considera ~15 min para adormecer.",
+    cta: "Experimentar a Calculadora de Ciclos",
+    faqs: [
+      {
+        q: "Por que o ciclo de 90 minutos importa?",
+        a: "Cada ciclo percorre sono leve, profundo e REM. Acordar no fim de um ciclo (em vez de no sono profundo) reduz a grogue ao acordar.",
+      },
+      {
+        q: "Quantos ciclos devo buscar?",
+        a: "A maioria dos adultos se sente melhor com 5–6 ciclos (7,5–9 horas). Atletas ou quem está recuperando sono pode precisar de 7.",
+      },
+      {
+        q: "O ciclo de 90 minutos é exato?",
+        a: "É uma média. Os ciclos reais duram 70–120 minutos e variam por idade e pessoa. Use como guia, não como regra rígida.",
+      },
+      {
+        q: "E se eu não conseguir adormecer em 15 minutos?",
+        a: "É normal ocasionalmente. Se acontecer toda noite, as técnicas de TCC-I podem ajudar a recalibrar o início do seu sono.",
+      },
+    ],
+  },
+  nap: {
+    meta: {
+      title: "Calculadora de Sonecas — Duração perfeita | Somna",
+      desc: "Calcule a duração ideal da soneca para energia, atenção e recuperação.",
+    },
+    eyebrow: "CALCULADORA DE SONECAS",
+    title: "Encontre a duração perfeita de soneca",
+    sub: "Sonecas curtas e intencionais podem restaurar energia, foco e humor — sem afetar sua noite.",
+    currentTime: "Horário atual",
+    napLength: "Duração da soneca",
+    wakeSuggestions: "Sugestões para acordar",
+    minUnit: "min",
+    benefits: {
+      10: { label: "Reinício rápido", desc: "Uma pausa breve para aliviar o cansaço mental." },
+      20: { label: "Soneca energética", desc: "Melhora o estado de alerta sem grogue." },
+      30: { label: "Reforço de memória", desc: "Melhora a memória e o aprendizado." },
+      60: {
+        label: "Impulso cognitivo",
+        desc: "Útil, mas pode causar certa inércia ao acordar.",
+      },
+      90: { label: "Ciclo completo", desc: "Restaura a criatividade e o equilíbrio emocional." },
+    },
+    cta: "Ler o guia de higiene do sono",
+    quickCards: [
+      { len: "20 min", desc: "Melhora o estado de alerta sem grogue." },
+      { len: "30 min", desc: "Favorece a consolidação da memória." },
+      { len: "90 min", desc: "Um ciclo completo de sono — acorde renovado." },
+    ],
+    faqs: [
+      {
+        q: "Qual o melhor momento para uma soneca?",
+        a: "A maioria se beneficia entre 13h e 15h, coincidindo com a queda natural de alerta da tarde.",
+      },
+      {
+        q: "Quanto deve durar uma soneca?",
+        a: "10–20 minutos para um impulso rápido. 90 minutos para um ciclo completo. Evite 30–60 minutos se você acorda grogue com facilidade.",
+      },
+      {
+        q: "A soneca afeta meu sono noturno?",
+        a: "Sonecas curtas costumam não afetar. As longas ou no fim do dia podem reduzir a pressão de sono e adiar a hora de deitar, sobretudo com insônia.",
+      },
+      {
+        q: "Sonecas são sinal de mau sono?",
+        a: "Não necessariamente. Muitas culturas as praticam. Mas se você precisa de sonecas longas todos os dias para funcionar, pode indicar sono noturno insuficiente.",
+      },
+    ],
+  },
+  melatonin: {
+    meta: {
+      title: "Calculadora de Melatonina — Quando tomar melatonina? | Somna",
+      desc: "Estime o melhor momento para tomar melatonina conforme seu horário de dormir e seus hábitos.",
+    },
+    eyebrow: "CALCULADORA DE MELATONINA",
+    title: "Quando devo tomar melatonina?",
+    sub: "Guia educativo para estimar o momento — não é conselho médico.",
+    disclaimer:
+      "Esta ferramenta tem fins educativos e não constitui conselho médico. Consulte um profissional de saúde antes de usar suplementos de melatonina.",
+    bedtimeLabel: "Horário-alvo para se deitar",
+    onsetLabel: "Tempo habitual para adormecer",
+    onset: { fast: "Rápido (~15 min)", average: "Médio (~30 min)", slow: "Lento (~60 min)" },
+    recommendedWindow: "Janela recomendada",
+    windowNote: (bedtime, onsetMin) =>
+      `Tome melatonina cerca de 1–2 horas antes do seu horário-alvo de ${bedtime}. Seu tempo habitual para dormir (~${onsetMin} min) sugere começar a rotina de relaxamento ainda antes.`,
+    cta: "Explore a TCC-I em vez de soníferos",
+    infoCards: [
+      {
+        title: "O que é a melatonina?",
+        desc: "Um hormônio natural que sinaliza a noite ao seu corpo. Os suplementos buscam adiantar suavemente seu ritmo circadiano.",
+      },
+      {
+        title: "Quando tomar?",
+        desc: "Normalmente 1–2 horas antes de deitar, em doses baixas (0,3–1 mg). Doses maiores não são necessariamente mais eficazes.",
+      },
+      {
+        title: "Quem deve evitar?",
+        desc: "Pessoas grávidas ou em amamentação, crianças e quem toma certos medicamentos devem consultar um profissional primeiro.",
+      },
+    ],
+    faqs: [
+      {
+        q: "O que é a melatonina?",
+        a: "É um hormônio que seu cérebro produz em resposta à escuridão. Indica ao corpo que é hora de dormir e ajuda a regular o ritmo circadiano.",
+      },
+      {
+        q: "Quando devo tomar melatonina?",
+        a: "Geralmente 1–2 horas antes do seu horário-alvo para deitar. Doses baixas (0,3–1 mg) bem sincronizadas costumam ser mais eficazes do que doses altas na hora de dormir.",
+      },
+      {
+        q: "Quem deve evitar a melatonina?",
+        a: "Pessoas grávidas, em amamentação, que tomam certos medicamentos (anticoagulantes, imunossupressores) ou com distúrbios autoimunes ou convulsivos devem consultar um médico primeiro.",
+      },
+      {
+        q: "A melatonina é um sonífero?",
+        a: "Não. Ela não seda — sinaliza o momento. Para a insônia crônica, abordagens comportamentais como a TCC-I são a primeira linha de tratamento.",
+      },
+    ],
+  },
+};
+
+const dicts: Partial<Record<Lang, CalcDict>> = { en, zh, es, pt };
 
 export function getCalcDict(lang: Lang): CalcDict {
-  return dicts[lang];
+  return dicts[lang] ?? en;
 }

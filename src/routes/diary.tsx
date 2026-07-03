@@ -83,14 +83,16 @@ export function DiaryPage() {
           ? "保存失败，请检查浏览器存储设置后重试"
           : lang === "es"
             ? "No se pudo guardar. Revisa el almacenamiento del navegador e inténtalo de nuevo."
-            : "Could not save your entry. Please check your browser storage settings and try again.",
+            : lang === "pt"
+              ? "Não foi possível salvar. Verifique o armazenamento do navegador e tente novamente."
+              : "Could not save your entry. Please check your browser storage settings and try again.",
       );
     }
   };
 
   return (
     <>
-      <PageHero eyebrow="DIARY" title={t("diary.title")} sub={t("diary.sub")} />
+      <PageHero eyebrow={t("nav.diary")} title={t("diary.title")} sub={t("diary.sub")} />
       <section className="px-5 pb-20">
         <div className="mx-auto max-w-xl space-y-6">
           <form onSubmit={onSubmit} className="glass-strong space-y-5 rounded-3xl p-6 md:p-8">
@@ -165,7 +167,7 @@ export function DiaryPage() {
             <div className="space-y-4">
               <FeedbackCard record={feedback} />
               <Link
-                to="/dashboard"
+                to={lang === "es" ? "/es/panel" : lang === "pt" ? "/pt/painel" : "/dashboard"}
                 className="block rounded-full border border-white/15 bg-white/5 px-5 py-3 text-center text-sm transition hover:border-white/25 hover:bg-white/10"
               >
                 {t("diary.cta.dashboard")}

@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2, Lock, BookOpen, Award } from "lucide-react";
+import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n } from "@/lib/i18n";
 import { PageHero } from "@/components/PageHero";
 import { programLabels, programWeeks } from "@/lib/program-weeks";
@@ -39,7 +40,7 @@ export const Route = createFileRoute("/program/")({
 
 function ProgramPage() {
   const { t, lang } = useI18n();
-  const labels = programLabels[lang];
+  const labels = programLabels[lang] ?? programLabels.en!;
   const ui = getProgramLessonUI(lang);
   const { progress, hydrated } = useProgramProgress();
 
@@ -107,7 +108,7 @@ function ProgramPage() {
         <div className="mx-auto max-w-3xl">
           <ol className="relative space-y-4 border-l border-white/10 pl-6">
             {programWeeks.map((w) => {
-              const wc = w.i18n[lang] ?? w.i18n.en;
+              const wc = w.i18n[lang] ?? w.i18n.en!;
               const shortSlug = resolveWeekSlug(w.slug) ?? w.slug;
               const weekLessons = getLessonsByWeek(shortSlug);
               const status: WeekStatus = hydrated ? weekStatus(progress, w.slug) : "available";
@@ -168,12 +169,12 @@ function ProgramPage() {
             })}
           </ol>
           <div className="mt-10 text-center">
-            <Link
-              to="/assessment"
+            <SafeLink
+              to={lang === "pt" ? "/pt/assessment" : lang === "es" ? "/es/evaluacion" : "/assessment"}
               className="inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground"
             >
               {t("assess.start")}
-            </Link>
+            </SafeLink>
           </div>
         </div>
       </section>

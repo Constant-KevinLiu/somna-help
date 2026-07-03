@@ -8,7 +8,7 @@ export const Route = createFileRoute("/sleep-anxiety")({
   head: () => cbtiHead("sleep-anxiety"),
 });
 
-const cycleSteps: Record<Lang, { title: string; desc: string }[]> = {
+const cycleSteps: Partial<Record<Lang, { title: string; desc: string }[]>> = {
   en: [
     { title: "Bad night", desc: "Sleep was poor or fragmented." },
     { title: "Worry rises", desc: '"What if tonight is bad too?"' },
@@ -29,16 +29,17 @@ const cycleSteps: Record<Lang, { title: string; desc: string }[]> = {
   ],
 };
 
-const headingByLang: Record<Lang, string> = {
+const headingByLang: Partial<Record<Lang, string>> = {
   en: "The Sleep-Anxiety Cycle",
   zh: "睡眠–焦虑循环",
   es: "El ciclo sueño-ansiedad",
+  pt: "O ciclo sono-ansiedade",
 };
 
 export function SleepAnxietyPage() {
   const { lang } = useI18n();
   const article = getCbtiDict(lang).articles["sleep-anxiety"];
-  const steps = cycleSteps[lang];
+  const steps = cycleSteps[lang] ?? cycleSteps.en!;
 
   return (
     <CbtiArticleShell slug="sleep-anxiety" article={article}>

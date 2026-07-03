@@ -34,6 +34,14 @@ const labels = {
     speed: "Velocidad",
     missing: "Este audio estará disponible pronto.",
   },
+  pt: {
+    play: "Reproduzir",
+    pause: "Pausar",
+    back: "Voltar 15s",
+    fwd: "Avançar 15s",
+    speed: "Velocidade",
+    missing: "Este áudio estará disponível em breve.",
+  },
 };
 
 function fmt(s: number) {

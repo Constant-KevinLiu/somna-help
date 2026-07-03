@@ -16,17 +16,19 @@ const SIZE = 1200;
 const SITE_URL = "somna.help";
 
 /** Localized labels used inside generated images. */
-const IMG_LABELS: Record<
-  Lang,
-  {
-    sleepEfficiency: string;
-    improving: string;
-    dayStreak: string;
-    cbtiTraining: string;
-    sleepProfile: string;
-    sleepType: string;
-    result: string;
-  }
+const IMG_LABELS: Partial<
+  Record<
+    Lang,
+    {
+      sleepEfficiency: string;
+      improving: string;
+      dayStreak: string;
+      cbtiTraining: string;
+      sleepProfile: string;
+      sleepType: string;
+      result: string;
+    }
+  >
 > = {
   en: {
     sleepEfficiency: "Sleep Efficiency",
@@ -53,6 +55,15 @@ const IMG_LABELS: Record<
     cbtiTraining: "Entrenamiento de sueño CBT-I",
     sleepProfile: "Perfil de sueño",
     sleepType: "Tipo de sueño",
+    result: "Resultado",
+  },
+  pt: {
+    sleepEfficiency: "Eficiência do sono",
+    improving: "Melhorando",
+    dayStreak: "Dias seguidos",
+    cbtiTraining: "Treinamento de sono TCC-I",
+    sleepProfile: "Perfil de sono",
+    sleepType: "Tipo de sono",
     result: "Resultado",
   },
 };
@@ -137,7 +148,7 @@ export function generateDashboardImage(input: DashboardImageInput): string {
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
 
-  const labels = IMG_LABELS[input.lang];
+  const labels = IMG_LABELS[input.lang] ?? IMG_LABELS.en!;
   drawBase(ctx);
   drawBrand(ctx);
   drawFooter(ctx);
@@ -188,7 +199,7 @@ export function generateProfileImage(input: ProfileImageInput): string {
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
 
-  const labels = IMG_LABELS[input.lang];
+  const labels = IMG_LABELS[input.lang] ?? IMG_LABELS.en!;
   drawBase(ctx);
   drawBrand(ctx);
   drawFooter(ctx);
@@ -238,7 +249,7 @@ export function generateCalculatorImage(input: CalculatorImageInput): string {
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
 
-  const labels = IMG_LABELS[input.lang];
+  const labels = IMG_LABELS[input.lang] ?? IMG_LABELS.en!;
   drawBase(ctx);
   drawBrand(ctx);
   drawFooter(ctx);
@@ -281,7 +292,7 @@ export function downloadDataUrl(dataUrl: string, filename: string) {
 /**
  * Upload a generated share image (data URL) to R2 and return its public URL.
  *
- * Pinterest requires a real https:// image URL — data: and blob: URLs do not
+ * Pinterest requires a real https:// image URL �?data: and blob: URLs do not
  * work because Pinterest fetches the image server-side. This helper posts the
  * PNG to /api/share-image (handled in src/server.ts), which stores it in the
  * SHARE_BUCKET R2 binding and returns the public URL.

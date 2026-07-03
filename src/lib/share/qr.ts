@@ -126,8 +126,9 @@ export function isWeChatBrowser(): boolean {
 }
 
 /** Localized "long press to share" hint shown inside the WeChat in-app browser. */
-export const WECHAT_LONG_PRESS_HINT: Record<Lang, string> = {
+export const WECHAT_LONG_PRESS_HINT: Partial<Record<Lang, string>> = {
   en: "Long press the image to share.",
   zh: "长按图片即可分享",
   es: "Mantén pulsada la imagen para compartirla.",
+  pt: "Mantenha a imagem pressionada para compartilhar.",
 };

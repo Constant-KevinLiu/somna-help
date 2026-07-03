@@ -22,7 +22,7 @@
  * Use `<SafeLink to={dynamicString}>` only when the path is computed.
  */
 import { Link } from "@tanstack/react-router";
-import type { ComponentProps } from "react";
+import { forwardRef, type ComponentProps } from "react";
 
 /**
  * Props for SafeLink: all props accepted by TanStack `<Link>`, but with `to`
@@ -44,6 +44,14 @@ export type SafeLinkProps = Omit<ComponentProps<typeof Link>, "to"> & {
  * place in the codebase where a `string` is widened to the router's literal
  * route union. Every other component should use `SafeLink` or a literal `to`.
  */
-export function SafeLink({ to, ...rest }: SafeLinkProps) {
-  return <Link to={to as unknown as ComponentProps<typeof Link>["to"]} {...rest} />;
-}
+export const SafeLink = forwardRef<HTMLAnchorElement, SafeLinkProps>(
+  function SafeLink({ to, ...rest }, ref) {
+    return (
+      <Link
+        ref={ref}
+        to={to as unknown as ComponentProps<typeof Link>["to"]}
+        {...rest}
+      />
+    );
+  },
+);

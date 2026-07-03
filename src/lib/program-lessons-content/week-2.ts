@@ -161,6 +161,57 @@ export const week2Lessons: LessonContent[] = [
           "insomnio cama",
         ],
       },
+      pt: {
+        title: "Por que seu cérebro não associa mais a cama ao sono",
+        eyebrow: "SEMANA 2 · LIÇÃO 4",
+        subtitle:
+          "Como o condicionamento clássico rompe o vínculo cama–sono — e como reconstruí-lo.",
+        difficulty: "Iniciante",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "Vigília condicionada",
+            paras: [
+              "Você já se sentiu completamente exausto no sofá, só para ficar totalmente acordado no instante em que a cabeça toca o travesseiro? Isso não é um defeito do seu corpo; é uma demonstração poderosa do condicionamento clássico.",
+              "Nosso cérebro é uma máquina magistral de reconhecimento de padrões. Para quem dorme bem, a cama está profundamente pareada com o sono. Entrar no quarto dispara automaticamente uma cascata de relaxamento: o coração desacelera e os pensamentos acalmam.",
+              "Porém, quando você sofre com insônia crônica, esse pareamento se rompe. A cama vira o lugar onde você fica virando de um lado para o outro por horas, frustrado, preocupado com as contas ou com o desempenho de amanhã, ou rolando o celular atrás de respostas desesperadas. No fim, seu cérebro aprende um padrão novo e desadaptativo: Cama = Alerta e Ansiedade.",
+            ],
+          },
+          {
+            heading: "A regra de ouro",
+            paras: [
+              "A Terapia de Controle de Estímulos é um pilar poderoso e respaldado pela ciência da TCC-I, desenhada para cortar esse vínculo negativo e reconstruir sistematicamente a conexão cama–sono. A regra de ouro é absoluta: sua cama deve ser usada para apenas duas coisas — dormir e intimidade. Ao cuidar do seu comportamento com atenção, ensinamos seu cérebro a reconhecer a cama como uma pista exclusiva de descanso profundo e incondicional.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Comprometa-se esta semana com a regra fundamental do Controle de Estímulos: nunca use a cama para ler, trabalhar, ver TV ou se preocupar. Se não pegar no sono em cerca de 15 a 20 minutos, ou se uma onda de vigília te atingir, saia da cama com calma. Sente-se em uma cadeira confortável sob uma luz quente e baixa até sentir verdadeira sonolência de novo.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Pense na disposição atual do seu quarto e nas suas rotinas. Quantas atividades que não são dormir se infiltraram sem querer no seu santuário? Como você pode começar a proteger esse espaço?",
+        faqs: [
+          {
+            q: "Qual nível de sonolência devo sentir antes de voltar para a cama?",
+            a: "Espere a sonolência de verdade — bocejos, pálpebras pesadas, mente lenta — não apenas cansaço físico. Se voltar para a cama e se pegar alerta de novo após 20 minutos, simplesmente repita o processo.",
+          },
+          {
+            q: "E se eu tiver que repetir essa rotina cinco vezes em uma única noite?",
+            a: "Está tudo bem e é esperado nos primeiros dias. Toda vez que você escolhe levantar em vez de ficar virando de um lado para o outro, está apagando com sucesso um pedacinho daquele velho condicionamento ansioso.",
+          },
+        ],
+        ctaLabel: "Começar meu recondicionamento da cama",
+        seoTitle: "Por que seu cérebro não associa mais a cama ao sono | Somna TCC-I",
+        seoDescription:
+          "Entenda como o condicionamento clássico rompe o vínculo cama–sono na insônia crônica e como a Terapia de Controle de Estímulos o reconstrói.",
+        keywords: [
+          "associação cama sono",
+          "controle de estímulos",
+          "condicionamento clássico sono",
+          "TCC-I cama",
+          "insônia cama",
+        ],
+      },
     },
   },
 
@@ -333,6 +384,59 @@ export const week2Lessons: LessonContent[] = [
           "tratamiento conductual del insomnio",
         ],
       },
+      pt: {
+        title: "A ciência da Terapia de Controle de Estímulos",
+        eyebrow: "SEMANA 2 · LIÇÃO 5",
+        subtitle:
+          "Por que a regra dos 20 minutos funciona — a psicologia comportamental por trás da prática.",
+        difficulty: "Intermediário",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "Psicologia comportamental em ação",
+            paras: [
+              "A Terapia de Controle de Estímulos não é só uma coleção de bons hábitos — é uma aplicação elegante da psicologia comportamental. Ela se apoia nos mesmos princípios de aprendizagem descobertos por Ivan Pavlov. Do mesmo jeito que um estímulo neutro (um sino) pode ser pareado a uma resposta incondicionada (salivação), sua cama pode ser recodificada profundamente para disparar sonolência automática.",
+              "Em ensaios clínicos, o Controle de Estímulos figura de forma consistente entre as intervenções mais potentes de todo o protocolo de TCC-I. Seus tamanhos de efeito medidos igualam ou superam com frequência os remédios tradicionais para dormir, sem efeitos colaterais persistentes nem dependência.",
+            ],
+          },
+          {
+            heading: "A regra dos 20 minutos",
+            paras: [
+              "A ciência por trás da regra dos 20 minutos é precisa:",
+              "Tempo acordado na cama > 20 min → reforça o circuito de vigília.",
+              "Sair da cama acordado → protege o circuito do sono.",
+              "Quando você fica na cama além dessa janela, seu cérebro se premia ativamente por estar alerta naquele ambiente, cravando o hábito da vigília noturna mais fundo nas suas vias neurais. Ao se levantar, você nega ao cérebro a chance de reforçar essa associação negativa. Está, de forma sistemática, deixando a insônia passar fome do tempo de que ela precisa para se reforçar.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          "Esta semana, use seu diário matinal do sono para acompanhar suas transições. Anote o horário aproximado em que se levantou e o horário em que voltou para a cama. Não se obsesse com os minutos exatos — confie totalmente no seu senso interno de tempo.",
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Quando você está acordado na cama, quais são as principais pistas internas que te mantêm alerta? É inquietação física, mente acelerada ou sensibilidade ao ambiente? Reconhecer essas pistas ajuda a geri-las fora do quarto.",
+        faqs: [
+          {
+            q: "O Controle de Estímulos é a mesma coisa que a Restrição do Sono?",
+            a: "Não, são sistemas distintos, mas muito complementares. O Controle de Estímulos atua na associação psicológica entre a cama e o sono, enquanto a Restrição do Sono atua na sua pressão biológica de sono.",
+          },
+          {
+            q: "Quanto tempo o cérebro leva para reconstruir essa associação?",
+            a: "Muitos usuários notam uma mudança suave na qualidade do sono entre 7 e 14 dias, embora o recondicionamento comportamental completo costume levar de 4 a 6 semanas de constância sustentada.",
+          },
+        ],
+        ctaLabel: "Aprofundar minha prática científica",
+        seoTitle: "A ciência da Terapia de Controle de Estímulos | Somna TCC-I",
+        seoDescription:
+          "Entenda a psicologia comportamental por trás do Controle de Estímulos e da regra dos 20 minutos — uma das intervenções mais potentes da TCC-I.",
+        keywords: [
+          "terapia de controle de estímulos",
+          "regra dos 20 minutos sono",
+          "ciência TCC-I",
+          "Pavlov sono",
+          "tratamento comportamental da insônia",
+        ],
+      },
     },
   },
 
@@ -498,6 +602,59 @@ export const week2Lessons: LessonContent[] = [
           "control de estímulos noche",
           "CBT-I despertar medianoche",
           "no puedo dormir 3am",
+        ],
+      },
+      pt: {
+        title: "Como sair da cama sem frustração",
+        eyebrow: "SEMANA 2 · LIÇÃO 6",
+        subtitle:
+          "Transforme a vigília da meia-noite em um ato de autocuidado com um kit para se levantar.",
+        difficulty: "Iniciante",
+        readingTime: "6 min de leitura",
+        content: [
+          {
+            heading: "Uma vitória, não um fracasso",
+            paras: [
+              "Sejamos totalmente sinceros: sair da cama às 3h da manhã, quando você quer desesperadamente descansar, pode parecer incrivelmente desanimador. É fácil ver isso como um fracasso, um sinal de que o programa não está funcionando ou uma garantia de que amanhã vai ser um dia arruinado.",
+              "Para praticar o Controle de Estímulos com sucesso, você precisa aprender a arte de sair da cama sem frustração. Mude sua perspectiva: levantar não é um fracasso — é uma vitória e tanto. Você está executando, de forma ativa, uma estratégia clínica comprovada para recuperar sua saúde a longo prazo. Está protegendo seu santuário.",
+              "Tenha um plano bonito: não fique vagando sem rumo nem sentado em desconforto. Crie um espaço dedicado fora do quarto que pareça acolhedor, confortável e profundamente seguro. Mantenha uma mentalidade gentil: aceite que a cura é uma jornada não linear. Pode ser preciso sair da cama várias vezes esta noite, e isso é uma parte perfeitamente normal do reaprendizado.",
+            ],
+          },
+          {
+            heading: "Escolha suas atividades com sabedoria",
+            paras: [
+              "Suas atividades fora da cama devem ser tranquilas, mas envolventes o suficiente para distrair gentilmente a mente da ansiedade com o sono.",
+              "Faça isto (calmante e luz baixa): ler um romance ou ensaio reconfortante; desenhar, tricotar ou escrever no diário; ouvir música suave ou audiolivros.",
+              "Evite isto (estimulante): checar e-mails ou notificações de trabalho; rolar redes sociais ou assistir a vídeos intensos; comer lanches pesados ou resolver problemas.",
+            ],
+          },
+        ],
+        actionStepTitle: "Passo de ação",
+        actionStep:
+          'Hoje, durante as horas de luz do dia, monte seu "Kit para Levantar" pessoal. Prepare uma cadeira confortável com um cobertor quente, um abajur de leitura de baixa potência e um livro ou revista física. Ter esse cantinho acolhedor pronto tira toda a fricção na hora em que você precisar à noite.',
+        reflectionTitle: "Reflexão",
+        reflection:
+          "Quais emoções ou medos específicos invadem sua mente quando você percebe que precisa se levantar? Como você pode reenquadrar esses medos de forma gentil para apoiar sua jornada de cura?",
+        faqs: [
+          {
+            q: "Devo programar um alarme no celular para saber quando passarem 20 minutos?",
+            a: "Por favor, evite isso. Olhar o relógio ou programar alarmes cria hipervigilância. Use simplesmente seu relógio interno; quando se sentir claramente acordado, frustrado ou travado, esse é o seu sinal para se levantar com calma.",
+          },
+          {
+            q: "E se eu sentir frio ou desconforto fora da cama?",
+            a: "Garanta que sua área de descanso designada esteja abastecida com camadas quentes, meias grossas e almofadas confortáveis. O objetivo é fazer essa pausa noturna parecer um ato de autocuidado de verdade.",
+          },
+        ],
+        ctaLabel: "Baixar meu guia noturno",
+        seoTitle: "Como sair da cama sem frustração | Somna TCC-I",
+        seoDescription:
+          "Transforme a vigília da meia-noite em autocuidado com um kit para se levantar — atividades calmantes, luz baixa e mentalidade gentil para o Controle de Estímulos.",
+        keywords: [
+          "sair da cama insônia",
+          "kit para levantar",
+          "controle de estímulos noite",
+          "TCC-I acordar meia-noite",
+          "não consigo dormir 3h",
         ],
       },
     },
