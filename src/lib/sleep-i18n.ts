@@ -320,7 +320,8 @@ const pt: Strings = {
   "dash.brain.trend": "Tendência",
   "dash.brain.improved": "Sua eficiência do sono está melhorando.",
   "dash.brain.maintain": "Recomendamos manter o horário atual.",
-  "dash.brain.collecting": "Registre mais algumas noites para desbloquear orientação personalizada.",
+  "dash.brain.collecting":
+    "Registre mais algumas noites para desbloquear orientação personalizada.",
   "dash.greeting": "Boa noite, Kevin",
   "dash.empty.title": "Comece a registrar esta noite.",
   "dash.empty.body": "Pequenas mudanças geram progresso significativo.",
@@ -333,7 +334,8 @@ const pt: Strings = {
   "dash.latency.value": "{n} min",
   "insight.firstEntry":
     "Você registrou sua primeira noite. Continue assim — os padrões aparecem depois de alguns dias.",
-  "insight.improving": "Sua eficiência melhorou {n}% esta semana. Seu ritmo está se reestabelecendo.",
+  "insight.improving":
+    "Sua eficiência melhorou {n}% esta semana. Seu ritmo está se reestabelecendo.",
   "insight.steady": "Seu sono está estável. A constância é a base da TCC-I.",
   "insight.declining":
     "A eficiência caiu {n}% esta semana. Tente manter um horário fixo para acordar.",
@@ -378,12 +380,107 @@ const pt: Strings = {
   "cbti.ach.next": "{n} dias para a próxima",
 };
 
-const dicts: Partial<Record<Lang, Strings>> = { en, zh, es, pt };
+const pl: Strings = {
+  "sleep.fb.title.excellent": "Doskonale.",
+  "sleep.fb.title.great": "Dobra robota.",
+  "sleep.fb.title.ok": "Spokojna noc.",
+  "sleep.fb.title.low": "Drobne korekty naprzód.",
+  "sleep.fb.body.excellent": "Twój sen jest bardzo wydajny. Utrzymaj obecny rytm.",
+  "sleep.fb.body.great": "Jutro możemy nieznacznie dostosować plan.",
+  "sleep.fb.body.ok": "Bądź konsekwentny — drobne poprawki pomogą.",
+  "sleep.fb.body.low": "Zaczniemy stopniowo zacieśniać okno snu, by odbudować wydajność.",
+  "sleep.efficiency": "Wydajność snu",
+  "sleep.score": "Wynik snu",
+  "sleep.score.good": "Dobry",
+  "sleep.score.fair": "Średni",
+  "sleep.score.needs": "Do poprawy",
+  "sleep.latency": "Czas zasypiania",
+  "dash.today": "Dzisiejsza rekomendacja",
+  "dash.bedtime": "Pora snu",
+  "dash.wake": "Pora wstawania",
+  "dash.avoidScreens": "Unikaj ekranów po {time}",
+  "dash.startWindDown": "Rozpocznij relaks",
+  "dash.lastNight": "Ostatnia noc",
+  "dash.trend": "Trend",
+  "dash.weeklyAvg": "Średnia tygodniowa",
+  "dash.last7": "Ostatnie 7 dni",
+  "dash.last7Subtitle": "Śledź swój postęp w czasie.",
+  "dash.insight": "Spostrzeżenie tygodniowe",
+  "dash.streak": "Seria",
+  "dash.streak.days": "dni",
+  "dash.chart.title": "Trend wydajności snu",
+  "dash.chart.empty": "Jeszcze nie ma wpisów.",
+  "dash.recommendation.title": "Dzisiejsza rekomendacja",
+  "dash.recommendation.label": "CBT-I Brain",
+  "dash.brain.title": "Dlaczego taka rekomendacja?",
+  "dash.brain.efficiency": "Wydajność snu",
+  "dash.brain.latency": "Czas zasypiania",
+  "dash.brain.trend": "Trend",
+  "dash.brain.improved": "Twoja wydajność snu się poprawia.",
+  "dash.brain.maintain": "Plan pozostaje bez zmian.",
+  "dash.brain.collecting": "Zapisuj jeszcze kilka nocy, by odblokować spersonalizowane wskazówki.",
+  "dash.greeting": "Dobry wieczór",
+  "dash.empty.title": "Zacznij zapisywać dziś wieczorem.",
+  "dash.empty.body": "Małe zmiany prowadzą do dużego postępu.",
+  "dash.empty.cta": "Otwórz dziennik snu",
+  "dash.actions.title": "Szybkie działania",
+  "dash.actions.log": "Dziennik",
+  "dash.actions.relax": "Relaks",
+  "dash.actions.program": "Program",
+  "dash.actions.reminder": "Przypomnienia",
+  "dash.latency.value": "{n} min",
+  "insight.firstEntry": "Zapisałeś pierwszą noc. Kontynuuj — wzorce pojawią się po kilku dniach.",
+  "insight.improving":
+    "Twoja wydajność snu poprawiła się o {n}% w tym tygodniu. Twój rytm się odbudowuje.",
+  "insight.steady": "Twój sen jest w tym tygodniu stabilny. Konsekwencja to fundament CBT-I.",
+  "insight.declining":
+    "Wydajność spadła o {n}% w tym tygodniu. Spróbuj utrzymać stałą porę wstawania.",
+  "insight.collecting": "Kontynuuj zapisy — wkrótce pokażemy trendy.",
+  "trend.up": "↑ {n}%",
+  "trend.down": "↓ {n}%",
+  "trend.flat": "Stabilny",
+  "diary.feedback.note": "Jutro dostosujemy Twój plan na podstawie dzisiejszego wpisu.",
+  "cbti.nextStep": "Twój następny krok",
+  "cbti.rec.title.expand": "Dodaj 15 minut dziś wieczorem",
+  "cbti.rec.title.maintain": "Zachowaj dzisiejszy plan",
+  "cbti.rec.title.consistency": "Trzymaj się — skup się na konsekwencji",
+  "cbti.rec.title.collect": "Zapisz jeszcze kilka nocy",
+  "cbti.rec.reason.expand":
+    "Twoja 7-dniowa wydajność to {n}%. Sen jest wystarczająco głęboki, by delikatnie poszerzyć okno.",
+  "cbti.rec.reason.maintain":
+    "Twoja 7-dniowa wydajność to {n}%. Pozostań przy tym planie jeszcze jedną noc.",
+  "cbti.rec.reason.consistency":
+    "Twoja 7-dniowa wydajność to {n}%. Utrzymaj stałą porę wstawania — konsekwencja jest najważniejsza.",
+  "cbti.rec.reason.collect": "Zapisz kilka nocy, a spersonalizujemy Twoje okno snu.",
+  "cbti.window.title": "Twoje okno snu",
+  "cbti.window.tib": "Czas w łóżku",
+  "cbti.window.adjust": "Korekta",
+  "cbti.window.adjust.expand": "+{n} min",
+  "cbti.window.adjust.hold": "Bez zmian",
+  "cbti.coach.title": "Coach snu",
+  "coach.empty": "Zapisz dziś wieczorem, by jutro otrzymać spersonalizowaną wiadomość.",
+  "coach.collect": "Jeszcze kilka nocy danych odblokuje spersonalizowane wskazówki.",
+  "coach.expand":
+    "Świetna robota — Twój sen jest wystarczająco głęboki, by dodać {n} minut do okna.",
+  "coach.maintain": "Jesteś w stałym rytmie. Dziś wieczorem powtórz to samo, co wczoraj.",
+  "coach.consistency": "Zakotwicz porę wstawania. Konsekwencja odbuduje wydajność.",
+  "coach.lowNight": "Jedna gorsza noc nie anuluje postępu. Jutro wstawaj o tej samej porze.",
+  "cbti.week3.title": "Ten tydzień: ograniczenie snu",
+  "cbti.week3.live": "Na żywo z dziennika",
+  "cbti.week3.efficiency": "Wydajność 7-dniowa",
+  "cbti.week3.window": "Zalecane okno",
+  "cbti.week3.adjust": "Minuty korekty",
+  "cbti.ach.title": "Osiągnięcia",
+  "cbti.ach.unlocked": "Odblokowane",
+  "cbti.ach.next": "{n} dni do następnego",
+};
+
+const dicts: Record<Lang, Strings> = { en, zh, es, pt, pl };
 
 export function useSleepI18n() {
   const { lang } = useI18n();
   const t = (k: string, vars?: Record<string, string | number>) => {
-    const raw = (dicts[lang] ?? dicts.en!)[k] ?? dicts.en![k] ?? k;
+    const raw = dicts[lang][k] ?? dicts.en[k] ?? k;
     if (!vars) return raw;
     return raw.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ""));
   };

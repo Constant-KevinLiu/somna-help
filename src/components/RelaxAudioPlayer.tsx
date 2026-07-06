@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Play, Pause, RotateCcw, RotateCw } from "lucide-react";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type Lang } from "@/lib/i18n";
 
 interface Props {
   src: string;
@@ -9,7 +9,10 @@ interface Props {
 
 const SPEEDS = [0.75, 1, 1.25, 1.5];
 
-const labels = {
+const labels: Record<
+  Lang,
+  { play: string; pause: string; back: string; fwd: string; speed: string; missing: string }
+> = {
   en: {
     play: "Play",
     pause: "Pause",
@@ -42,6 +45,14 @@ const labels = {
     speed: "Velocidade",
     missing: "Este áudio estará disponível em breve.",
   },
+  pl: {
+    play: "Odtwórz",
+    pause: "Wstrzymaj",
+    back: "Cofnij 15 s",
+    fwd: "Przewiń 15 s",
+    speed: "Tempo",
+    missing: "To nagranie będzie wkrótce dostępne.",
+  },
 };
 
 function fmt(s: number) {
@@ -53,7 +64,7 @@ function fmt(s: number) {
 
 export function RelaxAudioPlayer({ src, title }: Props) {
   const { lang } = useI18n();
-  const L = labels[lang] ?? labels.en;
+  const L = labels[lang];
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [current, setCurrent] = useState(0);

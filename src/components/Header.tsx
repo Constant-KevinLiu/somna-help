@@ -2,6 +2,7 @@ import { Link, useRouter } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
 import { Menu, X, Moon, ChevronDown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { getCbtiDict, CBTI_SLUGS, cbtiPath } from "@/lib/cbti-i18n";
 import { getLearnDict, LEARN_SLUGS, learnPath } from "@/lib/learn-i18n";
@@ -34,6 +35,13 @@ const NAV_BY_LANG = {
     { to: "/pt/diary", key: "nav.diary" as const },
     { to: "/pt/relax", key: "nav.relax" as const },
   ],
+  pl: [
+    { to: "/pl", key: "nav.home" as const },
+    { to: "/pl/program", key: "nav.program" as const },
+    { to: "/pl/assessment", key: "nav.assessment" as const },
+    { to: "/pl/diary", key: "nav.diary" as const },
+    { to: "/pl/relax", key: "nav.relax" as const },
+  ],
   zh: [
     { to: "/", key: "nav.home" as const },
     { to: "/program", key: "nav.program" as const },
@@ -47,6 +55,7 @@ const DASHBOARD_BY_LANG = {
   en: { to: "/dashboard", key: "nav.dashboard" as const },
   es: { to: "/es/panel", key: "nav.dashboard" as const },
   pt: { to: "/pt/painel", key: "nav.dashboard" as const },
+  pl: { to: "/pl/dashboard", key: "nav.dashboard" as const },
   zh: { to: "/dashboard", key: "nav.dashboard" as const },
 };
 
@@ -59,7 +68,7 @@ export function Header() {
   const calcDict = getCalcDict(lang);
   const cbtiDict = getCbtiDict(lang);
   const learnDict = getLearnDict(lang);
-  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
+  const langPrefix = LANG_PREFIX[lang];
   const calculatorItems = [
     { to: `${langPrefix}/calculator`, label: calcDict.nav.cycle },
     { to: `${langPrefix}/sleep-calculator`, label: calcDict.nav.sleep },
@@ -68,7 +77,10 @@ export function Header() {
     { to: `${langPrefix}/melatonin-calculator`, label: calcDict.nav.melatonin },
   ];
   const guideItems = CBTI_SLUGS.map((s) => ({ to: cbtiPath(s, lang), label: cbtiDict.titles[s] }));
-  const lessonItems = LEARN_SLUGS.map((s) => ({ to: learnPath(s, lang), label: learnDict.titles[s] }));
+  const lessonItems = LEARN_SLUGS.map((s) => ({
+    to: learnPath(s, lang),
+    label: learnDict.titles[s],
+  }));
   const [open, setOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
   const [learnOpen, setLearnOpen] = useState(false);
@@ -144,7 +156,7 @@ export function Header() {
     <header className="sticky top-0 z-50">
       <div className="nav-bar">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to={langPrefix || "/"} className="flex items-center gap-2">
             <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent">
               <Moon className="h-4 w-4 text-primary-foreground" />
               <span className="absolute inset-0 -z-10 rounded-full bg-primary/40 blur-xl" />
@@ -217,9 +229,7 @@ export function Header() {
               {toolsOpen && (
                 <div className="absolute right-0 top-full pt-2">
                   <div className="nav-surface w-64 rounded-2xl p-2 animate-nav-dropdown">
-                    <div className="nav-label px-3 py-2">
-                      {t("nav.tools.section")}
-                    </div>
+                    <div className="nav-label px-3 py-2">{t("nav.tools.section")}</div>
                     {calculatorItems.map((c) => (
                       <SafeLink
                         key={c.to}
@@ -259,13 +269,13 @@ export function Header() {
                   <div className="nav-surface w-[34rem] rounded-2xl p-3 animate-nav-dropdown">
                     <div className="grid grid-cols-2 gap-2">
                       <div>
-                        <Link
+                        <SafeLink
                           to={langPrefix ? `${langPrefix}/learn` : "/learn"}
                           onClick={() => setLearnOpen(false)}
                           className="block px-3 py-2 text-xs uppercase tracking-widest text-accent hover:underline"
                         >
                           {t("nav.guides")}
-                        </Link>
+                        </SafeLink>
                         {guideItems.map((g) => (
                           <SafeLink
                             key={g.to}
@@ -278,13 +288,13 @@ export function Header() {
                         ))}
                       </div>
                       <div>
-                        <Link
+                        <SafeLink
                           to={langPrefix ? `${langPrefix}/learn` : "/learn"}
                           onClick={() => setLearnOpen(false)}
                           className="block px-3 py-2 text-xs uppercase tracking-widest text-accent hover:underline"
                         >
                           {t("nav.lessons")}
-                        </Link>
+                        </SafeLink>
                         {lessonItems.map((l) => (
                           <SafeLink
                             key={l.to}
@@ -383,9 +393,7 @@ export function Header() {
             ))}
 
             <section className="nav-section">
-              <h2 className="nav-label mb-4">
-                {t("nav.tools.section")}
-              </h2>
+              <h2 className="nav-label mb-4">{t("nav.tools.section")}</h2>
               <div className="flex flex-col gap-2">
                 {calculatorItems.map((c) => (
                   <SafeLink
@@ -404,9 +412,7 @@ export function Header() {
             </section>
 
             <section className="nav-section">
-              <h2 className="nav-label mb-4">
-                {t("nav.guides")}
-              </h2>
+              <h2 className="nav-label mb-4">{t("nav.guides")}</h2>
               <div className="flex flex-col gap-2">
                 {guideItems.map((g) => (
                   <SafeLink
@@ -425,17 +431,15 @@ export function Header() {
             </section>
 
             <section className="nav-section">
-              <h2 className="nav-label mb-4">
-                {t("nav.lessons")}
-              </h2>
+              <h2 className="nav-label mb-4">{t("nav.lessons")}</h2>
               <div className="flex flex-col gap-2">
-                <Link
+                <SafeLink
                   to={langPrefix ? `${langPrefix}/learn` : "/learn"}
                   onClick={() => setOpen(false)}
                   className="nav-item"
                 >
                   {t("nav.learn")}
-                </Link>
+                </SafeLink>
                 {lessonItems.map((l) => (
                   <SafeLink
                     key={l.to}

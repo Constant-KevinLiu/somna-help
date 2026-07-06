@@ -22,12 +22,15 @@ import {
 import { getCbtiDict, cbtiPath } from "@/lib/cbti-i18n";
 import { hreflangLinks } from "@/components/seo/Hreflang";
 import { loadPtDict, getPtString } from "@/locales/pt";
+import { loadPlDict, getPlString } from "@/locales/pl";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 
 export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson: LearnLesson }) {
   const { lang } = useI18n();
   const dict = getLearnDict(lang);
   const cbti = getCbtiDict(lang);
   const next = dict.lessons[lesson.nextLesson];
+  const prefix = LANG_PREFIX[lang];
 
   return (
     <>
@@ -111,7 +114,7 @@ export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson:
       <section className="px-5 pb-10">
         <div className="mx-auto grid max-w-4xl gap-4 md:grid-cols-2">
           <SafeLink
-            to={lesson.relatedTool.to}
+            to={`${prefix}${lesson.relatedTool.to}`}
             className="glass group rounded-2xl p-6 transition hover:bg-white/[0.06]"
           >
             <div className="mb-1 text-xs uppercase tracking-widest text-muted-foreground">
@@ -143,7 +146,7 @@ export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson:
       <section className="px-5 pb-12">
         <div className="mx-auto max-w-3xl text-center">
           <SafeLink
-            to={lesson.cta.to}
+            to={`${prefix}${lesson.cta.to}`}
             className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
           >
             {lesson.cta.label} <ArrowRight className="h-4 w-4" />
@@ -298,6 +301,45 @@ export function learnHeadPt(slug: LearnSlug) {
       { property: "og:url", content: `https://somna.help${url}` },
       { property: "og:type", content: "article" },
       { property: "og:locale", content: "pt_BR" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: title },
+      { name: "twitter:description", content: description },
+    ],
+    links: hreflangLinks(url),
+    scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
+  };
+}
+
+/**
+ * Wersja polska learnHead: odczytuje title/description z
+ * src/locales/pl/common.json (seo.learn.<slug>.*) i generuje hreflang
+ * czterojęzyczny + canonical /pl/learn/...
+ */
+export function learnHeadPl(slug: LearnSlug) {
+  const pl = getLearnDict("pl");
+  const lesson = pl.lessons[slug];
+  const t = loadPlDict();
+  const title = getPlString(t, `seo.learn.${slug}.title`);
+  const description = getPlString(t, `seo.learn.${slug}.description`);
+  const url = `/pl/learn/${slug}`;
+  const ld = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: lesson.faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  return {
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:url", content: `https://somna.help${url}` },
+      { property: "og:type", content: "article" },
+      { property: "og:locale", content: "pl_PL" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: title },
       { name: "twitter:description", content: description },

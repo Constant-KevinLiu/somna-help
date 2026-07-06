@@ -211,7 +211,7 @@ run("JSON-LD structured data present", () => {
 // ---------------------------------------------------------------------------
 console.log("\n═══ Gate 4: i18n (en / zh / es) ═══");
 
-run("All i18n modules have 3 language dicts", () => {
+run("All i18n modules have active language dicts", () => {
   const modules = [
     "src/lib/i18n.tsx",
     "src/lib/sleep-i18n.ts",
@@ -222,14 +222,14 @@ run("All i18n modules have 3 language dicts", () => {
   ];
   for (const rel of modules) {
     const content = read(rel);
-    // Each module must reference all three lang codes as dict keys or cases.
-    for (const lang of ["en", "zh", "es"]) {
+    // Each module must reference all active lang codes as dict keys or cases.
+    for (const lang of ["en", "es", "pt", "pl"]) {
       // Look for the lang as an object key like `en: {` or `const en`
       const re = new RegExp(`\\b${lang}\\s*[:=]`, "g");
       if (!re.test(content)) throw new Error(`${rel} missing lang "${lang}"`);
     }
   }
-  return `${modules.length} modules × 3 langs`;
+  return `${modules.length} modules × 4 langs`;
 });
 
 run("No mixed-language strings in main i18n dict", () => {

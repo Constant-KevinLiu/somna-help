@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "jezyk": "polski (pl-PL)",
+    "cel": "Meta-dane i treści 3 lekcji Tygodnia 5 programu CBT-I (Kognitywne aspekty CBT-I). Teksty pisane bezpośrednio po polsku.",
+    "tydzien": 5,
+    "slug_tygodnia": "week-5",
+    "lekcje": [13, 14, 15]
+  },
+
+  "week5.title": "Tydzień 5 · Myśli i przekonania",
+  "week5.eyebrow": "TYDZIEŃ 5",
+  "week5.subtitle": "Zmień sposób myślenia o śnie, by sen przestał być zagrożeniem.",
+  "week5.intro": "Piąty tydzień skupia się na poznawczej części CBT-I: identyfikowaniu i korygowaniu przekonań oraz myśli automatycznych, które podtrzymują bezsenność.",
+
+  "week5.lesson13.title": "Typowe myśli przy bezsenności",
+  "week5.lesson13.eyebrow": "TYDZIEŃ 5 · LEKCJA 13",
+  "week5.lesson13.subtitle": "„Muszę dziś dobrze spać” i inne pułapki myślowe.",
+  "week5.lesson13.difficulty": "Średniozaawansowany",
+  "week5.lesson13.readingTime": "7 min czytania",
+  "week5.lesson13.seoTitle": "Typowe myśli przy bezsenności | Somna CBT-I",
+  "week5.lesson13.seoDescription": "Poznaj najczęstsze niepomocne myśli przy bezsenności i naucz się je rozpoznawać, zanim przejmą kontrolę nad snem.",
+  "week5.lesson13.keywords": "myśli przy bezsenności, lęk przed snem, katastrofizowanie, CBT-I",
+
+  "week5.lesson14.title": "Jak CBT-I zmienia przekonania o śnie",
+  "week5.lesson14.eyebrow": "TYDZIEŃ 5 · LEKCJA 14",
+  "week5.lesson14.subtitle": "Restrukturyzacja poznawcza w praktyce, krok po kroku.",
+  "week5.lesson14.difficulty": "Zaawansowany",
+  "week5.lesson14.readingTime": "7 min czytania",
+  "week5.lesson14.seoTitle": "Zmiana przekonań o śnie dzięki CBT-I | Somna",
+  "week5.lesson14.seoDescription": "Praktyczne wprowadzenie do restrukturyzacji poznawczej: jak korygować niepomocne przekonania o śnie.",
+  "week5.lesson14.keywords": "restrukturyzacja poznawcza, przekonania o śnie, CBT-I, myślenie o śnie",
+
+  "week5.lesson15.title": "Realistyczne oczekiwania wobec snu",
+  "week5.lesson15.eyebrow": "TYDZIEŃ 5 · LEKCJA 15",
+  "week5.lesson15.subtitle": "Ile snu naprawdę potrzebujesz i dlaczego perfekcjonizm szkodzi.",
+  "week5.lesson15.difficulty": "Średniozaawansowany",
+  "week5.lesson15.readingTime": "6 min czytania",
+  "week5.lesson15.seoTitle": "Realistyczne oczekiwania wobec snu | Somna CBT-I",
+  "week5.lesson15.seoDescription": "Dlaczego dążenie do idealnego snu może pogarszać bezsenność i jak ustalić zdrowe, realistyczne oczekiwania.",
+  "week5.lesson15.keywords": "oczekiwania wobec snu, perfekcjonizm snu, ile snu potrzebuję, CBT-I"
+}

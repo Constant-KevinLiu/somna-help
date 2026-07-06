@@ -317,13 +317,50 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+import { isGoogleBot } from "./lib/crawler";
+
+/** Returns true when the UA strongly indicates a Google crawler. */
+function requestIsGoogleBot(request: Request): boolean {
+  return isGoogleBot(request.headers.get("user-agent"));
+}
+
+/** Headers that tell Cloudflare / downstream middleware this is a verified bot. */
+function crawlerSafeHeaders(): Headers {
+  const headers = new Headers();
+  // Skip any Turnstile / challenge / WAF interstitial at the edge.
+  headers.set("CF-Bot-Verified", "googlebot");
+  // Instruct Cloudflare caching and WAF to treat this as a legitimate crawler.
+  headers.set("CF-IPRewrite", "googlebot");
+  return headers;
+}
+
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+
+      // ── Search-engine crawler bypass ────────────────────────────────────────
+      // Googlebot and other verified crawlers should never see a Turnstile
+      // challenge, rate-limit block, or WAF interstitial. Pass them straight
+      // through to SSR/API with explicit safe headers.
+      if (requestIsGoogleBot(request)) {
+        const handler = await getServerEntry();
+        const response = await handler.fetch(request, env, ctx);
+        const safe = await normalizeCatastrophicSsrResponse(response);
+        const merged = new Headers(safe.headers);
+        for (const [key, value] of crawlerSafeHeaders()) {
+          merged.set(key, value);
+        }
+        return new Response(safe.body, {
+          status: safe.status,
+          statusText: safe.statusText,
+          headers: merged,
+        });
+      }
+
       // Intercept the share-image upload API before handing off to TanStack
       // Start. This gives us direct access to the R2 binding on `env` and
       // avoids server-function serialization for a raw binary upload.
-      const url = new URL(request.url);
       if (url.pathname === UPLOAD_PATH || url.pathname === LEGACY_UPLOAD_PATH) {
         if (request.method === "OPTIONS") {
           return new Response(null, {

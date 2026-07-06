@@ -1,12 +1,13 @@
 import { Calculator, Moon, Bed, Coffee, Pill, BookOpen } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { SafeLink } from "@/components/common/SafeLink";
 
 export function RelatedTools({ exclude }: { exclude?: string }) {
   const { lang } = useI18n();
   const d = getCalcDict(lang);
-  const prefix = lang === "pt" ? "/pt" : lang === "es" ? "/es" : "";
+  const prefix = LANG_PREFIX[lang];
   const tools = [
     { to: `${prefix}/calculator`, title: d.nav.cycle, desc: d.related.cycleDesc, icon: Moon },
     { to: `${prefix}/sleep-calculator`, title: d.nav.sleep, desc: d.related.sleepDesc, icon: Calculator },

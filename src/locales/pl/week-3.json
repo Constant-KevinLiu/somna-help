@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "jezyk": "polski (pl-PL)",
+    "cel": "Meta-dane i treści 3 lekcji Tygodnia 3 programu CBT-I (Ograniczenie snu i wydajność snu). Teksty pisane bezpośrednio po polsku.",
+    "tydzien": 3,
+    "slug_tygodnia": "week-3",
+    "lekcje": [7, 8, 9]
+  },
+
+  "week3.title": "Tydzień 3 · Ograniczenie snu",
+  "week3.eyebrow": "TYDZIEŃ 3",
+  "week3.subtitle": "Zwiększ presję snu, by szybciej zasypiać i lepiej odpoczywać.",
+  "week3.intro": "Trzeci tydzień wprowadza kontrowersyjną, ale bardzo skuteczną technikę: ograniczenie czasu spędzanego w łóżku. Celem jest głębszy, bardziej efektywny sen.",
+
+  "week3.lesson7.title": "Co to jest wydajność snu",
+  "week3.lesson7.eyebrow": "TYDZIEŃ 3 · LEKCJA 7",
+  "week3.lesson7.subtitle": "Dlaczego czas w łóżku to nie to samo co czas snu.",
+  "week3.lesson7.difficulty": "Początkujący",
+  "week3.lesson7.readingTime": "6 min czytania",
+  "week3.lesson7.seoTitle": "Wydajność snu: dlaczego czas w łóżku to nie sen | somna CBT-I",
+  "week3.lesson7.seoDescription": "Naucz się obliczać wydajność snu i zrozum, dlaczego krótszy czas w łóżku może poprawić jakość snu.",
+  "week3.lesson7.keywords": "wydajność snu, jakość snu, czas w łóżku, CBT-I",
+
+  "week3.lesson8.title": "Terapia ograniczenia snu",
+  "week3.lesson8.eyebrow": "TYDZIEŃ 3 · LEKCJA 8",
+  "week3.lesson8.subtitle": "Jak bezpiecznie skrócić czas w łóżku, by sen stał się głębszy.",
+  "week3.lesson8.difficulty": "Średniozaawansowany",
+  "week3.lesson8.readingTime": "7 min czytania",
+  "week3.lesson8.seoTitle": "Terapia ograniczenia snu w CBT-I | Somna",
+  "week3.lesson8.seoDescription": "Praktyczny przewodnik po terapii ograniczenia snu: jak obliczyć docelowy czas w łóżku i stopniowo go zwiększać.",
+  "week3.lesson8.keywords": "ograniczenie snu, terapia ograniczenia snu, czas w łóżku, CBT-I",
+
+  "week3.lesson9.title": "Błędy przy ograniczeniu snu",
+  "week3.lesson9.eyebrow": "TYDZIEŃ 3 · LEKCJA 9",
+  "week3.lesson9.subtitle": "Czego unikać, by technika działała i nie naruszała bezpieczeństwa.",
+  "week3.lesson9.difficulty": "Średniozaawansowany",
+  "week3.lesson9.readingTime": "6 min czytania",
+  "week3.lesson9.seoTitle": "Błędy przy ograniczeniu snu — jak ich unikać | Somna CBT-I",
+  "week3.lesson9.seoDescription": "Najczęstsze pułapki podczas terapii ograniczenia snu i wskazówki, jak stosować ją bezpiecznie i skutecznie.",
+  "week3.lesson9.keywords": "błędy ograniczenia snu, bezpieczeństwo terapii snu, drzemki a bezsenność, CBT-I"
+}

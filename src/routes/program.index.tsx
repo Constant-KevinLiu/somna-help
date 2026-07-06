@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2, Lock, BookOpen, Award } from "lucide-react";
 import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import { PageHero } from "@/components/PageHero";
 import { programLabels, programWeeks } from "@/lib/program-weeks";
 import { getProgramLessonUI } from "@/lib/program-lessons-i18n";

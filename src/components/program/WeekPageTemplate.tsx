@@ -11,6 +11,7 @@ import {
 import { PageHero } from "@/components/PageHero";
 import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import { SleepRestrictionWidget } from "@/components/program/SleepRestrictionWidget";
 import {
   getAdjacentWeeks,
@@ -30,7 +31,7 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
   const c = week.i18n[lang] ?? week.i18n.en!;
   const { prev, next } = getAdjacentWeeks(week.slug);
   const { progress, hydrated } = useProgramProgress();
-  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
+  const langPrefix = LANG_PREFIX[lang];
 
   const weekLessons = getLessonsByWeek(
     resolveWeekSlug(week.slug) ??
@@ -252,7 +253,7 @@ function WeekLessonTitle({ weekSlug, lessonSlug }: { weekSlug: string; lessonSlu
       return;
     }
     let active = true;
-    loadLesson(weekSlug, lessonSlug)
+    loadLesson(weekSlug, lessonSlug, lang)
       .then((lesson) => {
         if (!lesson || !active) return;
         const t = (lesson.i18n[lang] ?? lesson.i18n.en!).title;

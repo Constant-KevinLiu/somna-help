@@ -1,4 +1,75 @@
+# =============================================================================
+# somna.help — robots.txt
+# Versión multilingüe: en (raíz), /es, /pt, /pl
+# Objetivo: permitir todo el rastreo de Google y bloquear únicamente
+# directorios de build / administración / parámetros de rastreo.
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Reglas globales: permitir todo por defecto
+# ---------------------------------------------------------------------------
 User-agent: *
 Allow: /
 
-Sitemap: https://somna.help/sitemap.xml
+# ---------------------------------------------------------------------------
+# Google: acceso completo a todos los idiomas y páginas SEO
+# ---------------------------------------------------------------------------
+User-agent: Googlebot
+Allow: /
+Allow: /es/
+Allow: /pt/
+Allow: /pl/
+
+User-agent: Googlebot-Mobile
+Allow: /
+Allow: /es/
+Allow: /pt/
+Allow: /pl/
+
+User-agent: Googlebot-Image
+Allow: /
+Allow: /es/
+Allow: /pt/
+Allow: /pl/
+
+# ---------------------------------------------------------------------------
+# Directorios y patrones que no deben ser rastreados ni indexados
+# ---------------------------------------------------------------------------
+# Build / assets empaquetados
+Disallow: /dist/
+Disallow: /build/
+Disallow: /assets/*.js$
+Disallow: /assets/*.css$
+
+# Cachés y fuentes de compilación
+Disallow: /node_modules/
+Disallow: /.cache/
+Disallow: /app.config.*.js
+
+# Herramientas internas / no públicas
+Disallow: /api/
+Disallow: /_debug/
+Disallow: /__devtools/
+
+# Rutas privadas o que requieren sesión (no aportan SEO)
+Disallow: /settings/
+Disallow: /account/
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /reset-password
+
+# Parámetros de seguimiento / ordenación / filtros para evitar contenido duplicado
+Disallow: /*?*
+Disallow: /*&*
+Disallow: /*?utm_
+Disallow: /*?fbclid=
+Disallow: /*?ref=
+
+# ---------------------------------------------------------------------------
+# Sitemaps por idioma (índices independientes)
+# ---------------------------------------------------------------------------
+Sitemap: https://somna.help/sitemap-en.xml
+Sitemap: https://somna.help/sitemap-es.xml
+Sitemap: https://somna.help/sitemap-pt.xml
+Sitemap: https://somna.help/sitemap-pl.xml

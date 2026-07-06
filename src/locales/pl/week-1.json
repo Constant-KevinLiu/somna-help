@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "jezyk": "polski (pl-PL)",
+    "cel": "Meta-dane i treści 3 lekcji Tygodnia 1 programu CBT-I (Podstawy snu). Teksty pisane bezpośrednio po polsku.",
+    "tydzien": 1,
+    "slug_tygodnia": "week-1",
+    "lekcje": [1, 2, 3]
+  },
+
+  "week1.title": "Tydzień 1 · Podstawy snu",
+  "week1.eyebrow": "TYDZIEŃ 1",
+  "week1.subtitle": "Zanim cokolwiek zmienisz, zrozum, czym jest bezsenność i jak naprawdę działa sen.",
+  "week1.intro": "W tym pierwszym tygodniu celem nie jest nic naprawiać. Chcemy spojrzeć na Twój sen z ciekawością i życzliwością, budując podstawę, która utrzyma wszystkie kolejne tygodnie.",
+
+  "week1.lesson1.title": "Czym jest bezsenność?",
+  "week1.lesson1.eyebrow": "TYDZIEŃ 1 · LEKCJA 1",
+  "week1.lesson1.subtitle": "Zrozum, czym naprawdę jest bezsenność — i dlaczego CBT-I zostało stworzone, by ją rozwiązać.",
+  "week1.lesson1.difficulty": "Początkujący",
+  "week1.lesson1.readingTime": "6 min czytania",
+  "week1.lesson1.seoTitle": "Czym jest bezsenność? Model 3P wyjaśniony | Somna CBT-I",
+  "week1.lesson1.seoDescription": "Zrozum naturę bezsenności dzięki naukowemu Modelowi 3P i dowiedz się, dlaczego CBT-I skutecznie usuwa nawyki podtrzymujące bezsenność.",
+  "week1.lesson1.keywords": "bezsenność, model 3P, przewlekła bezsenność, CBT-I, leczenie bezsenności",
+
+  "week1.lesson2.title": "Jak działa sen?",
+  "week1.lesson2.eyebrow": "TYDZIEŃ 1 · LEKCJA 2",
+  "week1.lesson2.subtitle": "Wewnętrzne rytmy: cykle snu, zegar biologiczny i presja snu.",
+  "week1.lesson2.difficulty": "Początkujący",
+  "week1.lesson2.readingTime": "6 min czytania",
+  "week1.lesson2.seoTitle": "Jak działa sen: cykle, rytm okołodobowy i presja snu | Somna",
+  "week1.lesson2.seoDescription": "Poznaj 90-minutowe cykle snu, rytm okołodobowy i presję snu — oraz jak CBT-I przywraca ich naturalną równowagę.",
+  "week1.lesson2.keywords": "jak działa sen, cykle snu, rytm okołodobowy, presja snu, NREM REM",
+
+  "week1.lesson3.title": "Dlaczego większy wysiłek pogarsza sen",
+  "week1.lesson3.eyebrow": "TYDZIEŃ 1 · LEKCJA 3",
+  "week1.lesson3.subtitle": "Paradoks wysiłku wobec snu i sposób, by wyjść z tej pułapki.",
+  "week1.lesson3.difficulty": "Początkujący",
+  "week1.lesson3.readingTime": "5 min czytania",
+  "week1.lesson3.seoTitle": "Dlaczego większy wysiłek pogarsza sen | Somna CBT-I",
+  "week1.lesson3.seoDescription": "Odkryj paradoks lęku wydajnościowego związanego ze snem — dlaczego zmuszanie się do snu działa na odwrót — i jak CBT-I pomaga wyjść z pętli wysiłku.",
+  "week1.lesson3.keywords": "lęk wydajnościowy sen, zmuszanie się do snu, paradoks wysiłku snu, CBT-I sen, nie mogę zasnąć"
+}

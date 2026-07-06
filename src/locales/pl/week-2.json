@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "jezyk": "polski (pl-PL)",
+    "cel": "Meta-dane i treści 3 lekcji Tygodnia 2 programu CBT-I (Kontrola bodźców). Teksty pisane bezpośrednio po polsku.",
+    "tydzien": 2,
+    "slug_tygodnia": "week-2",
+    "lekcje": [4, 5, 6]
+  },
+
+  "week2.title": "Tydzień 2 · Kontrola bodźców",
+  "week2.eyebrow": "TYDZIEŃ 2",
+  "week2.subtitle": "Naucz mózg, że łóżko służy do spania — nie do bezsennych godzin.",
+  "week2.intro": "Drugi tydzień koncentruje się na jednej z najsilniejszych technik CBT-I: kontroli bodźców. Pomaga ona odbudować związek między łóżkiem a snem.",
+
+  "week2.lesson4.title": "Dlaczego mózg nie kojarzy łóżka ze snem",
+  "week2.lesson4.eyebrow": "TYDZIEŃ 2 · LEKCJA 4",
+  "week2.lesson4.subtitle": "Jak warunkowanie klasyczne niszczy połączenie łóżko–sen i jak je odbudować.",
+  "week2.lesson4.difficulty": "Początkujący",
+  "week2.lesson4.readingTime": "6 min czytania",
+  "week2.lesson4.seoTitle": "Łóżko tylko do spania: kontrola bodźców | Somna CBT-I",
+  "week2.lesson4.seoDescription": "Dowiedz się, dlaczego ograniczenie aktywności w łóżku wzmacnia sygnał snu i przyspiesza zasypianie.",
+  "week2.lesson4.keywords": "łóżko tylko do spania, kontrola bodźców, higiena snu, telefon przed snem, CBT-I",
+
+  "week2.lesson5.title": "Kontrola bodźców w praktyce",
+  "week2.lesson5.eyebrow": "TYDZIEŃ 2 · LEKCJA 5",
+  "week2.lesson5.subtitle": "Jak działa jedna z najskuteczniejszych technik CBT-I.",
+  "week2.lesson5.difficulty": "Średniozaawansowany",
+  "week2.lesson5.readingTime": "6 min czytania",
+  "week2.lesson5.seoTitle": "Reguła 15–20 minut przy bezsenności | Somna CBT-I",
+  "week2.lesson5.seoDescription": "Poznaj praktyczną zasadę kontroli bodźców: wstawaj z łóżka, gdy sen nie przychodzi, by mózg ponownie połączył łóżko ze snem.",
+  "week2.lesson5.keywords": "reguła 15 minut bezsenność, kontrola bodźców, co robić gdy nie mogę zasnąć, CBT-I",
+
+  "week2.lesson6.title": "Wychodzenie z łóżka bez frustracji",
+  "week2.lesson6.eyebrow": "TYDZIEŃ 2 · LEKCJA 6",
+  "week2.lesson6.subtitle": "Jak wstać w nocy, nie wpadając w złość i niepokój.",
+  "week2.lesson6.difficulty": "Początkujący",
+  "week2.lesson6.readingTime": "6 min czytania",
+  "week2.lesson6.seoTitle": "Wychodzenie z łóżka przy bezsenności | Somna CBT-I",
+  "week2.lesson6.seoDescription": "Praktyczne wskazówki, jak wstawać z łóżka w nocy bez frustracji i skutecznie wspierać kontrolę bodźców.",
+  "week2.lesson6.keywords": "wychodzenie z łóżka bezsenność, co robić gdy nie śpię, kontrola bodźców, CBT-I"
+}

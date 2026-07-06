@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "jezyk": "polski (pl-PL)",
+    "cel": "Meta-dane i treści 3 lekcji Tygodnia 4 programu CBT-I (Relaksacja i radzenie sobie z myślami). Teksty pisane bezpośrednio po polsku.",
+    "tydzien": 4,
+    "slug_tygodnia": "week-4",
+    "lekcje": [10, 11, 12]
+  },
+
+  "week4.title": "Tydzień 4 · Relaksacja i myśli",
+  "week4.eyebrow": "TYDZIEŃ 4",
+  "week4.subtitle": "Poznaj techniki, które uspokajają ciało i umysł przed snem.",
+  "week4.intro": "Czwarty tydzień dodaje narzędzia do łagodzenia napięcia i radzenia sobie z natłokiem myśli, które często towarzyszą bezsenności.",
+
+  "week4.lesson10.title": "Gdy w nocy głowa nie milknie",
+  "week4.lesson10.eyebrow": "TYDZIEŃ 4 · LEKCJA 10",
+  "week4.lesson10.subtitle": "Techniki radzenia sobie z natłokiem myśli i lękiem przed snem.",
+  "week4.lesson10.difficulty": "Średniozaawansowany",
+  "week4.lesson10.readingTime": "6 min czytania",
+  "week4.lesson10.seoTitle": "Natłok myśli w nocy: jak sobie radzić | Somna CBT-I",
+  "week4.lesson10.seoDescription": "Poznaj strategie CBT-I do łagodzenia wieczornego lęku i natłoku myśli, które utrudniają zasypianie.",
+  "week4.lesson10.keywords": "natłok myśli w nocy, lęk przed snem, ruminacje, CBT-I",
+
+  "week4.lesson11.title": "Techniki relaksacyjne przed snem",
+  "week4.lesson11.eyebrow": "TYDZIEŃ 4 · LEKCJA 11",
+  "week4.lesson11.subtitle": "Skanowanie ciała, progresywna relaksacja mięśni i wieczorny rytuał.",
+  "week4.lesson11.difficulty": "Średniozaawansowany",
+  "week4.lesson11.readingTime": "7 min czytania",
+  "week4.lesson11.seoTitle": "Techniki relaksacyjne przed snem | Somna CBT-I",
+  "week4.lesson11.seoDescription": "Praktyczny przegląd technik relaksacyjnych: skanowanie ciała, progresywna relaksacja mięśni i budowanie wieczornego rytuału.",
+  "week4.lesson11.keywords": "relaksacja przed snem, skanowanie ciała, progresywna relaksacja mięśni, CBT-I",
+
+  "week4.lesson12.title": "Ćwiczenia oddechowe na lepszy sen",
+  "week4.lesson12.eyebrow": "TYDZIEŃ 4 · LEKCJA 12",
+  "week4.lesson12.subtitle": "Jak wykorzystać oddech, by przełączyć układ nerwowy w tryb spoczynku.",
+  "week4.lesson12.difficulty": "Początkujący",
+  "week4.lesson12.readingTime": "6 min czytania",
+  "week4.lesson12.seoTitle": "Ćwiczenia oddechowe na bezsenność | Somna CBT-I",
+  "week4.lesson12.seoDescription": "Poznaj proste techniki oddechowe, które aktywują układ przywspółczulny i pomagają zasnąć.",
+  "week4.lesson12.keywords": "oddech a sen, ćwiczenia oddechowe, oddychanie przed snem, CBT-I"
+}

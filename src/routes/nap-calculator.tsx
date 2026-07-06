@@ -5,6 +5,7 @@ import { RelatedTools } from "@/components/RelatedTools";
 import { FAQ, faqJsonLd } from "@/components/FAQ";
 import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n, useFmtTime } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { Coffee, Brain, Battery } from "lucide-react";
 
@@ -121,7 +122,7 @@ export function NapCalculatorPage() {
 
           <div className="mt-8 text-center">
             <SafeLink
-              to={lang === "pt" ? "/pt/learn" : lang === "es" ? "/es/learn" : "/learn"}
+              to={`${LANG_PREFIX[lang]}/learn`}
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
             >
               {d.cta}
@@ -146,7 +147,7 @@ export function NapCalculatorPage() {
       </section>
 
       <FAQ items={d.faqs} />
-      <RelatedTools exclude={lang === "pt" ? "/pt/nap-calculator" : lang === "es" ? "/es/nap-calculator" : "/nap-calculator"} />
+      <RelatedTools exclude={`${LANG_PREFIX[lang]}/nap-calculator`} />
     </>
   );
 }

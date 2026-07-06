@@ -1,0 +1,50 @@
+{
+  "name": "tanstack_start_ts",
+  "dependencies": {
+    "vinxi": {
+      "version": "0.5.11",
+      "resolved": "https://registry.npmjs.org/vinxi/-/vinxi-0.5.11.tgz",
+      "overridden": false,
+      "dependencies": {
+        "nitropack": {
+          "version": "2.13.4",
+          "resolved": "https://registry.npmjs.org/nitropack/-/nitropack-2.13.4.tgz",
+          "overridden": false,
+          "dependencies": {
+            "@vercel/nft": {
+              "version": "1.10.2",
+              "resolved": "https://registry.npmjs.org/@vercel/nft/-/nft-1.10.2.tgz",
+              "overridden": false,
+              "dependencies": {
+                "glob": {
+                  "version": "13.0.6",
+                  "resolved": "https://registry.npmjs.org/glob/-/glob-13.0.6.tgz",
+                  "overridden": false
+                }
+              }
+            },
+            "archiver": {
+              "version": "7.0.1",
+              "resolved": "https://registry.npmjs.org/archiver/-/archiver-7.0.1.tgz",
+              "overridden": false,
+              "dependencies": {
+                "archiver-utils": {
+                  "version": "5.0.2",
+                  "resolved": "https://registry.npmjs.org/archiver-utils/-/archiver-utils-5.0.2.tgz",
+                  "overridden": false,
+                  "dependencies": {
+                    "glob": {
+                      "version": "10.5.0",
+                      "resolved": "https://registry.npmjs.org/glob/-/glob-10.5.0.tgz",
+                      "overridden": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

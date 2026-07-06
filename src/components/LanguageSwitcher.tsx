@@ -31,6 +31,7 @@ const OPTIONS: LangOption[] = [
   { value: "en", label: "English", flag: "🇬🇧", active: true },
   { value: "es", label: "Español", flag: "🇪🇸", active: true },
   { value: "pt", label: "Português (BR)", flag: "🇧🇷", active: true },
+  { value: "pl", label: "Polski", flag: "🇵🇱", active: true },
   { value: "de", label: "Deutsch", flag: "🇩🇪", active: false },
   { value: "ja", label: "日本語", flag: "🇯🇵", active: false },
   { value: "zh", label: "中文", flag: "🇨🇳", active: false },

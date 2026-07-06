@@ -5,6 +5,7 @@ import { RelatedTools } from "@/components/RelatedTools";
 import { FAQ, faqJsonLd } from "@/components/FAQ";
 import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n, useFmtTime } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { Moon, Clock } from "lucide-react";
 
@@ -113,7 +114,7 @@ export function SleepCalculatorPage() {
 
           <div className="mt-8 text-center">
             <SafeLink
-              to={lang === "pt" ? "/pt/calculator" : lang === "es" ? "/es/calculator" : "/calculator"}
+              to={`${LANG_PREFIX[lang]}/calculator`}
               className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
             >
               {d.cta}
@@ -134,7 +135,7 @@ export function SleepCalculatorPage() {
       </section>
 
       <FAQ items={d.faqs} />
-      <RelatedTools exclude={lang === "pt" ? "/pt/sleep-calculator" : lang === "es" ? "/es/sleep-calculator" : "/sleep-calculator"} />
+      <RelatedTools exclude={`${LANG_PREFIX[lang]}/sleep-calculator`} />
     </>
   );
 }

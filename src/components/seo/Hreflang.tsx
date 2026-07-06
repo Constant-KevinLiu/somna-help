@@ -24,6 +24,7 @@ const HREFLANG_BY_LANG: Record<Lang, string> = {
   en: "en",
   es: "es",
   pt: "pt",
+  pl: "pl",
   de: "de",
   ja: "ja",
   zh: "zh",

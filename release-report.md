@@ -1,8 +1,8 @@
 # Somna.help Release Report
 
-**Generated:** 2026-07-01 15:26:41 UTC
-**Duration:** 46.3s
-**Decision:** ✅ READY FOR PRODUCTION
+**Generated:** 2026-07-04 05:22:47 UTC
+**Duration:** 42.9s
+**Decision:** ❌ RELEASE BLOCKED
 
 ---
 
@@ -10,25 +10,25 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Passed | 23 |
-| ⚠️ Warnings | 0 |
-| ❌ Failed | 0 |
+| ✅ Passed | 20 |
+| ⚠️ Warnings | 2 |
+| ❌ Failed | 1 |
 
 ---
 
 ## Build Status
 
-✅ READY FOR PRODUCTION
+❌ RELEASE BLOCKED
 
 ## Code Quality
 
 - TypeScript: 0 errors
-- ESLint: 17 warnings (acceptable)
-- Prettier: all files formatted
+- ESLint: not run
+- Prettier: some files need formatting (run `npm run format`)
 
 ## Bundle Size
 
-largest chunk: router-BlLUbsC1.js (392 KB)
+router-Ckg7ajCn.js is 887 KB (threshold 500 KB)
 
 ## Cloudflare
 
@@ -52,7 +52,7 @@ largest chunk: router-BlLUbsC1.js (392 KB)
 
 ### i18n Checks
 
-- [x] All i18n modules have 3 language dicts — 6 modules × 3 langs
+- [x] All i18n modules have active language dicts — 6 modules × 4 langs
 - [x] No mixed-language strings in main i18n dict — en dict clean of CJK
 - [x] Fallback mechanism present — falls back to en
 
@@ -80,11 +80,15 @@ largest chunk: router-BlLUbsC1.js (392 KB)
 
 ## Remaining Risks
 
-None identified in automated checks.
+- ⚠️ Prettier (format check): some files need formatting (run `npm run format`)
+- ⚠️ Main router chunk under 500 KB: router-Ckg7ajCn.js is 887 KB (threshold 500 KB)
 
+## Blocking Issues
+
+- ❌ ESLint (0 errors): spawnSync C:\WINDOWS\system32\cmd.exe ENOBUFS
 
 ---
 
 ## Final Decision
 
-✅ READY FOR PRODUCTION
+❌ RELEASE BLOCKED

@@ -25,6 +25,8 @@ export type LessonLocale = {
   reflection: string;
   faqs: LessonFAQ[];
   ctaLabel: string;
+  /** Route path (without language prefix) for the lesson CTA link. */
+  ctaHref?: string;
   seoTitle: string;
   seoDescription: string;
   keywords: string[];
@@ -292,7 +294,8 @@ export const lessonMetas: LessonMeta[] = [
 export const TOTAL_LESSONS = lessonMetas.length; // 18
 
 export function lessonPath(weekSlug: string, lessonSlug: string, lang?: Lang): string {
-  const prefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
+  const prefix =
+    lang === "es" ? "/es" : lang === "pt" ? "/pt" : lang === "pl" ? "/pl" : "";
   return `${prefix}/program/${weekSlug}/${lessonSlug}`;
 }
 
@@ -326,8 +329,32 @@ export function isValidWeekSlug(slug: string): slug is WeekSlug {
   return (WEEK_SLUGS as readonly string[]).includes(slug);
 }
 
-/** Dynamic import of a week's full lesson content (lazy-loaded per week). */
-export async function loadWeekLessons(weekSlug: string): Promise<LessonContent[]> {
+/** Dynamic import of a week's full lesson content (lazy-loaded per week).
+ *  When lang is "pl", loads the native Polish content module.
+ */
+export async function loadWeekLessons(
+  weekSlug: string,
+  lang?: Lang,
+): Promise<LessonContent[]> {
+  if (lang === "pl") {
+    switch (weekSlug) {
+      case "week-1":
+        return (await import("./program-lessons-content/pl/pl-week-1")).plWeek1Lessons;
+      case "week-2":
+        return (await import("./program-lessons-content/pl/pl-week-2")).plWeek2Lessons;
+      case "week-3":
+        return (await import("./program-lessons-content/pl/pl-week-3")).plWeek3Lessons;
+      case "week-4":
+        return (await import("./program-lessons-content/pl/pl-week-4")).plWeek4Lessons;
+      case "week-5":
+        return (await import("./program-lessons-content/pl/pl-week-5")).plWeek5Lessons;
+      case "week-6":
+        return (await import("./program-lessons-content/pl/pl-week-6")).plWeek6Lessons;
+      default:
+        return [];
+    }
+  }
+
   switch (weekSlug) {
     case "week-1":
       return (await import("./program-lessons-content/week-1")).week1Lessons;
@@ -350,7 +377,8 @@ export async function loadWeekLessons(weekSlug: string): Promise<LessonContent[]
 export async function loadLesson(
   weekSlug: string,
   lessonSlug: string,
+  lang?: Lang,
 ): Promise<LessonContent | null> {
-  const lessons = await loadWeekLessons(weekSlug);
+  const lessons = await loadWeekLessons(weekSlug, lang);
   return lessons.find((l) => l.slug === lessonSlug) ?? null;
 }

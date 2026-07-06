@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type Lang } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import { PageHero } from "@/components/PageHero";
 import { AssessmentShareCard } from "@/components/AssessmentShareCard";
+import { SafeLink } from "@/components/common/SafeLink";
 
 export const Route = createFileRoute("/assessment")({
   component: AssessPage,
@@ -70,53 +72,173 @@ function healthPercent(score: number, max: number) {
   return Math.round((remaining / max) * 100);
 }
 
-const questions = [
+type Option = {
+  en: string;
+  zh: string;
+  es: string;
+  pt: string;
+  pl: string;
+  score: number;
+};
+
+type Question = {
+  key: string;
+  options: Option[];
+};
+
+const questions: Question[] = [
   {
     key: "assess.q1",
     options: [
-      { en: "Under 15 min", zh: "少于 15 分钟", es: "Menos de 15 min", pt: "Menos de 15 min", score: 0 },
-      { en: "15–30 min", zh: "15–30 分钟", es: "15–30 min", pt: "15–30 min", score: 1 },
-      { en: "30–60 min", zh: "30–60 分钟", es: "30–60 min", pt: "30–60 min", score: 2 },
-      { en: "Over an hour", zh: "超过一小时", es: "Más de una hora", pt: "Mais de uma hora", score: 3 },
+      {
+        en: "Under 15 min",
+        zh: "少于 15 分钟",
+        es: "Menos de 15 min",
+        pt: "Menos de 15 min",
+        pl: "Poniżej 15 min",
+        score: 0,
+      },
+      {
+        en: "15–30 min",
+        zh: "15–30 分钟",
+        es: "15–30 min",
+        pt: "15–30 min",
+        pl: "15–30 min",
+        score: 1,
+      },
+      {
+        en: "30–60 min",
+        zh: "30–60 分钟",
+        es: "30–60 min",
+        pt: "30–60 min",
+        pl: "30–60 min",
+        score: 2,
+      },
+      {
+        en: "Over an hour",
+        zh: "超过一小时",
+        es: "Más de una hora",
+        pt: "Mais de uma hora",
+        pl: "Ponad godzinę",
+        score: 3,
+      },
     ],
   },
   {
     key: "assess.q2",
     options: [
-      { en: "Rarely", zh: "很少", es: "Rara vez", pt: "Raramente", score: 0 },
-      { en: "Once", zh: "1 次", es: "Una vez", pt: "Uma vez", score: 1 },
-      { en: "2–3 times", zh: "2–3 次", es: "2–3 veces", pt: "2–3 vezes", score: 2 },
-      { en: "Many times", zh: "多次", es: "Muchas veces", pt: "Várias vezes", score: 3 },
+      { en: "Rarely", zh: "很少", es: "Rara vez", pt: "Raramente", pl: "Rzadko", score: 0 },
+      { en: "Once", zh: "1 次", es: "Una vez", pt: "Uma vez", pl: "Raz", score: 1 },
+      { en: "2–3 times", zh: "2–3 次", es: "2–3 veces", pt: "2–3 vezes", pl: "2–3 razy", score: 2 },
+      {
+        en: "Many times",
+        zh: "多次",
+        es: "Muchas veces",
+        pt: "Várias vezes",
+        pl: "Wiele razy",
+        score: 3,
+      },
     ],
   },
   {
     key: "assess.q3",
     options: [
-      { en: "7–9 hours", zh: "7–9 小时", es: "7–9 horas", pt: "7–9 horas", score: 0 },
-      { en: "6–7 hours", zh: "6–7 小时", es: "6–7 horas", pt: "6–7 horas", score: 1 },
-      { en: "5–6 hours", zh: "5–6 小时", es: "5–6 horas", pt: "5–6 horas", score: 2 },
-      { en: "Under 5 hours", zh: "少于 5 小时", es: "Menos de 5 horas", pt: "Menos de 5 horas", score: 3 },
+      {
+        en: "7–9 hours",
+        zh: "7–9 小时",
+        es: "7–9 horas",
+        pt: "7–9 horas",
+        pl: "7–9 godzin",
+        score: 0,
+      },
+      {
+        en: "6–7 hours",
+        zh: "6–7 小时",
+        es: "6–7 horas",
+        pt: "6–7 horas",
+        pl: "6–7 godzin",
+        score: 1,
+      },
+      {
+        en: "5–6 hours",
+        zh: "5–6 小时",
+        es: "5–6 horas",
+        pt: "5–6 horas",
+        pl: "5–6 godzin",
+        score: 2,
+      },
+      {
+        en: "Under 5 hours",
+        zh: "少于 5 小时",
+        es: "Menos de 5 horas",
+        pt: "Menos de 5 horas",
+        pl: "Poniżej 5 godzin",
+        score: 3,
+      },
     ],
   },
   {
     key: "assess.q4",
     options: [
-      { en: "Calm", zh: "平静", es: "Tranquilo", pt: "Calmo", score: 0 },
-      { en: "A little tense", zh: "略有紧张", es: "Algo tenso", pt: "Um pouco tenso", score: 1 },
-      { en: "Often anxious", zh: "经常焦虑", es: "A menudo ansioso", pt: "Muitas vezes ansioso", score: 2 },
-      { en: "Very anxious", zh: "非常焦虑", es: "Muy ansioso", pt: "Muito ansioso", score: 3 },
+      { en: "Calm", zh: "平静", es: "Tranquilo", pt: "Calmo", pl: "Spokojny", score: 0 },
+      {
+        en: "A little tense",
+        zh: "略有紧张",
+        es: "Algo tenso",
+        pt: "Um pouco tenso",
+        pl: "Lekko napięty",
+        score: 1,
+      },
+      {
+        en: "Often anxious",
+        zh: "经常焦虑",
+        es: "A menudo ansioso",
+        pt: "Muitas vezes ansioso",
+        pl: "Często niespokojny",
+        score: 2,
+      },
+      {
+        en: "Very anxious",
+        zh: "非常焦虑",
+        es: "Muy ansioso",
+        pt: "Muito ansioso",
+        pl: "Bardzo niespokojny",
+        score: 3,
+      },
     ],
   },
   {
     key: "assess.q5",
     options: [
-      { en: "Refreshed", zh: "精神饱满", es: "Descansado", pt: "Descansado", score: 0 },
-      { en: "Okay", zh: "还行", es: "Normal", pt: "Mais ou menos", score: 1 },
-      { en: "Tired", zh: "疲惫", es: "Cansado", pt: "Cansado", score: 2 },
-      { en: "Exhausted", zh: "极度疲惫", es: "Exhausto", pt: "Exausto", score: 3 },
+      {
+        en: "Refreshed",
+        zh: "精神饱满",
+        es: "Descansado",
+        pt: "Descansado",
+        pl: "Wypoczęty",
+        score: 0,
+      },
+      { en: "Okay", zh: "还行", es: "Normal", pt: "Mais ou menos", pl: "Tak sobie", score: 1 },
+      { en: "Tired", zh: "疲惫", es: "Cansado", pt: "Cansado", pl: "Zmęczony", score: 2 },
+      {
+        en: "Exhausted",
+        zh: "极度疲惫",
+        es: "Exhausto",
+        pt: "Exausto",
+        pl: "Wyczerpany",
+        score: 3,
+      },
     ],
   },
 ];
+
+const optionLabel = (o: Option, lang: Lang) => {
+  if (lang === "zh") return o.zh;
+  if (lang === "es") return o.es;
+  if (lang === "pt") return o.pt;
+  if (lang === "pl") return o.pl;
+  return o.en;
+};
 
 export function AssessPage() {
   const { t, lang } = useI18n();
@@ -172,13 +294,7 @@ export function AssessPage() {
                         : "border-white/10 bg-white/5 text-muted-foreground hover:border-white/20 hover:text-foreground"
                     }`}
                   >
-                    {lang === "zh"
-                      ? o.zh
-                      : lang === "es"
-                        ? o.es
-                        : lang === "pt"
-                          ? o.pt
-                          : o.en}
+                    {optionLabel(o, lang)}
                   </button>
                 ))}
               </div>
@@ -273,18 +389,18 @@ export function AssessPage() {
               </div>
 
               <div className="mt-7 flex flex-wrap justify-center gap-3">
-                <Link
-                  to={lang === "es" ? "/es/program" : lang === "pt" ? "/pt/program" : "/program"}
+                <SafeLink
+                  to={`${LANG_PREFIX[lang]}/program`}
                   className="rounded-full bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-medium text-primary-foreground"
                 >
                   {t("assess.cta.program")}
-                </Link>
-                <Link
-                  to={lang === "es" ? "/es/panel" : lang === "pt" ? "/pt/painel" : "/dashboard"}
+                </SafeLink>
+                <SafeLink
+                  to={`${LANG_PREFIX[lang]}/dashboard`}
                   className="rounded-full border border-white/15 bg-white/5 px-5 py-2.5 text-sm"
                 >
                   {t("assess.cta.dashboard")}
-                </Link>
+                </SafeLink>
               </div>
 
               <div className="mt-8">

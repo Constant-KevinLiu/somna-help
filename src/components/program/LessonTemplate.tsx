@@ -17,6 +17,7 @@ import { FAQ } from "@/components/FAQ";
 import { ShareModal } from "@/components/ShareModal";
 import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n, type Lang } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import {
   getAdjacentLessons,
   getLessonMeta,
@@ -41,7 +42,7 @@ export function LessonTemplate({ lesson }: Props) {
   const meta = getLessonMeta(lesson.slug)!;
   const { prev, next } = getAdjacentLessons(lesson.slug);
   const [shareOpen, setShareOpen] = useState(false);
-  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
+  const langPrefix = LANG_PREFIX[lang];
 
   const pageUrl = useMemo(
     () =>
@@ -138,6 +139,19 @@ export function LessonTemplate({ lesson }: Props) {
               <ListChecks className="h-3.5 w-3.5" /> {ui.actionStepTitle}
             </div>
             <p className="text-sm text-foreground/90 md:text-base">{c.actionStep}</p>
+
+            {/* CTA link localized per language via LANG_PREFIX */}
+            {c.ctaHref && (
+              <div className="mt-5">
+                <SafeLink
+                  to={`${langPrefix}${c.ctaHref}`}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+                >
+                  {c.ctaLabel}
+                  <ArrowRight className="h-4 w-4" />
+                </SafeLink>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -276,7 +290,7 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
   const { lang } = useI18n();
   const ui = getProgramLessonUI(lang);
   const meta = getLessonMeta(lessonSlug);
-  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
+  const langPrefix = LANG_PREFIX[lang];
   // Resolve localized title lazily. We use a synchronous lookup via a module-level
   // cache populated on first render of any lesson card. To avoid an extra network
   // round-trip per card, we read titles from the already-loaded current lesson when
@@ -316,7 +330,7 @@ function useRelatedLessonTitle(
       return;
     }
     let active = true;
-    loadLesson(weekSlug, lessonSlug)
+    loadLesson(weekSlug, lessonSlug, lang)
       .then((lesson) => {
         if (!lesson || !active) return;
         const t = (lesson.i18n[lang] ?? lesson.i18n.en!).title;
@@ -351,7 +365,11 @@ export function lessonHead(lesson: LessonContent, lang: Lang) {
       { property: "og:description", content: c.seoDescription },
       { property: "og:url", content: `${origin}${url}` },
       { property: "og:type", content: "article" },
-      { property: "og:locale", content: lang === "es" ? "es_ES" : lang === "pt" ? "pt_BR" : "en_US" },
+      {
+        property: "og:locale",
+        content:
+          lang === "es" ? "es_ES" : lang === "pt" ? "pt_BR" : lang === "pl" ? "pl_PL" : "en_US",
+      },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [

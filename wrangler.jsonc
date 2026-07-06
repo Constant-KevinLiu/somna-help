@@ -24,4 +24,57 @@
   "assets": {
     "directory": "dist/client",
   },
+
+  // =============================================================================
+  // Cloudflare security bypass rules for verified search-engine crawlers.
+  //
+  // IMPORTANT:
+  // - The fields below are declarative examples for documentation. Wrangler can
+  //   deploy some rulesets, but Turnstile allowlisting, WAF managed rules and
+  //   rate-limiting are usually configured via the Cloudflare Dashboard or the
+  //   Rulesets API / Terraform. Verify with `npx wrangler deploy --dry-run`.
+  // - Keep TanStack SSR / i18n routing unchanged; these rules only affect the
+  //   edge security layer in front of the Worker.
+  // =============================================================================
+
+  // Optional: reference a zone so zone-level rules can be applied.
+  // "zone_id": "<YOUR_ZONE_ID>",
+
+  // "rulesets": {
+  //   // Custom firewall rule: skip every challenge / WAF action for Google crawlers.
+  //   "http_request_firewall_custom": {
+  //     "rules": [
+  //       {
+  //         "expression": "(http.user_agent contains \"Googlebot\" or http.user_agent contains \"Googlebot-Mobile\" or http.user_agent contains \"Googlebot-Image\" or http.user_agent contains \"Mediapartners-Google\" or http.user_agent contains \"AdsBot-Google\") and (ip.src in $google_ips or ip.src in $cf.bot_management.verified_bot_category_ids)",
+  //         "description": "Allowlist verified Google crawlers: skip Turnstile, WAF and rate limiting",
+  //         "action": "skip",
+  //         "action_parameters": {
+  //           "ruleset": "current"
+  //         },
+  //         "enabled": true
+  //       }
+  //     ]
+  //   },
+  //
+  //   // Rate limiting: disable for search-engine crawlers.
+  //   "http_ratelimit": {
+  //     "rules": [
+  //       {
+  //         "expression": "(http.user_agent contains \"Googlebot\" or http.user_agent contains \"bingbot\" or http.user_agent contains \"DuckDuckBot\")",
+  //         "description": "Disable rate limiting for major search engine crawlers",
+  //         "action": "skip",
+  //         "enabled": true
+  //       }
+  //     ]
+  //   }
+  // },
+
+  // Bot Management (requires Enterprise / Pro with Bot Management subscription):
+  // Enable this only via the Dashboard or API. Once enabled, Cloudflare will
+  // automatically identify Googlebot as a verified bot and skip challenges.
+  // "bot_management": {
+  //   "enable_js": false,
+  //   "fight_mode": false,
+  //   "auto_update_model": true
+  // }
 }

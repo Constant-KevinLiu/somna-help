@@ -2,8 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import { useSleepI18n } from "@/lib/sleep-i18n";
 import { PageHero } from "@/components/PageHero";
+import { SafeLink } from "@/components/common/SafeLink";
 import {
   computeEfficiency,
   computeScore,
@@ -85,7 +87,9 @@ export function DiaryPage() {
             ? "No se pudo guardar. Revisa el almacenamiento del navegador e inténtalo de nuevo."
             : lang === "pt"
               ? "Não foi possível salvar. Verifique o armazenamento do navegador e tente novamente."
-              : "Could not save your entry. Please check your browser storage settings and try again.",
+              : lang === "pl"
+                ? "Nie udało się zapisać. Sprawdź ustawienia pamięci przeglądarki i spróbuj ponownie."
+                : "Could not save your entry. Please check your browser storage settings and try again.",
       );
     }
   };
@@ -166,12 +170,12 @@ export function DiaryPage() {
           {feedback && (
             <div className="space-y-4">
               <FeedbackCard record={feedback} />
-              <Link
-                to={lang === "es" ? "/es/panel" : lang === "pt" ? "/pt/painel" : "/dashboard"}
+              <SafeLink
+                to={`${LANG_PREFIX[lang]}/dashboard`}
                 className="block rounded-full border border-white/15 bg-white/5 px-5 py-3 text-center text-sm transition hover:border-white/25 hover:bg-white/10"
               >
                 {t("diary.cta.dashboard")}
-              </Link>
+              </SafeLink>
             </div>
           )}
 

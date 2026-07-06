@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type Lang } from "@/lib/i18n";
 import { PageHero } from "@/components/PageHero";
 import { Wind, Music, Heart, Play } from "lucide-react";
 import { relaxTracks, type RelaxCategory } from "@/lib/relax-tracks";
@@ -32,44 +32,58 @@ const phases = [
   { key: "relax.exhale", dur: 8 },
 ] as const;
 
-const catLabels: Record<RelaxCategory, { en: string; zh: string; es: string; pt: string }> = {
-  guided: { en: "Guided", zh: "引导", es: "Guiada", pt: "Guiada" },
-  nature: { en: "Nature", zh: "自然", es: "Naturaleza", pt: "Natureza" },
-  noise: { en: "Noise", zh: "噪音", es: "Ruido", pt: "Ruído" },
+const catLabels: Record<
+  RelaxCategory,
+  { en: string; zh: string; es: string; pt: string; pl: string }
+> = {
+  guided: { en: "Guided", zh: "引导", es: "Guiada", pt: "Guiada", pl: "Prowadzona" },
+  nature: { en: "Nature", zh: "自然", es: "Naturaleza", pt: "Natureza", pl: "Natura" },
+  noise: { en: "Noise", zh: "噪音", es: "Ruido", pt: "Ruído", pl: "Szum" },
 };
 
 const catIcon = { guided: Heart, nature: Wind, noise: Music } as const;
 
-const sectionLabel = {
+const sectionLabel: Record<Lang, string> = {
   en: "Sleep Audio Library",
   zh: "睡眠音频库",
   es: "Biblioteca de audio para dormir",
   pt: "Biblioteca de áudio para dormir",
+  pl: "Biblioteka dźwięków do snu",
   de: "Sleep Audio Library",
   ja: "Sleep Audio Library",
-};
-const sectionSub = {
+} as Record<Lang, string>;
+const sectionSub: Record<Lang, string> = {
   en: "Guided sessions, nature ambiences and noise. Tap a session to open the player.",
   zh: "引导练习、自然音景与噪音。点击任一会话打开播放器。",
   es: "Sesiones guiadas, ambientes naturales y ruido. Toca una sesión para abrir el reproductor.",
   pt: "Sessões guiadas, ambientes naturais e ruído. Toque numa sessão para abrir o player.",
+  pl: "Sesje prowadzone, dźwięki natury i szumy. Dotknij sesji, by otworzyć odtwarzacz.",
   de: "Guided sessions, nature ambiences and noise. Tap a session to open the player.",
   ja: "Guided sessions, nature ambiences and noise. Tap a session to open the player.",
-};
-const playLabel = { en: "Play", zh: "播放", es: "Reproducir", pt: "Reproduzir", de: "Play", ja: "Play" };
+} as Record<Lang, string>;
+const playLabel: Record<Lang, string> = {
+  en: "Play",
+  zh: "播放",
+  es: "Reproducir",
+  pt: "Reproduzir",
+  pl: "Odtwórz",
+  de: "Play",
+  ja: "Play",
+} as Record<Lang, string>;
 
 // Sufixo de duração por idioma (ex.: "8" + " min" ). "min" é usado em pt-BR
 // como abreviação de minutos, alinhado ao formato de hora 24h do Brasil.
-const durationSuffix = {
+const durationSuffix: Record<Lang, string> = {
   en: " min",
   zh: " 分钟",
   es: " min",
   pt: " min",
+  pl: " min",
   de: " min",
   ja: " min",
-};
+} as Record<Lang, string>;
 
-function formatDuration(raw: string, lang: keyof typeof durationSuffix): string {
+function formatDuration(raw: string, lang: Lang): string {
   const n = parseInt(raw, 10);
   if (Number.isNaN(n)) return raw;
   return `${n}${durationSuffix[lang] ?? durationSuffix.en}`;
@@ -152,6 +166,8 @@ export function RelaxPage() {
             {relaxTracks.map((tr) => {
               const Icon = catIcon[tr.category];
               const isActive = activeId === tr.id;
+              const title = tr.title[lang] ?? tr.title.en ?? "";
+              const desc = tr.description[lang] ?? tr.description.en ?? "";
               return (
                 <div
                   key={tr.id}
@@ -163,14 +179,16 @@ export function RelaxPage() {
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="truncate text-sm font-medium">{tr.title[lang]}</h3>
+                        <h3 className="truncate text-sm font-medium">{title}</h3>
                         <span className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] uppercase tracking-wider text-muted-foreground">
                           {catLabels[tr.category][lang]}
                         </span>
                       </div>
-                      <p className="mt-1 text-xs text-muted-foreground">{tr.description[lang]}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{desc}</p>
                       {tr.duration && (
-                        <p className="mt-1 text-[11px] text-muted-foreground/80">{formatDuration(tr.duration, lang)}</p>
+                        <p className="mt-1 text-[11px] text-muted-foreground/80">
+                          {formatDuration(tr.duration, lang)}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -178,7 +196,7 @@ export function RelaxPage() {
                   {!isActive ? (
                     <button
                       onClick={() => setActiveId(tr.id)}
-                      aria-label={`${playLabel[lang]}: ${tr.title[lang]}`}
+                      aria-label={`${playLabel[lang]}: ${title}`}
                       className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-4 py-2 text-xs font-medium text-primary-foreground transition hover:opacity-90"
                     >
                       <Play className="h-3.5 w-3.5" />
@@ -186,7 +204,7 @@ export function RelaxPage() {
                     </button>
                   ) : (
                     <div className="mt-4">
-                      <RelaxAudioPlayer src={tr.audioUrl} title={tr.title[lang]} />
+                      <RelaxAudioPlayer src={tr.audioUrl} title={title} />
                     </div>
                   )}
                 </div>

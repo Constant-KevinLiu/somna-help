@@ -16,20 +16,17 @@ const SIZE = 1200;
 const SITE_URL = "somna.help";
 
 /** Localized labels used inside generated images. */
-const IMG_LABELS: Partial<
-  Record<
-    Lang,
-    {
-      sleepEfficiency: string;
-      improving: string;
-      dayStreak: string;
-      cbtiTraining: string;
-      sleepProfile: string;
-      sleepType: string;
-      result: string;
-    }
-  >
-> = {
+type ImgLabelSet = {
+  sleepEfficiency: string;
+  improving: string;
+  dayStreak: string;
+  cbtiTraining: string;
+  sleepProfile: string;
+  sleepType: string;
+  result: string;
+};
+
+const IMG_LABELS: Record<Lang, ImgLabelSet> = {
   en: {
     sleepEfficiency: "Sleep Efficiency",
     improving: "Improving",
@@ -65,6 +62,15 @@ const IMG_LABELS: Partial<
     sleepProfile: "Perfil de sono",
     sleepType: "Tipo de sono",
     result: "Resultado",
+  },
+  pl: {
+    sleepEfficiency: "Wydajność snu",
+    improving: "Poprawia się",
+    dayStreak: "Dni z rzędu",
+    cbtiTraining: "Trening snu CBT-I",
+    sleepProfile: "Profil snu",
+    sleepType: "Typ snu",
+    result: "Wynik",
   },
 };
 
@@ -148,7 +154,7 @@ export function generateDashboardImage(input: DashboardImageInput): string {
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
 
-  const labels = IMG_LABELS[input.lang] ?? IMG_LABELS.en!;
+  const labels = IMG_LABELS[input.lang];
   drawBase(ctx);
   drawBrand(ctx);
   drawFooter(ctx);
@@ -199,7 +205,7 @@ export function generateProfileImage(input: ProfileImageInput): string {
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
 
-  const labels = IMG_LABELS[input.lang] ?? IMG_LABELS.en!;
+  const labels = IMG_LABELS[input.lang];
   drawBase(ctx);
   drawBrand(ctx);
   drawFooter(ctx);
@@ -249,7 +255,7 @@ export function generateCalculatorImage(input: CalculatorImageInput): string {
   const ctx = canvas.getContext("2d");
   if (!ctx) return "";
 
-  const labels = IMG_LABELS[input.lang] ?? IMG_LABELS.en!;
+  const labels = IMG_LABELS[input.lang];
   drawBase(ctx);
   drawBrand(ctx);
   drawFooter(ctx);

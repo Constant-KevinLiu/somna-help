@@ -971,8 +971,225 @@ const pt: CalcDict = {
   },
 };
 
-const dicts: Partial<Record<Lang, CalcDict>> = { en, zh, es, pt };
+const pl: CalcDict = {
+  nav: {
+    tools: "Narzędzia",
+    section: "Kalkulatory snu",
+    cycle: "Kalkulator cykli snu",
+    sleep: "Kalkulator godzin snu",
+    bedtime: "Kalkulator pory snu",
+    nap: "Kalkulator drzemki",
+    melatonin: "Kalkulator melatoniny",
+  },
+  related: {
+    title: "Powiązane narzędzia",
+    cycleDesc: "Planuj wokół 90-minutowych cykli snu.",
+    sleepDesc: "Ile snu potrzebujesz w zależności od wieku.",
+    bedtimeDesc: "Najlepsza pora, by położyć się spać.",
+    napDesc: "Idealna długość drzemki dla energii.",
+    melatoninDesc: "Kiedy przyjąć melatoninę.",
+    guide: "Przewodnik CBT-I",
+    guideDesc: "Program bez leków, oparty na nauce.",
+  },
+  common: {
+    faqTitle: "Częste pytania",
+    bestBadge: "Najlepsze",
+    cyclesWord: "cykli",
+    hoursShort: " h snu",
+    minShort: "min",
+  },
+  cycle: {
+    meta: {
+      title: "Kalkulator cykli snu — Somna",
+      desc: "Znajdź idealną porę zasypiania i budzenia, wykorzystując naturalne 90-minutowe cykle snu.",
+    },
+  },
+  sleep: {
+    meta: {
+      title: "Kalkulator godzin snu – znajdź swoją idealną dawkę snu | Somna",
+      desc: "Oblicz, ile godzin snu potrzebujesz w zależności od wieku i planowanej pory wstawania.",
+    },
+    eyebrow: "KALKULATOR GODZIN SNU",
+    title: "Znajdź swoją idealną dawkę snu",
+    sub: "Rekomendacje oparte na badaniach, dostosowane do Twojego wieku i planowanej pory wstawania.",
+    ageLabel: "Grupa wiekowa",
+    ages: {
+      teen: "Nastolatek (13–17)",
+      young: "Młody dorosły (18–25)",
+      adult: "Dorosły (26–64)",
+      older: "Starszy dorosły (65+)",
+    },
+    ageNotes: {
+      teen: "Nastolatki potrzebują więcej snu, by wspierać rozwój fizyczny i mózgu.",
+      young: "Większość młodych dorosłych funkcjonuje najlepiej po 7–9 godzinach snu.",
+      adult: "Dorośli zazwyczaj dobrze funkcjonują przy 7–9 godzinach regularnego snu.",
+      older: "Sen staje się z wiekiem płytszy — celuj w 7–8 godzin.",
+    },
+    wakeLabel: "Planowana pora wstawania",
+    recommended: "Zalecany sen",
+    hoursWord: "godziny",
+    suggestedBedtime: "Sugerowana pora snu",
+    toWake: (t) => `Aby obudzić się o ${t} i czuć się wypoczętym.`,
+    cta: "Dowiedz się więcej o cyklach snu",
+    whyTitle: "Dlaczego sen zależy od wieku?",
+    whyParas: [
+      "Zapotrzebowanie na sen zmienia się w ciągu życia. Zmiany hormonalne, rozwój mózgu i rytm dobowy wpływają na to, ile odpoczynku potrzebuje organizm.",
+      "Regularność jest często ważniejsza niż dokładna liczba godzin. Chodzenie spać i wstawanie o stałych porach pomaga ustabilizować wewnętrzny zegar.",
+      "Jeśli mimo mieścisz się w zalecanych zakresach czujesz się niewyspany, prowadź zapis snu przez kilka tygodni, by dostrzec wzorce.",
+    ],
+    faqs: [
+      {
+        q: "Ile snu naprawdę potrzebuję?",
+        a: "Większość dorosłych potrzebuje 7–9 godzin snu na noc. Nastolatki 8–10 godzin, a osoby starsze zazwyczaj dobrze funkcjonują przy 7–8 godzinach. Jakość snu ma takie samo znaczenie jak jego długość.",
+      },
+      {
+        q: "Co się dzieje, gdy śpię mniej niż zalecane?",
+        a: "Krótkoterminowo możesz czuć się senny, drażliwy lub mieć trudności z koncentracją. Chroniczny deficyt snu wiąże się z problemami nastroju, metabolizmu i układu krążenia.",
+      },
+      {
+        q: "Czy mogę nadrobić sen w weekendy?",
+        a: "Częściowo tak, ale najbardziej wiarygodną metodą jest stały rytm dnia. Duże przesunięcia w weekend mogą zaburzyć rytm dobowy.",
+      },
+      {
+        q: "Czy więcej snu zawsze oznacza lepiej?",
+        a: "Nie. Regularne spanie powyżej 9–10 godzin może korelować z problemami zdrowotnymi. Celuj w zakres, w którym czujesz się wypoczęty.",
+      },
+    ],
+  },
+  bedtime: {
+    meta: {
+      title: "Kalkulator pory snu – znajdź najlepszą godzinę na sen | Somna",
+      desc: "Oblicz idealną porę snu na podstawie cykli snu i planowanej pory wstawania.",
+    },
+    eyebrow: "KALKULATOR PORY SNU",
+    title: "Znajdź najlepszą porę, by położyć się spać",
+    sub: "Budzenie się pomiędzy cyklami snu pomaga czuć się bardziej wypoczętym, spokojniejszym i skupionym.",
+    wakeLabel: "Chcę wstać o",
+    suggested: "Sugerowane pory snu",
+    cyclesSuffix: (h, c) => `${h} h snu · ${c} cykli`,
+    bestLabel: "Zalecane",
+    note: "Każda opcja pozwala obudzić się pomiędzy cyklami snu. Uwzględniono około 15 minut na zaśnięcie.",
+    cta: "Wypróbuj kalkulator cykli snu",
+    faqs: [
+      {
+        q: "Dlaczego 90-minutowy cykl snu ma znaczenie?",
+        a: "Każdy cykl przechodzi przez sen lekki, głęboki i REM. Obudzenie się na końcu cyklu, a nie w fazie głębokiego snu, zmniejsza uczucie otępienia.",
+      },
+      {
+        q: "Ile cykli powinienem celować?",
+        a: "Większość dorosłych czuje się najlepiej przy 5–6 cyklach (ok. 7,5–9 godzin). Sportowcy lub osoby odrabiające deficyt snu mogą skorzystać z 7 cykli.",
+      },
+      {
+        q: "Czy 90 minut to dokładna długość cyklu?",
+        a: "To wartość średnia. Rzeczywiste cykle trwają 70–120 minut i zależą od wieku i osoby. Traktuj sugerowane godziny jako wskazówkę, nie sztywną regułę.",
+      },
+      {
+        q: "Co jeśli nie zasypiam w 15 minut?",
+        a: "Czasem się to zdarza. Jeśli dzieje się tak każdej nocy, techniki CBT-I mogą pomóc wyrównać rytm zasypiania.",
+      },
+    ],
+  },
+  nap: {
+    meta: {
+      title: "Kalkulator drzemki – znajdź idealną długość drzemki | Somna",
+      desc: "Oblicz idealną długość drzemki dla energii, skupienia i regeneracji.",
+    },
+    eyebrow: "KALKULATOR DRZEMKI",
+    title: "Znajdź idealną długość drzemki",
+    sub: "Krótkie, celowe drzemki mogą przywrócić energię, skupienie i dobry nastrój — bez zakłócania nocnego snu.",
+    currentTime: "Aktualna godzina",
+    napLength: "Długość drzemki",
+    wakeSuggestions: "Sugerowane godziny pobudki",
+    minUnit: "min",
+    benefits: {
+      10: { label: "Szybki reset", desc: "Krótka przerwa, która łagodzi zmęczenie umysłowe." },
+      20: { label: "Energiczna drzemka", desc: "Poprawia czujność bez otępienia." },
+      30: { label: "Wsparcie pamięci", desc: "Poprawia zapamiętywanie i uczenie się." },
+      60: {
+        label: "Podniesienie poznawcze",
+        desc: "Pomocne, ale może wiązać się z lekkim otępieniem.",
+      },
+      90: { label: "Pełny cykl snu", desc: "Przywraca kreatywność i równowagę emocjonalną." },
+    },
+    cta: "Przeczytaj przewodnik o higienie snu",
+    quickCards: [
+      { len: "20 min", desc: "Poprawia czujność bez otępienia." },
+      { len: "30 min", desc: "Wspiera konsolidację pamięci." },
+      { len: "90 min", desc: "Pełny cykl snu — obudź się odświeżony." },
+    ],
+    faqs: [
+      {
+        q: "Kiedy najlepiej zdrzemnąć się w ciągu dnia?",
+        a: "Większość osób najlepiej reaguje na drzemkę między 13:00 a 15:00, gdy naturalnie spada czujność po południu.",
+      },
+      {
+        q: "Jak długa powinna być drzemka?",
+        a: "10–20 minut dla szybkiego zastrzyku energii. 90 minut dla pełnego cyklu snu. Unikaj 30–60 minut, jeśli łatwo budzisz się z otępieniem.",
+      },
+      {
+        q: "Czy drzemka szkodzi nocnemu snowi?",
+        a: "Krótkie drzemki zazwyczaj nie szkodzą. Długie lub późne popołudniowe mogą obniżyć presję snu i opóźnić pójście spać, szczególnie przy bezsenności.",
+      },
+      {
+        q: "Czy regularne drzemki oznaczają zły sen?",
+        a: "Niekoniecznie. Wiele kultur praktykuje drzemki. Jeśli jednak codziennie potrzebujesz długich drzemek, by funkcjonować, może to oznaczać niedobór nocnego snu.",
+      },
+    ],
+  },
+  melatonin: {
+    meta: {
+      title: "Kalkulator melatoniny – kiedy przyjąć melatoninę? | Somna",
+      desc: "Oszacuj najlepszą porę przyjęcia melatoniny na podstawie planowanej pory snu i harmonogramu dnia.",
+    },
+    eyebrow: "KALKULATOR MELATONINY",
+    title: "Kiedy przyjąć melatoninę?",
+    sub: "Edukacyjna wskazówka dotycząca pory przyjęcia — nie jest to porada medyczna.",
+    disclaimer:
+      "To narzędzie ma charakter edukacyjny i nie stanowi porady medycznej. Przed użyciem suplementów z melatoniną skonsultuj się z lekarzem.",
+    bedtimeLabel: "Planowana pora snu",
+    onsetLabel: "Typowy czas zasypiania",
+    onset: { fast: "Szybki (~15 min)", average: "Średni (~30 min)", slow: "Wolny (~60 min)" },
+    recommendedWindow: "Zalecane okno",
+    windowNote: (bedtime, onsetMin) =>
+      `Weź melatoninę na około 1–2 godziny przed planowaną porą snu (${bedtime}). Twój typowy czas zasypiania (~${onsetMin} min) sugeruje rozpoczęcie rytuału relaksacyjnego jeszcze wcześniej.`,
+    cta: "Odkryj CBT-I zamiast środków nasennych",
+    infoCards: [
+      {
+        title: "Co to jest melatonina?",
+        desc: "Naturalny hormon, który sygnalizuje organizmowi nadchodzenie nocy. Suplementy mają na celu delikatne przyspieszenie rytmu dobowego.",
+      },
+      {
+        title: "Kiedy ją przyjąć?",
+        desc: "Zazwyczaj 1–2 godziny przed snem, w niskich dawkach (0,3–1 mg). Większe dawki nie zawsze są skuteczniejsze.",
+      },
+      {
+        title: "Kto powinien jej unikać?",
+        desc: "Osoby w ciąży, karmiące piersią, dzieci oraz osoby przyjmujące niektóre leki powinny najpierw skonsultować się z lekarzem.",
+      },
+    ],
+    faqs: [
+      {
+        q: "Co to jest melatonina?",
+        a: "Melatonina to hormon wytwarzany przez mózg w odpowiedzi na ciemność. Sygnalizuje organizmowi, że czas spać, pomagając regulować rytm dobowy.",
+      },
+      {
+        q: "Kiedy przyjąć melatoninę?",
+        a: "Zazwyczaj 1–2 godziny przed planowaną porą snu. Niskie dawki (0,3–1 mg) w odpowiednim momencie są często skuteczniejsze niż większe dawki bezpośrednio przed snem.",
+      },
+      {
+        q: "Kto powinien unikać melatoniny?",
+        a: "Osoby w ciąży, karmiące piersią, przyjmujące niektóre leki (np. przeciwzakrzepowe, immunosupresyjne) lub z chorobami autoimmunologicznymi i padaczką powinny skonsultować się z lekarzem.",
+      },
+      {
+        q: "Czy melatonina to środek nasenny?",
+        a: "Nie. Nie wywołuje senności — daje sygnał czasowy. W przewlekłej bezsenności podejścia behawioralne, takie jak CBT-I, uznaje się za leczenie pierwszego wyboru.",
+      },
+    ],
+  },
+};
+
+const dicts: Record<Lang, CalcDict> = { en, zh, es, pt, pl };
 
 export function getCalcDict(lang: Lang): CalcDict {
-  return dicts[lang] ?? en;
+  return dicts[lang];
 }

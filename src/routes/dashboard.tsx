@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import { useSleepI18n } from "@/lib/sleep-i18n";
 import { PageHero } from "@/components/PageHero";
 import { DashboardShareCard } from "@/components/DashboardShareCard";
@@ -57,7 +58,7 @@ export const Route = createFileRoute("/dashboard")({
 export function Dash() {
   const { lang, t: baseT } = useI18n();
   const { t } = useSleepI18n();
-  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
+  const langPrefix = LANG_PREFIX[lang];
   const [records, setRecords] = useState<SleepRecord[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
@@ -115,12 +116,12 @@ export function Dash() {
               </div>
               <h2 className="font-display text-2xl text-gradient">{t("dash.chart.empty")}</h2>
               <p className="mt-3 text-sm text-muted-foreground">{t("dash.empty.body")}</p>
-              <Link
+              <SafeLink
                 to={`${langPrefix}/diary`}
                 className="mt-6 inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"
               >
                 {t("dash.empty.cta")}
-              </Link>
+              </SafeLink>
             </div>
           </div>
         </section>
@@ -159,13 +160,13 @@ export function Dash() {
                   </div>
                 </div>
               </div>
-              <Link
+              <SafeLink
                 to={`${langPrefix}/relax`}
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"
               >
                 <Wind className="h-4 w-4" />
                 {t("dash.startWindDown")}
-              </Link>
+              </SafeLink>
             </div>
           </div>
 
@@ -402,7 +403,7 @@ function ProgramProgressCard() {
   const { lang } = useI18n();
   const ui = getProgramLessonUI(lang);
   const { progress, hydrated } = useProgramProgress();
-  const langPrefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
+  const langPrefix = LANG_PREFIX[lang];
 
   if (!hydrated) {
     return (

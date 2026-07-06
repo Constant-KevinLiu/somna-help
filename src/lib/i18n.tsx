@@ -1,19 +1,22 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { pl } from "./i18n-pl-dict";
 
-export type Lang = "en" | "zh" | "es" | "pt";
+export type Lang = "en" | "zh" | "es" | "pt" | "pl";
 
-type Dict = Record<string, string>;
+export type Dict = Record<string, string>;
 
 export const localeMap: Record<Lang, string> = {
   en: "en-US",
   zh: "zh-CN",
   es: "es-ES",
   pt: "pt-BR",
+  pl: "pl-PL",
 };
 
 export function formatTime(d: Date, lang: Lang) {
-  // Brasil usa formato 24h (convenção pt-BR). Demais idiomas mantêm 12h.
-  const hour12 = lang !== "pt";
+  // Brasil e Polônia usam formato 24h (convenções pt-BR e pl-PL).
+  // Demais idiomas mantêm 12h.
+  const hour12 = lang !== "pt" && lang !== "pl";
   return d.toLocaleTimeString(localeMap[lang], {
     hour: "2-digit",
     minute: "2-digit",
@@ -621,23 +624,30 @@ const pt: Dict = {
   "cta.backHome": "Voltar ao início",
 
   "hero.title": "Durma melhor, começando esta noite",
-  "hero.sub": "O somna é seu companheiro de sono baseado em TCC-I. Sem remédios, sem pressão: pequenas mudanças diárias para recuperar seu ritmo natural de descanso.",
+  "hero.sub":
+    "O somna é seu companheiro de sono baseado em TCC-I. Sem remédios, sem pressão: pequenas mudanças diárias para recuperar seu ritmo natural de descanso.",
   "hero.badge": "TCC-I · Baseado em evidência clínica",
 
   "features.title": "Um caminho calmo de volta a noites reparadoras",
   "features.1.t": "Programa TCC-I",
-  "features.1.d": "Seis semanas de hábitos suaves, passo a passo, para reconstruir seu ciclo natural de sono e acabar com a insônia.",
+  "features.1.d":
+    "Seis semanas de hábitos suaves, passo a passo, para reconstruir seu ciclo natural de sono e acabar com a insônia.",
   "features.2.t": "Calculadora de ciclos",
-  "features.2.d": "Descubra o horário ideal para dormir e acordar, baseado nos seus ciclos de sono de 90 minutos.",
+  "features.2.d":
+    "Descubra o horário ideal para dormir e acordar, baseado nos seus ciclos de sono de 90 minutos.",
   "features.3.t": "Relaxamento noturno",
-  "features.3.d": "Técnicas de respiração, meditação e rituais calmantes para liberar o estresse antes de dormir.",
+  "features.3.d":
+    "Técnicas de respiração, meditação e rituais calmantes para liberar o estresse antes de dormir.",
 
   "trust.title": "Com respaldo científico. Feito para a calma.",
-  "trust.sub": "A terapia TCC-I é o tratamento sem medicamentos de primeira linha recomendado pelos especialistas em sono. Pequenas mudanças consistentes, ao longo de semanas, devolvem seu ritmo natural.",
+  "trust.sub":
+    "A terapia TCC-I é o tratamento sem medicamentos de primeira linha recomendado pelos especialistas em sono. Pequenas mudanças consistentes, ao longo de semanas, devolvem seu ritmo natural.",
   "trust.1.t": "Com evidência clínica",
-  "trust.1.d": "Décadas de pesquisa científica sustentam a TCC-I como primeira opção para insônia crônica.",
+  "trust.1.d":
+    "Décadas de pesquisa científica sustentam a TCC-I como primeira opção para insônia crônica.",
   "trust.2.t": "Sem medicamentos",
-  "trust.2.d": "Sem remédios, sem efeitos colaterais. Apenas hábitos que reeducam seu cérebro para dormir.",
+  "trust.2.d":
+    "Sem remédios, sem efeitos colaterais. Apenas hábitos que reeducam seu cérebro para dormir.",
   "trust.3.t": "Recuperação por hábitos",
   "trust.3.d": "Pequenos ajustes sustentáveis na sua rotina restauram o sono saudável com o tempo.",
 
@@ -646,10 +656,12 @@ const pt: Dict = {
   "emo.2": "A cabeça não para de pensar quando você tenta dormir",
   "emo.3": "Você está exausto, mas o sono não vem",
   "emo.4": "A ansiedade aparece conforme a hora de deitar se aproxima",
-  "emo.note": "Você não está sozinho. O sono pode ser reaprendido: devagar, sem pressa e sem cobrança.",
+  "emo.note":
+    "Você não está sozinho. O sono pode ser reaprendido: devagar, sem pressa e sem cobrança.",
 
   "calc.title": "Calculadora de ciclos de sono",
-  "calc.sub": "O sono acontece em ciclos de cerca de 90 minutos. Acordar no fim de um ciclo ajuda você a se sentir descansado.",
+  "calc.sub":
+    "O sono acontece em ciclos de cerca de 90 minutos. Acordar no fim de um ciclo ajuda você a se sentir descansado.",
   "calc.wake": "Quero acordar às",
   "calc.bed": "Quero dormir às",
   "calc.mode.wake": "Planejar pela hora de acordar",
@@ -669,13 +681,17 @@ const pt: Dict = {
     "A maioria dos adultos funciona melhor com 7,5 a 9 horas de sono. Dormir em ciclos completos de 90 minutos pode ajudar a reduzir a letargia matinal e melhorar a energia durante o dia.",
 
   "program.title": "Programa TCC-I em 6 semanas",
-  "program.sub": "Uma jornada suave de 6 semanas e 18 lições para reconstruir seu sono, um passo de cada vez.",
-  "program.hubSub": "18 lições curtas e práticas, distribuídas em 6 semanas, para retreinar seu cérebro a dormir bem — sem remédios.",
+  "program.sub":
+    "Uma jornada suave de 6 semanas e 18 lições para reconstruir seu sono, um passo de cada vez.",
+  "program.hubSub":
+    "18 lições curtas e práticas, distribuídas em 6 semanas, para retreinar seu cérebro a dormir bem — sem remédios.",
 
   "assess.title": "Avaliação do sono",
-  "assess.sub": "Uma breve e acolhedora revisão para entender seu sono e montar seu plano personalizado.",
+  "assess.sub":
+    "Uma breve e acolhedora revisão para entender seu sono e montar seu plano personalizado.",
   "assess.start": "Começar avaliação",
-  "assess.support": "Muita gente vive isso. O sono pode melhorar aos poucos, com estrutura e constância.",
+  "assess.support":
+    "Muita gente vive isso. O sono pode melhorar aos poucos, com estrutura e constância.",
   "assess.next": "Próxima",
   "assess.back": "Voltar",
   "assess.done": "Ver meu perfil de sono",
@@ -685,7 +701,8 @@ const pt: Dict = {
   "assess.q4": "Como descreveria sua ansiedade na hora de deitar?",
   "assess.q5": "Quão descansado você se sente ao acordar?",
   "assess.result": "Seu perfil de sono",
-  "assess.result.sub": "Um ponto de partida, não um diagnóstico. Seu plano TCC-I é montado em torno disso.",
+  "assess.result.sub":
+    "Um ponto de partida, não um diagnóstico. Seu plano TCC-I é montado em torno disso.",
   "assess.cta.program": "Começar programa",
   "assess.cta.dashboard": "Ir para o painel",
   "assess.level.label": "Perfil de sono",
@@ -731,7 +748,8 @@ const pt: Dict = {
   "diary.saved": "Registro salvo 🌙",
 
   "relax.title": "Relaxamento e descanso",
-  "relax.sub": "Um espaço tranquilo para liberar o dia: respiração 4-7-8, meditação e rituais calmantes antes de dormir.",
+  "relax.sub":
+    "Um espaço tranquilo para liberar o dia: respiração 4-7-8, meditação e rituais calmantes antes de dormir.",
   "relax.start": "Começar relaxamento",
   "relax.stop": "Parar",
   "relax.breathe": "Respiração 4-7-8",
@@ -741,7 +759,8 @@ const pt: Dict = {
   "relax.exhale": "Expire",
 
   "dash.title": "Seu painel do sono",
-  "dash.sub": "Seu plano de sono para esta noite, sua eficiência e sua sequência de constância, em um relance.",
+  "dash.sub":
+    "Seu plano de sono para esta noite, sua eficiência e sua sequência de constância, em um relance.",
   "dash.bed": "Hora sugerida para dormir",
   "dash.wake": "Hora de acordar",
   "dash.eff": "Eficiência do sono",
@@ -778,7 +797,8 @@ const pt: Dict = {
   "common.no": "Não",
 
   "error.generic.title": "Algo deu errado",
-  "error.generic.body": "Ocorreu um erro da nossa parte. Você pode recarregar a página ou voltar ao início.",
+  "error.generic.body":
+    "Ocorreu um erro da nossa parte. Você pode recarregar a página ou voltar ao início.",
   "error.retry": "Tentar novamente",
   "error.goHome": "Ir ao início",
   "error.404.title": "Página não encontrada",
@@ -792,7 +812,8 @@ const pt: Dict = {
 
   "footer.tag": "Um companheiro de sono suave, guiado pela ciência.",
   "footer.rights": "© 2026 somna. Todos os direitos reservados.",
-  "footer.disc": "Isso não é conselho médico. Se seus problemas de sono persistirem, consulte um profissional de saúde.",
+  "footer.disc":
+    "Isso não é conselho médico. Se seus problemas de sono persistirem, consulte um profissional de saúde.",
   "footer.legal.privacy": "Privacidade",
   "footer.legal.terms": "Termos",
   "footer.legal.cookies": "Cookies",
@@ -810,7 +831,8 @@ const pt: Dict = {
   "share.facebook": "Facebook",
   "share.linkedin": "LinkedIn",
   "share.whatsapp": "WhatsApp",
-  "share.pinterestFallback": "Primeiro gere a imagem para compartilhar e depois publique no Pinterest.",
+  "share.pinterestFallback":
+    "Primeiro gere a imagem para compartilhar e depois publique no Pinterest.",
   "share.copyLink": "Copiar link",
   "share.copied": "Link copiado",
   "share.copyFailed": "Não foi possível copiar o link",
@@ -848,12 +870,13 @@ const pt: Dict = {
   "lang.switch.title": "Idioma",
   "lang.switch.aria": "Mudar de idioma",
   "lang.switch.remember": "Lembrar meu idioma neste dispositivo",
-  "lang.redirect.notice": "Levamos você à versão em português. Você pode mudar de idioma quando quiser, lá em cima.",
+  "lang.redirect.notice":
+    "Levamos você à versão em português. Você pode mudar de idioma quando quiser, lá em cima.",
 
   lang: "PT",
 };
 
-const dicts = { en, zh, es, pt };
+const dicts: Record<Lang, Dict> = { en, zh, es, pt, pl };
 
 const Ctx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: string) => string }>({
   lang: "en",
@@ -884,7 +907,11 @@ export function I18nProvider({
     setLangState(l);
     if (typeof window !== "undefined") window.localStorage.setItem("lull.lang", l);
   };
-  const t = (k: string) => dicts[lang][k] ?? dicts.en[k] ?? k;
+  const t = (k: string) => {
+    const localized = dicts[lang][k];
+    if (localized !== undefined) return localized;
+    return dicts.en[k] ?? k;
+  };
   return <Ctx.Provider value={{ lang, setLang, t }}>{children}</Ctx.Provider>;
 }
 

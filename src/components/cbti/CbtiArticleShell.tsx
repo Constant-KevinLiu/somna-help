@@ -6,6 +6,7 @@ import { FAQ } from "@/components/FAQ";
 import { RelatedTools } from "@/components/RelatedTools";
 import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n } from "@/lib/i18n";
+import { LANG_PREFIX } from "@/lib/lang-detect";
 import {
   getCbtiDict,
   type CbtiArticle,
@@ -152,15 +153,15 @@ export function CbtiArticleShell({
                 <p className="mt-1 text-xs text-muted-foreground">{dict.summaries[s]}</p>
               </SafeLink>
             ))}
-            <Link
-              to={lang === "pt" ? "/pt/diary" : lang === "es" ? "/es/diary" : "/diary"}
+            <SafeLink
+              to={`${LANG_PREFIX[lang]}/diary`}
               className="glass group rounded-2xl p-5 transition hover:bg-white/[0.06]"
             >
               <div className="font-display text-base text-foreground group-hover:text-accent">
                 {dict.ui.sleepDiary}
               </div>
               <p className="mt-1 text-xs text-muted-foreground">{dict.ui.sleepDiaryDesc}</p>
-            </Link>
+            </SafeLink>
           </div>
         </div>
       </section>

@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "jezyk": "polski (pl-PL)",
+    "cel": "Meta-dane i treści 3 lekcji Tygodnia 6 programu CBT-I (Utrzymanie efektów). Teksty pisane bezpośrednio po polsku.",
+    "tydzien": 6,
+    "slug_tygodnia": "week-6",
+    "lekcje": [16, 17, 18]
+  },
+
+  "week6.title": "Tydzień 6 · Utrzymanie efektów",
+  "week6.eyebrow": "TYDZIEŃ 6",
+  "week6.subtitle": "Zabezpiecz postępy i przygotuj się na wyzwania w przyszłości.",
+  "week6.intro": "Ostatni tydzień programu koncentruje się na utrwaleniu nawyków, planowaniu na trudniejsze momenty i budowaniu długoterminowego zdrowia snu.",
+
+  "week6.lesson16.title": "Zapobieganie nawrotom bezsenności",
+  "week6.lesson16.eyebrow": "TYDZIEŃ 6 · LEKCJA 16",
+  "week6.lesson16.subtitle": "Plan działania na trudniejsze noce i okresy stresu.",
+  "week6.lesson16.difficulty": "Średniozaawansowany",
+  "week6.lesson16.readingTime": "6 min czytania",
+  "week6.lesson16.seoTitle": "Zapobieganie nawrotom bezsenności | Somna CBT-I",
+  "week6.lesson16.seoDescription": "Stwórz osobisty plan zapobiegania nawrotom bezsenności na trudniejsze noce i okresy wzmożonego stresu.",
+  "week6.lesson16.keywords": "nawrót bezsenności, zapobieganie bezsenności, plan awaryjny sen, CBT-I",
+
+  "week6.lesson17.title": "Sen w podróży i jet lag",
+  "week6.lesson17.eyebrow": "TYDZIEŃ 6 · LEKCJA 17",
+  "week6.lesson17.subtitle": "Jak chronić rytm snu podczas podróży i zmiany strefy czasowej.",
+  "week6.lesson17.difficulty": "Średniozaawansowany",
+  "week6.lesson17.readingTime": "6 min czytania",
+  "week6.lesson17.seoTitle": "Sen w podróży i jet lag: jak sobie radzić | Somna CBT-I",
+  "week6.lesson17.seoDescription": "Praktyczne strategie na jet lag i zmiany rytmu dobowego podczas podróży, bez utraty postępów CBT-I.",
+  "week6.lesson17.keywords": "sen w podróży, jet lag, zmiana strefy czasowej, rytm dobowy, CBT-I",
+
+  "week6.lesson18.title": "Długoterminowe zdrowie snu",
+  "week6.lesson18.eyebrow": "TYDZIEŃ 6 · LEKCJA 18",
+  "week6.lesson18.subtitle": "Jak utrzymać dobre nawyki snu przez miesiące i lata.",
+  "week6.lesson18.difficulty": "Początkujący",
+  "week6.lesson18.readingTime": "6 min czytania",
+  "week6.lesson18.seoTitle": "Długoterminowe zdrowie snu: jak utrzymać efekty CBT-I | Somna",
+  "week6.lesson18.seoDescription": "Praktyczne wskazówki, jak zachować dobre nawyki snu na dłużej i chronić efekty terapii CBT-I.",
+  "week6.lesson18.keywords": "zdrowie snu, utrzymanie efektów CBT-I, nawyki snu, długoterminowy sen"
+}

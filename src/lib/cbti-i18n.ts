@@ -1,6 +1,8 @@
 import type { Lang } from "./i18n";
+import { LANG_PREFIX } from "./lang-detect";
 import type { FAQ } from "./calc-i18n";
 import { ptCbtiDict } from "./cbti-pt-i18n";
+import { plCbtiDict } from "./cbti-pl-i18n";
 
 export type CbtiSlug =
   | "cbt-i-guide"
@@ -1830,7 +1832,13 @@ const es: CbtiDict = {
   },
 };
 
-const dicts: Partial<Record<Lang, CbtiDict>> = { en, zh, es, pt: ptCbtiDict };
+const dicts: Partial<Record<Lang, CbtiDict>> = {
+  en,
+  zh,
+  es,
+  pt: ptCbtiDict,
+  pl: plCbtiDict,
+};
 
 export function getCbtiDict(lang: Lang): CbtiDict {
   return dicts[lang] ?? en;
@@ -1844,7 +1852,7 @@ export const CBTI_SLUGS: CbtiSlug[] = [
   "insomnia-treatment",
 ];
 
-export function cbtiPath(slug: CbtiSlug, lang?: "en" | "zh" | "es" | "pt"): string {
-  const prefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : "";
+export function cbtiPath(slug: CbtiSlug, lang?: Lang): string {
+  const prefix = lang ? LANG_PREFIX[lang] : "";
   return `${prefix}/${slug}`;
 }

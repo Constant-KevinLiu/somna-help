@@ -10,10 +10,10 @@
  * - Cada idioma tem seu próprio prefixo de rota: / (en), /es/, /pt/, /de/, /ja/, /zh/.
  */
 
-export type Lang = "en" | "es" | "pt" | "de" | "ja" | "zh";
+export type Lang = "en" | "es" | "pt" | "pl" | "de" | "ja" | "zh";
 
 /** Idiomas atualmente ativos (com rotas e locales criados). */
-export const ACTIVE_LANGS: Lang[] = ["en", "es", "pt"];
+export const ACTIVE_LANGS: Lang[] = ["en", "es", "pt", "pl"];
 
 /** Idiomas reservados para futuro (sem rotas ainda). */
 export const RESERVED_LANGS: Lang[] = ["de", "ja", "zh"];
@@ -23,6 +23,7 @@ export const LANG_PREFIX: Record<Lang, string> = {
   en: "",
   es: "/es",
   pt: "/pt",
+  pl: "/pl",
   de: "/de",
   ja: "/ja",
   zh: "/zh",
@@ -51,6 +52,7 @@ function readCookie(name: string): string | null {
  * getBrowserLang: lê o idioma do navegador (navigator.language) e o normaliza
  * para um dos idiomas suportados. Retorna "en" como fallback.
  * - pt-BR, pt-PT → "pt"
+ * - pl-PL → "pl"
  * - es-ES, es-MX, es-AR → "es"
  * - de-DE, de-AT → "de"
  * - ja-JP → "ja"
@@ -63,6 +65,7 @@ export function getBrowserLang(): Lang {
     if (!l) continue;
     const lower = l.toLowerCase();
     if (lower.startsWith("pt")) return "pt";
+    if (lower.startsWith("pl")) return "pl";
     if (lower.startsWith("es")) return "es";
     if (lower.startsWith("de")) return "de";
     if (lower.startsWith("ja")) return "ja";
@@ -77,7 +80,7 @@ export function getBrowserLang(): Lang {
  */
 export function getSavedUserLang(): Lang | null {
   const v = readCookie(LANG_COOKIE);
-  if (v === "en" || v === "es" || v === "pt" || v === "de" || v === "ja" || v === "zh") return v;
+  if (v === "en" || v === "es" || v === "pt" || v === "pl" || v === "de" || v === "ja" || v === "zh") return v;
   return null;
 }
 
@@ -119,11 +122,13 @@ export function generateUid(): string {
  * - "/" → "en"
  * - "/es" ou "/es/..." → "es"
  * - "/pt" ou "/pt/..." → "pt"
+ * - "/pl" ou "/pl/..." → "pl"
  * - "/de/..." → "de", "/ja/..." → "ja", "/zh/..." → "zh"
  */
 export function getLangFromPathname(pathname: string): Lang {
   if (pathname === "/es" || pathname.startsWith("/es/")) return "es";
   if (pathname === "/pt" || pathname.startsWith("/pt/")) return "pt";
+  if (pathname === "/pl" || pathname.startsWith("/pl/")) return "pl";
   if (pathname === "/de" || pathname.startsWith("/de/")) return "de";
   if (pathname === "/ja" || pathname.startsWith("/ja/")) return "ja";
   if (pathname === "/zh" || pathname.startsWith("/zh/")) return "zh";
