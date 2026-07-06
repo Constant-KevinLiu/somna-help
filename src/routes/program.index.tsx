@@ -33,9 +33,9 @@ export const Route = createFileRoute("/program/")({
         content:
           "An 18-lesson, 6-week CBT-I journey to rebuild your sleep, one gentle step at a time.",
       },
-      { property: "og:url", content: "/program" },
+      { property: "og:url", content: "https://somna.help/program" },
     ],
-    links: [{ rel: "canonical", href: "/program" }],
+    links: [{ rel: "canonical", href: "https://somna.help/program" }],
   }),
 });
 

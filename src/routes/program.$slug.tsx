@@ -22,10 +22,10 @@ export const Route = createFileRoute("/program/$slug")({
         { name: "description", content: en.seoDescription },
         { property: "og:title", content: en.seoTitle },
         { property: "og:description", content: en.seoDescription },
-        { property: "og:url", content: `/program/${week.slug}` },
+        { property: "og:url", content: `https://somna.help/program/${week.slug}` },
         { property: "og:type", content: "article" },
       ],
-      links: [{ rel: "canonical", href: `/program/${week.slug}` }],
+      links: [{ rel: "canonical", href: `https://somna.help/program/${week.slug}` }],
     };
   },
   notFoundComponent: () => (

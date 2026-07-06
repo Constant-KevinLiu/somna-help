@@ -84,8 +84,8 @@ export function xShareUrl(lang: Lang, efficiency: number, contentType = "default
  * @param lang        Language for the description.
  */
 export function pinterestShareUrl(pageUrl: string, imageUrl: string, lang: Lang): string {
-  // Guarantee a full public URL for the media param; never use a relative URL.
-  const publicMediaUrl = imageUrl.startsWith("http") ? imageUrl : shareImageUrl(imageUrl);
+  // Guarantee a full public HTTPS URL for the media param; never use a relative URL.
+  const publicMediaUrl = imageUrl.startsWith("https://") ? imageUrl : shareImageUrl(imageUrl);
   const desc = pinterestDescription(lang);
   const params = new URLSearchParams({
     url: pageUrl,

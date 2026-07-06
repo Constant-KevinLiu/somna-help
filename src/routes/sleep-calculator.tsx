@@ -28,10 +28,10 @@ export const Route = createFileRoute("/sleep-calculator")({
         { name: "description", content: d.sleep.meta.desc },
         { property: "og:title", content: d.sleep.meta.title },
         { property: "og:description", content: d.sleep.meta.desc },
-        { property: "og:url", content: "/sleep-calculator" },
+        { property: "og:url", content: "https://somna.help/sleep-calculator" },
         { property: "og:type", content: "website" },
       ],
-      links: [{ rel: "canonical", href: "/sleep-calculator" }],
+      links: [{ rel: "canonical", href: "https://somna.help/sleep-calculator" }],
       scripts: [{ type: "application/ld+json", children: JSON.stringify(faqJsonLd(d.sleep.faqs)) }],
     };
   },

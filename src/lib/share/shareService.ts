@@ -985,7 +985,7 @@ export function share(
     case "weibo": {
       // Weibo share URL with title + public R2 image as `pic`.
       const weiboParams = new URLSearchParams({ url: pageUrl, title: title || desc });
-      if (imageUrl && imageUrl.startsWith("http")) weiboParams.set("pic", imageUrl);
+      if (imageUrl && imageUrl.startsWith("https://")) weiboParams.set("pic", imageUrl);
       url = `https://service.weibo.com/share/share.php?${weiboParams.toString()}`;
       break;
     }
@@ -996,7 +996,7 @@ export function share(
         title: title || desc,
         summary: desc,
       });
-      if (imageUrl && imageUrl.startsWith("http")) qqParams.set("pics", imageUrl);
+      if (imageUrl && imageUrl.startsWith("https://")) qqParams.set("pics", imageUrl);
       url = `https://connect.qq.com/widget/shareqq/index.html?${qqParams.toString()}`;
       break;
     }

@@ -22,10 +22,10 @@ export const Route = createFileRoute("/bedtime-calculator")({
         { name: "description", content: d.bedtime.meta.desc },
         { property: "og:title", content: d.bedtime.meta.title },
         { property: "og:description", content: d.bedtime.meta.desc },
-        { property: "og:url", content: "/bedtime-calculator" },
+        { property: "og:url", content: "https://somna.help/bedtime-calculator" },
         { property: "og:type", content: "website" },
       ],
-      links: [{ rel: "canonical", href: "/bedtime-calculator" }],
+      links: [{ rel: "canonical", href: "https://somna.help/bedtime-calculator" }],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(faqJsonLd(d.bedtime.faqs)) },
       ],

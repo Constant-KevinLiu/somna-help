@@ -185,7 +185,7 @@ export function cbtiHead(slug: CbtiSlug) {
       acceptedAnswer: { "@type": "Answer", text: f.a },
     })),
   };
-  const url = cbtiPath(slug);
+  const url = `https://somna.help${cbtiPath(slug)}`;
   return {
     meta: [
       { title: a.meta.title },

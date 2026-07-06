@@ -410,6 +410,6 @@ export function articleJsonLd(lesson: LessonContent, lang: Lang) {
     wordCount: c.content.reduce((n, s) => n + s.paras.join(" ").split(/\s+/).length, 0),
     author: { "@type": "Organization", name: "Somna" },
     publisher: { "@type": "Organization", name: "Somna" },
-    mainEntityOfPage: lessonPath(lesson.weekSlug, lesson.slug, lang),
+    mainEntityOfPage: `https://somna.help${lessonPath(lesson.weekSlug, lesson.slug, lang)}`,
   };
 }

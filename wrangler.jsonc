@@ -23,7 +23,29 @@
 
   "assets": {
     "directory": "dist/client",
+    "headers": {
+      // HSTS: tell browsers to always use HTTPS for somna.help and subdomains.
+      // This header is also added dynamically by src/server.ts for SSR pages.
+      "/*": {
+        "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin"
+      }
+    }
   },
+
+  // =============================================================================
+  // HTTPS enforcement
+  //
+  // IMPORTANT: Cloudflare's "Always Use HTTPS" page rule (Dashboard → Rules →
+  // Page Rules) is the most reliable way to redirect HTTP→HTTPS at the edge.
+  // The Worker entry (src/server.ts) adds a fallback 301 redirect and HSTS
+  // header so every route — /, /es/**, /pt/**, /pl/**, /program/**, etc. —
+  // is served exclusively over HTTPS. No HTTP version is ever indexed.
+  // =============================================================================
+
+  // Optional: reference a zone so zone-level page rules can be applied.
+  // "zone_id": "<YOUR_ZONE_ID>",
 
   // =============================================================================
   // Cloudflare security bypass rules for verified search-engine crawlers.

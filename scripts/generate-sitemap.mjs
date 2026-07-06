@@ -1,14 +1,15 @@
 /**
- * Generador de sitemap multilingüe.
+ * Generador de sitemaps multilingües.
  *
- * Produce un único sitemap.xml con entradas <url> por cada página, cada una con
- * su bloque <xhtml:link rel="alternate" hreflang="en|es|x-default">. Así Google
- * entiende que /es/diary y /diary son versiones equivalentes, no duplicados.
+ * Produce cuatro sitemaps independientes (sitemap-en.xml, sitemap-es.xml,
+ * sitemap-pt.xml, sitemap-pl.xml), cada uno con URLs forzosamente en HTTPS.
+ * También genera un índice sitemap.xml para compatibilidad con herramientas
+ * que esperan un único punto de entrada.
  *
  * Uso:
  *   node scripts/generate-sitemap.mjs
  *
- * El resultado se escribe en public/sitemap.xml. Ejecutar antes de cada deploy.
+ * Ejecutar antes de cada deploy.
  */
 
 import { writeFileSync } from "node:fs";
@@ -18,7 +19,15 @@ import { dirname, resolve } from "node:path";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ORIGIN = "https://somna.help";
 
-/** Rutas principales de la app (sin locale). Cada una genera versión en y es. */
+/** Idiomas activos con su prefijo de ruta. */
+const LANGS = [
+  { code: "en", prefix: "" },
+  { code: "es", prefix: "/es" },
+  { code: "pt", prefix: "/pt" },
+  { code: "pl", prefix: "/pl" },
+];
+
+/** Rutas principales de la app (sin locale). */
 const ROUTES = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
   { path: "/dashboard", priority: "0.9", changefreq: "daily" },
@@ -44,37 +53,53 @@ const ROUTES = [
   { path: "/terms", priority: "0.3", changefreq: "yearly" },
 ];
 
-/** Convierte una ruta base a su versión en/es. */
-function toEn(path) {
-  return path === "/" ? "/" : path;
-}
-function toEs(path) {
-  return path === "/" ? "/es" : "/es" + path;
+function localizePath(path, prefix) {
+  if (path === "/") {
+    return prefix || "/";
+  }
+  return `${prefix}${path}`;
 }
 
-function urlBlock(route) {
-  const enUrl = ORIGIN + toEn(route.path);
-  const esUrl = ORIGIN + toEs(route.path);
+function urlBlock(route, langPrefix) {
+  const loc = `${ORIGIN}${localizePath(route.path, langPrefix)}`;
   return `  <url>
-    <loc>${enUrl}</loc>
+    <loc>${loc}</loc>
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority}</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>
-    <xhtml:link rel="alternate" hreflang="es" href="${esUrl}"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="${enUrl}"/>
   </url>`;
 }
 
-const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
-${ROUTES.map(urlBlock).join("\n")}
-
+function generateSitemap(lang) {
+  const body = ROUTES.map((route) => urlBlock(route, lang.prefix)).join("\n");
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${body}
 </urlset>
 `;
+}
 
-const outPath = resolve(__dirname, "..", "public", "sitemap.xml");
-writeFileSync(outPath, xml, "utf8");
-console.log(`Sitemap generado: ${outPath} (${ROUTES.length} URLs, ${ROUTES.length * 2} versiones idioma)`);
+function generateSitemapIndex() {
+  const entries = LANGS.map(
+    (lang) =>
+      `  <sitemap>
+    <loc>${ORIGIN}/sitemap-${lang.code}.xml</loc>
+    <lastmod>${new Date().toISOString().split("T")[0]}</lastmod>
+  </sitemap>`,
+  ).join("\n");
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${entries}
+</sitemapindex>
+`;
+}
+
+for (const lang of LANGS) {
+  const outPath = resolve(__dirname, "..", "public", `sitemap-${lang.code}.xml`);
+  writeFileSync(outPath, generateSitemap(lang), "utf8");
+  console.log(`Sitemap generado: ${outPath} (${ROUTES.length} URLs)`);
+}
+
+const indexPath = resolve(__dirname, "..", "public", "sitemap.xml");
+writeFileSync(indexPath, generateSitemapIndex(), "utf8");
+console.log(`Índice de sitemaps generado: ${indexPath}`);

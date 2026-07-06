@@ -21,9 +21,9 @@ export const Route = createFileRoute("/learn/")({
         property: "og:description",
         content: "Evidence-based sleep education — long-form guides and quick lessons.",
       },
-      { property: "og:url", content: "/learn" },
+      { property: "og:url", content: "https://somna.help/learn" },
     ],
-    links: [{ rel: "canonical", href: "/learn" }],
+    links: [{ rel: "canonical", href: "https://somna.help/learn" }],
   }),
 });
 

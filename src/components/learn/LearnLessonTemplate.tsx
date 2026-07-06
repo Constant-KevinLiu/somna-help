@@ -209,7 +209,7 @@ export function LearnLessonTemplate({ slug, lesson }: { slug: LearnSlug; lesson:
 export function learnHead(slug: LearnSlug) {
   const en = getLearnDict("en");
   const lesson = en.lessons[slug];
-  const url = learnPath(slug);
+  const url = `https://somna.help${learnPath(slug)}`;
   const ld = {
     "@context": "https://schema.org",
     "@type": "FAQPage",

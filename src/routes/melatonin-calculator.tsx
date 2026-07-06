@@ -22,10 +22,10 @@ export const Route = createFileRoute("/melatonin-calculator")({
         { name: "description", content: d.melatonin.meta.desc },
         { property: "og:title", content: d.melatonin.meta.title },
         { property: "og:description", content: d.melatonin.meta.desc },
-        { property: "og:url", content: "/melatonin-calculator" },
+        { property: "og:url", content: "https://somna.help/melatonin-calculator" },
         { property: "og:type", content: "website" },
       ],
-      links: [{ rel: "canonical", href: "/melatonin-calculator" }],
+      links: [{ rel: "canonical", href: "https://somna.help/melatonin-calculator" }],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify(faqJsonLd(d.melatonin.faqs)) },
       ],
