@@ -3,7 +3,7 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { SHARE_IMAGE_HOSTING_ENABLED, shareImageUrl } from "./lib/share-config";
-import { isGoogleBot } from "./lib/crawler";
+import { isSearchEngineBot, isMaliciousAiBot } from "./lib/crawler";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -367,18 +367,23 @@ function addSecurityHeaders(response: Response): Response {
   });
 }
 
-/** Returns true when the UA strongly indicates a Google crawler. */
-function requestIsGoogleBot(request: Request): boolean {
-  return isGoogleBot(request.headers.get("user-agent"));
+/** Returns true when the UA strongly indicates a legitimate search-engine crawler. */
+function requestIsSearchEngineBot(request: Request): boolean {
+  return isSearchEngineBot(request.headers.get("user-agent"));
+}
+
+/** Returns true when the UA belongs to a known unauthorized AI scraper. */
+function requestIsMaliciousAiBot(request: Request): boolean {
+  return isMaliciousAiBot(request.headers.get("user-agent"));
 }
 
 /** Headers that tell Cloudflare / downstream middleware this is a verified bot. */
 function crawlerSafeHeaders(): Headers {
   const headers = new Headers();
   // Skip any Turnstile / challenge / WAF interstitial at the edge.
-  headers.set("CF-Bot-Verified", "googlebot");
+  headers.set("CF-Bot-Verified", "search-engine");
   // Instruct Cloudflare caching and WAF to treat this as a legitimate crawler.
-  headers.set("CF-IPRewrite", "googlebot");
+  headers.set("CF-IPRewrite", "search-engine");
   return headers;
 }
 
@@ -395,11 +400,26 @@ export default {
 
       const url = new URL(request.url);
 
+      // ── Malicious AI scraper block ──────────────────────────────────────────
+      // Block known unauthorized AI scrapers at the Worker edge before they ever
+      // reach SSR or API handlers, protecting original content from being used
+      // to train models.
+      if (requestIsMaliciousAiBot(request)) {
+        return new Response("Forbidden: unauthorized AI scraper", {
+          status: 403,
+          headers: {
+            "content-type": "text/plain; charset=utf-8",
+            "cache-control": "public, max-age=3600",
+          },
+        });
+      }
+
       // ── Search-engine crawler bypass ────────────────────────────────────────
-      // Googlebot and other verified crawlers should never see a Turnstile
-      // challenge, rate-limit block, or WAF interstitial. Pass them straight
-      // through to SSR/API with explicit safe headers.
-      if (requestIsGoogleBot(request)) {
+      // Google, Bing, DuckDuckGo, Apple, Yandex, Baidu and other verified
+      // crawlers should never see a Turnstile challenge, rate-limit block, or
+      // WAF interstitial. Pass them straight through to SSR/API with explicit
+      // safe headers so the full HTML is rendered and returned.
+      if (requestIsSearchEngineBot(request)) {
         const handler = await getServerEntry();
         const response = await handler.fetch(request, env, ctx);
         const safe = await normalizeCatastrophicSsrResponse(response);

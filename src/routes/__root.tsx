@@ -22,7 +22,10 @@ import {
   switchRouteLang,
   LANG_PREFIX,
 } from "@/lib/lang-detect";
-import { isGoogleBot } from "@/lib/crawler";
+import {
+  isSearchEngineBot,
+  isMaliciousAiBot,
+} from "@/lib/crawler";
 import {
   CrawlerContext,
   CrawlerContextValue,
@@ -87,22 +90,31 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 /**
- * Server-side detection of Google crawlers.
+ * Server-side detection of search-engine crawlers and malicious AI scrapers.
  * Runs during SSR so the first HTML response already hides consent banners
- * and Turnstile for verified bots.
+ * and Turnstile for verified bots, while returning 403 for unauthorized
+ * AI scrapers.
  */
 const detectCrawler = createServerFn({ method: "GET" }).handler(async () => {
   const userAgent = getRequestHeader("user-agent") ?? "";
+  // Block known malicious AI scrapers at the edge/SSR layer.
+  if (isMaliciousAiBot(userAgent)) {
+    throw new Response("Forbidden: unauthorized AI scraper", { status: 403 });
+  }
   return {
     userAgent,
-    isCrawler: isGoogleBot(userAgent),
+    isSearchEngineBot: isSearchEngineBot(userAgent),
+    isMaliciousAiBot: false,
   };
 });
 
 /**
- * Placeholder for the cookie-consent banner.
- * Replace this with the real consent UI component when it is added.
- * It is automatically suppressed for all crawler requests.
+ * Cookie / privacy consent banner placeholder.
+ *
+ * This component is automatically suppressed for all crawler requests by the
+ * RootComponent. Replace the `return null;` body with the real consent UI
+ * when it is added; the crawler guard in RootComponent will remain effective
+ * without further changes.
  */
 function CookieConsentBanner() {
   // TODO: implement real cookie consent UI.
@@ -216,16 +228,36 @@ function RootComponent() {
 
   // Server-side crawler detection (always false on the very first client render
   // until hydration completes, then matches the server value).
-  const serverCrawler = Route.useLoaderData() ?? { userAgent: "", isCrawler: false };
+  const serverCrawler = Route.useLoaderData() ?? {
+    userAgent: "",
+    isSearchEngineBot: false,
+    isMaliciousAiBot: false,
+  };
 
   // Re-evaluate on the client for CSR navigations and as a defensive fallback.
-  const isCrawler = useMemo(() => {
+  const isSearchEngineBotClient = useMemo(() => {
     if (typeof navigator !== "undefined" && navigator.userAgent) {
-      return isGoogleBot(navigator.userAgent);
+      return isSearchEngineBot(navigator.userAgent);
     }
-    return serverCrawler.isCrawler;
-  }, [serverCrawler.isCrawler]);
+    return serverCrawler.isSearchEngineBot;
+  }, [serverCrawler.isSearchEngineBot]);
 
+  const isMaliciousAiBotClient = useMemo(() => {
+    if (typeof navigator !== "undefined" && navigator.userAgent) {
+      return isMaliciousAiBot(navigator.userAgent);
+    }
+    return serverCrawler.isMaliciousAiBot;
+  }, [serverCrawler.isMaliciousAiBot]);
+
+  // Treat search-engine bots and malicious AI scrapers as "crawlers" for UI
+  // suppression purposes. Malicious AI scrapers are blocked at the SSR/Worker
+  // layer and should never reach the React tree, but we keep the guard here
+  // for completeness.
+  const isCrawler = isSearchEngineBotClient || isMaliciousAiBotClient;
+
+  // Force-close any visible interstitials for crawlers. This guarantees that
+  // even if a route code attempts to open the Turnstile dialog or consent
+  // banner, the crawler sees the underlying page markup only.
   const crawlerValue = useMemo<CrawlerContextValue>(
     () => ({
       isCrawler,
@@ -265,6 +297,13 @@ function RootComponent() {
             <Footer />
           </div>
           <Toaster position="bottom-center" />
+          {/*
+            Crawlers receive full HTML only:
+            - No Turnstile challenge widget / dialog.
+            - No cookie / privacy consent banner.
+            - No language-preference redirect.
+            Normal users still get all interactive UI and cookie persistence.
+          */}
           {!isCrawler && (
             <>
               <CookieConsentBanner />

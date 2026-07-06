@@ -62,34 +62,50 @@
   // Optional: reference a zone so zone-level rules can be applied.
   // "zone_id": "<YOUR_ZONE_ID>",
 
-  // "rulesets": {
-  //   // Custom firewall rule: skip every challenge / WAF action for Google crawlers.
-  //   "http_request_firewall_custom": {
-  //     "rules": [
-  //       {
-  //         "expression": "(http.user_agent contains \"Googlebot\" or http.user_agent contains \"Googlebot-Mobile\" or http.user_agent contains \"Googlebot-Image\" or http.user_agent contains \"Mediapartners-Google\" or http.user_agent contains \"AdsBot-Google\") and (ip.src in $google_ips or ip.src in $cf.bot_management.verified_bot_category_ids)",
-  //         "description": "Allowlist verified Google crawlers: skip Turnstile, WAF and rate limiting",
-  //         "action": "skip",
-  //         "action_parameters": {
-  //           "ruleset": "current"
-  //         },
-  //         "enabled": true
-  //       }
-  //     ]
-  //   },
-  //
-  //   // Rate limiting: disable for search-engine crawlers.
-  //   "http_ratelimit": {
-  //     "rules": [
-  //       {
-  //         "expression": "(http.user_agent contains \"Googlebot\" or http.user_agent contains \"bingbot\" or http.user_agent contains \"DuckDuckBot\")",
-  //         "description": "Disable rate limiting for major search engine crawlers",
-  //         "action": "skip",
-  //         "enabled": true
-  //       }
-  //     ]
-  //   }
-  // },
+  "rulesets": {
+    // Custom firewall rules: whitelist verified search engines, block known
+    // unauthorized AI scrapers, and skip Turnstile for legitimate crawlers.
+    "http_request_firewall_custom": {
+      "rules": [
+        {
+          "expression": "(http.user_agent contains \"Googlebot\" or http.user_agent contains \"Googlebot-Mobile\" or http.user_agent contains \"Googlebot-Image\" or http.user_agent contains \"Googlebot-Video\" or http.user_agent contains \"Mediapartners-Google\" or http.user_agent contains \"AdsBot-Google\") and (ip.src in $cf.bot_management.verified_bot_category_ids or ip.src in $google_ips)",
+          "description": "Allowlist verified Google crawlers: skip WAF, Bot Fight Mode, rate limiting and Turnstile",
+          "action": "skip",
+          "action_parameters": {
+            "ruleset": "current"
+          },
+          "enabled": true
+        },
+        {
+          "expression": "(http.user_agent contains \"bingbot\" or http.user_agent contains \"DuckDuckBot\" or http.user_agent contains \"Applebot\" or http.user_agent contains \"YandexBot\" or http.user_agent contains \"Baiduspider\" or http.user_agent contains \"Slurp\")",
+          "description": "Allowlist other major search engine crawlers: skip WAF, Bot Fight Mode and rate limiting",
+          "action": "skip",
+          "action_parameters": {
+            "ruleset": "current"
+          },
+          "enabled": true
+        },
+        {
+          "expression": "(http.user_agent contains \"GPTBot\" or http.user_agent contains \"CCBot\" or http.user_agent contains \"ClaudeBot\" or http.user_agent contains \"anthropic-ai\" or http.user_agent contains \"PerplexityBot\" or http.user_agent contains \"Amazonbot\" or http.user_agent contains \"Bytespider\" or http.user_agent contains \"ImagesiftBot\" or http.user_agent contains \"Omgilibot\" or http.user_agent contains \"Diffbot\" or http.user_agent contains \"FacebookBot\")",
+          "description": "Block known unauthorized AI scrapers and social crawlers",
+          "action": "block",
+          "enabled": true
+        }
+      ]
+    },
+
+    // Rate limiting: disable for all legitimate search-engine crawlers.
+    "http_ratelimit": {
+      "rules": [
+        {
+          "expression": "(http.user_agent contains \"Googlebot\" or http.user_agent contains \"bingbot\" or http.user_agent contains \"DuckDuckBot\" or http.user_agent contains \"Applebot\" or http.user_agent contains \"YandexBot\" or http.user_agent contains \"Baiduspider\" or http.user_agent contains \"Slurp\")",
+          "description": "Disable rate limiting for legitimate search engine crawlers",
+          "action": "skip",
+          "enabled": true
+        }
+      ]
+    }
+  },
 
   // Bot Management (requires Enterprise / Pro with Bot Management subscription):
   // Enable this only via the Dashboard or API. Once enabled, Cloudflare will

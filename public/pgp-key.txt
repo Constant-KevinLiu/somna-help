@@ -1,0 +1,16 @@
+# OpenPGP Public Key for somna.help Security Reports
+#
+# This is a placeholder. Replace the content below with your actual ASCII-armored
+# OpenPGP public key before going live.
+#
+# To generate a key:
+#   gpg --full-generate-key
+#   gpg --armor --export security@somna.help > public/pgp-key.txt
+#
+# Then update the Encryption field in public/.well-known/security.txt if needed.
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+REPLACE THIS BLOCK WITH YOUR REAL ASCII-ARMORED OPENPGP PUBLIC KEY.
+
+-----END PGP PUBLIC KEY BLOCK-----

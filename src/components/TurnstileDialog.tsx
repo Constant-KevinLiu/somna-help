@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { TurnstileWidget } from "./TurnstileWidget";
 import { useCrawler } from "@/lib/crawler-context";
-import { isGoogleBot } from "@/lib/crawler";
+import { isSearchEngineBot } from "@/lib/crawler";
 
 export interface TurnstileDialogProps {
   /** Whether the dialog is open. */
@@ -22,19 +22,24 @@ export interface TurnstileDialogProps {
   action?: string;
   /** Called when the user successfully completes the challenge. */
   onVerify?: (token: string) => void;
-  /** Called when the challenge fails. */
+  /** Called when the challenge fails after all retries are exhausted. */
   onError?: (errorCode: string) => void;
   /** Dialog title text. */
   title?: string;
   /** Dialog description text. */
   description?: string;
+  /** Maximum number of auto-retries inside the widget before surfacing an error. */
+  maxRetries?: number;
 }
 
 /**
  * Modal Turnstile challenge dialog.
  *
- * The dialog is automatically suppressed for search-engine crawlers so they
- * never see an interstitial and can crawl the underlying page normally.
+ * The dialog is automatically suppressed for all search-engine crawlers
+ * (Google, Bing, DuckDuckGo, Apple, Yandex, Baidu, etc.) so they never see an
+ * interstitial and can crawl the underlying page normally. Normal users still
+ * see the dialog when `open` is true, with built-in retry logic for transient
+ * Turnstile failures.
  */
 export function TurnstileDialog({
   open,
@@ -45,12 +50,15 @@ export function TurnstileDialog({
   onError,
   title = "Verify you are human",
   description = "Please complete the quick security check below to continue.",
+  maxRetries = 3,
 }: TurnstileDialogProps) {
   const { isCrawler: contextIsCrawler } = useCrawler();
   const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
-  const isCrawler = contextIsCrawler || isGoogleBot(ua);
+  const isCrawler = contextIsCrawler || isSearchEngineBot(ua);
 
+  // Forcibly close the dialog if a crawler somehow reaches this component.
   if (isCrawler) {
+    if (open) onOpenChange(false);
     return null;
   }
 
@@ -65,11 +73,14 @@ export function TurnstileDialog({
           <TurnstileWidget
             siteKey={siteKey}
             action={action}
+            maxRetries={maxRetries}
             onVerify={(token) => {
               onVerify?.(token);
               onOpenChange(false);
             }}
-            onError={onError}
+            onError={(errorCode) => {
+              onError?.(errorCode);
+            }}
           />
         </div>
       </DialogContent>

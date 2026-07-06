@@ -1,0 +1,80 @@
+# Cloudflare Worker deployment configuration for somna.help
+# This file is intentionally kept separate from wrangler.jsonc so that
+# security rules can be versioned and reviewed independently.
+#
+# NOTE: Wrangler deploys primarily from wrangler.jsonc in this project.
+# This TOML is provided as a documented, deploy-ready reference for the
+# Cloudflare Dashboard / Rulesets API / Terraform workflow required to
+# fully clear Security Insights alerts.
+
+name = "tanstack-start-app"
+main = "dist/server/server.js"
+compatibility_date = "2025-09-24"
+compatibility_flags = ["nodejs_compat"]
+
+# Optional: bind the production zone so zone-level page rules / WAF rules apply.
+# zone_id = "<YOUR_ZONE_ID>"
+
+# =============================================================================
+# R2 bucket binding for the share-image service.
+# The bucket must be created first with:
+#   wrangler r2 bucket create somna-share
+# =============================================================================
+[[r2_buckets]]
+binding = "SHARE_BUCKET"
+bucket_name = "somna-share"
+
+# =============================================================================
+# Static assets served from the Vite client build output.
+# Security headers are also added dynamically by src/server.ts for SSR pages.
+# =============================================================================
+[assets]
+directory = "dist/client"
+
+[assets.headers]
+"/*" = {
+  Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload",
+  X-Content-Type-Options = "nosniff",
+  Referrer-Policy = "strict-origin-when-cross-origin"
+}
+
+# =============================================================================
+# Custom firewall rules: allowlist legitimate crawlers, block malicious AI bots.
+#
+# IMPORTANT: These rules are declarative examples. Wrangler deploys may not
+# create all rule types directly; verify with `wrangler deploy --dry-run` and
+# mirror any unsupported rules in the Cloudflare Dashboard or via the
+# Rulesets API / Terraform.
+# =============================================================================
+[[ruleset]]
+name = "http_request_firewall_custom"
+
+  [[ruleset.rule]]
+  description = "Allowlist verified Google crawlers: skip WAF, Bot Fight Mode, rate limiting and Turnstile"
+  expression = "(http.user_agent contains \"Googlebot\" or http.user_agent contains \"Googlebot-Mobile\" or http.user_agent contains \"Googlebot-Image\" or http.user_agent contains \"Googlebot-Video\" or http.user_agent contains \"Mediapartners-Google\" or http.user_agent contains \"AdsBot-Google\")"
+  action = "skip"
+  enabled = true
+
+  [[ruleset.rule]]
+  description = "Allowlist other major search engine crawlers: skip WAF, Bot Fight Mode and rate limiting"
+  expression = "(http.user_agent contains \"bingbot\" or http.user_agent contains \"BingPreview\" or http.user_agent contains \"DuckDuckBot\" or http.user_agent contains \"Applebot\" or http.user_agent contains \"YandexBot\" or http.user_agent contains \"Baiduspider\" or http.user_agent contains \"Slurp\")"
+  action = "skip"
+  enabled = true
+
+  [[ruleset.rule]]
+  description = "Block known unauthorized AI scrapers and social crawlers"
+  expression = "(http.user_agent contains \"GPTBot\" or http.user_agent contains \"CCBot\" or http.user_agent contains \"ClaudeBot\" or http.user_agent contains \"anthropic-ai\" or http.user_agent contains \"PerplexityBot\" or http.user_agent contains \"Amazonbot\" or http.user_agent contains \"Bytespider\" or http.user_agent contains \"ImagesiftBot\" or http.user_agent contains \"Omgilibot\" or http.user_agent contains \"Diffbot\" or http.user_agent contains \"FacebookBot\" or http.user_agent contains \"SemrushBot\" or http.user_agent contains \"AhrefsBot\")"
+  action = "block"
+  enabled = true
+
+# =============================================================================
+# Rate limiting: disable for all legitimate search-engine crawlers.
+# =============================================================================
+[[ruleset]]
+name = "http_ratelimit"
+
+  [[ruleset.rule]]
+  description = "Disable rate limiting for legitimate search engine crawlers"
+  expression = "(http.user_agent contains \"Googlebot\" or http.user_agent contains \"bingbot\" or http.user_agent contains \"DuckDuckBot\" or http.user_agent contains \"Applebot\" or http.user_agent contains \"YandexBot\" or http.user_agent contains \"Baiduspider\" or http.user_agent contains \"Slurp\")"
+  action = "skip"
+  enabled = true

@@ -1,0 +1,35 @@
+# somna.help — Security Contact and Vulnerability Disclosure Policy
+# This file follows RFC 9116 (https://www.rfc-editor.org/rfc/rfc9116).
+# Last updated: 2026-07-06
+
+# How to report a security vulnerability
+Contact: mailto:security@somna.help
+
+# Expiration date for the information in this file (ISO 8601)
+Expires: 2027-07-06T00:00:00.000Z
+
+# Security policy and disclosure guidelines
+Policy: https://somna.help/security/policy
+
+# Acknowledgments page for security researchers
+Acknowledgments: https://somna.help/security/hall-of-fame
+
+# Careers / security hiring
+Hiring: https://somna.help/careers
+
+# Languages we can communicate in
+Preferred-Languages: en, es, pt, pl
+
+# Canonical locations of this security.txt file
+Canonical: https://somna.help/.well-known/security.txt
+Canonical: https://liushaoxian-9180.workers.dev/.well-known/security.txt
+
+# OpenPGP public key for encrypted vulnerability reports
+Encryption: https://somna.help/pgp-key.txt
+
+# AI crawler policy (complements robots.txt and Cloudflare WAF rules)
+# Unauthorized AI scrapers are explicitly prohibited from crawling, indexing,
+# training on, or otherwise using any somna.help content.
+# Authorized search-engine crawlers may index public pages per robots.txt.
+# Blocked AI crawlers: GPTBot, CCBot, ClaudeBot, PerplexityBot, Amazonbot,
+# Bytespider, ImagesiftBot, Omgilibot, Diffbot, and similar agents.
