@@ -19,6 +19,8 @@ export interface TurnstileProviderProps {
  * client and is skipped entirely for search-engine crawlers, so bot traffic
  * always receives clean HTML with full SEO markup.
  */
+const DEFAULT_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
+
 export function TurnstileProvider({ siteKey, maxRetries = 3 }: TurnstileProviderProps) {
   const { isCrawler: contextIsCrawler } = useCrawler();
   const ua = typeof navigator !== "undefined" ? navigator.userAgent : "";
@@ -43,7 +45,7 @@ export function TurnstileProvider({ siteKey, maxRetries = 3 }: TurnstileProvider
 
   return (
     <TurnstileWidget
-      siteKey={siteKey}
+      siteKey={siteKey ?? DEFAULT_SITE_KEY}
       action="site-verify"
       maxRetries={maxRetries}
       onVerify={handleVerify}

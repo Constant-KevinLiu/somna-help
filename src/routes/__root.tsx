@@ -255,6 +255,16 @@ function RootComponent() {
   // for completeness.
   const isCrawler = isSearchEngineBotClient || isMaliciousAiBotClient;
 
+  // Also pass the crawler flag to the document so downstream components can
+  // read it even before React hydration finishes. This makes the suppression
+  // robust against any client-only component that might otherwise flash a
+  // Turnstile widget during hydration.
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.crawler = isCrawler ? "true" : "false";
+    }
+  }, [isCrawler]);
+
   // Force-close any visible interstitials for crawlers. This guarantees that
   // even if a route code attempts to open the Turnstile dialog or consent
   // banner, the crawler sees the underlying page markup only.

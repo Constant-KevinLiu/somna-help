@@ -168,8 +168,7 @@ export function TurnstileWidget({
           language: "auto",
           appearance: "interaction-only",
           retry: "auto",
-          "refresh-expired": "auto",
-          "timeout": 15000,
+          refreshExpired: "auto",
         }}
       />
       {lastError && retryCount > 0 && retryCount < maxRetries && (

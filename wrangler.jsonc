@@ -35,6 +35,16 @@
   },
 
   // =============================================================================
+  // Turnstile secrets (server-side only).
+  // PUBLIC_TURNSTILE_SITE_KEY is consumed by the client bundle via Vite/Vinxi and
+  // must be set in .env.local for local development. TURNSTILE_SECRET_KEY is
+  // private and is injected into the Worker runtime by Wrangler.
+  // =============================================================================
+  "vars": {
+    "TURNSTILE_SECRET_KEY": "0x4AAAAAAADxKp1ZKabCELC_EOYTcBEV6xHY"
+  },
+
+  // =============================================================================
   // HTTPS enforcement
   //
   // IMPORTANT: Cloudflare's "Always Use HTTPS" page rule (Dashboard → Rules →

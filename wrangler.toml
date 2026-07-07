@@ -16,6 +16,15 @@ compatibility_flags = ["nodejs_compat"]
 # zone_id = "<YOUR_ZONE_ID>"
 
 # =============================================================================
+# Turnstile secrets (server-side only).
+# PUBLIC_TURNSTILE_SITE_KEY is consumed by the client bundle via Vite/Vinxi and
+# must be set in .env.local for local development. TURNSTILE_SECRET_KEY is
+# private and is injected into the Worker runtime by Wrangler.
+# =============================================================================
+[vars]
+TURNSTILE_SECRET_KEY = "0x4AAAAAAADxKp1ZKabCELC_EOYTcBEV6xHY"
+
+# =============================================================================
 # R2 bucket binding for the share-image service.
 # The bucket must be created first with:
 #   wrangler r2 bucket create somna-share
@@ -31,12 +40,7 @@ bucket_name = "somna-share"
 [assets]
 directory = "dist/client"
 
-[assets.headers]
-"/*" = {
-  Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload",
-  X-Content-Type-Options = "nosniff",
-  Referrer-Policy = "strict-origin-when-cross-origin"
-}
+
 
 # =============================================================================
 # Custom firewall rules: allowlist legitimate crawlers, block malicious AI bots.

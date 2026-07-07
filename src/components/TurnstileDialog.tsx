@@ -41,10 +41,12 @@ export interface TurnstileDialogProps {
  * see the dialog when `open` is true, with built-in retry logic for transient
  * Turnstile failures.
  */
+const DEFAULT_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "";
+
 export function TurnstileDialog({
   open,
   onOpenChange,
-  siteKey,
+  siteKey = DEFAULT_SITE_KEY,
   action = "modal-verify",
   onVerify,
   onError,
