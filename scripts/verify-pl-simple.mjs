@@ -23,7 +23,9 @@ for (const path of paths) {
     const title = head.match(/<title>([^<]*)<\/title>/)?.[1] ?? "(no title)";
     const hreflangs = [...head.matchAll(/hrefLang="([^"]+)"/)].map((m) => m[1]);
     const english = ["Sleep Better", "Starting Tonight"].filter((m) => text.includes(m));
-    out.push(`${path}\t${res.status}\t${title}\threflangs=${hreflangs.join(",")}${english.length ? "\tEN=" + english.join(",") : ""}`);
+    out.push(
+      `${path}\t${res.status}\t${title}\threflangs=${hreflangs.join(",")}${english.length ? "\tEN=" + english.join(",") : ""}`,
+    );
   } catch (e) {
     out.push(`${path}\tERROR\t${e.message}`);
   }

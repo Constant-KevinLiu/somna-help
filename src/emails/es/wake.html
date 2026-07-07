@@ -2,47 +2,117 @@
   Email de reactivación: 48h / 72h / 7 días sin registrar sueño.
   Asunto varía según el día (ver locales/es/email.json).
 -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Volvemos a estar por aquí</title>
-  <style>
-    body { margin: 0; padding: 0; background: #0b0b14; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #e8e8f0; }
-    .wrap { max-width: 560px; margin: 0 auto; padding: 32px 24px; }
-    .brand { font-size: 22px; font-weight: 600; color: #ffffff; }
-    .brand .moon { color: #a78bfa; }
-    .tagline { font-size: 13px; color: #8a8aa0; margin-top: 2px; }
-    .card { background: #15151f; border: 1px solid #2a2a3a; border-radius: 16px; padding: 28px; margin-top: 24px; }
-    .h1 { font-size: 24px; line-height: 1.3; color: #ffffff; margin: 0 0 16px; }
-    .p { font-size: 15px; line-height: 1.6; color: #c8c8d8; margin: 0 0 16px; }
-    .tip { background: #1d1d2b; border-left: 3px solid #a78bfa; border-radius: 8px; padding: 14px 16px; font-size: 14px; color: #c8c8d8; margin: 16px 0; }
-    .btn { display: inline-block; background: linear-gradient(135deg, #7c5cff, #a78bfa); color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 600; padding: 14px 28px; border-radius: 999px; margin: 8px 0 20px; }
-    .footer { margin-top: 32px; padding-top: 24px; border-top: 1px solid #2a2a3a; font-size: 12px; color: #6a6a80; line-height: 1.6; }
-    .footer a { color: #8a8aa0; }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="brand">somna <span class="moon">🌙</span></div>
-    <div class="tagline">Tu acompañante de sueño</div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Volvemos a estar por aquí</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background: #0b0b14;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        color: #e8e8f0;
+      }
+      .wrap {
+        max-width: 560px;
+        margin: 0 auto;
+        padding: 32px 24px;
+      }
+      .brand {
+        font-size: 22px;
+        font-weight: 600;
+        color: #ffffff;
+      }
+      .brand .moon {
+        color: #a78bfa;
+      }
+      .tagline {
+        font-size: 13px;
+        color: #8a8aa0;
+        margin-top: 2px;
+      }
+      .card {
+        background: #15151f;
+        border: 1px solid #2a2a3a;
+        border-radius: 16px;
+        padding: 28px;
+        margin-top: 24px;
+      }
+      .h1 {
+        font-size: 24px;
+        line-height: 1.3;
+        color: #ffffff;
+        margin: 0 0 16px;
+      }
+      .p {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #c8c8d8;
+        margin: 0 0 16px;
+      }
+      .tip {
+        background: #1d1d2b;
+        border-left: 3px solid #a78bfa;
+        border-radius: 8px;
+        padding: 14px 16px;
+        font-size: 14px;
+        color: #c8c8d8;
+        margin: 16px 0;
+      }
+      .btn {
+        display: inline-block;
+        background: linear-gradient(135deg, #7c5cff, #a78bfa);
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 600;
+        padding: 14px 28px;
+        border-radius: 999px;
+        margin: 8px 0 20px;
+      }
+      .footer {
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid #2a2a3a;
+        font-size: 12px;
+        color: #6a6a80;
+        line-height: 1.6;
+      }
+      .footer a {
+        color: #8a8aa0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="brand">somna <span class="moon">🌙</span></div>
+      <div class="tagline">Tu acompañante de sueño</div>
 
-    <div class="card">
-      <h1 class="h1">Volvemos a estar por aquí</h1>
-      <p class="p">Notamos que llevas unos días sin anotar tu sueño. Lo entendemos: a veces se olvida. Pero el diario solo funciona si se alimenta. Tres minutos cada mañana bastan para que empecemos a ver patrones útiles.</p>
+      <div class="card">
+        <h1 class="h1">Volvemos a estar por aquí</h1>
+        <p class="p">
+          Notamos que llevas unos días sin anotar tu sueño. Lo entendemos: a veces se olvida. Pero
+          el diario solo funciona si se alimenta. Tres minutos cada mañana bastan para que empecemos
+          a ver patrones útiles.
+        </p>
 
-      <div class="tip">Ponerte una alarma a la hora de levantarte ayuda a no olvidarlo.</div>
+        <div class="tip">Ponerte una alarma a la hora de levantarte ayuda a no olvidarlo.</div>
 
-      <a href="https://somna.help/es/diary" class="btn">Anotar el sueño de anoche</a>
+        <a href="https://somna.help/es/diary" class="btn">Anotar el sueño de anoche</a>
+      </div>
+
+      <div class="footer">
+        Recibes este correo porque tienes una cuenta en somna. Si no quieres recibir más emails,
+        puedes <a href="{{UNSUBSCRIBE_URL}}">darte de baja</a>.<br />
+        somna · Madrid, España<br />
+        <a href="https://somna.help/es/privacy">Política de privacidad</a> ·
+        <a href="https://somna.help/es/terms">Términos del servicio</a><br />
+        ¿Necesitas ayuda? Responde a este correo.
+      </div>
     </div>
-
-    <div class="footer">
-      Recibes este correo porque tienes una cuenta en somna. Si no quieres recibir más emails, puedes <a href="{{UNSUBSCRIBE_URL}}">darte de baja</a>.<br>
-      somna · Madrid, España<br>
-      <a href="https://somna.help/es/privacy">Política de privacidad</a> · <a href="https://somna.help/es/terms">Términos del servicio</a><br>
-      ¿Necesitas ayuda? Responde a este correo.
-    </div>
-  </div>
-</body>
+  </body>
 </html>

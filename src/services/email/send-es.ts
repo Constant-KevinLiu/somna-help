@@ -13,13 +13,7 @@
 
 import { loadEsDict } from "@/locales/es";
 
-export type EmailType =
-  | "activation"
-  | "wake"
-  | "weekly"
-  | "renew"
-  | "dunning"
-  | "reengage";
+export type EmailType = "activation" | "wake" | "weekly" | "renew" | "dunning" | "reengage";
 
 export type UserLang = "en" | "es";
 
@@ -104,9 +98,7 @@ export async function sendTransactionalEmail(
   const html = await loadEsTemplate(type);
   const rendered = renderTemplate(html, {
     UNSUBSCRIBE_URL: recipient.unsubscribeUrl,
-    ...Object.fromEntries(
-      Object.entries(data).map(([k, v]) => [k, String(v ?? "")]),
-    ),
+    ...Object.fromEntries(Object.entries(data).map(([k, v]) => [k, String(v ?? "")])),
   });
 
   await dispatchEmail({

@@ -66,9 +66,7 @@ function PlProgramPage() {
       {/* CO ZAWIERA PROGRAM */}
       <section className="px-5 py-12">
         <div className="mx-auto max-w-4xl">
-          <h2 className="font-display text-2xl text-foreground md:text-3xl">
-            Co zawiera program
-          </h2>
+          <h2 className="font-display text-2xl text-foreground md:text-3xl">Co zawiera program</h2>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {[
               {

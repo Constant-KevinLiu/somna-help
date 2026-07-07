@@ -39,9 +39,7 @@ export const Route = createFileRoute("/pl/program/$week/$lesson")({
   notFoundComponent: () => (
     <div className="mx-auto max-w-3xl px-5 py-24 text-center">
       <h1 className="font-display text-3xl text-foreground/90">Lekcja nie została znaleziona</h1>
-      <p className="mt-3 text-muted-foreground">
-        Ta lekcja programu nie istnieje.
-      </p>
+      <p className="mt-3 text-muted-foreground">Ta lekcja programu nie istnieje.</p>
     </div>
   ),
   component: PlLessonRoute,

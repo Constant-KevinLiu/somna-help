@@ -355,8 +355,7 @@ export const programWeeks: WeekContent[] = [
         title: "Restrição do Sono",
         eyebrow: "SEMANA 3 · PROGRAMA TCC-I",
         seoTitle: "Restrição do Sono | Semana 3 do Programa TCC-I | Somna",
-        seoDescription:
-          "Melhore a eficiência do sono alinhando o tempo na cama ao sono real.",
+        seoDescription: "Melhore a eficiência do sono alinhando o tempo na cama ao sono real.",
         intro: "A restrição do sono ajuda a melhorar a eficiência do sono.",
         whyTitle: "Por que importa",
         whyPoints: [

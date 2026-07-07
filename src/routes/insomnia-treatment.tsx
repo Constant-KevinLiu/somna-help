@@ -10,7 +10,9 @@ export const Route = createFileRoute("/insomnia-treatment")({
 
 type Row = { label: string; cbti: string; med: string };
 
-const compare: Partial<Record<Lang, { heading: string; cbtiCol: string; medCol: string; rows: Row[] }>> = {
+const compare: Partial<
+  Record<Lang, { heading: string; cbtiCol: string; medCol: string; rows: Row[] }>
+> = {
   en: {
     heading: "CBT-I vs Medication",
     cbtiCol: "CBT-I",
@@ -68,7 +70,7 @@ const compare: Partial<Record<Lang, { heading: string; cbtiCol: string; medCol: 
 export function InsomniaTreatmentPage() {
   const { lang } = useI18n();
   const article = getCbtiDict(lang).articles["insomnia-treatment"];
-  const c = compare[lang] ?? compare.en!
+  const c = compare[lang] ?? compare.en!;
 
   return (
     <CbtiArticleShell slug="insomnia-treatment" article={article}>

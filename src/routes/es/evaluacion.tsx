@@ -36,8 +36,7 @@ function EsAssessmentPage() {
       </div>
       <div className="mx-auto max-w-2xl text-center animate-fade-up">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-muted-foreground">
-          <ClipboardCheck className="h-3 w-3 text-accent" />
-          5 PREGUNTAS · 3 MINUTOS
+          <ClipboardCheck className="h-3 w-3 text-accent" />5 PREGUNTAS · 3 MINUTOS
         </div>
         <h1 className="font-display text-4xl leading-tight text-gradient md:text-5xl">
           {t["assess.title"]}

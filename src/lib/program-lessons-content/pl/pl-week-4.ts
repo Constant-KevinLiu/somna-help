@@ -65,12 +65,7 @@ export const plWeek4Lessons: LessonContent[] = [
         seoTitle: "Natłok myśli w nocy: jak sobie radzić | Somna CBT-I",
         seoDescription:
           "Poznaj strategie CBT-I do łagodzenia wieczornego lęku i natłoku myśli, które utrudniają zasypianie.",
-        keywords: [
-          "natłok myśli w nocy",
-          "lęk przed snem",
-          "ruminacje",
-          "CBT-I",
-        ],
+        keywords: ["natłok myśli w nocy", "lęk przed snem", "ruminacje", "CBT-I"],
       },
     },
   },
@@ -154,11 +149,7 @@ export const plWeek4Lessons: LessonContent[] = [
     weekSlug: "week-4",
     lessonNumber: 12,
     estimatedMinutes: 6,
-    relatedLessonSlugs: [
-      "relaxation-techniques",
-      "racing-thoughts-at-night",
-      "how-sleep-works",
-    ],
+    relatedLessonSlugs: ["relaxation-techniques", "racing-thoughts-at-night", "how-sleep-works"],
     i18n: {
       pl: {
         title: "Ćwiczenia oddechowe na lepszy sen",
@@ -211,12 +202,7 @@ export const plWeek4Lessons: LessonContent[] = [
         seoTitle: "Ćwiczenia oddechowe na bezsenność | Somna CBT-I",
         seoDescription:
           "Poznaj proste techniki oddechowe, które aktywują układ przywspółczulny i pomagają zasnąć.",
-        keywords: [
-          "oddech a sen",
-          "ćwiczenia oddechowe",
-          "oddychanie przed snem",
-          "CBT-I",
-        ],
+        keywords: ["oddech a sen", "ćwiczenia oddechowe", "oddychanie przed snem", "CBT-I"],
       },
     },
   },

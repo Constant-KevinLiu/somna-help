@@ -42,9 +42,7 @@ export const LANG_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
  */
 function readCookie(name: string): string | null {
   if (typeof document === "undefined") return null;
-  const match = document.cookie.match(
-    new RegExp("(?:^|;\\s*)" + name + "=([^;]+)"),
-  );
+  const match = document.cookie.match(new RegExp("(?:^|;\\s*)" + name + "=([^;]+)"));
   return match ? decodeURIComponent(match[1]) : null;
 }
 
@@ -80,7 +78,16 @@ export function getBrowserLang(): Lang {
  */
 export function getSavedUserLang(): Lang | null {
   const v = readCookie(LANG_COOKIE);
-  if (v === "en" || v === "es" || v === "pt" || v === "pl" || v === "de" || v === "ja" || v === "zh") return v;
+  if (
+    v === "en" ||
+    v === "es" ||
+    v === "pt" ||
+    v === "pl" ||
+    v === "de" ||
+    v === "ja" ||
+    v === "zh"
+  )
+    return v;
   return null;
 }
 
@@ -92,7 +99,8 @@ export function getSavedUserLang(): Lang | null {
  */
 export function setUserLangCookie(lang: Lang): void {
   if (typeof document === "undefined") return;
-  const secure = typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
+  const secure =
+    typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
   document.cookie = `${LANG_COOKIE}=${lang}; Path=/; Max-Age=${LANG_COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
   if (!readCookie(UID_COOKIE)) {
     document.cookie = `${UID_COOKIE}=${generateUid()}; Path=/; Max-Age=${LANG_COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
@@ -112,9 +120,7 @@ export function generateUid(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
   }
-  return "xxxxxxxxxxxxxxxx".replace(/x/g, () =>
-    Math.floor(Math.random() * 16).toString(16),
-  );
+  return "xxxxxxxxxxxxxxxx".replace(/x/g, () => Math.floor(Math.random() * 16).toString(16));
 }
 
 /**

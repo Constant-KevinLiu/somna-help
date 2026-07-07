@@ -116,6 +116,7 @@ Si el insomnio dura más de tres semanas, si afecta a tu vida diaria o si va aco
 ---
 
 **Fuentes sugeridas:**
+
 - Guías clínicas de la Asociación Española del Sueño sobre CBT-I.
 - Estudios sobre la respiración 4-7-8 y la activación parasimpática.
 - Documentos de consenso europeo sobre el tratamiento del insomnio crónico.

@@ -7,6 +7,7 @@
 ## 1. Enlazado interno (solo entre páginas en español)
 
 ### Reglas
+
 - Todo enlace interno apunta a una ruta bajo `/es/`. **Nunca** a la raíz inglesa.
 - El anchor siempre está en español y describe el destino (evitar «haz clic aquí»).
 - Cada página enlaza al menos a 2 páginas relacionadas y a 1 página de producto.
@@ -14,6 +15,7 @@
   `/es/calculator`, `/es/blog`, `/es/faq`, `/es/pricing`.
 
 ### Páginas pilar (orphan-free)
+
 - `/es` — home
 - `/es/program` — programa CBT-I
 - `/es/calculator` — calculadora de ciclos
@@ -23,12 +25,14 @@
 - `/es/faq` — FAQ
 
 ### Menús de navegación
+
 - Header: Inicio · Programa · Test · Diario · Relajación · Calculadoras (desplegable) · Blog
 - Footer: las páginas pilar + Privacidad · Términos
 
 ## 2. Google Search Console (GSC)
 
 ### Pasos
+
 1. Añadir la propiedad `https://somna.help/es/` como prefijo de URL en GSC.
    (No mezclar con la propiedad de la raíz inglesa.)
 2. Verificar la propiedad (registro TXT o etiqueta HTML; si ya está verificada
@@ -45,6 +49,7 @@
 ## 3. Enlaces externos (linkbuilding en español)
 
 ### Fuentes prioritarias (KD bajo, alta relevancia)
+
 - **Foros y comunidades:** foros de salud en español (p. ej. secciones de
   sueño de foros generales), respondiendo con valor real, no spam.
 - **Directorios de apps de salud:** listados en español de apps de bienestar.
@@ -57,12 +62,14 @@
   datos del estudio anual de sueño de somna (agregados y anónimos).
 
 ### Prácticas a evitar
+
 - Comprar enlaces.
 - Comentarios masivos en blogs con enlace exacto.
 - Directorios de baja calidad o genéricos.
 - Enlaces desde sitios no hispanos (diluyen la relevancia lingüística).
 
 ### Anchor sugerido (siempre en español)
+
 - «programa CBT-I en español»
 - «calculadora de ciclos de sueño»
 - «diario de sueño online»

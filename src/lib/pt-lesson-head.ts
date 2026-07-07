@@ -26,10 +26,7 @@ const SITE_ORIGIN = "https://somna.help";
  * @param lesson     Conteúdo completo da lição (usado para JSON-LD e URLs).
  * @param lessonKey  Chave base no JSON (ex.: "week3.lesson7").
  */
-export function ptLessonHeadFromLocales(
-  lesson: LessonContent,
-  lessonKey: string,
-) {
+export function ptLessonHeadFromLocales(lesson: LessonContent, lessonKey: string) {
   const dict: PtDict = loadPtDict();
   const seoTitle = getPtString(dict, `${lessonKey}.seoTitle`);
   const seoDescription = getPtString(dict, `${lessonKey}.seoDescription`);

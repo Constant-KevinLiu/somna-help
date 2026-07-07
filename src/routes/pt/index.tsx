@@ -114,7 +114,8 @@ function PtHome() {
                 </h3>
                 <p className="mt-3 text-sm text-muted-foreground">{f.d}</p>
                 <span className="mt-4 inline-flex items-center gap-1 text-xs text-accent">
-                  {t["cta.readMore"]} <ArrowRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
+                  {t["cta.readMore"]}{" "}
+                  <ArrowRight className="h-3 w-3 transition group-hover:translate-x-0.5" />
                 </span>
               </SafeLink>
             ))}
@@ -125,9 +126,7 @@ function PtHome() {
       {/* TRUST */}
       <section className="px-5 py-16">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="font-display text-3xl text-foreground md:text-4xl">
-            {t["trust.title"]}
-          </h2>
+          <h2 className="font-display text-3xl text-foreground md:text-4xl">{t["trust.title"]}</h2>
           <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">{t["trust.sub"]}</p>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
@@ -147,9 +146,7 @@ function PtHome() {
       {/* CTA FINAL */}
       <section className="px-5 py-20">
         <div className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-gradient-to-br from-primary/10 to-accent/10 p-10 text-center">
-          <h2 className="font-display text-3xl text-foreground md:text-4xl">
-            {t["emo.note"]}
-          </h2>
+          <h2 className="font-display text-3xl text-foreground md:text-4xl">{t["emo.note"]}</h2>
           <SafeLink
             to="/pt/program"
             className="mt-8 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-8 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"

@@ -19,10 +19,14 @@ for (const path of paths) {
     const text = await res.text();
     const head = text.match(/<head[^>]*>([\s\S]*?)<\/head>/)?.[1] ?? "";
     const title = head.match(/<title>([^<]*)<\/title>/)?.[1] ?? "(no title)";
-    const hreflangs = [...head.matchAll(/<link[^>]*rel="alternate"[^>]*>/g)].map(
-      (m) => m[0].replace(/\s+/g, " ").trim(),
+    const hreflangs = [...head.matchAll(/<link[^>]*rel="alternate"[^>]*>/g)].map((m) =>
+      m[0].replace(/\s+/g, " ").trim(),
     );
-    const canonical = head.match(/<link[^>]*rel="canonical"[^>]*>/)?.[0]?.replace(/\s+/g, " ").trim() ?? "";
+    const canonical =
+      head
+        .match(/<link[^>]*rel="canonical"[^>]*>/)?.[0]
+        ?.replace(/\s+/g, " ")
+        .trim() ?? "";
     console.log(`\n${path} -> ${res.status} ${title}`);
     console.log("  canonical:", canonical);
     console.log("  hreflangs:", hreflangs.length ? "" : "none");

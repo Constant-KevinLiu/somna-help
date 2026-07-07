@@ -63,12 +63,7 @@ export const plWeek6Lessons: LessonContent[] = [
         seoTitle: "Zapobieganie nawrotom bezsenności | Somna CBT-I",
         seoDescription:
           "Stwórz osobisty plan zapobiegania nawrotom bezsenności na trudniejsze noce i okresy wzmożonego stresu.",
-        keywords: [
-          "nawrót bezsenności",
-          "zapobieganie bezsenności",
-          "plan awaryjny sen",
-          "CBT-I",
-        ],
+        keywords: ["nawrót bezsenności", "zapobieganie bezsenności", "plan awaryjny sen", "CBT-I"],
       },
     },
   },
@@ -80,11 +75,7 @@ export const plWeek6Lessons: LessonContent[] = [
     weekSlug: "week-6",
     lessonNumber: 17,
     estimatedMinutes: 6,
-    relatedLessonSlugs: [
-      "preventing-relapse",
-      "long-term-sleep-health",
-      "how-sleep-works",
-    ],
+    relatedLessonSlugs: ["preventing-relapse", "long-term-sleep-health", "how-sleep-works"],
     i18n: {
       pl: {
         title: "Sen w podróży i jet lag",
@@ -133,13 +124,7 @@ export const plWeek6Lessons: LessonContent[] = [
         seoTitle: "Sen w podróży i jet lag: jak sobie radzić | Somna CBT-I",
         seoDescription:
           "Praktyczne strategie na jet lag i zmiany rytmu dobowego podczas podróży, bez utraty postępów CBT-I.",
-        keywords: [
-          "sen w podróży",
-          "jet lag",
-          "zmiana strefy czasowej",
-          "rytm dobowy",
-          "CBT-I",
-        ],
+        keywords: ["sen w podróży", "jet lag", "zmiana strefy czasowej", "rytm dobowy", "CBT-I"],
       },
     },
   },
@@ -205,12 +190,7 @@ export const plWeek6Lessons: LessonContent[] = [
         seoTitle: "Długoterminowe zdrowie snu: jak utrzymać efekty CBT-I | Somna",
         seoDescription:
           "Praktyczne wskazówki, jak zachować dobre nawyki snu na dłużej i chronić efekty terapii CBT-I.",
-        keywords: [
-          "zdrowie snu",
-          "utrzymanie efektów CBT-I",
-          "nawyki snu",
-          "długoterminowy sen",
-        ],
+        keywords: ["zdrowie snu", "utrzymanie efektów CBT-I", "nawyki snu", "długoterminowy sen"],
       },
     },
   },

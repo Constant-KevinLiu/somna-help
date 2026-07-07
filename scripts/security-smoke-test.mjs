@@ -81,12 +81,7 @@ for (const path of PATHS) {
       text.includes("turnstile");
 
     check(assert(status === 200, `[${path}] ${shortUA} → status ${status}`));
-    check(
-      assert(
-        !challengePresent,
-        `[${path}] ${shortUA} → no Turnstile markup`,
-      ),
-    );
+    check(assert(!challengePresent, `[${path}] ${shortUA} → no Turnstile markup`));
     check(
       assert(
         headers.get("strict-transport-security"),

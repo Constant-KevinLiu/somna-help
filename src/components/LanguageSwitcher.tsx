@@ -13,11 +13,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "@tanstack/react-router";
 import { Globe, Check, ChevronDown } from "lucide-react";
 import type { Lang } from "@/lib/lang-detect";
-import {
-  switchRouteLang,
-  getLangFromPathname,
-  setUserLangCookie,
-} from "@/lib/lang-detect";
+import { switchRouteLang, getLangFromPathname, setUserLangCookie } from "@/lib/lang-detect";
 import { useI18n } from "@/lib/i18n";
 
 interface LangOption {

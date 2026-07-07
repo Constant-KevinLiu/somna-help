@@ -294,8 +294,7 @@ export const lessonMetas: LessonMeta[] = [
 export const TOTAL_LESSONS = lessonMetas.length; // 18
 
 export function lessonPath(weekSlug: string, lessonSlug: string, lang?: Lang): string {
-  const prefix =
-    lang === "es" ? "/es" : lang === "pt" ? "/pt" : lang === "pl" ? "/pl" : "";
+  const prefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : lang === "pl" ? "/pl" : "";
   return `${prefix}/program/${weekSlug}/${lessonSlug}`;
 }
 
@@ -332,10 +331,7 @@ export function isValidWeekSlug(slug: string): slug is WeekSlug {
 /** Dynamic import of a week's full lesson content (lazy-loaded per week).
  *  When lang is "pl", loads the native Polish content module.
  */
-export async function loadWeekLessons(
-  weekSlug: string,
-  lang?: Lang,
-): Promise<LessonContent[]> {
+export async function loadWeekLessons(weekSlug: string, lang?: Lang): Promise<LessonContent[]> {
   if (lang === "pl") {
     switch (weekSlug) {
       case "week-1":

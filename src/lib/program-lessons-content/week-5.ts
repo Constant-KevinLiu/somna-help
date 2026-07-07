@@ -185,7 +185,8 @@ export const week5Lessons: LessonContent[] = [
       pt: {
         title: "Os pensamentos mais comuns da insônia",
         eyebrow: "SEMANA 5 · LIÇÃO 13",
-        subtitle: "Quatro armadilhas cognitivas que alimentam a ansiedade do sono — e como identificá-las.",
+        subtitle:
+          "Quatro armadilhas cognitivas que alimentam a ansiedade do sono — e como identificá-las.",
         difficulty: "Intermediário",
         readingTime: "7 min de leitura",
         content: [
@@ -198,10 +199,10 @@ export const week5Lessons: LessonContent[] = [
           {
             heading: "Quatro armadilhas cognitivas",
             paras: [
-              "1. Catastrofização (o pior cenário): \"Se eu não pegar no sono nos próximos dez minutos, minha apresentação amanhã vai ser um desastre absoluto e vou arruinar minha carreira.\" A realidade: embora o mau sono seja profundamente incômodo, você provavelmente já enfrentou dias difíceis com pouco descanso antes e superou eles com sucesso.",
-              "2. Pensamento de tudo ou nada (a armadilha binária): \"Se eu não conseguir 8 horas perfeitas de sono ininterrupto hoje, meu dia inteiro é um fracasso total.\" A realidade: o sono é fluido. Uma noite com despertares breves ou 6 horas sólidas ainda pode oferecer restauração significativa.",
-              "3. Comparações injustas (a ilusão do isolamento): \"Todo mundo no mundo está dormindo facilmente agora. Tem algo fundamentalmente quebrado na minha biologia.\" A realidade: milhões de pessoas enfrentam desafios de sono todas as noites. Você não está sozinho, e seu corpo mantém sua capacidade natural de dormir.",
-              "4. Afirmações de \"deveria\" (a panela de pressão): \"Eu deveria conseguir dormir naturalmente sem esforço. Meu corpo deveria simplesmente funcionar.\" A realidade: impor expectativas rígidas a um processo biológico natural só cria frustração, empurrando o sono para mais longe.",
+              '1. Catastrofização (o pior cenário): "Se eu não pegar no sono nos próximos dez minutos, minha apresentação amanhã vai ser um desastre absoluto e vou arruinar minha carreira." A realidade: embora o mau sono seja profundamente incômodo, você provavelmente já enfrentou dias difíceis com pouco descanso antes e superou eles com sucesso.',
+              '2. Pensamento de tudo ou nada (a armadilha binária): "Se eu não conseguir 8 horas perfeitas de sono ininterrupto hoje, meu dia inteiro é um fracasso total." A realidade: o sono é fluido. Uma noite com despertares breves ou 6 horas sólidas ainda pode oferecer restauração significativa.',
+              '3. Comparações injustas (a ilusão do isolamento): "Todo mundo no mundo está dormindo facilmente agora. Tem algo fundamentalmente quebrado na minha biologia." A realidade: milhões de pessoas enfrentam desafios de sono todas as noites. Você não está sozinho, e seu corpo mantém sua capacidade natural de dormir.',
+              '4. Afirmações de "deveria" (a panela de pressão): "Eu deveria conseguir dormir naturalmente sem esforço. Meu corpo deveria simplesmente funcionar." A realidade: impor expectativas rígidas a um processo biológico natural só cria frustração, empurrando o sono para mais longe.',
             ],
           },
           {
@@ -230,7 +231,7 @@ export const week5Lessons: LessonContent[] = [
         ctaLabel: "Baixar meu modelo de diário de pensamentos",
         seoTitle: "Os pensamentos mais comuns da insônia | Somna TCC-I",
         seoDescription:
-          "Conheça as quatro armadilhas cognitivas mais comuns da insônia — catastrofização, pensamento de tudo ou nada, comparações injustas e afirmações de \"deveria\".",
+          'Conheça as quatro armadilhas cognitivas mais comuns da insônia — catastrofização, pensamento de tudo ou nada, comparações injustas e afirmações de "deveria".',
         keywords: [
           "pensamentos de insônia",
           "distorções cognitivas sono",
@@ -423,9 +424,9 @@ export const week5Lessons: LessonContent[] = [
           {
             heading: "Um exemplo prático",
             paras: [
-              "O pensamento automático: \"Se eu não dormir bem hoje à noite, não vou conseguir funcionar amanhã e vou cometer erros terríveis no trabalho.\"",
+              'O pensamento automático: "Se eu não dormir bem hoje à noite, não vou conseguir funcionar amanhã e vou cometer erros terríveis no trabalho."',
               "A verificação da realidade: vamos olhar para as evidências reais. Já houve dias em que você dormiu mal, mas ainda conseguiu completar suas tarefas essenciais? Sim, muitas vezes. Você sobreviveu a esses dias? Sim. Você diria a um amigo querido que está com dificuldades de sono que ele é completamente incapaz de funcionar? Claro que não.",
-              "O reenquadramento equilibrado: \"Eu prefiro uma noite inteira de sono, mas sei por experiência própria que consigo passar pelo dia de trabalho mesmo cansado. Uma noite inquieta não significa que amanhã será um desastre.\"",
+              'O reenquadramento equilibrado: "Eu prefiro uma noite inteira de sono, mas sei por experiência própria que consigo passar pelo dia de trabalho mesmo cansado. Uma noite inquieta não significa que amanhã será um desastre."',
               "Note como a perspectiva reenquadrada não maqueia o desafio. Ela é simplesmente precisa, justa e reconfortante, o que permite ao seu corpo relaxar e deixar o sono chegar naturalmente.",
             ],
           },
@@ -658,10 +659,10 @@ export const week5Lessons: LessonContent[] = [
           {
             heading: "Quatro mitos, quatro verdades",
             paras: [
-              "Mito: \"Preciso garantir 8 horas de sono todas as noites para ficar saudável.\" Verdade: as necessidades de sono variam naturalmente conforme sua genética, idade e atividade. Qualidade e constância importam muito mais do que um número arbitrário.",
-              "Mito: \"Eu deveria adormecer imediatamente depois que minha cabeça toca o travesseiro.\" Verdade: um período normal e saudável para pegar no sono leva de 10 a 20 minutos. Adormecer instantaneamente costuma ser sinal de exaustão severa.",
-              "Mito: \"Acordar durante a noite significa que minha terapia não está funcionando.\" Verdade: despertares breves entre ciclos de sono são uma parte natural da biologia humana. O sono reparador não é um bloco sólido; é uma série de ondas gentis.",
-              "Mito: \"Uma noite ruim de sono vai arruinar completamente minha saúde e minha semana.\" Verdade: o corpo humano é notavelmente resiliente. Sua pressão natural de sono vai aprofundar o sono de hoje à noite para compensar as horas inquietas de ontem.",
+              'Mito: "Preciso garantir 8 horas de sono todas as noites para ficar saudável." Verdade: as necessidades de sono variam naturalmente conforme sua genética, idade e atividade. Qualidade e constância importam muito mais do que um número arbitrário.',
+              'Mito: "Eu deveria adormecer imediatamente depois que minha cabeça toca o travesseiro." Verdade: um período normal e saudável para pegar no sono leva de 10 a 20 minutos. Adormecer instantaneamente costuma ser sinal de exaustão severa.',
+              'Mito: "Acordar durante a noite significa que minha terapia não está funcionando." Verdade: despertares breves entre ciclos de sono são uma parte natural da biologia humana. O sono reparador não é um bloco sólido; é uma série de ondas gentis.',
+              'Mito: "Uma noite ruim de sono vai arruinar completamente minha saúde e minha semana." Verdade: o corpo humano é notavelmente resiliente. Sua pressão natural de sono vai aprofundar o sono de hoje à noite para compensar as horas inquietas de ontem.',
             ],
           },
           {

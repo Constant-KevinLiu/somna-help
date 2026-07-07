@@ -171,7 +171,9 @@ function ProgramPage() {
           </ol>
           <div className="mt-10 text-center">
             <SafeLink
-              to={lang === "pt" ? "/pt/assessment" : lang === "es" ? "/es/evaluacion" : "/assessment"}
+              to={
+                lang === "pt" ? "/pt/assessment" : lang === "es" ? "/es/evaluacion" : "/assessment"
+              }
               className="inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground"
             >
               {t("assess.start")}

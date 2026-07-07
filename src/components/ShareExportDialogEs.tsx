@@ -70,9 +70,7 @@ export function ShareExportDialogEs({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
       <div className="w-full max-w-lg rounded-3xl border border-white/10 bg-card p-6 shadow-2xl">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-xl text-foreground">
-            {t["share.title"]}
-          </h2>
+          <h2 className="font-display text-xl text-foreground">{t["share.title"]}</h2>
           <button
             onClick={onClose}
             className="rounded-full p-1.5 text-muted-foreground transition hover:bg-white/5"

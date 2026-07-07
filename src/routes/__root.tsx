@@ -22,14 +22,8 @@ import {
   switchRouteLang,
   LANG_PREFIX,
 } from "@/lib/lang-detect";
-import {
-  isSearchEngineBot,
-  isMaliciousAiBot,
-} from "@/lib/crawler";
-import {
-  CrawlerContext,
-  CrawlerContextValue,
-} from "@/lib/crawler-context";
+import { isSearchEngineBot, isMaliciousAiBot } from "@/lib/crawler";
+import { CrawlerContext, CrawlerContextValue } from "@/lib/crawler-context";
 import { TurnstileProvider } from "@/components/TurnstileProvider";
 
 function NotFoundComponent() {
@@ -272,8 +266,7 @@ function RootComponent() {
     () => ({
       isCrawler,
       userAgent:
-        serverCrawler.userAgent ||
-        (typeof navigator !== "undefined" ? navigator.userAgent : ""),
+        serverCrawler.userAgent || (typeof navigator !== "undefined" ? navigator.userAgent : ""),
     }),
     [isCrawler, serverCrawler.userAgent],
   );

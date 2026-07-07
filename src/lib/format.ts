@@ -37,7 +37,7 @@ export function esRegionFromPathname(pathname: string): EsRegion {
  */
 export function formatDate(d: Date, lang: Lang, region?: EsRegion): string {
   const locale =
-    lang === "es" && region ? LOCALE_BY_ES_REGION[region] : LOCALE_BY_LANG[lang] ?? "en-US";
+    lang === "es" && region ? LOCALE_BY_ES_REGION[region] : (LOCALE_BY_LANG[lang] ?? "en-US");
   return d.toLocaleDateString(locale, {
     day: "2-digit",
     month: "2-digit",
@@ -52,7 +52,7 @@ export function formatDate(d: Date, lang: Lang, region?: EsRegion): string {
  */
 export function formatTime(d: Date, lang: Lang, region?: EsRegion): string {
   const locale =
-    lang === "es" && region ? LOCALE_BY_ES_REGION[region] : LOCALE_BY_LANG[lang] ?? "en-US";
+    lang === "es" && region ? LOCALE_BY_ES_REGION[region] : (LOCALE_BY_LANG[lang] ?? "en-US");
   const use12h = lang === "es" && region === "es-MX";
   return d.toLocaleTimeString(locale, {
     hour: "2-digit",
@@ -71,11 +71,7 @@ export function formatDateTime(d: Date, lang: Lang, region?: EsRegion): string {
  * - España: euros, símbolo tras la cantidad con espacio (11,99 €)
  * - México: dólares, símbolo delante ($9.99)
  */
-export function formatPrice(
-  amount: number,
-  lang: Lang,
-  region?: EsRegion,
-): string {
+export function formatPrice(amount: number, lang: Lang, region?: EsRegion): string {
   if (lang === "es" && region === "es-MX") {
     return new Intl.NumberFormat("es-MX", {
       style: "currency",
@@ -107,7 +103,10 @@ export function monthlyPriceFor(region: EsRegion): { amount: number; currency: "
 }
 
 /** Devuelve el precio anual mensualizado (20 % de descuento). */
-export function yearlyMonthlyPriceFor(region: EsRegion): { amount: number; currency: "EUR" | "USD" } {
+export function yearlyMonthlyPriceFor(region: EsRegion): {
+  amount: number;
+  currency: "EUR" | "USD";
+} {
   const monthly = monthlyPriceFor(region);
   return { amount: Math.round(monthly.amount * 0.8 * 100) / 100, currency: monthly.currency };
 }

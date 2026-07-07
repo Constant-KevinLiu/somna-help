@@ -36,8 +36,7 @@ function EsDiaryPage() {
       </div>
       <div className="mx-auto max-w-2xl text-center animate-fade-up">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-muted-foreground">
-          <BookOpen className="h-3 w-3 text-accent" />
-          3 MINUTOS CADA MAÑANA
+          <BookOpen className="h-3 w-3 text-accent" />3 MINUTOS CADA MAÑANA
         </div>
         <h1 className="font-display text-4xl leading-tight text-gradient md:text-5xl">
           {t["diary.title"]}

@@ -16,8 +16,7 @@ export const Route = createFileRoute("/es/melatonin-calculator")({
       { title: "Calculadora de melatonina — somna" },
       {
         name: "description",
-        content:
-          "Calcula cuándo tomar melatonina y en qué dosis según tu hora objetivo de sueño.",
+        content: "Calcula cuándo tomar melatonina y en qué dosis según tu hora objetivo de sueño.",
       },
       { property: "og:title", content: "Calculadora de melatonina — somna" },
       { property: "og:locale", content: "es_ES" },

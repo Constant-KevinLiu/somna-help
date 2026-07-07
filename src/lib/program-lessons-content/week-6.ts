@@ -650,7 +650,7 @@ export const week6Lessons: LessonContent[] = [
           {
             heading: "Você chegou",
             paras: [
-              "Parabéns — você completou as seis semanas do Programa TCC-I do Somna. Mas este momento não é apenas um fim; é uma passagem. Você não foi \"curado\" do lado de fora. Você construiu habilidades novas, reconfigurou sua relação com a cama e treinou seu cérebro a dormir de novo.",
+              'Parabéns — você completou as seis semanas do Programa TCC-I do Somna. Mas este momento não é apenas um fim; é uma passagem. Você não foi "curado" do lado de fora. Você construiu habilidades novas, reconfigurou sua relação com a cama e treinou seu cérebro a dormir de novo.',
               "O maior presente da TCC-I é a autoconfiança. Você agora sabe que, mesmo quando o sono vacilar, tem um caminho claro de volta ao descanso.",
             ],
           },

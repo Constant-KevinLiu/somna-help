@@ -316,11 +316,7 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
 // Lightweight cache for related-lesson titles keyed by `${weekSlug}/${lessonSlug}/${lang}`.
 const titleCache = new Map<string, string>();
 
-function useRelatedLessonTitle(
-  weekSlug: string,
-  lessonSlug: string,
-  lang: Lang,
-): string | null {
+function useRelatedLessonTitle(weekSlug: string, lessonSlug: string, lang: Lang): string | null {
   const cacheKey = `${weekSlug}/${lessonSlug}/${lang}`;
   const [title, setTitle] = useState<string | null>(() => titleCache.get(cacheKey) ?? null);
 
@@ -392,13 +388,7 @@ export function lessonHead(lesson: LessonContent, lang: Lang) {
 export function articleJsonLd(lesson: LessonContent, lang: Lang) {
   const c = lesson.i18n[lang] ?? lesson.i18n.en!;
   const weekLabel =
-    lang === "es"
-      ? "Semana"
-      : lang === "pt"
-        ? "Semana"
-        : lang === "zh"
-          ? "第"
-          : "Week";
+    lang === "es" ? "Semana" : lang === "pt" ? "Semana" : lang === "zh" ? "第" : "Week";
   const weekSuffix = lang === "zh" ? "周" : "";
   return {
     "@context": "https://schema.org",

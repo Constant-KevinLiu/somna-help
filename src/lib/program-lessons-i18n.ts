@@ -303,7 +303,11 @@ const pl: ProgramLessonUI = {
   completedWeek: "Ukończona",
   statusLabel: "Status",
   completionLabel: "Ukończenie",
-  difficulty: { beginner: "Początkujący", intermediate: "Średniozaawansowany", advanced: "Zaawansowany" },
+  difficulty: {
+    beginner: "Początkujący",
+    intermediate: "Średniozaawansowany",
+    advanced: "Zaawansowany",
+  },
   dashProgramTitle: "Program CBT-I",
   dashCurrentWeek: "Aktualny tydzień programu",
   dashCurrentLesson: "Aktualna lekcja",

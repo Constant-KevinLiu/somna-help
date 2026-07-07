@@ -29,4 +29,3 @@ export const Route = createFileRoute("/es/panel")({
     links: hreflangLinks("/es/panel"),
   }),
 });
-

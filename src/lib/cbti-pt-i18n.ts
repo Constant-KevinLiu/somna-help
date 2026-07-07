@@ -43,7 +43,8 @@ const ptTitles: Record<CbtiSlug, string> = {
 const ptSummaries: Record<CbtiSlug, string> = {
   "cbt-i-guide": "Uma introdução completa à Terapia Cognitivo-Comportamental para Insônia.",
   "sleep-anxiety": "Por que se preocupar com o sono piora o sono — e como quebrar esse ciclo.",
-  "how-to-fall-asleep-fast": "Técnicas baseadas em evidência para adormecer mais rápido, sem remédios.",
+  "how-to-fall-asleep-fast":
+    "Técnicas baseadas em evidência para adormecer mais rápido, sem remédios.",
   "wake-up-at-3am": "Causas comuns de despertar no meio da madrugada e o que fazer a respeito.",
   "insomnia-treatment": "TCC-I versus medicamentos — o que a pesquisa científica realmente diz.",
 };

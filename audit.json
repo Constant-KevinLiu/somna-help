@@ -13,10 +13,7 @@
           "title": "h3 has a Path Traversal via Percent-Encoded Dot Segments in serveStatic Allows Arbitrary File Read",
           "url": "https://github.com/advisories/GHSA-wr4h-v87w-p3r7",
           "severity": "moderate",
-          "cwe": [
-            "CWE-22",
-            "CWE-116"
-          ],
+          "cwe": ["CWE-22", "CWE-116"],
           "cvss": {
             "score": 5.9,
             "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N"
@@ -30,9 +27,7 @@
           "title": "h3: SSE Event Injection via Unsanitized Carriage Return (`\\r`) in EventStream Data and Comment Fields (Bypass of CVE Fix)",
           "url": "https://github.com/advisories/GHSA-4hxc-9384-m385",
           "severity": "moderate",
-          "cwe": [
-            "CWE-74"
-          ],
+          "cwe": ["CWE-74"],
           "cvss": {
             "score": 5.3,
             "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
@@ -46,9 +41,7 @@
           "title": "h3: Double Decoding in `serveStatic` Bypasses `resolveDotSegments` Path Traversal Protection via `%252e%252e`",
           "url": "https://github.com/advisories/GHSA-72gr-qfp7-vwhw",
           "severity": "moderate",
-          "cwe": [
-            "CWE-22"
-          ],
+          "cwe": ["CWE-22"],
           "cvss": {
             "score": 5.9,
             "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N"
@@ -62,9 +55,7 @@
           "title": "h3 has a Server-Sent Events Injection via Unsanitized Newlines in Event Stream Fields",
           "url": "https://github.com/advisories/GHSA-22cc-p3c6-wpvm",
           "severity": "high",
-          "cwe": [
-            "CWE-93"
-          ],
+          "cwe": ["CWE-93"],
           "cvss": {
             "score": 7.5,
             "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:L/I:H/A:N"
@@ -78,9 +69,7 @@
           "title": "h3 v1 has Request Smuggling (TE.TE) issue",
           "url": "https://github.com/advisories/GHSA-mp2g-9vg9-f4cg",
           "severity": "high",
-          "cwe": [
-            "CWE-444"
-          ],
+          "cwe": ["CWE-444"],
           "cvss": {
             "score": 8.9,
             "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:L"
@@ -88,13 +77,9 @@
           "range": "<=1.15.4"
         }
       ],
-      "effects": [
-        "vinxi"
-      ],
+      "effects": ["vinxi"],
       "range": "<=1.15.8",
-      "nodes": [
-        "node_modules/vinxi/node_modules/h3"
-      ],
+      "nodes": ["node_modules/vinxi/node_modules/h3"],
       "fixAvailable": {
         "name": "vinxi",
         "version": "0.0.10",
@@ -105,14 +90,10 @@
       "name": "vinxi",
       "severity": "moderate",
       "isDirect": true,
-      "via": [
-        "h3"
-      ],
+      "via": ["h3"],
       "effects": [],
       "range": ">=0.0.11",
-      "nodes": [
-        "node_modules/vinxi"
-      ],
+      "nodes": ["node_modules/vinxi"],
       "fixAvailable": {
         "name": "vinxi",
         "version": "0.0.10",

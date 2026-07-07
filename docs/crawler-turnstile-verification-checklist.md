@@ -56,7 +56,7 @@
 
 - [ ] Open the site in a normal browser with a standard UA.
 - [ ] Cookie consent banner (placeholder `CookieConsentBanner` in `__root.tsx`)
-  renders when implemented.
+      renders when implemented.
 - [ ] Turnstile widget renders when `PUBLIC_TURNSTILE_SITE_KEY` is configured.
 - [ ] Language preference redirect still works:
   - Visit `/`, switch to Español → URL changes to `/es`.
@@ -105,6 +105,7 @@ done
 ```
 
 Expected for every path:
+
 - `HTTP/2 200`
 - No `cf-mitigated` header
 - No `set-cookie` forcing a challenge

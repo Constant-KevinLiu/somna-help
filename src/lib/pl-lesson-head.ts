@@ -37,10 +37,7 @@ export function plLessonTitleFromLocales(lessonKey: string): string {
   return getPlString(dict, `${lessonKey}.seoTitle`);
 }
 
-export function plLessonHeadFromLocales(
-  lesson: LessonContent,
-  lessonKey: string,
-) {
+export function plLessonHeadFromLocales(lesson: LessonContent, lessonKey: string) {
   const dict: PlDict = loadPlDict();
   const seoTitle = getPlString(dict, `${lessonKey}.seoTitle`);
   const seoDescription = getPlString(dict, `${lessonKey}.seoDescription`);

@@ -31,35 +31,45 @@ export const pl: Dict = {
   "cta.backHome": "Wróć na stronę główną",
 
   "hero.title": "Zacznij lepiej spać już dziś wieczorem",
-  "hero.sub": "somna to oparty na CBT-I towarzysz snu. Bez leków, bez presji: małe, codzienne zmiany, które pomogą odzyskać naturalny rytm wypoczynku.",
+  "hero.sub":
+    "somna to oparty na CBT-I towarzysz snu. Bez leków, bez presji: małe, codzienne zmiany, które pomogą odzyskać naturalny rytm wypoczynku.",
   "hero.badge": "CBT-I · Potwierdzone badaniami klinicznymi",
 
   "features.title": "Spokojna droga powrotu do regenerujących nocy",
   "features.1.t": "Program CBT-I",
-  "features.1.d": "Sześć tygodni łagodnych, krok po kroku nawyków, które odbudowują naturalny cykl snu i pomagają uporać się z bezsennością.",
+  "features.1.d":
+    "Sześć tygodni łagodnych, krok po kroku nawyków, które odbudowują naturalny cykl snu i pomagają uporać się z bezsennością.",
   "features.2.t": "Kalkulator cykli snu",
-  "features.2.d": "Dowiedz się, o której godzinie najlepiej położyć się spać i wstać, wykorzystując 90-minutowe cykle snu.",
+  "features.2.d":
+    "Dowiedz się, o której godzinie najlepiej położyć się spać i wstać, wykorzystując 90-minutowe cykle snu.",
   "features.3.t": "Wieczorny relaks",
-  "features.3.d": "Oddychanie, medytacja i uspokajające rytuały, które pomagają zrzucić napięcie przed snem.",
+  "features.3.d":
+    "Oddychanie, medytacja i uspokajające rytuały, które pomagają zrzucić napięcie przed snem.",
 
   "trust.title": "Poparte nauką. Stworzone dla spokoju.",
-  "trust.sub": "CBT-I to zalecana przez specjalistów od snu, pozbawiona leków metoda pierwszego wyboru przy przewlekłej bezsenności. Małe, konsekwentne zmiany przez kilka tygodni odbudowują naturalny rytm.",
+  "trust.sub":
+    "CBT-I to zalecana przez specjalistów od snu, pozbawiona leków metoda pierwszego wyboru przy przewlekłej bezsenności. Małe, konsekwentne zmiany przez kilka tygodni odbudowują naturalny rytm.",
   "trust.1.t": "Oparte na dowodach",
-  "trust.1.d": "Dziesięciolecia badań klinicznych potwierdzają skuteczność CBT-I jako pierwszej linii leczenia przewlekłej bezsenności.",
+  "trust.1.d":
+    "Dziesięciolecia badań klinicznych potwierdzają skuteczność CBT-I jako pierwszej linii leczenia przewlekłej bezsenności.",
   "trust.2.t": "Bez leków",
-  "trust.2.d": "Bez tabletek, bez działań niepożądanych. Tylko nawyki, które na nowo uczą mózg zasypiać.",
+  "trust.2.d":
+    "Bez tabletek, bez działań niepożądanych. Tylko nawyki, które na nowo uczą mózg zasypiać.",
   "trust.3.t": "Odbudowa przez nawyki",
-  "trust.3.d": "Drobne, możliwe do utrzymania zmiany w codziennej rutynie przywracają zdrowy sen z czasem.",
+  "trust.3.d":
+    "Drobne, możliwe do utrzymania zmiany w codziennej rutynie przywracają zdrowy sen z czasem.",
 
   "emo.title": "Jeśli Twoje noce wyglądają tak…",
   "emo.1": "Długo leżysz w łóżku po zgaszeniu światła",
   "emo.2": "Gdy próbujesz zasnąć, głowa nie przestaje myśleć",
   "emo.3": "Jesteś wyczerpany, ale sen nie przychodzi",
   "emo.4": "Zbliżająca się pora snu wywołuje niepokój",
-  "emo.note": "Nie jesteś sam. Sen można na nowo nauczyć się spać — łagodnie, stopniowo i bez presji.",
+  "emo.note":
+    "Nie jesteś sam. Sen można na nowo nauczyć się spać — łagodnie, stopniowo i bez presji.",
 
   "calc.title": "Kalkulator cykli snu",
-  "calc.sub": "Sen składa się z cykli trwających około 90 minut. Obudzenie się na końcu cyklu pomaga poczuć się wypoczętym.",
+  "calc.sub":
+    "Sen składa się z cykli trwających około 90 minut. Obudzenie się na końcu cyklu pomaga poczuć się wypoczętym.",
   "calc.wake": "Chcę wstać o",
   "calc.bed": "Chcę zasnąć o",
   "calc.mode.wake": "Planuj wokół pory wstawania",
@@ -75,16 +85,20 @@ export const pl: Dict = {
   "calc.badge.recommended": "⭐ Zalecane",
   "calc.badge.recovery": "Regeneracja",
   "calc.explain.title": "Dlaczego zalecamy 5 i 6 cykli?",
-  "calc.explain.body": "Większość dorosłych funkcjonuje najlepiej po 7,5–9 godzinach snu. Spanie w pełnych cyklach 90-minutowych może zmniejszyć poranne zmęczenie i poprawić energię w ciągu dnia.",
+  "calc.explain.body":
+    "Większość dorosłych funkcjonuje najlepiej po 7,5–9 godzinach snu. Spanie w pełnych cyklach 90-minutowych może zmniejszyć poranne zmęczenie i poprawić energię w ciągu dnia.",
 
   "program.title": "Program CBT-I w 6 tygodni",
   "program.sub": "Sześciotygodniowa, łagodna podróż do odbudowy snu — krok po kroku.",
-  "program.hubSub": "18 krótkich i praktycznych lekcji na 6 tygodni, które uczą mózg ponownie dobrze spać — bez leków.",
+  "program.hubSub":
+    "18 krótkich i praktycznych lekcji na 6 tygodni, które uczą mózg ponownie dobrze spać — bez leków.",
 
   "assess.title": "Ocena snu",
-  "assess.sub": "Krótki, wspierający wywiad, który pomoże zrozumieć Twój sen i przygotować spersonalizowany plan.",
+  "assess.sub":
+    "Krótki, wspierający wywiad, który pomoże zrozumieć Twój sen i przygotować spersonalizowany plan.",
   "assess.start": "Rozpocznij ocenę snu",
-  "assess.support": "Wielu ludzi to przeżywa. Sen może się poprawiać stopniowo, dzięki strukturze i regularności.",
+  "assess.support":
+    "Wielu ludzi to przeżywa. Sen może się poprawiać stopniowo, dzięki strukturze i regularności.",
   "assess.next": "Dalej",
   "assess.back": "Wstecz",
   "assess.done": "Zobacz mój profil snu",
@@ -142,7 +156,8 @@ export const pl: Dict = {
   "diary.cta.dashboard": "Zobacz panel",
 
   "relax.title": "Relaks i odpoczynek",
-  "relax.sub": "Spokojna przestrzeń, by zostawić dzień za sobą: oddychanie 4-7-8, medytacja i uspokajające rytuały przed snem.",
+  "relax.sub":
+    "Spokojna przestrzeń, by zostawić dzień za sobą: oddychanie 4-7-8, medytacja i uspokajające rytuały przed snem.",
   "relax.start": "Rozpocznij relaks",
   "relax.stop": "Zatrzymaj",
   "relax.breathe": "Oddychanie 4-7-8",
@@ -151,7 +166,8 @@ export const pl: Dict = {
   "relax.hold": "Wstrzymaj",
   "relax.exhale": "Wydech",
   "relax.audio.library": "Biblioteka dźwięków do snu",
-  "relax.audio.hint": "Sesje prowadzone, dźwięki natury i szumy. Dotknij sesji, by otworzyć odtwarzacz.",
+  "relax.audio.hint":
+    "Sesje prowadzone, dźwięki natury i szumy. Dotknij sesji, by otworzyć odtwarzacz.",
   "relax.audio.play": "Odtwórz",
   "relax.audio.duration": " min",
 
@@ -193,7 +209,8 @@ export const pl: Dict = {
   "common.no": "Nie",
 
   "error.generic.title": "Coś poszło nie tak",
-  "error.generic.body": "Wystąpił błąd po naszej stronie. Możesz odświeżyć stronę lub wrócić na stronę główną.",
+  "error.generic.body":
+    "Wystąpił błąd po naszej stronie. Możesz odświeżyć stronę lub wrócić na stronę główną.",
   "error.retry": "Spróbuj ponownie",
   "error.goHome": "Wróć na stronę główną",
   "error.404.title": "Strona nie znaleziona",
@@ -207,7 +224,8 @@ export const pl: Dict = {
 
   "footer.tag": "Łagodny towarzysz snu, wspierany przez naukę.",
   "footer.rights": "© 2026 somna. Wszelkie prawa zastrzeżone.",
-  "footer.disc": "To nie jest porada medyczna. Jeśli problemy ze snem się utrzymują, skonsultuj się z lekarzem.",
+  "footer.disc":
+    "To nie jest porada medyczna. Jeśli problemy ze snem się utrzymują, skonsultuj się z lekarzem.",
   "footer.legal.privacy": "Prywatność",
   "footer.legal.terms": "Warunki",
   "footer.legal.cookies": "Cookies",
@@ -225,7 +243,8 @@ export const pl: Dict = {
   "share.facebook": "Facebook",
   "share.linkedin": "LinkedIn",
   "share.whatsapp": "WhatsApp",
-  "share.pinterestFallback": "Najpierw wygeneruj obraz do udostępnienia, a następnie opublikuj na Pinterest.",
+  "share.pinterestFallback":
+    "Najpierw wygeneruj obraz do udostępnienia, a następnie opublikuj na Pinterest.",
   "share.copyLink": "Kopiuj link",
   "share.copied": "Link skopiowany",
   "share.copyFailed": "Nie udało się skopiować linku",
@@ -263,7 +282,8 @@ export const pl: Dict = {
   "lang.switch.title": "Język",
   "lang.switch.aria": "Zmień język",
   "lang.switch.remember": "Zapamiętaj mój język na tym urządzeniu",
-  "lang.redirect.notice": "Przekierowaliśmy Cię na wersję polską. Możesz zmienić język w dowolnej chwili u góry strony.",
+  "lang.redirect.notice":
+    "Przekierowaliśmy Cię na wersję polską. Możesz zmienić język w dowolnej chwili u góry strony.",
 
   lang: "PL",
 };

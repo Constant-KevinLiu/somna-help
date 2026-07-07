@@ -21,7 +21,8 @@ const ptSummaries: Record<LearnSlug, string> = {
   "what-is-cbti": "Uma introdução acolhedora à TCC-I e por que ela funciona a longo prazo.",
   "90-minute-sleep-cycle": "Como os ciclos de sono moldam a sensação de descanso.",
   "4-7-8-breathing": "Um padrão simples de respiração que acalma o sistema nervoso.",
-  "racing-thoughts-at-night": "Por que os pensamentos ficam altos à noite — e o que a TCC-I faz a respeito.",
+  "racing-thoughts-at-night":
+    "Por que os pensamentos ficam altos à noite — e o que a TCC-I faz a respeito.",
   "circadian-rhythm": "Como a luz e a cafeína guiam, silenciosamente, seu relógio biológico.",
   "stimulus-control": "Reconstruindo a conexão cama–sono, uma noite de cada vez.",
 };

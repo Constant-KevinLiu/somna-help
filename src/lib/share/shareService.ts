@@ -63,13 +63,7 @@ export type SharePlatform =
 
 /** Built-in Canvas template kinds. */
 export type ShareTemplate =
-  | "dashboard"
-  | "diary"
-  | "assessment"
-  | "program"
-  | "article"
-  | "default"
-  | "error";
+  "dashboard" | "diary" | "assessment" | "program" | "article" | "default" | "error";
 
 /** A/B variant identifier for share cards. */
 export type ShareVariant = "a" | "b" | string;

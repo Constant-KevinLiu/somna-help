@@ -12,6 +12,7 @@
 ## Fase 1 — Desarrollo en VS Code
 
 ### 1.1 Recursos de idioma (ya creados)
+
 - [ ] Revisar `src/locales/es/common.json` — navegación, botones, errores.
 - [ ] Revisar `src/locales/es/diary.json` — diario, panel, análisis IA.
 - [ ] Revisar `src/locales/es/pricing.json` — planes en euros.
@@ -23,6 +24,7 @@
 - [ ] Revisar `src/locales/es/payment.json` — flujo de pago Subotiz.
 
 ### 1.2 Arquitectura (ya creada)
+
 - [ ] `src/lib/lang-detect.ts` — detección IP/Cookie, switch de rutas.
 - [ ] `src/lib/format.ts` — fecha/hora/moneda ES vs MX.
 - [ ] `src/components/seo/Hreflang.tsx` — hreflang bidireccional + canonical.
@@ -34,7 +36,9 @@
 - [ ] `docs/cloudflare-cache-rules-es.txt` — reglas de caché.
 
 ### 1.3 Ampliar rutas /es/ (tarea pendiente)
+
 Replicar el patrón de `src/routes/es/index.tsx` para cada página:
+
 - [ ] `src/routes/es/diary.tsx`
 - [ ] `src/routes/es/calculator.tsx`
 - [ ] `src/routes/es/assessment.tsx`
@@ -51,11 +55,13 @@ Cada una: `createFileRoute("/es/<path>")`, `head` con `hreflangMeta("/es/<path>"
 textos de `loadEsDict()`.
 
 ### 1.4 Emails (ya creados)
+
 - [ ] `src/emails/es/base.html` + 6 plantillas específicas.
 - [ ] `src/services/email/send-es.ts` — dispatcher nativo es.
 - [ ] `src/routes/api/email/send.ts` — endpoint POST.
 
 ### 1.5 Compartir y pago
+
 - [ ] `src/components/ShareExportDialogEs.tsx` — diálogo R2 en español.
 - [ ] `src/locales/es/payment.json` — cadenas Subotiz.
 
@@ -64,7 +70,7 @@ textos de `loadEsDict()`.
 - [ ] `npm.cmd run dev` y abrir `http://localhost:3000/es`.
 - [ ] Verificar que el `<html lang="es">` aparece en el DOM.
 - [ ] Verificar en DevTools → Network que las etiquetas `<link rel="alternate"
-      hreflang="en|es">` y `<link rel="canonical">` están presentes.
+    hreflang="en|es">` y `<link rel="canonical">` están presentes.
 - [ ] Probar el conmutador de idioma: cambia de /es a / y viceversa.
 - [ ] Comprobar que la cookie `somna_uid` se setea con `lang=es` tras cambiar.
 - [ ] Probar el diario en /es/diary con textos en español.

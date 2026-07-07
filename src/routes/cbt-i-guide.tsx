@@ -76,7 +76,9 @@ export function CbtIGuidePage() {
   return (
     <CbtiArticleShell slug="cbt-i-guide" article={article}>
       <div className="glass-strong rounded-3xl p-6 md:p-8">
-        <h3 className="font-display text-xl text-foreground">{headingByLang[lang] ?? headingByLang.en!}</h3>
+        <h3 className="font-display text-xl text-foreground">
+          {headingByLang[lang] ?? headingByLang.en!}
+        </h3>
         <ol className="relative mt-6 space-y-6 border-l border-white/10 pl-6">
           {content.map((c, i) => (
             <li key={i} className="relative">

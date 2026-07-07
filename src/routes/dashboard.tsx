@@ -313,8 +313,16 @@ export function Dash() {
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <QuickAction to={`${langPrefix}/diary`} icon={Moon} label={t("dash.actions.log")} />
               <QuickAction to={`${langPrefix}/relax`} icon={Wind} label={t("dash.actions.relax")} />
-              <QuickAction to={`${langPrefix}/program`} icon={BookOpen} label={t("dash.actions.program")} />
-              <QuickAction to={`${langPrefix}/reminder`} icon={Bell} label={t("dash.actions.reminder")} />
+              <QuickAction
+                to={`${langPrefix}/program`}
+                icon={BookOpen}
+                label={t("dash.actions.program")}
+              />
+              <QuickAction
+                to={`${langPrefix}/reminder`}
+                icon={Bell}
+                label={t("dash.actions.reminder")}
+              />
             </div>
           </div>
         </div>

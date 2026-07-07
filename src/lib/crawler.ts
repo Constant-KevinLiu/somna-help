@@ -157,10 +157,7 @@ export const MALICIOUS_AI_BOT_USER_AGENTS = [
 export function isSearchEngineBot(userAgent: string | null | undefined): boolean {
   if (!userAgent) return false;
   const ua = userAgent;
-  return (
-    isGoogleBot(ua) ||
-    SEARCH_ENGINE_BOT_USER_AGENTS.some((snippet) => ua.includes(snippet))
-  );
+  return isGoogleBot(ua) || SEARCH_ENGINE_BOT_USER_AGENTS.some((snippet) => ua.includes(snippet));
 }
 
 /** Returns true for known malicious or unauthorized AI scrapers. */

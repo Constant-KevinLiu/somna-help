@@ -144,13 +144,7 @@ export const plWeek1Lessons: LessonContent[] = [
         seoTitle: "Jak działa sen: cykle, rytm okołodobowy i presja snu | Somna",
         seoDescription:
           "Poznaj 90-minutowe cykle snu, rytm okołodobowy i presję snu — oraz jak CBT-I przywraca ich naturalną równowagę.",
-        keywords: [
-          "jak działa sen",
-          "cykle snu",
-          "rytm okołodobowy",
-          "presja snu",
-          "NREM REM",
-        ],
+        keywords: ["jak działa sen", "cykle snu", "rytm okołodobowy", "presja snu", "NREM REM"],
       },
     },
   },

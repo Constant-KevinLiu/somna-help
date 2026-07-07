@@ -14,11 +14,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { LessonTemplate, lessonHead } from "@/components/program/LessonTemplate";
 import { useI18n } from "@/lib/i18n";
-import {
-  getLessonMetaByWeekAndSlug,
-  isValidWeekSlug,
-  loadLesson,
-} from "@/lib/program-lessons";
+import { getLessonMetaByWeekAndSlug, isValidWeekSlug, loadLesson } from "@/lib/program-lessons";
 
 export const Route = createFileRoute("/es/program/$week/$lesson")({
   loader: async ({ params }) => {
@@ -41,9 +37,7 @@ export const Route = createFileRoute("/es/program/$week/$lesson")({
   notFoundComponent: () => (
     <div className="mx-auto max-w-3xl px-5 py-24 text-center">
       <h1 className="font-display text-3xl text-foreground/90">Lección no encontrada</h1>
-      <p className="mt-3 text-muted-foreground">
-        Esa lección del programa no existe.
-      </p>
+      <p className="mt-3 text-muted-foreground">Esa lección del programa no existe.</p>
     </div>
   ),
   component: EsLessonRoute,

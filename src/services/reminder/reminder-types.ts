@@ -9,13 +9,7 @@
 
 /** Days of the week for the weekly summary reminder. */
 export type Weekday =
-  | "Monday"
-  | "Tuesday"
-  | "Wednesday"
-  | "Thursday"
-  | "Friday"
-  | "Saturday"
-  | "Sunday";
+  "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday";
 
 /** Canonical reminder settings persisted to localStorage. */
 export interface ReminderSettings {

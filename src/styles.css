@@ -118,11 +118,7 @@
   /* Frosted glass card used by every navigation surface
      (dropdowns, language menu, tools menu, learn menu, mobile drawer). */
   .nav-surface {
-    background: linear-gradient(
-      180deg,
-      rgba(34, 40, 72, 0.96),
-      rgba(18, 22, 40, 0.92)
-    );
+    background: linear-gradient(180deg, rgba(34, 40, 72, 0.96), rgba(18, 22, 40, 0.92));
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
     border: 1px solid oklch(1 0 0 / 14%);
@@ -141,11 +137,7 @@
   /* The sticky top app bar. Same gradient, but slightly thinner so it
      doesn't overpower the page while still being legible. */
   .nav-bar {
-    background: linear-gradient(
-      180deg,
-      rgba(34, 40, 72, 0.92),
-      rgba(18, 22, 40, 0.88)
-    );
+    background: linear-gradient(180deg, rgba(34, 40, 72, 0.92), rgba(18, 22, 40, 0.88));
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
     border-bottom: 1px solid oklch(1 0 0 / 10%);
@@ -172,7 +164,9 @@
     color: rgba(255, 255, 255, 0.92);
     border-radius: 12px;
     background: rgba(255, 255, 255, 0.04);
-    transition: background-color 200ms ease-out, color 200ms ease-out;
+    transition:
+      background-color 200ms ease-out,
+      color 200ms ease-out;
   }
   .nav-item:hover,
   .nav-item:focus-visible {

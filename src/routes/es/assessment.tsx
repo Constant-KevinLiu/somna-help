@@ -24,8 +24,7 @@ export const Route = createFileRoute("/es/assessment")({
       { property: "og:title", content: "Test de sueño — somna" },
       {
         property: "og:description",
-        content:
-          "Cinco preguntas para entender tu sueño y crear tu plan personalizado de CBT-I.",
+        content: "Cinco preguntas para entender tu sueño y crear tu plan personalizado de CBT-I.",
       },
       { property: "og:locale", content: "es_ES" },
       { property: "og:url", content: "https://somna.help/es/assessment" },

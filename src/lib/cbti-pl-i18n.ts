@@ -19,7 +19,8 @@ const plTitles: Record<CbtiSlug, string> = {
 const plSummaries: Record<CbtiSlug, string> = {
   "cbt-i-guide": "Pełne wprowadzenie do poznawczo-behawioralnej terapii bezsenności.",
   "sleep-anxiety": "Dlaczego martwienie się snem pogarsza sen — i jak przerwać ten cykl.",
-  "how-to-fall-asleep-fast": "Techniki oparte na dowodach, które pomagają zasnąć szybciej, bez leków.",
+  "how-to-fall-asleep-fast":
+    "Techniki oparte na dowodach, które pomagają zasnąć szybciej, bez leków.",
   "wake-up-at-3am": "Przyczyny nocnych przebudzeń o świcie i co z nimi robić.",
   "insomnia-treatment": "CBT-I vs leki — co naprawdę mówią badania naukowe.",
 };
@@ -477,7 +478,11 @@ const plArticles: CbtiDict["articles"] = {
       yes: "Tak",
       no: "Nie",
       nodes: [
-        { q: "Obudziłeś się?", yes: "Zostań w bezruchu, oddychaj powoli.", no: "Kontynuuj odpoczynek." },
+        {
+          q: "Obudziłeś się?",
+          yes: "Zostań w bezruchu, oddychaj powoli.",
+          no: "Kontynuuj odpoczynek.",
+        },
         {
           q: "Wciąż przytomny po około 20 minutach?",
           yes: "Wstań z łóżka. Słabe światło. Spokojna aktywność.",

@@ -64,12 +64,7 @@ export const plWeek5Lessons: LessonContent[] = [
         seoTitle: "Typowe myśli przy bezsenności | Somna CBT-I",
         seoDescription:
           "Poznaj najczęstsze niepomocne myśli przy bezsenności i naucz się je rozpoznawać, zanim przejmą kontrolę nad snem.",
-        keywords: [
-          "myśli przy bezsenności",
-          "lęk przed snem",
-          "katastrofizowanie",
-          "CBT-I",
-        ],
+        keywords: ["myśli przy bezsenności", "lęk przed snem", "katastrofizowanie", "CBT-I"],
       },
     },
   },
@@ -138,12 +133,7 @@ export const plWeek5Lessons: LessonContent[] = [
         seoTitle: "Zmiana przekonań o śnie dzięki CBT-I | Somna",
         seoDescription:
           "Praktyczne wprowadzenie do restrukturyzacji poznawczej: jak korygować niepomocne przekonania o śnie.",
-        keywords: [
-          "restrukturyzacja poznawcza",
-          "przekonania o śnie",
-          "CBT-I",
-          "myślenie o śnie",
-        ],
+        keywords: ["restrukturyzacja poznawcza", "przekonania o śnie", "CBT-I", "myślenie o śnie"],
       },
     },
   },
@@ -209,12 +199,7 @@ export const plWeek5Lessons: LessonContent[] = [
         seoTitle: "Realistyczne oczekiwania wobec snu | Somna CBT-I",
         seoDescription:
           "Dlaczego dążenie do idealnego snu może pogarszać bezsenność i jak ustalić zdrowe, realistyczne oczekiwania.",
-        keywords: [
-          "oczekiwania wobec snu",
-          "perfekcjonizm snu",
-          "ile snu potrzebuję",
-          "CBT-I",
-        ],
+        keywords: ["oczekiwania wobec snu", "perfekcjonizm snu", "ile snu potrzebuję", "CBT-I"],
       },
     },
   },

@@ -29,8 +29,7 @@ export const Route = createFileRoute("/es/program/")({
       { property: "og:title", content: "Programa CBT-I en 6 semanas — somna" },
       {
         property: "og:description",
-        content:
-          "Reconstruye tu sueño con un programa CBT-I de 6 semanas y 18 lecciones.",
+        content: "Reconstruye tu sueño con un programa CBT-I de 6 semanas y 18 lecciones.",
       },
       { property: "og:url", content: "https://somna.help/es/program" },
       { property: "og:locale", content: "es_ES" },
@@ -96,10 +95,7 @@ function EsProgramIndexPage() {
                 d: "Celebra cada hito y mantén la motivación semana a semana.",
               },
             ].map((f, i) => (
-              <div
-                key={i}
-                className="glass rounded-2xl border border-white/10 p-5"
-              >
+              <div key={i} className="glass rounded-2xl border border-white/10 p-5">
                 <f.icon className="h-5 w-5 text-accent" />
                 <h3 className="mt-3 font-display text-lg text-foreground">{f.t}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{f.d}</p>
@@ -112,9 +108,7 @@ function EsProgramIndexPage() {
       {/* SEMANAS */}
       <section className="px-5 py-12">
         <div className="mx-auto max-w-4xl">
-          <h2 className="font-display text-2xl text-foreground md:text-3xl">
-            Las 6 semanas
-          </h2>
+          <h2 className="font-display text-2xl text-foreground md:text-3xl">Las 6 semanas</h2>
           <div className="mt-8 space-y-3">
             {programWeeks.map((week, idx) => (
               <SafeLink
@@ -142,9 +136,7 @@ function EsProgramIndexPage() {
       {/* CTA FINAL */}
       <section className="px-5 py-16">
         <div className="mx-auto max-w-3xl rounded-3xl border border-white/10 bg-gradient-to-br from-primary/10 to-accent/10 p-8 text-center">
-          <h2 className="font-display text-2xl text-foreground md:text-3xl">
-            {t["emo.note"]}
-          </h2>
+          <h2 className="font-display text-2xl text-foreground md:text-3xl">{t["emo.note"]}</h2>
           <SafeLink
             to="/es/program/week-1-sleep-foundations"
             className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground transition hover:scale-[1.02]"

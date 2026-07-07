@@ -66,12 +66,7 @@ export const plWeek3Lessons: LessonContent[] = [
         seoTitle: "Wydajność snu: dlaczego czas w łóżku to nie sen | Somna CBT-I",
         seoDescription:
           "Naucz się obliczać wydajność snu i zrozum, dlaczego krótszy czas w łóżku może poprawić jakość snu.",
-        keywords: [
-          "wydajność snu",
-          "jakość snu",
-          "czas w łóżku",
-          "CBT-I",
-        ],
+        keywords: ["wydajność snu", "jakość snu", "czas w łóżku", "CBT-I"],
       },
     },
   },
@@ -140,12 +135,7 @@ export const plWeek3Lessons: LessonContent[] = [
         seoTitle: "Terapia ograniczenia snu w CBT-I | Somna",
         seoDescription:
           "Praktyczny przewodnik po terapii ograniczenia snu: jak obliczyć docelowy czas w łóżku i stopniowo go zwiększać.",
-        keywords: [
-          "ograniczenie snu",
-          "terapia ograniczenia snu",
-          "czas w łóżku",
-          "CBT-I",
-        ],
+        keywords: ["ograniczenie snu", "terapia ograniczenia snu", "czas w łóżku", "CBT-I"],
       },
     },
   },

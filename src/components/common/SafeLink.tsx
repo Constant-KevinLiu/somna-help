@@ -44,14 +44,9 @@ export type SafeLinkProps = Omit<ComponentProps<typeof Link>, "to"> & {
  * place in the codebase where a `string` is widened to the router's literal
  * route union. Every other component should use `SafeLink` or a literal `to`.
  */
-export const SafeLink = forwardRef<HTMLAnchorElement, SafeLinkProps>(
-  function SafeLink({ to, ...rest }, ref) {
-    return (
-      <Link
-        ref={ref}
-        to={to as unknown as ComponentProps<typeof Link>["to"]}
-        {...rest}
-      />
-    );
-  },
-);
+export const SafeLink = forwardRef<HTMLAnchorElement, SafeLinkProps>(function SafeLink(
+  { to, ...rest },
+  ref,
+) {
+  return <Link ref={ref} to={to as unknown as ComponentProps<typeof Link>["to"]} {...rest} />;
+});

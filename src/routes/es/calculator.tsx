@@ -25,8 +25,7 @@ export const Route = createFileRoute("/es/calculator")({
       { property: "og:title", content: "Calculadora de sueño — somna" },
       {
         property: "og:description",
-        content:
-          "Calcula tu hora ideal de dormir según los ciclos de 90 minutos.",
+        content: "Calcula tu hora ideal de dormir según los ciclos de 90 minutos.",
       },
       { property: "og:locale", content: "es_ES" },
       { property: "og:url", content: "https://somna.help/es/calculator" },

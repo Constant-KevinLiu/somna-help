@@ -10,8 +10,18 @@ export function RelatedTools({ exclude }: { exclude?: string }) {
   const prefix = LANG_PREFIX[lang];
   const tools = [
     { to: `${prefix}/calculator`, title: d.nav.cycle, desc: d.related.cycleDesc, icon: Moon },
-    { to: `${prefix}/sleep-calculator`, title: d.nav.sleep, desc: d.related.sleepDesc, icon: Calculator },
-    { to: `${prefix}/bedtime-calculator`, title: d.nav.bedtime, desc: d.related.bedtimeDesc, icon: Bed },
+    {
+      to: `${prefix}/sleep-calculator`,
+      title: d.nav.sleep,
+      desc: d.related.sleepDesc,
+      icon: Calculator,
+    },
+    {
+      to: `${prefix}/bedtime-calculator`,
+      title: d.nav.bedtime,
+      desc: d.related.bedtimeDesc,
+      icon: Bed,
+    },
     { to: `${prefix}/nap-calculator`, title: d.nav.nap, desc: d.related.napDesc, icon: Coffee },
     {
       to: `${prefix}/melatonin-calculator`,

@@ -29,9 +29,9 @@
       "/*": {
         "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
         "X-Content-Type-Options": "nosniff",
-        "Referrer-Policy": "strict-origin-when-cross-origin"
-      }
-    }
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+      },
+    },
   },
 
   // =============================================================================
@@ -41,7 +41,7 @@
   // private and is injected into the Worker runtime by Wrangler.
   // =============================================================================
   "vars": {
-    "TURNSTILE_SECRET_KEY": "0x4AAAAAAADxKp1ZKabCELC_EOYTcBEV6xHY"
+    "TURNSTILE_SECRET_KEY": "0x4AAAAAAADxKp1ZKabCELC_EOYTcBEV6xHY",
   },
 
   // =============================================================================
@@ -82,26 +82,26 @@
           "description": "Allowlist verified Google crawlers: skip WAF, Bot Fight Mode, rate limiting and Turnstile",
           "action": "skip",
           "action_parameters": {
-            "ruleset": "current"
+            "ruleset": "current",
           },
-          "enabled": true
+          "enabled": true,
         },
         {
           "expression": "(http.user_agent contains \"bingbot\" or http.user_agent contains \"DuckDuckBot\" or http.user_agent contains \"Applebot\" or http.user_agent contains \"YandexBot\" or http.user_agent contains \"Baiduspider\" or http.user_agent contains \"Slurp\")",
           "description": "Allowlist other major search engine crawlers: skip WAF, Bot Fight Mode and rate limiting",
           "action": "skip",
           "action_parameters": {
-            "ruleset": "current"
+            "ruleset": "current",
           },
-          "enabled": true
+          "enabled": true,
         },
         {
           "expression": "(http.user_agent contains \"GPTBot\" or http.user_agent contains \"CCBot\" or http.user_agent contains \"ClaudeBot\" or http.user_agent contains \"anthropic-ai\" or http.user_agent contains \"PerplexityBot\" or http.user_agent contains \"Amazonbot\" or http.user_agent contains \"Bytespider\" or http.user_agent contains \"ImagesiftBot\" or http.user_agent contains \"Omgilibot\" or http.user_agent contains \"Diffbot\" or http.user_agent contains \"FacebookBot\")",
           "description": "Block known unauthorized AI scrapers and social crawlers",
           "action": "block",
-          "enabled": true
-        }
-      ]
+          "enabled": true,
+        },
+      ],
     },
 
     // Rate limiting: disable for all legitimate search-engine crawlers.
@@ -111,10 +111,10 @@
           "expression": "(http.user_agent contains \"Googlebot\" or http.user_agent contains \"bingbot\" or http.user_agent contains \"DuckDuckBot\" or http.user_agent contains \"Applebot\" or http.user_agent contains \"YandexBot\" or http.user_agent contains \"Baiduspider\" or http.user_agent contains \"Slurp\")",
           "description": "Disable rate limiting for legitimate search engine crawlers",
           "action": "skip",
-          "enabled": true
-        }
-      ]
-    }
+          "enabled": true,
+        },
+      ],
+    },
   },
 
   // Bot Management (requires Enterprise / Pro with Bot Management subscription):

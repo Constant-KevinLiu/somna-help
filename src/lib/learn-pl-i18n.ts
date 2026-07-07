@@ -18,8 +18,7 @@ const plTitles: Record<LearnSlug, string> = {
 };
 
 const plSummaries: Record<LearnSlug, string> = {
-  "what-is-cbti":
-    "Przyjazne wprowadzenie do CBT-I i dlaczego działa na dłuższą metę.",
+  "what-is-cbti": "Przyjazne wprowadzenie do CBT-I i dlaczego działa na dłuższą metę.",
   "90-minute-sleep-cycle":
     "Jak cykle snu kształtują poczucie wypoczynku i wybieraj idealną porę budzenia.",
   "4-7-8-breathing":
