@@ -21,8 +21,8 @@
  * CI without extra installs. It shells out to the project's own tsc/eslint/
  * vite/wrangler via npx so it always uses the pinned versions.
  */
-import { execSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { execSync, spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -115,7 +115,20 @@ run("Production Build (vite build)", () => {
 });
 
 run("Wrangler Dry Run", () => {
-  const out = sh("npx wrangler deploy --dry-run");
+  const logDir = join(ROOT, "ci-logs");
+  const logFile = join(logDir, "wrangler-dry-run.log");
+  mkdirSync(logDir, { recursive: true });
+  // Redirect output to a file to avoid ENOBUFS from large in-memory pipes.
+  const result = spawnSync("npx wrangler deploy --dry-run > ci-logs/wrangler-dry-run.log 2>&1", {
+    cwd: ROOT,
+    shell: true,
+    stdio: ["ignore", "ignore", "ignore"],
+  });
+  if (!existsSync(logFile)) throw new Error("wrangler dry-run did not produce output");
+  const out = readFileSync(logFile, "utf8");
+  if (result.status !== 0) {
+    throw new Error(`wrangler dry-run exited ${result.status}\n${out.slice(-500)}`);
+  }
   if (!out.includes("SHARE_BUCKET")) throw new Error("R2 binding SHARE_BUCKET not found");
   if (!out.includes("--dry-run: exiting now")) throw new Error("dry-run did not complete");
   return "config valid, R2 binding present";
@@ -150,11 +163,22 @@ run("Route tree generated", () => {
 console.log("\n═══ Gate 3: SEO ═══");
 
 run("sitemap.xml lists all routes", () => {
-  const xml = read("public/sitemap.xml");
-  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  const indexXml = read("public/sitemap.xml");
+  const childMaps = [...indexXml.matchAll(/<loc>([^<]+\.xml)<\/loc>/g)].map((m) => m[1]);
+  const locs = [];
+  if (childMaps.length > 0) {
+    for (const childUrl of childMaps) {
+      const fileName = childUrl.split("/").pop();
+      const childXml = read(`public/${fileName}`);
+      locs.push(...[...childXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]));
+    }
+  } else {
+    locs.push(...[...indexXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]));
+  }
+  console.log(`    discovered ${locs.length} URLs in sitemap(s)`);
   if (locs.length < 30) throw new Error(`only ${locs.length} URLs (expected 30+)`);
   if (!locs.includes("https://somna.help/")) throw new Error("homepage missing");
-  if (!locs.some((u) => u.includes("/program/week-1/"))) throw new Error("program lessons missing");
+  if (!locs.some((u) => u.includes("/program/week-1-sleep-foundations"))) throw new Error("program week 1 missing");
   return `${locs.length} URLs`;
 });
 

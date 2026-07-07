@@ -1,7 +1,7 @@
 # Somna.help Release Report
 
-**Generated:** 2026-07-04 05:22:47 UTC
-**Duration:** 42.9s
+**Generated:** 2026-07-07 14:21:41 UTC
+**Duration:** 99.7s
 **Decision:** ❌ RELEASE BLOCKED
 
 ---
@@ -10,9 +10,9 @@
 
 | Metric | Count |
 |--------|-------|
-| ✅ Passed | 20 |
+| ✅ Passed | 18 |
 | ⚠️ Warnings | 2 |
-| ❌ Failed | 1 |
+| ❌ Failed | 3 |
 
 ---
 
@@ -28,18 +28,18 @@
 
 ## Bundle Size
 
-router-Ckg7ajCn.js is 887 KB (threshold 500 KB)
+router-BcCVOcV8.js is 957 KB (threshold 500 KB)
 
 ## Cloudflare
 
 - Build: dist/server/server.js + dist/client/ produced
-- Wrangler: config valid, R2 binding present
+- Wrangler: —
 
 ## SEO
 
 ### SEO Checks
 
-- [x] sitemap.xml lists all routes — 47 URLs
+- [ ] sitemap.xml lists all routes — program week 1 missing
 - [x] robots.txt allows crawling + references sitemap — valid
 - [x] OG image file exists — public/og-cover.jpg
 - [x] No localhost URLs in source — clean
@@ -81,11 +81,13 @@ router-Ckg7ajCn.js is 887 KB (threshold 500 KB)
 ## Remaining Risks
 
 - ⚠️ Prettier (format check): some files need formatting (run `npm run format`)
-- ⚠️ Main router chunk under 500 KB: router-Ckg7ajCn.js is 887 KB (threshold 500 KB)
+- ⚠️ Main router chunk under 500 KB: router-BcCVOcV8.js is 957 KB (threshold 500 KB)
 
 ## Blocking Issues
 
-- ❌ ESLint (0 errors): spawnSync C:\WINDOWS\system32\cmd.exe ENOBUFS
+- ❌ ESLint (0 errors): Command failed: npx eslint .
+- ❌ Wrangler Dry Run: spawnSync C:\WINDOWS\system32\cmd.exe ENOBUFS
+- ❌ sitemap.xml lists all routes: program week 1 missing
 
 ---
 

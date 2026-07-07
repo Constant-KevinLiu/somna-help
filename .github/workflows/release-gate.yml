@@ -63,12 +63,53 @@ jobs:
       - name: Production Build
         run: npm run build
 
-      - name: Wrangler Dry Run
-        run: npx wrangler deploy --dry-run
+      - name: Wrangler Dry Run (write log to file to avoid ENOBUFS)
+        run: |
+          mkdir -p ci-logs
+          # Run dry-run and send stdout/stderr to a file to avoid large in-memory pipes.
+          set +e
+          npx wrangler deploy --dry-run > ci-logs/wrangler-dry-run.log 2>&1
+          WRANGLER_EXIT=$?
+          set -e
+          # Print a short tail so the job summary has context without blowing buffers.
+          echo "==== Wrangler dry-run tail (last 200 lines) ===="
+          tail -n 200 ci-logs/wrangler-dry-run.log
+          # Fail on non-zero exit or if the output contains errors.
+          if [ $WRANGLER_EXIT -ne 0 ]; then
+            echo "Wrangler dry-run failed with exit code $WRANGLER_EXIT"
+            cat ci-logs/wrangler-dry-run.log
+            exit 1
+          fi
+          if grep -qi "error" ci-logs/wrangler-dry-run.log; then
+            echo "Wrangler dry-run output contains errors — see ci-logs/wrangler-dry-run.log"
+            cat ci-logs/wrangler-dry-run.log
+            exit 1
+          fi
 
       # ── Full Release Gate (SEO, i18n, security, data integrity, bundle) ───
       # This re-runs the engineering checks above (fast, cached) plus all the
       # structural gates. It also writes release-report.md.
+      - name: Serve built site for crawler
+        run: |
+          mkdir -p ci-logs
+          # Start a lightweight static server in the background. http-server is
+          # not in package.json, so let npx install it automatically on CI.
+          npx --yes http-server ./dist -p 3000 -c-1 > ci-logs/http-server.log 2>&1 &
+          # Wait for the server to accept connections.
+          for i in $(seq 1 30); do
+            if curl -sSf http://127.0.0.1:3000/ >/dev/null 2>&1; then
+              echo "Server started"
+              break
+            fi
+            echo "Waiting for server to start..."
+            sleep 1
+          done
+          if ! curl -sSf http://127.0.0.1:3000/ >/dev/null 2>&1; then
+            echo "Failed to start static server; see ci-logs/http-server.log"
+            cat ci-logs/http-server.log || true
+            exit 1
+          fi
+
       - name: Run Release Gate
         run: npm run release:report
 
@@ -78,7 +119,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-report
-          path: release-report.md
+          path: |
+            release-report.md
+            ci-logs/
           retention-days: 30
 
       - name: Upload build artifacts
