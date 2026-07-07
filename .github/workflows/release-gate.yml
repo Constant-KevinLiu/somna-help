@@ -48,7 +48,7 @@ jobs:
         run: npm ci
 
       - name: Auto fix Prettier format
-        run: npx prettier --write "src/**/*.{ts,tsx}"
+        run: npx prettier --write "src/**/*.{ts,tsx}" "docs/**/*.md"
 
       # ── Engineering Quality Gate ──────────────────────────────────────────
       - name: TypeScript Check
@@ -58,7 +58,7 @@ jobs:
         run: npm run lint
 
       - name: Prettier Format Check
-        run: npm run format:check
+        run: npx prettier --check "src/**/*.{ts,tsx}" "docs/**/*.md"
 
       - name: Production Build
         run: npm run build

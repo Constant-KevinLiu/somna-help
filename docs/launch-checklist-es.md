@@ -70,7 +70,7 @@ textos de `loadEsDict()`.
 - [ ] `npm.cmd run dev` y abrir `http://localhost:3000/es`.
 - [ ] Verificar que el `<html lang="es">` aparece en el DOM.
 - [ ] Verificar en DevTools → Network que las etiquetas `<link rel="alternate"
-    hreflang="en|es">` y `<link rel="canonical">` están presentes.
+hreflang="en|es">` y `<link rel="canonical">` están presentes.
 - [ ] Probar el conmutador de idioma: cambia de /es a / y viceversa.
 - [ ] Comprobar que la cookie `somna_uid` se setea con `lang=es` tras cambiar.
 - [ ] Probar el diario en /es/diary con textos en español.
