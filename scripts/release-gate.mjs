@@ -178,7 +178,8 @@ run("sitemap.xml lists all routes", () => {
   console.log(`    discovered ${locs.length} URLs in sitemap(s)`);
   if (locs.length < 30) throw new Error(`only ${locs.length} URLs (expected 30+)`);
   if (!locs.includes("https://somna.help/")) throw new Error("homepage missing");
-  if (!locs.some((u) => u.includes("/program/week-1-sleep-foundations"))) throw new Error("program week 1 missing");
+  if (!locs.some((u) => u.includes("/program/week-1-sleep-foundations")))
+    throw new Error("program week 1 missing");
   return `${locs.length} URLs`;
 });
 

@@ -66,10 +66,18 @@ const PROGRAM_WEEKS = [
 /** Program lesson slugs by week slug (must match lessonMetas). */
 const PROGRAM_LESSONS = {
   "week-1": ["what-is-insomnia", "how-sleep-works", "trying-harder-makes-sleep-worse"],
-  "week-2": ["bed-sleep-association", "stimulus-control-science", "leaving-bed-without-frustration"],
+  "week-2": [
+    "bed-sleep-association",
+    "stimulus-control-science",
+    "leaving-bed-without-frustration",
+  ],
   "week-3": ["what-is-sleep-efficiency", "sleep-restriction-therapy", "sleep-restriction-mistakes"],
   "week-4": ["racing-thoughts-at-night", "relaxation-techniques", "breathing-exercises-for-sleep"],
-  "week-5": ["common-insomnia-thoughts", "cbti-changes-sleep-beliefs", "realistic-sleep-expectations"],
+  "week-5": [
+    "common-insomnia-thoughts",
+    "cbti-changes-sleep-beliefs",
+    "realistic-sleep-expectations",
+  ],
   "week-6": ["preventing-relapse", "travel-jet-lag-sleep", "long-term-sleep-health"],
 };
 
