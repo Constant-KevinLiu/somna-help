@@ -147,7 +147,7 @@
 - [ ] English — all UI text displays in English
 - [ ] 简体中文 — all UI text displays in Chinese
 - [ ] Español — all UI text displays in Spanish
-- [ ] Language switcher persists selection (localStorage `lull.lang`)
+- [ ] Language switcher persists selection (localStorage `somna-language`)
 - [ ] No mixed-language strings in any dict
 - [ ] Dashboard translations complete
 - [ ] Share dialog translations complete

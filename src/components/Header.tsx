@@ -314,7 +314,17 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <LanguageSwitcher />
+            <LanguageSwitcher
+              onBeforeChange={async () => {
+                if (open) {
+                  setOpen(false);
+                  // Espera a que termine la animación CSS del drawer antes de
+                  // cambiar el idioma y navegar; evita que el estado viejo del
+                  // drawer restaure el idioma anterior en móvil.
+                  await new Promise((r) => setTimeout(r, 220));
+                }
+              }}
+            />
             <button
               ref={hamburgerRef}
               className="lg:hidden rounded-full p-2 text-white/80 hover:bg-accent/20 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"

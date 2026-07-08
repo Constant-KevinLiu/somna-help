@@ -4,10 +4,12 @@
  * ⚠️ 100% cliente. Sem endpoints /api. Sem createAPIFileRoute. Sem SSR.
  *
  * Arquitetura multilíngue extensível:
- * - A preferência do usuário é salva no cookie `somna_lang` (1 ano).
+ * - A preferência do usuário é salva no cookie `somna_lang` (1 ano) e no
+ *   localStorage `somna-language`.
  * - Detecção automática por navegador (navigator.language) como fallback.
- * - Idiomas suportados: en, es, pt. Reservados para futuro: de, ja, zh.
- * - Cada idioma tem seu próprio prefixo de rota: / (en), /es/, /pt/, /de/, /ja/, /zh/.
+ * - Idiomas suportados: en, es, pt, pl. Reservados para futuro: de, ja, zh.
+ * - Cada idioma tem seu próprio prefixo de rota: / (en), /es/, /pt/, /pl/,
+ *   /de/, /ja/, /zh/.
  */
 
 export type Lang = "en" | "es" | "pt" | "pl" | "de" | "ja" | "zh";
@@ -35,6 +37,8 @@ export const LANG_COOKIE = "somna_lang";
 export const UID_COOKIE = "somna_uid";
 /** Validade do cookie de idioma: 1 ano. */
 export const LANG_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
+/** Nome da chave localStorage que guarda a preferência de idioma do usuário. */
+export const LANG_LOCAL_STORAGE = "somna-language";
 
 /**
  * Lee una cookie individual por su nombre desde document.cookie (cliente).
@@ -72,13 +76,8 @@ export function getBrowserLang(): Lang {
   return "en";
 }
 
-/**
- * getSavedUserLang: lê a preferência manual salva pelo usuário no cookie
- * somna_lang. Retorna null se não houver preferência salva.
- */
-export function getSavedUserLang(): Lang | null {
-  const v = readCookie(LANG_COOKIE);
-  if (
+function isValidLang(v: string | null): v is Lang {
+  return (
     v === "en" ||
     v === "es" ||
     v === "pt" ||
@@ -86,8 +85,21 @@ export function getSavedUserLang(): Lang | null {
     v === "de" ||
     v === "ja" ||
     v === "zh"
-  )
-    return v;
+  );
+}
+
+/**
+ * getSavedUserLang: lê a preferência manual salva pelo usuário no cookie
+ * somna_lang ou no localStorage somna-language. Retorna null se não houver
+ * preferência salva.
+ */
+export function getSavedUserLang(): Lang | null {
+  const cookie = readCookie(LANG_COOKIE);
+  if (isValidLang(cookie)) return cookie;
+  if (typeof window !== "undefined") {
+    const stored = window.localStorage.getItem(LANG_LOCAL_STORAGE);
+    if (isValidLang(stored)) return stored;
+  }
   return null;
 }
 
@@ -108,8 +120,20 @@ export function setUserLangCookie(lang: Lang): void {
 }
 
 /**
+ * Persiste a preferência de idioma em cookie (somna_lang) e localStorage
+ * (somna-language), mantendo compatibilidade com mecanismos anteriores.
+ */
+export function setUserLangPreference(lang: Lang): void {
+  setUserLangCookie(lang);
+  if (typeof window !== "undefined") {
+    window.localStorage.setItem(LANG_LOCAL_STORAGE, lang);
+  }
+}
+
+/**
  * Devuelve el idioma efectivo del visitante en el cliente.
- * Prioridad: cookie de preferencia manual > idioma del navegador > "en".
+ * Prioridad: cookie somna_lang > localStorage somna-language > idioma del
+ * navegador > "en".
  */
 export function resolveClientLang(): Lang {
   return getSavedUserLang() ?? getBrowserLang();
@@ -213,9 +237,9 @@ export function switchRouteLang(pathname: string, toLang: Lang): string {
   const enPath = enSegments.join("/");
 
   // Aplica el prefijo del idioma destino y mapea slugs si es necesario.
-  if (toLang === "en") return enPath;
   const targetSegments = enPath.split("/").map((s) => enSlugToLocalized(s, toLang));
-  return targetPrefix + targetSegments.join("/");
+  const result = targetPrefix + targetSegments.join("/");
+  return result || "/";
 }
 
 /**

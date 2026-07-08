@@ -6,15 +6,22 @@
  * - Muestra el idioma actual y permite cambiar entre los idiomas activos.
  * - Idiomas activos: English, Español, Português (BR).
  * - Reservados (desactivados): Deutsch, 日本語, 中文.
- * - Al hacer clic: escribe cookie somna_lang y router.navigate a la ruta equivalente.
+ * - Al hacer clic: persiste somna_lang + somna-language, cierra el drawer
+ *   móvil si es necesario, y navega a la ruta equivalente.
  */
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "@tanstack/react-router";
 import { Globe, Check, ChevronDown } from "lucide-react";
 import type { Lang } from "@/lib/lang-detect";
-import { switchRouteLang, getLangFromPathname, setUserLangCookie } from "@/lib/lang-detect";
+import { switchRouteLang, getLangFromPathname, setUserLangPreference } from "@/lib/lang-detect";
 import { useI18n } from "@/lib/i18n";
+
+interface LanguageSwitcherProps {
+  /** Llamado antes de persistir el idioma y navegar; permite cerrar el drawer
+   *  móvil y esperar su animación para evitar condiciones de carrera. */
+  onBeforeChange?: () => void | Promise<void>;
+}
 
 interface LangOption {
   value: Lang;
@@ -33,7 +40,7 @@ const OPTIONS: LangOption[] = [
   { value: "zh", label: "中文", flag: "🇨🇳", active: false },
 ];
 
-export function LanguageSwitcher() {
+export function LanguageSwitcher({ onBeforeChange }: LanguageSwitcherProps) {
   const router = useRouter();
   const { t } = useI18n();
   const pathname = router.state.location.pathname;
@@ -59,16 +66,23 @@ export function LanguageSwitcher() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  function choose(lang: Lang) {
+  async function choose(lang: Lang) {
     setOpen(false);
-    if (lang === current) return;
 
-    // 1. Guarda la preferencia en la cookie somna_lang (cliente puro).
-    setUserLangCookie(lang);
+    // 1. Cierra el drawer móvil si procede y espera su animación.
+    if (onBeforeChange) await onBeforeChange();
 
-    // 2. Navega a la ruta equivalente en el otro idioma.
-    const target = switchRouteLang(pathname, lang);
-    router.navigate({ to: target });
+    // 2. Relee la ruta actual para evitar decisiones obsoletas tras la espera.
+    const freshPathname = router.state.location.pathname;
+    const freshCurrent = getLangFromPathname(freshPathname);
+    if (lang === freshCurrent) return;
+
+    // 3. Sincroniza cookie, localStorage y estado de i18n.
+    setUserLangPreference(lang);
+
+    // 4. Navega a la ruta equivalente en el otro idioma.
+    const target = switchRouteLang(freshPathname, lang);
+    router.navigate({ to: target, replace: true });
   }
 
   const currentOption = OPTIONS.find((o) => o.value === current) ?? OPTIONS[0];

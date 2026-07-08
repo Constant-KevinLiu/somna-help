@@ -21,6 +21,7 @@ import {
   getLangFromPathname,
   switchRouteLang,
   LANG_PREFIX,
+  ACTIVE_LANGS,
 } from "@/lib/lang-detect";
 import { isSearchEngineBot, isMaliciousAiBot } from "@/lib/crawler";
 import { CrawlerContext, CrawlerContextValue } from "@/lib/crawler-context";
@@ -271,10 +272,11 @@ function RootComponent() {
     [isCrawler, serverCrawler.userAgent],
   );
 
-  // Auto-redirect baseado no cookie de preferência (somna_lang).
-  // Só no cliente: evita SSR 500 e mismatch de hidratação.
-  // - Se o cookie diz "pt" mas estamos em rota de outro idioma → /pt/...
-  // - Se o cookie diz "en" mas estamos em /es/... ou /pt/... → rota inglesa.
+  // Auto-redirect baseado na preferência persistida (cookie somna_lang ou
+  // localStorage somna-language). Só no cliente: evita SSR 500 e mismatch de
+  // hidratação.
+  // - Se a preferência diz "pt" mas estamos em rota de outro idioma → /pt/...
+  // - Se a preferência diz "en" mas estamos em /es/... ou /pt/... → rota inglesa.
   // Crawlers never follow this redirect and always see the requested URL.
   useEffect(() => {
     if (isCrawler) return;
@@ -283,7 +285,7 @@ function RootComponent() {
     const currentLang = getLangFromPathname(pathname);
     if (saved === currentLang) return;
     // Só redireciona se o idioma salvo tem rotas ativas.
-    if (saved !== "en" && saved !== "es" && saved !== "pt" && saved !== "pl") return;
+    if (!ACTIVE_LANGS.includes(saved)) return;
     const target = switchRouteLang(pathname, saved);
     if (target !== pathname) router.navigate({ to: target, replace: true });
   }, [pathname, router, isCrawler]);

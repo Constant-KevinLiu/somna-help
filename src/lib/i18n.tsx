@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { setUserLangPreference } from "./lang-detect";
 import { pl } from "./i18n-pl-dict";
 
 export type Lang = "en" | "zh" | "es" | "pt" | "pl";
@@ -900,12 +901,13 @@ export function I18nProvider({
   // sincronizamos el estado.
   useEffect(() => {
     setLangState(initialLang);
-    if (typeof window !== "undefined") window.localStorage.setItem("lull.lang", initialLang);
+    if (typeof window !== "undefined")
+      window.localStorage.setItem("somna-language", initialLang);
   }, [initialLang]);
 
   const setLang = (l: Lang) => {
     setLangState(l);
-    if (typeof window !== "undefined") window.localStorage.setItem("lull.lang", l);
+    setUserLangPreference(l);
   };
   const t = (k: string) => {
     const localized = dicts[lang][k];
