@@ -5,6 +5,7 @@ import { getCalcDict } from "@/lib/calc-i18n";
 import { PageHero } from "@/components/PageHero";
 import { CalculatorShareCard } from "@/components/CalculatorShareCard";
 import { Moon, Sun } from "lucide-react";
+import { TimeWheelPicker } from "@/components/ui/TimeWheelPicker";
 
 export const Route = createFileRoute("/calculator")({
   component: CalculatorPage,
@@ -141,11 +142,12 @@ export function CalculatorPage() {
               <span className="text-sm text-muted-foreground">
                 {mode === "wake" ? t("calc.wake") : t("calc.bed")}
               </span>
-              <input
-                type="time"
+              <TimeWheelPicker
                 value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 font-display text-3xl text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-ring"
+                onChange={setTime}
+                locale={lang}
+                label={mode === "wake" ? t("calc.wake") : t("calc.bed")}
+                className="mt-3 w-full"
               />
             </label>
           </div>

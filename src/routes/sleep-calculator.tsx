@@ -8,6 +8,7 @@ import { useI18n, useFmtTime } from "@/lib/i18n";
 import { LANG_PREFIX } from "@/lib/lang-detect";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { Moon, Clock } from "lucide-react";
+import { TimeWheelPicker } from "@/components/ui/TimeWheelPicker";
 
 type AgeGroup = "teen" | "young" | "adult" | "older";
 
@@ -82,11 +83,12 @@ export function SleepCalculatorPage() {
 
             <label className="mt-6 block">
               <span className="text-sm text-muted-foreground">{d.wakeLabel}</span>
-              <input
-                type="time"
+              <TimeWheelPicker
                 value={wake}
-                onChange={(e) => setWake(e.target.value)}
-                className="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 font-display text-3xl text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-ring"
+                onChange={setWake}
+                locale={lang}
+                label={d.wakeLabel}
+                className="mt-3 w-full"
               />
             </label>
           </div>

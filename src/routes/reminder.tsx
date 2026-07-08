@@ -6,6 +6,7 @@ import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { TimeWheelPicker } from "@/components/ui/TimeWheelPicker";
 import {
   Select,
   SelectContent,
@@ -268,12 +269,11 @@ function ReminderTimeRow({
         </div>
         <div className="mt-0.5 text-xs text-muted-foreground">{desc}</div>
       </div>
-      <Input
-        type="time"
+      <TimeWheelPicker
         value={value}
-        onChange={(e) => onChange(e.target.value)}
-        aria-label={label}
-        className="w-28"
+        onChange={onChange}
+        label={label}
+        className="w-28 rounded-xl px-3 text-xl"
       />
     </div>
   );

@@ -8,6 +8,7 @@ import { useI18n, useFmtTime } from "@/lib/i18n";
 import { LANG_PREFIX } from "@/lib/lang-detect";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { Pill, AlertTriangle } from "lucide-react";
+import { TimeWheelPicker } from "@/components/ui/TimeWheelPicker";
 
 type Onset = "fast" | "average" | "slow";
 const ONSET_MIN: Record<Onset, number> = { fast: 15, average: 30, slow: 60 };
@@ -67,11 +68,12 @@ export function MelatoninCalculatorPage() {
           <div className="glass-strong rounded-3xl p-6 md:p-8">
             <label className="block">
               <span className="text-sm text-muted-foreground">{d.bedtimeLabel}</span>
-              <input
-                type="time"
+              <TimeWheelPicker
                 value={bedtime}
-                onChange={(e) => setBedtime(e.target.value)}
-                className="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 font-display text-3xl text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-ring"
+                onChange={setBedtime}
+                locale={lang}
+                label={d.bedtimeLabel}
+                className="mt-3 w-full"
               />
             </label>
 

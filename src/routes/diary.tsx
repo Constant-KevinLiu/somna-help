@@ -18,6 +18,7 @@ import {
   type SleepRecord,
 } from "@/lib/sleep-records";
 import { ShareModal } from "@/components/ShareModal";
+import { TimeWheelPicker } from "@/components/ui/TimeWheelPicker";
 import { trackShare } from "@/lib/share-analytics";
 import { Share2 } from "lucide-react";
 
@@ -101,11 +102,12 @@ export function DiaryPage() {
         <div className="mx-auto max-w-xl space-y-6">
           <form onSubmit={onSubmit} className="glass-strong space-y-5 rounded-3xl p-6 md:p-8">
             <Field label={t("diary.bedtime")}>
-              <input
-                type="time"
+              <TimeWheelPicker
                 value={bed}
-                onChange={(e) => setBed(e.target.value)}
-                className={inputCls}
+                onChange={setBed}
+                locale={lang}
+                label={t("diary.bedtime")}
+                className="w-full"
               />
             </Field>
             <Field label={t("diary.fall")}>
@@ -127,11 +129,12 @@ export function DiaryPage() {
               />
             </Field>
             <Field label={t("diary.wake")}>
-              <input
-                type="time"
+              <TimeWheelPicker
                 value={wake}
-                onChange={(e) => setWake(e.target.value)}
-                className={inputCls}
+                onChange={setWake}
+                locale={lang}
+                label={t("diary.wake")}
+                className="w-full"
               />
             </Field>
             <Field label={`${t("diary.quality")}: ${quality}/5`}>

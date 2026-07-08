@@ -8,6 +8,7 @@ import { useI18n, useFmtTime } from "@/lib/i18n";
 import { LANG_PREFIX } from "@/lib/lang-detect";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { Coffee, Brain, Battery } from "lucide-react";
+import { TimeWheelPicker } from "@/components/ui/TimeWheelPicker";
 
 const PRESETS = [10, 20, 30, 60, 90];
 
@@ -68,11 +69,12 @@ export function NapCalculatorPage() {
           <div className="glass-strong rounded-3xl p-6 md:p-8">
             <label className="block">
               <span className="text-sm text-muted-foreground">{d.currentTime}</span>
-              <input
-                type="time"
+              <TimeWheelPicker
                 value={time}
-                onChange={(e) => setTime(e.target.value)}
-                className="mt-3 w-full rounded-2xl border border-white/10 bg-white/5 px-5 py-4 font-display text-3xl text-foreground outline-none focus:border-accent focus:ring-2 focus:ring-ring"
+                onChange={setTime}
+                locale={lang}
+                label={d.currentTime}
+                className="mt-3 w-full"
               />
             </label>
 
