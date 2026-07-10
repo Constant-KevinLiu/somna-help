@@ -296,12 +296,19 @@ export function createWheelGesture(config: WheelGestureConfig): () => void {
     );
   }
 
+  // Bind Pointer Events when available (handles mouse/touch/pen),
+  // but always also bind Touch Events on touch-capable devices. This
+  // ensures devices that expose PointerEvent *but* dispatch TouchEvents
+  // (or that have buggy PointerEvent support) still receive touch handling
+  // so mobile touch gestures are reliably recognised.
   if (supportsPointer) {
     element.addEventListener("pointerdown", onPointerDown, { passive: false });
     element.addEventListener("pointermove", onPointerMove, { passive: false });
     element.addEventListener("pointerup", onPointerUp, { passive: false });
     element.addEventListener("pointercancel", onPointerCancel, { passive: false });
-  } else if (isTouch) {
+  }
+
+  if (isTouch) {
     element.addEventListener("touchstart", onTouchStart, { passive: false });
     element.addEventListener("touchmove", onTouchMove, { passive: false });
     element.addEventListener("touchend", onTouchEnd, { passive: false });
@@ -319,7 +326,8 @@ export function createWheelGesture(config: WheelGestureConfig): () => void {
       element.removeEventListener("pointermove", onPointerMove);
       element.removeEventListener("pointerup", onPointerUp);
       element.removeEventListener("pointercancel", onPointerCancel);
-    } else if (isTouch) {
+    }
+    if (isTouch) {
       element.removeEventListener("touchstart", onTouchStart);
       element.removeEventListener("touchmove", onTouchMove);
       element.removeEventListener("touchend", onTouchEnd);

@@ -30,13 +30,64 @@ function isValidTransformValue(value: number): boolean {
   return Number.isFinite(value);
 }
 
+function createFallbackSlot(): HTMLElement {
+  const children: HTMLElement[] = [];
+  const classes = new Set<string>();
+  const attributes = new Map<string, string>();
+  const style = {
+    transform: "",
+    position: "",
+    left: "",
+    right: "",
+    height: "",
+    willChange: "",
+    opacity: "",
+    visibility: "",
+  } as unknown as CSSStyleDeclaration;
+
+  return {
+    style,
+    children: children as unknown as HTMLCollection,
+    appendChild(child: HTMLElement) {
+      children.push(child);
+      return child;
+    },
+    remove() {
+      /* no-op in non-DOM environments */
+    },
+    getAttribute(name: string) {
+      return attributes.get(name) ?? null;
+    },
+    setAttribute(name: string, value: string) {
+      attributes.set(name, value);
+    },
+    textContent: "",
+    classList: {
+      add(...names: string[]) {
+        names.forEach((name) => classes.add(name));
+      },
+      remove(...names: string[]) {
+        names.forEach((name) => classes.delete(name));
+      },
+      contains(name: string) {
+        return classes.has(name);
+      },
+    } as unknown as DOMTokenList,
+  } as unknown as HTMLElement;
+}
+
 export function createWheelRenderer(config: WheelRendererConfig): WheelRenderer {
   const { container, itemHeight, slotCount, createSlot } = config;
   const slots: HTMLElement[] = [];
+  const createSlotElement = createSlot
+    ? createSlot
+    : typeof document !== "undefined" && typeof document.createElement === "function"
+      ? () => document.createElement("div")
+      : createFallbackSlot;
 
   // Build the initial pool of reused DOM nodes.
   for (let i = 0; i < slotCount; i++) {
-    const el = createSlot ? createSlot() : document.createElement("div");
+    const el = createSlotElement();
     el.style.position = "absolute";
     el.style.left = "0";
     el.style.right = "0";
