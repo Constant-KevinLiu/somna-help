@@ -78,13 +78,7 @@ export function getBrowserLang(): Lang {
 
 function isValidLang(v: string | null): v is Lang {
   return (
-    v === "en" ||
-    v === "es" ||
-    v === "pt" ||
-    v === "pl" ||
-    v === "de" ||
-    v === "ja" ||
-    v === "zh"
+    v === "en" || v === "es" || v === "pt" || v === "pl" || v === "de" || v === "ja" || v === "zh"
   );
 }
 

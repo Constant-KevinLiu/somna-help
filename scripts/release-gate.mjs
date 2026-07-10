@@ -14,8 +14,9 @@
  *   3. SEO                  — sitemap, robots, OG image, canonical, JSON-LD
  *   4. i18n                 — en/zh/es key parity across all dict modules
  *   5. Data Integrity       — single source of truth for SleepRecord
- *   6. Security             — no innerHTML, no localhost in production config
- *   7. Bundle Health        — main chunk size warning (non-blocking)
+ *   6. WheelEngine Health   — virtual renderer, transform validation, debug overlay, lifecycle
+ *   7. Security             — no innerHTML, no localhost in production config
+ *   8. Bundle Health        — main chunk size warning (non-blocking)
  *
  * This script is dependency-free (Node 20+ built-ins only) so it can run in
  * CI without extra installs. It shells out to the project's own tsc/eslint/
@@ -305,6 +306,74 @@ run("Dashboard uses cbti-brain recommendation engine", () => {
   return "sleepWindow() from cbti-brain.ts";
 });
 
+run("WheelEngine unit tests pass", () => {
+  const testFiles = [
+    "src/components/time-picker/WheelPhysics.test.ts",
+    "src/components/time-picker/VirtualWheel.test.ts",
+    "src/components/time-picker/WheelGesture.test.ts",
+    "src/components/time-picker/WheelDebug.test.ts",
+    "src/components/time-picker/WheelRenderer.test.ts",
+  ];
+  sh(`node node_modules/tsx/dist/cli.mjs --test ${testFiles.join(" ")}`);
+  return `${testFiles.length} WheelEngine test suites passed`;
+});
+
+run("WheelEngine virtual renderer never collapses", () => {
+  const virtualWheel = read("src/components/time-picker/VirtualWheel.ts");
+  if (!virtualWheel.includes("Math.max(1, visibleCount + 2)")) {
+    throw new Error("VirtualWheel slotCount is not guarded against zero");
+  }
+  if (!virtualWheel.includes("safeItemHeight")) {
+    throw new Error("VirtualWheel does not sanitize itemHeight");
+  }
+  if (!virtualWheel.includes("safeItemCount")) {
+    throw new Error("VirtualWheel does not sanitize itemCount");
+  }
+  return "slot count and dimensions guarded";
+});
+
+run("WheelEngine renderer validates translate3d values", () => {
+  const renderer = read("src/components/time-picker/WheelRenderer.ts");
+  if (!renderer.includes("isValidTransformValue")) {
+    throw new Error("WheelRenderer does not validate transform values");
+  }
+  if (!renderer.includes("Number.isFinite")) {
+    throw new Error("WheelRenderer does not reject NaN/Infinity");
+  }
+  return "translate3d values validated";
+});
+
+run("WheelEngine debug overlay is dev-only", () => {
+  const debug = read("src/components/time-picker/WheelDebug.ts");
+  if (!debug.includes("import.meta.env.DEV")) {
+    throw new Error("WheelDebug is not gated by import.meta.env.DEV");
+  }
+  if (!debug.includes("DEBUG_WHEEL")) {
+    throw new Error("WheelDebug does not support DEBUG_WHEEL override");
+  }
+  if (!debug.includes("Ctrl+Shift+W")) {
+    throw new Error("WheelDebug toggle shortcut missing");
+  }
+  if (!debug.includes("copyWheelDebugState")) {
+    throw new Error("WheelDebug copy-state helper missing");
+  }
+  return "dev-only debug overlay with toggle and export";
+});
+
+run("WheelEngine physics lifecycle reports state", () => {
+  const engine = read("src/components/time-picker/WheelEngine.ts");
+  const required = [
+    "physicsState",
+    "gestureState",
+    "pointerCaptured",
+    "updateWheelDebug",
+    "requestAnimationFrame",
+  ];
+  const missing = required.filter((s) => !engine.includes(s));
+  if (missing.length) throw new Error(`missing lifecycle instrumentation: ${missing.join(", ")}`);
+  return "physics/gesture/pointer state instrumented";
+});
+
 // ---------------------------------------------------------------------------
 // Gate 6 — Security
 // ---------------------------------------------------------------------------
@@ -485,6 +554,17 @@ ${gateSection(
   "Data Integrity Checks",
   results.filter((r) =>
     ["SleepRecord", "loadRecords", "cbti-brain"].some((k) => r.name.includes(k)),
+  ),
+)}
+
+## WheelEngine Health
+
+${gateSection(
+  "WheelEngine Checks",
+  results.filter((r) =>
+    ["WheelEngine", "virtual renderer", "translate3d", "debug overlay", "lifecycle"].some((k) =>
+      r.name.includes(k),
+    ),
   ),
 )}
 

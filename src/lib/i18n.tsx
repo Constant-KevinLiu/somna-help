@@ -901,8 +901,7 @@ export function I18nProvider({
   // sincronizamos el estado.
   useEffect(() => {
     setLangState(initialLang);
-    if (typeof window !== "undefined")
-      window.localStorage.setItem("somna-language", initialLang);
+    if (typeof window !== "undefined") window.localStorage.setItem("somna-language", initialLang);
   }, [initialLang]);
 
   const setLang = (l: Lang) => {

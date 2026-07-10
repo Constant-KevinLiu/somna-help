@@ -1,0 +1,6 @@
+
+2026.07.08
+1. Mobile Language Switch Fix (English Switching Bug on Mobile)
+2. Time Picker System v2.1
+2026.07.09
+
