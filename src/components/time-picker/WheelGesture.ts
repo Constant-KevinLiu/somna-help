@@ -165,20 +165,20 @@ export function createWheelGesture(config: WheelGestureConfig): () => void {
     const y = native.clientY;
     const deltaY = y - startY;
 
-    if (!dragging && Math.abs(deltaY) > dragThreshold) {
+    if (!dragging) {
+      if (Math.abs(deltaY) <= dragThreshold) return;
       dragging = true;
       // Once we commit to a vertical drag, suppress scrolling.
       element.style.touchAction = "none";
       element.style.overscrollBehavior = "none";
     }
 
-    if (dragging) {
-      e.preventDefault();
-      addSample(y);
-      const raw = computeVelocity();
-      velocity = smoothVelocity(velocity, raw, velocitySmoothing);
-      handlers.onMove?.(toGestureEvent(native), deltaY);
-    }
+    e.preventDefault();
+    addSample(y);
+    const raw = computeVelocity();
+    velocity = smoothVelocity(velocity, raw, velocitySmoothing);
+    handlers.onMove?.(toGestureEvent(native), deltaY);
+    startY = y;
   }
 
   function handleEnd(e: PointerEvent | TouchEvent) {
