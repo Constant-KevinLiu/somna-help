@@ -44,6 +44,19 @@ const en: Strings = {
   "reminder.weekday.Sunday": "Sunday",
   "reminder.back": "Back to Dashboard",
   "reminder.noindex": "Personal settings page — not indexed.",
+  "reminder.timezone.label": "Timezone",
+  "reminder.language.label": "Language",
+  "reminder.language.en": "English",
+  "reminder.language.es": "Español",
+  "reminder.language.pt": "Português",
+  "reminder.status.title": "Reminder Status",
+  "reminder.status.active": "Active",
+  "reminder.status.inactive": "Not active",
+  "reminder.status.email": "Email",
+  "reminder.status.time": "Time",
+  "reminder.status.timezone": "Timezone",
+  "reminder.status.nextRun": "Next reminder",
+  "reminder.testButton": "Send Test Email",
 };
 
 const zh: Strings = {
@@ -82,6 +95,19 @@ const zh: Strings = {
   "reminder.weekday.Sunday": "周日",
   "reminder.back": "返回仪表盘",
   "reminder.noindex": "个人设置页面 — 不被索引。",
+  "reminder.timezone.label": "时区",
+  "reminder.language.label": "语言",
+  "reminder.language.en": "English",
+  "reminder.language.es": "Español",
+  "reminder.language.pt": "Português",
+  "reminder.status.title": "提醒状态",
+  "reminder.status.active": "已开启",
+  "reminder.status.inactive": "未开启",
+  "reminder.status.email": "邮箱",
+  "reminder.status.time": "时间",
+  "reminder.status.timezone": "时区",
+  "reminder.status.nextRun": "下次提醒",
+  "reminder.testButton": "发送测试邮件",
 };
 
 const es: Strings = {
@@ -120,6 +146,19 @@ const es: Strings = {
   "reminder.weekday.Sunday": "Domingo",
   "reminder.back": "Volver al panel",
   "reminder.noindex": "Página de configuración personal — no indexada.",
+  "reminder.timezone.label": "Zona horaria",
+  "reminder.language.label": "Idioma",
+  "reminder.language.en": "English",
+  "reminder.language.es": "Español",
+  "reminder.language.pt": "Português",
+  "reminder.status.title": "Estado del recordatorio",
+  "reminder.status.active": "Activo",
+  "reminder.status.inactive": "No activo",
+  "reminder.status.email": "Correo",
+  "reminder.status.time": "Hora",
+  "reminder.status.timezone": "Zona horaria",
+  "reminder.status.nextRun": "Próximo recordatorio",
+  "reminder.testButton": "Enviar correo de prueba",
 };
 
 const dicts: Partial<Record<Lang, Strings>> = { en, zh, es, pt: en };

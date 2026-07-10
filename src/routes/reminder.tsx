@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Bell, Moon, CheckCircle2, BookOpen, ArrowLeft, Mail } from "lucide-react";
+import { Bell, Moon, CheckCircle2, BookOpen, ArrowLeft, Mail, Sparkles } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +40,9 @@ function ReminderCenter() {
   const [settings, setSettings] = useState<ReminderSettings>(DEFAULT_REMINDER_SETTINGS);
   const [hydrated, setHydrated] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [status, setStatus] = useState<{ enabled: boolean; email: string; time: string; timezone: string; language: string; nextRun: string } | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [testing, setTesting] = useState(false);
 
   // Load settings on mount (SSR-safe).
   useEffect(() => {
@@ -52,8 +55,7 @@ function ReminderCenter() {
     if (key === "email") setEmailError(null);
   };
 
-  const handleSave = () => {
-    // Validate email if reminders are enabled.
+  const handleSave = async () => {
     if (settings.enabled) {
       const error = validateEmailForUI(settings.email);
       if (error) {
@@ -61,12 +63,72 @@ function ReminderCenter() {
         return;
       }
     }
+
     const toSave: ReminderSettings = {
       ...settings,
       email: normalizeEmail(settings.email),
+      reminderTime: settings.reminderTime || settings.eveningTime,
+      timezone: settings.timezone || "UTC",
+      language: settings.language || "en",
     };
+
     saveReminderSettings(toSave);
-    toast.success(t("reminder.saved"));
+    setSaving(true);
+    try {
+      const response = await fetch("/api/reminders", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          email: toSave.email,
+          enabled: toSave.enabled,
+          time: toSave.reminderTime || toSave.eveningTime,
+          timezone: toSave.timezone,
+          language: toSave.language,
+        }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload?.message || "Failed to save reminder settings");
+      }
+      setStatus({
+        enabled: Boolean(payload?.enabled),
+        email: payload?.email || toSave.email,
+        time: payload?.time || toSave.reminderTime || toSave.eveningTime,
+        timezone: payload?.timezone || toSave.timezone,
+        language: payload?.language || toSave.language,
+        nextRun: payload?.nextRun || "Pending",
+      });
+      toast.success(t("reminder.saved"));
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to save reminder settings");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleTestEmail = async () => {
+    if (!settings.email) {
+      toast.error(t("reminder.error.emailEmpty"));
+      return;
+    }
+
+    setTesting(true);
+    try {
+      const response = await fetch("/api/reminders/test", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: normalizeEmail(settings.email), language: settings.language || "en" }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(payload?.message || "Test email failed");
+      }
+      toast.success(payload?.message || "Test email sent");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Unable to send test email");
+    } finally {
+      setTesting(false);
+    }
   };
 
   if (!hydrated) {
@@ -140,6 +202,42 @@ function ReminderCenter() {
               />
             </div>
 
+            <div className="mt-6 grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="text-sm font-medium text-foreground">{t("reminder.timezone.label")}</div>
+                <Select
+                  value={settings.timezone}
+                  onValueChange={(v) => update("timezone", v)}
+                >
+                  <SelectTrigger className="mt-3" aria-label={t("reminder.timezone.label")}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="UTC">UTC</SelectItem>
+                    <SelectItem value="America/New_York">America/New_York</SelectItem>
+                    <SelectItem value="Europe/Madrid">Europe/Madrid</SelectItem>
+                    <SelectItem value="Asia/Shanghai">Asia/Shanghai</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
+                <div className="text-sm font-medium text-foreground">{t("reminder.language.label")}</div>
+                <Select
+                  value={settings.language}
+                  onValueChange={(v) => update("language", v)}
+                >
+                  <SelectTrigger className="mt-3" aria-label={t("reminder.language.label")}>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">{t("reminder.language.en")}</SelectItem>
+                    <SelectItem value="es">{t("reminder.language.es")}</SelectItem>
+                    <SelectItem value="pt-BR">{t("reminder.language.pt")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
             {/* Morning reminder */}
             <ReminderTimeRow
               icon={<Moon className="h-4 w-4 text-accent" />}
@@ -185,13 +283,35 @@ function ReminderCenter() {
               </Select>
             </div>
 
+            {/* Status card */}
+            <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-muted-foreground">
+              <div className="font-medium text-foreground">{t("reminder.status.title")}</div>
+              <div className="mt-2 space-y-1">
+                <div>{status?.enabled ? `✓ ${t("reminder.status.active")}` : `○ ${t("reminder.status.inactive")}`}</div>
+                <div>{t("reminder.status.email")}: {status?.email || settings.email || "—"}</div>
+                <div>{t("reminder.status.time")}: {status?.time || settings.reminderTime || settings.eveningTime}</div>
+                <div>{t("reminder.status.timezone")}: {status?.timezone || settings.timezone || "UTC"}</div>
+                <div>{t("reminder.status.nextRun")}: {status?.nextRun || "Pending"}</div>
+              </div>
+            </div>
+
             {/* Save button */}
-            <div className="mt-6">
+            <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <Button
                 onClick={handleSave}
+                disabled={saving}
                 className="w-full rounded-full bg-gradient-to-r from-primary to-accent text-primary-foreground"
               >
-                {t("reminder.save")}
+                {saving ? "Saving…" : t("reminder.save")}
+              </Button>
+              <Button
+                onClick={handleTestEmail}
+                variant="outline"
+                disabled={testing || !settings.email}
+                className="w-full rounded-full"
+              >
+                <Sparkles className="mr-2 h-4 w-4" />
+                {testing ? "Sending…" : t("reminder.testButton")}
               </Button>
             </div>
           </div>

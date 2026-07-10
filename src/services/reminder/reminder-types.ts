@@ -23,8 +23,18 @@ export interface ReminderSettings {
   eveningTime: string;
   /** Day of the week for the weekly summary. Default: "Sunday". */
   weeklyDay: Weekday;
+  /** Primary reminder time stored for server delivery. Default: "22:00". */
+  reminderTime: string;
+  /** Timezone for delivery. Default: "UTC". */
+  timezone: string;
+  /** Preferred reminder language. Default: "en". */
+  language: string;
+  /** Reminder type used by the backend. Default: "BEDTIME_REMINDER". */
+  reminderType: string;
   /** ISO timestamp of the last save. */
   updatedAt: string;
+  /** ISO timestamp of the most recent successful send. */
+  lastSentAt: string | null;
 }
 
 /** A single reminder to be dispatched through a provider. */
@@ -64,7 +74,12 @@ export const DEFAULT_REMINDER_SETTINGS: ReminderSettings = {
   morningTime: "07:30",
   eveningTime: "22:00",
   weeklyDay: "Sunday",
+  reminderTime: "22:00",
+  timezone: "UTC",
+  language: "en",
+  reminderType: "BEDTIME_REMINDER",
   updatedAt: "",
+  lastSentAt: null,
 };
 
 /** All valid weekday values, in display order. */

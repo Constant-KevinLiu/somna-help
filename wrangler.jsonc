@@ -57,6 +57,10 @@
   // Optional: reference a zone so zone-level page rules can be applied.
   // "zone_id": "<YOUR_ZONE_ID>",
 
+  "triggers": {
+    "crons": ["*/15 * * * *"],
+  },
+
   // =============================================================================
   // Cloudflare security bypass rules for verified search-engine crawlers.
   //

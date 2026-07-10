@@ -4,6 +4,9 @@ import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { SHARE_IMAGE_HOSTING_ENABLED, shareImageUrl } from "./lib/share-config";
 import { isSearchEngineBot, isMaliciousAiBot } from "./lib/crawler";
+import { saveReminderSettingsServer, getReminderSettingsServer, deleteReminderSettingsServer } from "./services/reminder/reminder-storage-server";
+import { sendReminderTestEmail } from "./services/reminder/reminder-mailer";
+import { runReminderCron } from "./services/reminder/reminder-worker";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -47,6 +50,9 @@ interface ShareEnv {
 
 const LEGACY_UPLOAD_PATH = "/api/share-image";
 const UPLOAD_PATH = "/api/share/upload";
+const REMINDER_PATH = "/api/reminders";
+const REMINDER_STATUS_PATH = "/api/reminders/status";
+const REMINDER_TEST_PATH = "/api/reminders/test";
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024; // 5 MB cap on uploaded PNGs
 
 /**
@@ -434,6 +440,65 @@ export default {
         });
       }
 
+      if (url.pathname === REMINDER_PATH || url.pathname === REMINDER_STATUS_PATH || url.pathname === REMINDER_TEST_PATH || url.pathname.startsWith("/api/reminders/")) {
+        if (request.method === "OPTIONS") {
+          return new Response(null, {
+            status: 204,
+            headers: {
+              "access-control-allow-origin": "*",
+              "access-control-allow-methods": "POST, GET, DELETE, OPTIONS",
+              "access-control-allow-headers": "content-type",
+            },
+          });
+        }
+
+        if (url.pathname === REMINDER_TEST_PATH) {
+          if (request.method !== "POST") {
+            return json(405, { success: false, error: "method_not_allowed" });
+          }
+          const payload = await request.json().catch(() => ({}));
+          const email = typeof payload?.email === "string" ? payload.email : "";
+          const language = typeof payload?.language === "string" ? payload.language : "en";
+          if (!email) return json(400, { success: false, error: "invalid_payload" });
+          const result = await sendReminderTestEmail(email, language);
+          return json(result.success ? 200 : 500, {
+            success: result.success,
+            message: result.success ? "Test email queued" : result.error,
+          });
+        }
+
+        if (request.method === "GET") {
+          const record = await getReminderSettingsServer(env as Record<string, unknown>);
+          return json(200, {
+            success: true,
+            enabled: record?.enabled ?? false,
+            email: record?.email ?? "",
+            time: record?.reminderTime ?? "22:00",
+            timezone: record?.timezone ?? "UTC",
+            language: record?.language ?? "en",
+            nextRun: record?.reminderTime ?? "Pending",
+          });
+        }
+
+        if (request.method === "POST") {
+          const payload = await request.json().catch(() => ({}));
+          const email = typeof payload?.email === "string" ? payload.email : "";
+          const enabled = Boolean(payload?.enabled);
+          const time = typeof payload?.time === "string" ? payload.time : "22:00";
+          const timezone = typeof payload?.timezone === "string" ? payload.timezone : "UTC";
+          const language = typeof payload?.language === "string" ? payload.language : "en";
+          if (!email && enabled) return json(400, { success: false, error: "invalid_payload" });
+          const record = await saveReminderSettingsServer(env as Record<string, unknown> , { email, enabled, time, timezone, language });
+          return json(200, { success: true, ...record, nextRun: record.reminderTime });
+        }
+
+        if (request.method === "DELETE") {
+          const id = url.pathname.split("/").filter(Boolean).pop();
+          const deleted = await deleteReminderSettingsServer(env as Record<string, unknown>, id ?? "");
+          return json(200, { success: deleted });
+        }
+      }
+
       // Intercept the share-image upload API before handing off to TanStack
       // Start. This gives us direct access to the R2 binding on `env` and
       // avoids server-function serialization for a raw binary upload.
@@ -456,6 +521,11 @@ export default {
         const uploadResponse = await handler(request, (env ?? {}) as ShareEnv);
         uploadResponse.headers.set("access-control-allow-origin", "*");
         return uploadResponse;
+      }
+
+      if (url.pathname === "/api/reminders/cron") {
+        const result = await runReminderCron(env as Record<string, unknown>);
+        return json(200, result);
       }
 
       const handler = await getServerEntry();

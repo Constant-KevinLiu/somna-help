@@ -43,6 +43,7 @@ export function saveReminderSettings(settings: ReminderSettings): void {
   try {
     const toStore: ReminderSettings = {
       ...settings,
+      reminderTime: settings.reminderTime || settings.eveningTime,
       updatedAt: new Date().toISOString(),
     };
     window.localStorage.setItem(REMINDER_SETTINGS_KEY, JSON.stringify(toStore));

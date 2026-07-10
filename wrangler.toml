@@ -15,6 +15,9 @@ compatibility_flags = ["nodejs_compat"]
 # Optional: bind the production zone so zone-level page rules / WAF rules apply.
 # zone_id = "<YOUR_ZONE_ID>"
 
+[triggers]
+crons = ["*/15 * * * *"]
+
 # =============================================================================
 # Turnstile secrets (server-side only).
 # PUBLIC_TURNSTILE_SITE_KEY is consumed by the client bundle via Vite/Vinxi and
