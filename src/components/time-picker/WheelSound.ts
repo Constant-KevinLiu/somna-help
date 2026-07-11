@@ -3,18 +3,73 @@
 /**
  * WheelSound — soft click feedback for the time picker.
  *
- * Plays a short, crisp vivo T1-style wheel detent tick whenever the
- * wheel settles onto a new detent. Sound is permanently on (the product
- * requires no mute entry point). Degrades gracefully when audio playback
- * is unavailable (autoplay restrictions, muted devices).
+ * Plays the iPhone-native wheel detent tick whenever a column settles onto
+ * a new detent. Sound follows the device's *system* audio state — when the
+ * OS / ringer / media output is muted the tick is suppressed. There is no
+ * in-page mute switch; volume control belongs entirely to the device.
+ *
+ * Platform notes (web API limits):
+ *  - On every platform the underlying <audio> element already routes through
+ *    the OS output, so a zero/!audible system volume naturally yields
+ *    silence. We additionally probe a Web Audio context so iOS Silent /
+ *    Ring-switch mode (which suspends the audio clock) is respected too.
  */
 
-const CLICK_URL = "data:audio/wav;base64,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";
+// iPhone-native time-picker wheel tick: short, bright, transparent.
+const CLICK_URL = "data:audio/wav;base64,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";
 
 let clickAudio: HTMLAudioElement | null = null;
 
+// Shared AudioContext used purely to probe the device's audio-clock state
+// (iOS Silent mode pauses it). It is never used to emit sound.
+let audioCtx: AudioContext | null = null;
+let ctxProbed = false;
+let ctxMuted = false;
+
 export interface WheelSound {
   play: () => void;
+}
+
+function getAudioContext(): AudioContext | null {
+  if (typeof window === "undefined") return null;
+  if (!audioCtx) {
+    const Ctor =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!Ctor) return null;
+    try {
+      audioCtx = new Ctor();
+    } catch {
+      return null;
+    }
+  }
+  return audioCtx;
+}
+
+// Best-effort detection of system mute. The first tick is always allowed
+// (the <audio> element already honors the OS volume); afterwards we treat a
+// context that never left the "suspended" state as muted by the device.
+function systemAudioMuted(): boolean {
+  const ctx = getAudioContext();
+  if (!ctx) return false;
+  if (!ctxProbed) {
+    ctxProbed = true;
+    try {
+      void ctx.resume?.();
+    } catch {
+      /* ignore */
+    }
+    return false;
+  }
+  if (ctx.state === "suspended") {
+    try {
+      void ctx.resume?.();
+    } catch {
+      /* ignore */
+    }
+    ctxMuted = true;
+  }
+  return ctxMuted;
 }
 
 export function createWheelSound(): WheelSound {
@@ -27,12 +82,14 @@ export function createWheelSound(): WheelSound {
 
   function doPlay() {
     if (typeof window === "undefined") return;
+    // Follow the device system audio state: skip when muted / silent.
+    if (systemAudioMuted()) return;
     ensureAudio();
     if (!clickAudio) return;
-    // Always re-wind so rapid/overlapping ticks replay cleanly.
+    // Re-wind so every detent plays the full tick from the start.
     clickAudio.currentTime = 0;
     void clickAudio.play().catch(() => {
-      /* ignore autoplay restrictions */
+      /* ignore autoplay / OS audio restrictions */
     });
   }
 
