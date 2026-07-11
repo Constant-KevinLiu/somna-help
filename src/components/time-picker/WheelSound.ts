@@ -3,16 +3,18 @@
 /**
  * WheelSound — soft click feedback for the time picker.
  *
- * Plays the iPhone-native wheel detent tick whenever a column settles onto
- * a new detent. Sound follows the device's *system* audio state — when the
- * OS / ringer / media output is muted the tick is suppressed. There is no
+ * Plays the iPhone-native wheel detent tick whenever a column crosses a
+ * detent. Sound follows the *device* system audio state — when the OS /
+ * ringer / media output is muted the tick is suppressed. There is no
  * in-page mute switch; volume control belongs entirely to the device.
  *
- * Platform notes (web API limits):
- *  - On every platform the underlying <audio> element already routes through
- *    the OS output, so a zero/!audible system volume naturally yields
- *    silence. We additionally probe a Web Audio context so iOS Silent /
- *    Ring-switch mode (which suspends the audio clock) is respected too.
+ * Unified detection across phone / tablet / PC:
+ *  - The underlying <audio> element already routes through the OS output, so
+ *    a zero system or media volume is silent natively.
+ *  - For tablets & phones (iOS / iPadOS) the Silent / Ring switch suspends
+ *    the Web Audio clock; we probe that to suppress ticks when muted.
+ *  - Where available, an explicitly paused MediaSession also indicates the
+ *    device audio is off.
  */
 
 // iPhone-native time-picker wheel tick: short, bright, transparent.
@@ -46,10 +48,15 @@ function getAudioContext(): AudioContext | null {
   return audioCtx;
 }
 
-// Best-effort detection of system mute. The first tick is always allowed
-// (the <audio> element already honors the OS volume); afterwards we treat a
-// context that never left the "suspended" state as muted by the device.
+// Best-effort, device-agnostic detection of system mute (phone / tablet /
+// PC). The first tick is always allowed (the <audio> element already honors
+// the OS volume); afterwards we treat a Web Audio context that never left the
+// "suspended" state as muted (iOS / iPadOS Silent mode), and honor an
+// explicitly paused MediaSession.
 function systemAudioMuted(): boolean {
+  if (typeof navigator !== "undefined" && navigator.mediaSession) {
+    if (navigator.mediaSession.playbackState === "paused") return true;
+  }
   const ctx = getAudioContext();
   if (!ctx) return false;
   if (!ctxProbed) {

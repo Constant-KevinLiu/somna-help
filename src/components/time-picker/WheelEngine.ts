@@ -119,23 +119,35 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
   const sound = createWheelSound();
   const haptics = createWheelHaptics();
 
-  // The tick should fire once per settle, regardless of input source. Rapid
-  // wheel events or a momentum tail can resolve multiple detents in quick
-  // succession; this cooldown collapses them so we never stack overlapping
-  // ticks (which would read as a single distorted "pop").
-  const TICK_COOLDOWN_MS = 60;
+  // Per-detent tick feedback. The wheel ticks every time it crosses a detent
+  // (the centered index changes), not just once at rest — mirroring the native
+  // iOS continuous detent audio across phone, tablet and PC. A *dynamic*
+  // cooldown scales with scroll speed: fast flicks get a short gap (dense,
+  // urgent ticks) while slow drags get a long gap (sparse). Sound is
+  // permanent and follows the device system audio state (see WheelSound).
+  const TICK_MIN_COOLDOWN_MS = 18;
+  const TICK_MAX_COOLDOWN_MS = 90;
   let lastTickAt = 0;
+  let prevOffsetForSpeed = offset;
 
   let lastState: VirtualWheelState | null = null;
   let lastNotifiedIndex = currentIndex;
 
-  // Unified audio trigger for every path that settles onto a detent:
-  // touch momentum (onEnd), mouse-wheel snap (onWheel), keyboard / external
-  // value sync (setValue), and reduced-motion snaps. Sound is permanent.
-  function playTickSound() {
+  function dynamicTickCooldown(speedPx: number): number {
+    const ratio = Math.min(1, speedPx / itemHeight); // 0 (still) .. 1 (≈1 cell/frame)
+    return (
+      TICK_MAX_COOLDOWN_MS -
+      ratio * (TICK_MAX_COOLDOWN_MS - TICK_MIN_COOLDOWN_MS)
+    );
+  }
+
+  // Unified audio trigger for every input source (touch drag, momentum,
+  // mouse-wheel, keyboard / external value sync). `speedPx` is the per-frame
+  // scroll delta used to pick the cooldown.
+  function playTickSound(speedPx = 0) {
     if (typeof window === "undefined") return;
     const now = performance.now();
-    if (now - lastTickAt < TICK_COOLDOWN_MS) return;
+    if (now - lastTickAt < dynamicTickCooldown(speedPx)) return;
     lastTickAt = now;
     sound.play();
   }
@@ -166,12 +178,16 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
       snapping: physicsState === "snapping",
     });
 
-    // Notify selection changes during drag/momentum.
+    // Notify selection changes during drag/momentum, and tick on every
+    // detent crossing for continuous iOS-style audio feedback (fast scroll →
+    // dense ticks, slow scroll → sparse). Speed is the per-frame offset delta.
     if (state.normalizedCenterIndex !== lastNotifiedIndex) {
       lastNotifiedIndex = state.normalizedCenterIndex;
       onSelectionChanged?.(getValueText(lastNotifiedIndex), lastNotifiedIndex);
       haptics.trigger();
+      playTickSound(Math.abs(offset - prevOffsetForSpeed));
     }
+    prevOffsetForSpeed = offset;
 
     if (!virtualStateEqual(state, lastState)) {
       lastState = state;
@@ -186,7 +202,7 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
     );
   }
 
-  function snapTo(index: number, animated = true, playSound = false) {
+  function snapTo(index: number, animated = true) {
     const targetIndex = loop ? normalizeIndex(index, itemCount) : clamp(index, 0, itemCount - 1);
     const targetOffset = computeSnapOffset(targetIndex, { itemHeight, itemCount, loop });
 
@@ -196,7 +212,6 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
       physicsState = "ready";
       updateVisuals(true);
       emitChangeIfNeeded();
-      if (playSound) playTickSound();
       return;
     }
 
@@ -217,7 +232,6 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
         gestureState = "idle";
         updateVisuals(true);
         emitChangeIfNeeded();
-        if (playSound) playTickSound();
       },
     });
   }
@@ -269,7 +283,7 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
     physicsState = hasMomentum ? "momentum" : "snapping";
 
     if (reducedMotion) {
-      snapTo(destination.targetIndex, false, true);
+      snapTo(destination.targetIndex, false);
       return;
     }
 
@@ -289,7 +303,6 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
         gestureState = "idle";
         updateVisuals(true);
         emitChangeIfNeeded();
-        playTickSound();
       },
     });
   }
@@ -331,7 +344,7 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
       wheelSnapTimeoutId = null;
       gestureState = "end";
       physicsState = "snapping";
-      snapTo(offsetToIndex(offset, itemHeight), !reducedMotion, true);
+      snapTo(offsetToIndex(offset, itemHeight), !reducedMotion);
     }, 80);
   }
 
