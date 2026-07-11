@@ -119,10 +119,24 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
   const sound = createWheelSound();
   const haptics = createWheelHaptics();
 
+  // The tick should fire once per settle, regardless of input source. Rapid
+  // wheel events or a momentum tail can resolve multiple detents in quick
+  // succession; this cooldown collapses them so we never stack overlapping
+  // ticks (which would read as a single distorted "pop").
+  const TICK_COOLDOWN_MS = 60;
+  let lastTickAt = 0;
+
   let lastState: VirtualWheelState | null = null;
   let lastNotifiedIndex = currentIndex;
 
+  // Unified audio trigger for every path that settles onto a detent:
+  // touch momentum (onEnd), mouse-wheel snap (onWheel), keyboard / external
+  // value sync (setValue), and reduced-motion snaps. Sound is permanent.
   function playTickSound() {
+    if (typeof window === "undefined") return;
+    const now = performance.now();
+    if (now - lastTickAt < TICK_COOLDOWN_MS) return;
+    lastTickAt = now;
     sound.play();
   }
 

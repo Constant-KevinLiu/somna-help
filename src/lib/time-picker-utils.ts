@@ -78,13 +78,3 @@ export function getLocalePeriodLabels(locale: string): { am: string; pm: string 
 
   return { am: extractPeriod(amDate), pm: extractPeriod(pmDate) };
 }
-
-/** Toggle the global soft-click sound setting for the time picker. */
-export function setTimePickerSoundEnabled(enabled: boolean): void {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem("somna-time-picker-sound", String(enabled));
-  } catch {
-    /* ignore */
-  }
-}
