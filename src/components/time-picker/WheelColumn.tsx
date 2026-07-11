@@ -54,7 +54,7 @@ export function WheelColumn<T extends string>({
       itemHeight: ITEM_HEIGHT,
       visibleCount: VISIBLE_ITEMS,
       physics: {
-        friction: 0.92,
+        friction: 0.994,
         minVelocity: 0.15,
         maxVelocity: 2.5,
         snapDuration: 160,

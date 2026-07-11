@@ -121,7 +121,10 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
 
   let lastState: VirtualWheelState | null = null;
   let lastNotifiedIndex = currentIndex;
-  let lastSoundIndex = currentIndex;
+
+  function playTickSound() {
+    sound.play();
+  }
 
   function detectReducedMotion(): boolean {
     if (typeof window === "undefined") return false;
@@ -156,12 +159,6 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
       haptics.trigger();
     }
 
-    // Play sound only when selection changes.
-    if (state.normalizedCenterIndex !== lastSoundIndex) {
-      lastSoundIndex = state.normalizedCenterIndex;
-      sound.play(lastSoundIndex);
-    }
-
     if (!virtualStateEqual(state, lastState)) {
       lastState = state;
       renderer.render(state, offset);
@@ -175,7 +172,7 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
     );
   }
 
-  function snapTo(index: number, animated = true) {
+  function snapTo(index: number, animated = true, playSound = false) {
     const targetIndex = loop ? normalizeIndex(index, itemCount) : clamp(index, 0, itemCount - 1);
     const targetOffset = computeSnapOffset(targetIndex, { itemHeight, itemCount, loop });
 
@@ -185,6 +182,7 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
       physicsState = "ready";
       updateVisuals(true);
       emitChangeIfNeeded();
+      if (playSound) playTickSound();
       return;
     }
 
@@ -205,6 +203,7 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
         gestureState = "idle";
         updateVisuals(true);
         emitChangeIfNeeded();
+        if (playSound) playTickSound();
       },
     });
   }
@@ -256,7 +255,7 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
     physicsState = hasMomentum ? "momentum" : "snapping";
 
     if (reducedMotion) {
-      snapTo(destination.targetIndex, false);
+      snapTo(destination.targetIndex, false, true);
       return;
     }
 
@@ -276,6 +275,7 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
         gestureState = "idle";
         updateVisuals(true);
         emitChangeIfNeeded();
+        playTickSound();
       },
     });
   }
@@ -317,7 +317,7 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
       wheelSnapTimeoutId = null;
       gestureState = "end";
       physicsState = "snapping";
-      snapTo(offsetToIndex(offset, itemHeight), !reducedMotion);
+      snapTo(offsetToIndex(offset, itemHeight), !reducedMotion, true);
     }, 80);
   }
 

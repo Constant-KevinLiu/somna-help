@@ -28,14 +28,20 @@ export interface WheelSound {
 
 export function createWheelSound(): WheelSound {
   let enabled = getSoundEnabled();
-  let lastIndex = -1;
 
-  function play() {
-    if (!enabled || typeof window === "undefined") return;
+  function ensureAudio() {
     if (!clickAudio) {
       clickAudio = new Audio(CLICK_URL);
-      clickAudio.volume = 0.15;
+      clickAudio.volume = 0.08;
     }
+  }
+
+  function doPlay() {
+    if (typeof window === "undefined") return;
+    enabled = getSoundEnabled();
+    if (!enabled) return;
+    ensureAudio();
+    if (!clickAudio) return;
     clickAudio.currentTime = 0;
     void clickAudio.play().catch(() => {
       /* ignore autoplay restrictions */
@@ -43,11 +49,8 @@ export function createWheelSound(): WheelSound {
   }
 
   return {
-    play(index?: number) {
-      const currentIndex = typeof index === "number" ? index : -1;
-      if (currentIndex !== -1 && currentIndex === lastIndex) return;
-      lastIndex = currentIndex;
-      play();
+    play() {
+      doPlay();
     },
     setEnabled(value: boolean) {
       enabled = value;

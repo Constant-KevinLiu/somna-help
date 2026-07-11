@@ -16,12 +16,22 @@ function hashEmail(email: string): string {
 export async function sendReminderEmail(record: ReminderRecord): Promise<ReminderMailResult> {
   const { subject, html } = getReminderTemplate(record.language);
   const to = record.email;
+  const apiKey = process.env.RESEND_API_KEY?.trim();
+
+  if (!apiKey) {
+    return {
+      success: false,
+      status: "FAILED",
+      provider: "resend",
+      error: "invalid_api_key",
+    };
+  }
 
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY ?? ""}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -34,11 +44,15 @@ export async function sendReminderEmail(record: ReminderRecord): Promise<Reminde
 
     if (!response.ok) {
       const text = await response.text();
+      const errorCode =
+        response.status === 401 || text.includes("API key is invalid")
+          ? "invalid_api_key"
+          : `email_provider_failed:${response.status}:${text}`;
       return {
         success: false,
         status: "FAILED",
         provider: "resend",
-        error: `email_provider_failed:${response.status}:${text}`,
+        error: errorCode,
       };
     }
 

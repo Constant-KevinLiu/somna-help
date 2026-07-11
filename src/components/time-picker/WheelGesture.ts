@@ -53,7 +53,7 @@ export function createWheelGesture(config: WheelGestureConfig): () => void {
     handlers,
     dragThreshold = 4,
     maxVelocity = 2.5,
-    velocitySmoothing = 0.7,
+    velocitySmoothing = 0.6,
     onPointerCaptureChanged,
   } = config;
 
@@ -66,6 +66,9 @@ export function createWheelGesture(config: WheelGestureConfig): () => void {
   let rafId: number | null = null;
   let pointerCaptured = false;
   let removed = false;
+
+  const SAMPLE_WINDOW_MS = 120;
+  const MAX_SAMPLE_COUNT = 8;
 
   function setPointerCaptured(captured: boolean) {
     if (pointerCaptured === captured) return;
@@ -95,12 +98,16 @@ export function createWheelGesture(config: WheelGestureConfig): () => void {
     setPointerCaptured(false);
   }
 
-  function computeVelocity(): number {
-    if (samples.length < 2) return 0;
-    // Use the last 4 samples to estimate release velocity.
-    const recent = samples.slice(-4);
-    const first = recent[0];
-    const last = recent[recent.length - 1];
+  function computeVelocity(override?: PointSample): number {
+    const now = override?.t ?? performance.now();
+    const currentSamples = override ? [...samples, override] : samples;
+    if (currentSamples.length < 2) return 0;
+
+    const windowStart = now - SAMPLE_WINDOW_MS;
+    const recent = currentSamples.filter((sample) => sample.t >= windowStart);
+    const relevant = recent.length >= 2 ? recent : currentSamples;
+    const first = relevant[0];
+    const last = relevant[relevant.length - 1];
     const dt = last.t - first.t;
     if (dt <= 0) return 0;
     return clampVelocity((last.y - first.y) / dt, maxVelocity);
@@ -109,8 +116,12 @@ export function createWheelGesture(config: WheelGestureConfig): () => void {
   function addSample(y: number) {
     const now = performance.now();
     samples.push({ y, t: now });
-    // Keep a small rolling window to avoid stale samples.
-    while (samples.length > 6) samples.shift();
+    while (
+      samples.length > MAX_SAMPLE_COUNT ||
+      (samples.length > 0 && now - samples[0].t > SAMPLE_WINDOW_MS * 2)
+    ) {
+      samples.shift();
+    }
   }
 
   function handleStart(e: PointerEvent | TouchEvent) {

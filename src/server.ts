@@ -461,7 +461,12 @@ export default {
           const language = typeof payload?.language === "string" ? payload.language : "en";
           if (!email) return json(400, { success: false, error: "invalid_payload" });
           const result = await sendReminderTestEmail(email, language);
-          return json(result.success ? 200 : 500, {
+          const statusCode = result.success
+            ? 200
+            : result.error === "invalid_api_key"
+            ? 401
+            : 500;
+          return json(statusCode, {
             success: result.success,
             message: result.success ? "Test email queued" : result.error,
           });

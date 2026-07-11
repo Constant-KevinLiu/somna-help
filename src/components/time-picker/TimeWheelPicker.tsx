@@ -21,6 +21,7 @@ import {
   formatLocaleTime,
   localePrefers12Hour,
   getLocalePeriodLabels,
+  setTimePickerSoundEnabled,
 } from "@/lib/time-picker-utils";
 import { WheelColumn } from "./WheelColumn";
 
@@ -157,6 +158,7 @@ function TimeWheelDialog({ value, locale, format, label, onCancel, onDone }: Tim
   );
 
   const [state, setState] = useState<PickerState>(() => parse(value));
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const [, setCommitted] = useState<string>(value);
 
   // Live mirror of the three columns' currently centered values. Updated on
@@ -174,6 +176,22 @@ function TimeWheelDialog({ value, locale, format, label, onCancel, onDone }: Tim
     setState(parse(value));
     setCommitted(value);
   }, [value, parse]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const stored = window.localStorage.getItem("somna-time-picker-sound");
+      setSoundEnabled(stored === null ? true : stored === "true");
+    } catch {
+      setSoundEnabled(true);
+    }
+  }, []);
+
+  const toggleSound = useCallback(() => {
+    const next = !soundEnabled;
+    setSoundEnabled(next);
+    setTimePickerSoundEnabled(next);
+  }, [soundEnabled]);
 
   const buildValue = useCallback(
     (s: PickerState): string => {
@@ -341,16 +359,26 @@ function TimeWheelDialog({ value, locale, format, label, onCancel, onDone }: Tim
           "animate-in slide-in-from-bottom-8 fade-in duration-200",
         )}
       >
-        <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
           <span className="text-sm font-medium text-muted-foreground">{label}</span>
-          <button
-            type="button"
-            onClick={onCancel}
-            className="rounded-md p-1 text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label="Cancel"
-          >
-            <span aria-hidden>×</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={toggleSound}
+              className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted-foreground transition hover:border-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-pressed={soundEnabled}
+            >
+              {soundEnabled ? "Sound On" : "Sound Off"}
+            </button>
+            <button
+              type="button"
+              onClick={onCancel}
+              className="rounded-md p-1 text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Cancel"
+            >
+              <span aria-hidden>×</span>
+            </button>
+          </div>
         </div>
 
         <div

@@ -88,7 +88,11 @@ function ReminderCenter() {
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(payload?.message || "Failed to save reminder settings");
+        const serverMessage = payload?.message;
+        if (response.status === 401 || serverMessage?.includes("invalid_api_key") || serverMessage?.includes("email_provider_failed:401")) {
+          throw new Error(t("reminder.error.apiKeyInvalid"));
+        }
+        throw new Error(serverMessage || "Failed to save reminder settings");
       }
       setStatus({
         enabled: Boolean(payload?.enabled),
@@ -100,7 +104,13 @@ function ReminderCenter() {
       });
       toast.success(t("reminder.saved"));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unable to save reminder settings");
+      const message =
+        error instanceof Error
+          ? error.message === "Failed to fetch"
+            ? t("reminder.error.network")
+            : error.message
+          : t("reminder.error.generic");
+      toast.error(message);
     } finally {
       setSaving(false);
     }
@@ -121,11 +131,21 @@ function ReminderCenter() {
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
-        throw new Error(payload?.message || "Test email failed");
+        const serverMessage = payload?.message;
+        if (response.status === 401 || serverMessage?.includes("invalid_api_key") || serverMessage?.includes("email_provider_failed:401")) {
+          throw new Error(t("reminder.error.apiKeyInvalid"));
+        }
+        throw new Error(serverMessage || "Test email failed");
       }
       toast.success(payload?.message || "Test email sent");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Unable to send test email");
+      const message =
+        error instanceof Error
+          ? error.message === "Failed to fetch"
+            ? t("reminder.error.network")
+            : error.message
+          : t("reminder.error.generic");
+      toast.error(message);
     } finally {
       setTesting(false);
     }
