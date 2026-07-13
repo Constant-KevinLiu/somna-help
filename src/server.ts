@@ -493,6 +493,15 @@ export default {
           const timezone = typeof payload?.timezone === "string" ? payload.timezone : "UTC";
           const language = typeof payload?.language === "string" ? payload.language : "en";
           if (!email && enabled) return json(400, { success: false, error: "invalid_payload" });
+          
+          // Validate email service API key before saving
+          if (enabled) {
+            const apiKey = process.env.RESEND_API_KEY?.trim();
+            if (!apiKey) {
+              return json(401, { success: false, error: "invalid_api_key" });
+            }
+          }
+          
           const record = await saveReminderSettingsServer(env as Record<string, unknown> , { email, enabled, time, timezone, language });
           return json(200, { success: true, ...record, nextRun: record.reminderTime });
         }

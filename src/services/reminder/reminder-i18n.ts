@@ -57,6 +57,9 @@ const en: Strings = {
   "reminder.status.timezone": "Timezone",
   "reminder.status.nextRun": "Next reminder",
   "reminder.testButton": "Send Test Email",
+  "reminder.error.apiKeyInvalid": "Email service configuration error. Please contact support.",
+  "reminder.error.network": "Network error. Please check your connection.",
+  "reminder.error.generic": "An error occurred. Please try again.",
 };
 
 const zh: Strings = {
@@ -108,6 +111,9 @@ const zh: Strings = {
   "reminder.status.timezone": "时区",
   "reminder.status.nextRun": "下次提醒",
   "reminder.testButton": "发送测试邮件",
+  "reminder.error.apiKeyInvalid": "邮件服务配置错误，请联系支持。",
+  "reminder.error.network": "网络错误，请检查您的连接。",
+  "reminder.error.generic": "发生错误，请重试。",
 };
 
 const es: Strings = {
@@ -159,6 +165,9 @@ const es: Strings = {
   "reminder.status.timezone": "Zona horaria",
   "reminder.status.nextRun": "Próximo recordatorio",
   "reminder.testButton": "Enviar correo de prueba",
+  "reminder.error.apiKeyInvalid": "Error de configuración del servicio de correo. Contacte con soporte.",
+  "reminder.error.network": "Error de red. Por favor, verifique su conexión.",
+  "reminder.error.generic": "Ocurrió un error. Por favor, inténtelo de nuevo.",
 };
 
 const dicts: Partial<Record<Lang, Strings>> = { en, zh, es, pt: en };
