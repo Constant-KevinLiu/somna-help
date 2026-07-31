@@ -115,5 +115,11 @@
     "h3": "^1.15.11",
     "glob": "^13.0.6",
     "tar": "^7.5.19"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "esbuild@0.25.12": true,
+    "workerd@1.20260730.1": true,
+    "@parcel/watcher@2.5.6": true
   }
 }
