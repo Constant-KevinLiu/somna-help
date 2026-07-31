@@ -8,6 +8,7 @@ import { getCbtiDict, CBTI_SLUGS, cbtiPath } from "@/lib/cbti-i18n";
 import { getLearnDict, LEARN_SLUGS, learnPath } from "@/lib/learn-i18n";
 import { SafeLink } from "@/components/common/SafeLink";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { IdentityMenu } from "@/components/IdentityMenu";
 
 // Rutas base por idioma. Usamos los mismos slugs en todos los idiomas
 // (1:1 mapping) para que switchRouteLang() pueda hacer el intercambio de
@@ -20,6 +21,7 @@ const NAV_BY_LANG = {
     { to: "/assessment", key: "nav.assessment" as const },
     { to: "/diary", key: "nav.diary" as const },
     { to: "/relax", key: "nav.relax" as const },
+    { to: "/reminders", key: "nav.reminders" as const },
   ],
   es: [
     { to: "/es", key: "nav.home" as const },
@@ -27,6 +29,7 @@ const NAV_BY_LANG = {
     { to: "/es/assessment", key: "nav.assessment" as const },
     { to: "/es/diary", key: "nav.diary" as const },
     { to: "/es/relax", key: "nav.relax" as const },
+    { to: "/es/reminders", key: "nav.reminders" as const },
   ],
   pt: [
     { to: "/pt", key: "nav.home" as const },
@@ -34,6 +37,7 @@ const NAV_BY_LANG = {
     { to: "/pt/assessment", key: "nav.assessment" as const },
     { to: "/pt/diary", key: "nav.diary" as const },
     { to: "/pt/relax", key: "nav.relax" as const },
+    { to: "/pt/reminders", key: "nav.reminders" as const },
   ],
   pl: [
     { to: "/pl", key: "nav.home" as const },
@@ -41,6 +45,7 @@ const NAV_BY_LANG = {
     { to: "/pl/assessment", key: "nav.assessment" as const },
     { to: "/pl/diary", key: "nav.diary" as const },
     { to: "/pl/relax", key: "nav.relax" as const },
+    { to: "/pl/reminders", key: "nav.reminders" as const },
   ],
   zh: [
     { to: "/", key: "nav.home" as const },
@@ -48,6 +53,15 @@ const NAV_BY_LANG = {
     { to: "/assessment", key: "nav.assessment" as const },
     { to: "/diary", key: "nav.diary" as const },
     { to: "/relax", key: "nav.relax" as const },
+    { to: "/reminders", key: "nav.reminders" as const },
+  ],
+  de: [
+    { to: "/", key: "nav.home" as const },
+    { to: "/program", key: "nav.program" as const },
+    { to: "/assessment", key: "nav.assessment" as const },
+    { to: "/diary", key: "nav.diary" as const },
+    { to: "/relax", key: "nav.relax" as const },
+    { to: "/reminders", key: "nav.reminders" as const },
   ],
 };
 
@@ -57,6 +71,7 @@ const DASHBOARD_BY_LANG = {
   pt: { to: "/pt/painel", key: "nav.dashboard" as const },
   pl: { to: "/pl/dashboard", key: "nav.dashboard" as const },
   zh: { to: "/dashboard", key: "nav.dashboard" as const },
+  de: { to: "/dashboard", key: "nav.dashboard" as const },
 };
 
 export function Header() {
@@ -314,6 +329,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <IdentityMenu locale={lang} />
             <LanguageSwitcher
               onBeforeChange={async () => {
                 if (open) {

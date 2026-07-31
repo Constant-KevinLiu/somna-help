@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["@cloudflare/workers-types", "node"],
+    "noEmit": true
+  },
+  "include": [
+    "src/server.ts",
+    "src/services/auth/**/*.ts",
+    "src/services/sync/**/*.ts",
+    "src/services/account/**/*.ts",
+    "src/services/reminder/reminder-storage-server.ts",
+    "src/services/reminder/reminder-worker.ts",
+    "src/services/reminder/reminder-mailer.ts"
+  ],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
+}

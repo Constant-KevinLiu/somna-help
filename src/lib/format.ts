@@ -110,3 +110,30 @@ export function yearlyMonthlyPriceFor(region: EsRegion): {
   const monthly = monthlyPriceFor(region);
   return { amount: Math.round(monthly.amount * 0.8 * 100) / 100, currency: monthly.currency };
 }
+
+/**
+ * Formatea una hora en formato relativo (ej: "en 5 minutos", "hace 1 hora").
+ */
+export function formatRelativeTime(d: Date): string {
+  const now = new Date();
+  const diffMs = d.getTime() - now.getTime();
+  const diffMins = Math.round(diffMs / 60000);
+  const diffHours = Math.round(diffMs / 3600000);
+  const diffDays = Math.round(diffMs / 86400000);
+
+  if (diffMs < 0) {
+    // Past
+    if (diffMins > -5) return "Just now";
+    if (diffMins > -60) return `${Math.abs(diffMins)} min ago`;
+    if (diffHours > -24) return `${Math.abs(diffHours)} hour${Math.abs(diffHours) !== 1 ? "s" : ""} ago`;
+    if (diffDays > -7) return `${Math.abs(diffDays)} day${Math.abs(diffDays) !== 1 ? "s" : ""} ago`;
+    return d.toLocaleDateString();
+  } else {
+    // Future
+    if (diffMins < 5) return "Now";
+    if (diffMins < 60) return `In ${diffMins} min`;
+    if (diffHours < 24) return `In ${diffHours} hour${diffHours !== 1 ? "s" : ""}`;
+    if (diffDays < 7) return `In ${diffDays} day${diffDays !== 1 ? "s" : ""}`;
+    return d.toLocaleDateString();
+  }
+}

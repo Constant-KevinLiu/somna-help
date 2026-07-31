@@ -7,6 +7,7 @@
  */
 import { DEFAULT_REMINDER_SETTINGS, type ReminderSettings } from "./reminder-types";
 import { validateReminderSettings } from "./reminder-validation";
+import { isBrowser, safeLocalStorageGet, safeLocalStorageSet } from "@/lib/safe-storage";
 
 /** localStorage key for reminder settings. */
 export const REMINDER_SETTINGS_KEY = "reminderSettings";
@@ -14,24 +15,15 @@ export const REMINDER_SETTINGS_KEY = "reminderSettings";
 /** Custom event dispatched on save, for in-tab reactivity. */
 export const REMINDER_SETTINGS_EVENT = "somna-reminder-settings";
 
-function isBrowser(): boolean {
-  return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
-}
-
 /**
  * Load reminder settings from localStorage.
  * Returns validated settings, or defaults if storage is empty/corrupted.
  */
 export function loadReminderSettings(): ReminderSettings {
   if (!isBrowser()) return { ...DEFAULT_REMINDER_SETTINGS };
-  try {
-    const raw = window.localStorage.getItem(REMINDER_SETTINGS_KEY);
-    if (!raw) return { ...DEFAULT_REMINDER_SETTINGS };
-    const parsed = JSON.parse(raw);
-    return validateReminderSettings(parsed);
-  } catch {
-    return { ...DEFAULT_REMINDER_SETTINGS };
-  }
+  const raw = safeLocalStorageGet<Record<string, unknown> | null>(REMINDER_SETTINGS_KEY, null);
+  if (!raw) return { ...DEFAULT_REMINDER_SETTINGS };
+  return validateReminderSettings(raw);
 }
 
 /**
@@ -40,15 +32,12 @@ export function loadReminderSettings(): ReminderSettings {
  */
 export function saveReminderSettings(settings: ReminderSettings): void {
   if (!isBrowser()) return;
-  try {
-    const toStore: ReminderSettings = {
-      ...settings,
-      reminderTime: settings.reminderTime || settings.eveningTime,
-      updatedAt: new Date().toISOString(),
-    };
-    window.localStorage.setItem(REMINDER_SETTINGS_KEY, JSON.stringify(toStore));
-    window.dispatchEvent(new CustomEvent(REMINDER_SETTINGS_EVENT, { detail: toStore }));
-  } catch {
-    /* ignore quota / private mode errors */
-  }
+  const toStore: ReminderSettings = {
+    ...settings,
+    reminderTime: settings.reminderTime || settings.eveningTime,
+    updatedAt: new Date().toISOString(),
+  };
+  safeLocalStorageSet(REMINDER_SETTINGS_KEY, toStore, {
+    dispatchEvent: REMINDER_SETTINGS_EVENT,
+  });
 }

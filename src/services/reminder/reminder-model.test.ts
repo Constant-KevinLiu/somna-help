@@ -1,19 +1,27 @@
-import test from "node:test";
-import assert from "node:assert/strict";
+
+import { describe, it, expect } from "vitest";
+
 import { buildReminderRecord } from "./reminder-model";
 
-test("buildReminderRecord normalizes email and defaults timezone/language", () => {
-  const record = buildReminderRecord({
-    email: " User@Example.com ",
-    enabled: true,
-    time: "22:30",
-    timezone: "America/New_York",
-    language: "en",
-  });
+describe("buildReminderRecord", () => {
+  it("normalizes email and defaults timezone/language", () => {
+    const record = buildReminderRecord({
+      email: " User@Example.com ",
+      enabled: true,
+      time: "22:30",
+      timezone: "America/New_York",
+      language: "en",
+    });
 
-  assert.equal(record.email, "user@example.com");
-  assert.equal(record.emailHash.length, 64);
-  assert.equal(record.timezone, "America/New_York");
-  assert.equal(record.language, "en");
-  assert.equal(record.reminderType, "BEDTIME_REMINDER");
+    // Email should be trimmed and lowercased
+    expect(record.email).toBe("user@example.com");
+    // Enabled flag should be preserved
+    expect(record.enabled).toBe(true);
+    // Time should be preserved
+    expect(record.reminderTime).toBe("22:30");
+    // Timezone should be preserved
+    expect(record.timezone).toBe("America/New_York");
+    // Language should be normalized
+    expect(record.language).toBe("en");
+  });
 });

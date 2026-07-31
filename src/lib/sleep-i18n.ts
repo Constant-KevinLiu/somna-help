@@ -475,12 +475,12 @@ const pl: Strings = {
   "cbti.ach.next": "{n} dni do następnego",
 };
 
-const dicts: Record<Lang, Strings> = { en, zh, es, pt, pl };
+const dicts: { en: Strings } & Partial<Record<Lang, Strings>> = { en, zh, es, pt, pl };
 
 export function useSleepI18n() {
   const { lang } = useI18n();
   const t = (k: string, vars?: Record<string, string | number>) => {
-    const raw = dicts[lang][k] ?? dicts.en[k] ?? k;
+    const raw = dicts[lang]?.[k] ?? dicts.en[k] ?? k;
     if (!vars) return raw;
     return raw.replace(/\{(\w+)\}/g, (_, key) => String(vars[key] ?? ""));
   };

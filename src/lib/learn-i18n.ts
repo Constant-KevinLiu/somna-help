@@ -4,6 +4,7 @@ import type { FAQ } from "./calc-i18n";
 import type { CbtiSlug } from "./cbti-i18n";
 import { ptLearnDict } from "./learn-pt-i18n";
 import { plLearnDict } from "./learn-pl-i18n";
+import { deLearnDict } from "./learn-de-i18n";
 
 export type LearnSlug =
   | "what-is-cbti"
@@ -1894,6 +1895,7 @@ const dicts: Partial<Record<Lang, LearnDict>> = {
   es,
   pt: ptLearnDict,
   pl: plLearnDict,
+  de: deLearnDict,
 };
 
 export function getLearnDict(lang: Lang): LearnDict {

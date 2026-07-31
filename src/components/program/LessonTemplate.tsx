@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useLessonTitle } from "@/hooks/use-lesson-title";
 import {
   ArrowLeft,
   ArrowRight,
@@ -9,6 +10,7 @@ import {
   HelpCircle,
   Lightbulb,
   ListChecks,
+  Pause,
   Share2,
   Sparkles,
 } from "lucide-react";
@@ -25,10 +27,10 @@ import {
   type LessonContent,
 } from "@/lib/program-lessons";
 import { getProgramLessonUI } from "@/lib/program-lessons-i18n";
-import { useProgramProgress } from "@/lib/program-progress";
+import { useProgramService } from "@/lib/program/use-program-service";
 import { getWeekByNumber } from "@/lib/program-weeks";
+import { ProgramUnsupportedBanner } from "./ProgramUnsupportedBanner";
 import { trackShare } from "@/lib/share-analytics";
-import { loadLesson } from "@/lib/program-lessons";
 
 type Props = {
   lesson: LessonContent;
@@ -37,7 +39,8 @@ type Props = {
 export function LessonTemplate({ lesson }: Props) {
   const { lang, t } = useI18n();
   const ui = getProgramLessonUI(lang);
-  const { progress, toggle, hydrated } = useProgramProgress();
+  const { progress, toggleLesson, hydrated, overallCompletion, isUnsupportedSchema } = useProgramService();
+  const isPaused = hydrated && !isUnsupportedSchema && progress.status === "paused";
   const c = lesson.i18n[lang] ?? lesson.i18n.en!;
   const meta = getLessonMeta(lesson.slug)!;
   const { prev, next } = getAdjacentLessons(lesson.slug);
@@ -52,7 +55,8 @@ export function LessonTemplate({ lesson }: Props) {
     [],
   );
 
-  const completed = hydrated && progress.completedLessons.includes(lesson.slug);
+  const completed = hydrated && progress.completedLessonIds.includes(lesson.slug);
+  const totalCompleted = progress.completedLessonIds.length;
   const relatedLessons = meta.relatedLessonSlugs
     .map((s) => getLessonMeta(s))
     .filter((l): l is NonNullable<typeof l> => Boolean(l))
@@ -96,14 +100,14 @@ export function LessonTemplate({ lesson }: Props) {
         <div className="mx-auto mt-6 max-w-md">
           <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-muted-foreground">
             <span>{ui.progressLabel}</span>
-            <span>{progress.completedLessons.length} / 18</span>
+            <span>{totalCompleted} / 18</span>
           </div>
           <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-white/10">
             <div
               className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
-              style={{ width: `${Math.round((progress.completedLessons.length / 18) * 100)}%` }}
+              style={{ width: `${overallCompletion}%` }}
               role="progressbar"
-              aria-valuenow={progress.completedLessons.length}
+              aria-valuenow={totalCompleted}
               aria-valuemin={0}
               aria-valuemax={18}
               aria-label={ui.progressLabel}
@@ -111,6 +115,9 @@ export function LessonTemplate({ lesson }: Props) {
           </div>
         </div>
       </PageHero>
+
+      {/* Unsupported schema warning */}
+      <ProgramUnsupportedBanner />
 
       {/* Lesson content sections */}
       <section className="px-5 pb-8" aria-label={ui.lessonContentTitle}>
@@ -196,14 +203,24 @@ export function LessonTemplate({ lesson }: Props) {
             </div>
           )}
 
+          {/* Paused note */}
+          {isPaused && (
+            <div className="mb-4 flex items-center gap-2 rounded-2xl border border-accent/30 bg-accent/[0.07] px-4 py-3 text-sm text-foreground/90">
+              <Pause className="h-4 w-4 shrink-0 text-accent" />
+              <span>{ui.lessonPausedNote}</span>
+            </div>
+          )}
+
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             {/* Mark as completed toggle */}
             <button
               type="button"
-              onClick={() => toggle(lesson.slug)}
-              disabled={!hydrated}
+              onClick={() => toggleLesson(lesson.slug, lesson.weekSlug)}
+              disabled={!hydrated || isUnsupportedSchema || isPaused}
               aria-pressed={completed}
               aria-label={completed ? ui.markIncomplete : ui.markCompleted}
+              aria-disabled={!hydrated || isUnsupportedSchema || isPaused}
+              title={isPaused ? ui.lessonPausedNote : undefined}
               className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-3 text-sm text-foreground/90 transition hover:bg-white/10 disabled:opacity-50"
             >
               <CheckCircle2
@@ -296,7 +313,7 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
   // round-trip per card, we read titles from the already-loaded current lesson when
   // possible; otherwise we show the lesson number + a neutral label and let the link
   // carry the user to the full lesson.
-  const title = useRelatedLessonTitle(weekSlug, lessonSlug, lang);
+  const title = useLessonTitle(weekSlug, lessonSlug, lang);
   if (!meta) return null;
   return (
     <SafeLink
@@ -313,36 +330,6 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
   );
 }
 
-// Lightweight cache for related-lesson titles keyed by `${weekSlug}/${lessonSlug}/${lang}`.
-const titleCache = new Map<string, string>();
-
-function useRelatedLessonTitle(weekSlug: string, lessonSlug: string, lang: Lang): string | null {
-  const cacheKey = `${weekSlug}/${lessonSlug}/${lang}`;
-  const [title, setTitle] = useState<string | null>(() => titleCache.get(cacheKey) ?? null);
-
-  useEffect(() => {
-    if (titleCache.has(cacheKey)) {
-      setTitle(titleCache.get(cacheKey)!);
-      return;
-    }
-    let active = true;
-    loadLesson(weekSlug, lessonSlug, lang)
-      .then((lesson) => {
-        if (!lesson || !active) return;
-        const t = (lesson.i18n[lang] ?? lesson.i18n.en!).title;
-        titleCache.set(cacheKey, t);
-        setTitle(t);
-      })
-      .catch(() => {
-        /* ignore — card falls back to neutral label */
-      });
-    return () => {
-      active = false;
-    };
-  }, [cacheKey, lang]);
-
-  return title;
-}
 
 /** SEO head helper for lesson routes. */
 export function lessonHead(lesson: LessonContent, lang: Lang) {

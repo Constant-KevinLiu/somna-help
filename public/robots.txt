@@ -35,23 +35,21 @@ Allow: /pl/
 # ---------------------------------------------------------------------------
 # Directorios y patrones que no deben ser rastreados ni indexados
 # ---------------------------------------------------------------------------
-# Build / assets empaquetados
+# Build
 Disallow: /dist/
 Disallow: /build/
 Disallow: /assets/*.js$
 Disallow: /assets/*.css$
 
-# Cachés y fuentes de compilación
+# Internal
 Disallow: /node_modules/
 Disallow: /.cache/
 Disallow: /app.config.*.js
 
-# Herramientas internas / no públicas
+# Private
 Disallow: /api/
 Disallow: /_debug/
 Disallow: /__devtools/
-
-# Rutas privadas o que requieren sesión (no aportan SEO)
 Disallow: /settings/
 Disallow: /account/
 Disallow: /login
@@ -59,17 +57,14 @@ Disallow: /register
 Disallow: /forgot-password
 Disallow: /reset-password
 
-# Parámetros de seguimiento / ordenación / filtros para evitar contenido duplicado
-Disallow: /*?*
-Disallow: /*&*
+# Tracking parameters
 Disallow: /*?utm_
 Disallow: /*?fbclid=
 Disallow: /*?ref=
 
-# ---------------------------------------------------------------------------
-# Sitemaps por idioma (índices independientes)
-# ---------------------------------------------------------------------------
+Sitemap: https://somna.help/sitemap.xml
 Sitemap: https://somna.help/sitemap-en.xml
 Sitemap: https://somna.help/sitemap-es.xml
 Sitemap: https://somna.help/sitemap-pt.xml
 Sitemap: https://somna.help/sitemap-pl.xml
+

@@ -7,6 +7,15 @@ import { isSearchEngineBot, isMaliciousAiBot } from "./lib/crawler";
 import { saveReminderSettingsServer, getReminderSettingsServer, deleteReminderSettingsServer } from "./services/reminder/reminder-storage-server";
 import { sendReminderTestEmail } from "./services/reminder/reminder-mailer";
 import { runReminderCron } from "./services/reminder/reminder-worker";
+import {
+  handleRequestCode,
+  handleVerifyCode,
+  handleGetSession,
+  handleLogout,
+  getAuthenticatedUser,
+} from "./services/auth/auth-api";
+import { handleSync, handleRestore } from "./services/sync/api/sync-api";
+import { handleAccountExport, handleAccountDelete } from "./services/account/account-api";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
@@ -53,6 +62,14 @@ const UPLOAD_PATH = "/api/share/upload";
 const REMINDER_PATH = "/api/reminders";
 const REMINDER_STATUS_PATH = "/api/reminders/status";
 const REMINDER_TEST_PATH = "/api/reminders/test";
+const AUTH_REQUEST_CODE = "/api/auth/request-code";
+const AUTH_VERIFY_CODE = "/api/auth/verify-code";
+const AUTH_SESSION = "/api/auth/session";
+const AUTH_LOGOUT = "/api/auth/logout";
+const SYNC_PATH = "/api/sync";
+const SYNC_RESTORE_PATH = "/api/sync/restore";
+const ACCOUNT_EXPORT_PATH = "/api/account/export";
+const ACCOUNT_DELETE_PATH = "/api/account/data";
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024; // 5 MB cap on uploaded PNGs
 
 /**
@@ -540,6 +557,125 @@ export default {
       if (url.pathname === "/api/reminders/cron") {
         const result = await runReminderCron(env as Record<string, unknown>);
         return json(200, result);
+      }
+
+      // ── Authentication API ──────────────────────────────────────────────────
+      // Sleep Diary v2.3 Progressive Authentication endpoints.
+      // Passwordless OTP login with secure HttpOnly session cookies.
+      if (
+        url.pathname === AUTH_REQUEST_CODE ||
+        url.pathname === AUTH_VERIFY_CODE ||
+        url.pathname === AUTH_SESSION ||
+        url.pathname === AUTH_LOGOUT
+      ) {
+        if (request.method === "OPTIONS") {
+          return new Response(null, {
+            status: 204,
+            headers: {
+              "access-control-allow-origin": "*",
+              "access-control-allow-methods": "POST, GET, OPTIONS",
+              "access-control-allow-headers": "content-type",
+            },
+          });
+        }
+
+        const authContext = { request, env, ctx };
+        
+        if (url.pathname === AUTH_REQUEST_CODE) {
+          return handleRequestCode(authContext);
+        }
+        if (url.pathname === AUTH_VERIFY_CODE) {
+          return handleVerifyCode(authContext);
+        }
+        if (url.pathname === AUTH_SESSION) {
+          return handleGetSession(authContext);
+        }
+        if (url.pathname === AUTH_LOGOUT) {
+          return handleLogout(authContext);
+        }
+      }
+
+      // ── Sync API ────────────────────────────────────────────────────────────
+      // Phase D: Cloud sync with conflict resolution
+      // All endpoints require valid session cookie.
+      if (url.pathname === SYNC_PATH || url.pathname === SYNC_RESTORE_PATH) {
+        if (request.method === "OPTIONS") {
+          return new Response(null, {
+            status: 204,
+            headers: {
+              "access-control-allow-origin": "*",
+              "access-control-allow-methods": "POST, GET, OPTIONS",
+              "access-control-allow-headers": "content-type, idempotency-key",
+            },
+          });
+        }
+
+        const authContext = { request, env, ctx };
+        const user = await getAuthenticatedUser(authContext);
+
+        if (!user) {
+          return json(401, {
+            success: false,
+            error: "unauthorized",
+            message: "Valid authentication required",
+          });
+        }
+
+        if (url.pathname === SYNC_PATH) {
+          if (request.method !== "POST") {
+            return json(405, { success: false, error: "method_not_allowed" });
+          }
+          const idempotencyKey = request.headers.get("Idempotency-Key") || undefined;
+          return handleSync(env as Record<string, unknown>, user.user.id, request, idempotencyKey);
+        }
+
+        if (url.pathname === SYNC_RESTORE_PATH) {
+          if (request.method !== "GET") {
+            return json(405, { success: false, error: "method_not_allowed" });
+          }
+          return handleRestore(env as Record<string, unknown>, user.user.id);
+        }
+      }
+
+      // ── Account Data Controls API ─────────────────────────────────────────────
+      // Phase D: Account export and deletion endpoints.
+      // Both endpoints require valid session cookie.
+      if (url.pathname === ACCOUNT_EXPORT_PATH || url.pathname === ACCOUNT_DELETE_PATH) {
+        if (request.method === "OPTIONS") {
+          return new Response(null, {
+            status: 204,
+            headers: {
+              "access-control-allow-origin": "*",
+              "access-control-allow-methods": "GET, DELETE, OPTIONS",
+              "access-control-allow-headers": "content-type",
+            },
+          });
+        }
+
+        const authContext = { request, env, ctx };
+        const user = await getAuthenticatedUser(authContext);
+
+        if (!user) {
+          return json(401, {
+            success: false,
+            error: "unauthorized",
+            message: "Valid authentication required",
+          });
+        }
+
+        if (url.pathname === ACCOUNT_EXPORT_PATH) {
+          if (request.method !== "GET") {
+            return json(405, { success: false, error: "method_not_allowed" });
+          }
+          return handleAccountExport(env as Record<string, unknown>, (user as any).user.id);
+        }
+
+        if (url.pathname === ACCOUNT_DELETE_PATH) {
+          if (request.method !== "DELETE") {
+            return json(405, { success: false, error: "method_not_allowed" });
+          }
+          return handleAccountDelete(env as Record<string, unknown>, (user as any).user.id, request);
+        }
       }
 
       const handler = await getServerEntry();

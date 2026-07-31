@@ -21,6 +21,23 @@
     },
   ],
 
+  // =============================================================================
+  // D1 Database for Sleep Diary v2.3
+  // Stores users, sessions, OTP challenges, sleep records, reflections,
+  // and reminder settings for authenticated cross-device sync.
+  // Create with:
+  //   wrangler d1 create somna-db
+  // Run migrations with:
+  //   wrangler d1 migrations apply somna-db
+  // =============================================================================
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "somna-db",
+      "database_id": "REPLACE_WITH_YOUR_DATABASE_ID",
+    },
+  ],
+
   "assets": {
     "directory": "dist/client",
     "headers": {

@@ -3,6 +3,7 @@ import { LANG_PREFIX } from "./lang-detect";
 import type { FAQ } from "./calc-i18n";
 import { ptCbtiDict } from "./cbti-pt-i18n";
 import { plCbtiDict } from "./cbti-pl-i18n";
+import { deCbtiDict } from "./cbti-de-i18n";
 
 export type CbtiSlug =
   | "cbt-i-guide"
@@ -1838,6 +1839,7 @@ const dicts: Partial<Record<Lang, CbtiDict>> = {
   es,
   pt: ptCbtiDict,
   pl: plCbtiDict,
+  de: deCbtiDict,
 };
 
 export function getCbtiDict(lang: Lang): CbtiDict {

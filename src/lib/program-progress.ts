@@ -1,5 +1,22 @@
-// CBT-I Program progress tracking — localStorage-backed.
-// Stores completed lesson slugs under "cbtiProgramProgress".
+/**
+ * @deprecated LEGACY — Use `@/lib/program/use-program-service` for all new code.
+ *
+ * This module is preserved only for:
+ *   1. Migration compatibility (read-only legacy data format)
+ *   2. Existing tests that reference it directly
+ *
+ * Migration path:
+ *   Legacy localStorage key: "cbtiProgramProgress"
+ *     ↓ (read on first load, never written)
+ *   migrateLegacyProgress() in @/lib/program/service.ts
+ *     ↓
+ *   Canonical storage key: "somna:program-progress:v1"
+ *
+ * Production routes and components MUST NOT import this module.
+ * The new canonical source of truth is `@/lib/program/`.
+ *
+ * Storage key: "cbtiProgramProgress" (legacy, read-only for migration)
+ */
 
 import { useEffect, useState, useCallback } from "react";
 import { lessonMetas, TOTAL_LESSONS, getLessonsByWeek, type LessonMeta } from "./program-lessons";

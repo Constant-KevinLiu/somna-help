@@ -1188,8 +1188,8 @@ const pl: CalcDict = {
   },
 };
 
-const dicts: Record<Lang, CalcDict> = { en, zh, es, pt, pl };
+const dicts: { en: CalcDict } & Partial<Record<Lang, CalcDict>> = { en, zh, es, pt, pl };
 
 export function getCalcDict(lang: Lang): CalcDict {
-  return dicts[lang];
+  return dicts[lang] ?? dicts.en;
 }

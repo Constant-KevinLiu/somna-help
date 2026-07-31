@@ -16,6 +16,7 @@ import { I18nProvider, useI18n } from "@/lib/i18n";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
+import { SessionProvider } from "@/hooks/use-session";
 import {
   getSavedUserLang,
   getLangFromPathname,
@@ -26,6 +27,7 @@ import {
 import { isSearchEngineBot, isMaliciousAiBot } from "@/lib/crawler";
 import { CrawlerContext, CrawlerContextValue } from "@/lib/crawler-context";
 import { TurnstileProvider } from "@/components/TurnstileProvider";
+import { useAnalyticsPageView } from "@/hooks/use-analytics-page-view";
 
 function NotFoundComponent() {
   const { t, lang } = useI18n();
@@ -49,6 +51,13 @@ function NotFoundComponent() {
   );
 }
 
+function safeTranslate(translatedValue: unknown, key: string, fallback: string): string {
+  if (typeof translatedValue === "string" && translatedValue.trim() && translatedValue !== key) {
+    return translatedValue;
+  }
+  return fallback;
+}
+
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
@@ -59,9 +68,15 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          {t("error.generic.title")}
+          {safeTranslate(t("error.generic.title"), "error.generic.title", "Something went wrong")}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">{t("error.generic.body")}</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {safeTranslate(
+            t("error.generic.body"),
+            "error.generic.body",
+            "We couldn't load this page. Please try again.",
+          )}
+        </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -70,13 +85,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            {t("error.retry")}
+            {safeTranslate(t("error.retry"), "error.retry", "Try again")}
           </button>
           <a
             href={home}
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            {t("error.goHome")}
+            {safeTranslate(t("error.goHome"), "error.goHome", "Go to home")}
           </a>
         </div>
       </div>
@@ -260,6 +275,10 @@ function RootComponent() {
     }
   }, [isCrawler]);
 
+  // Initialize GA4 and track SPA route changes.
+  // No-op during SSR, when measurement ID is absent, or for crawlers.
+  useAnalyticsPageView(router, { isCrawler });
+
   // Force-close any visible interstitials for crawlers. This guarantees that
   // even if a route code attempts to open the Turnstile dialog or consent
   // banner, the crawler sees the underlying page markup only.
@@ -293,29 +312,31 @@ function RootComponent() {
   return (
     <CrawlerContext.Provider value={crawlerValue}>
       <QueryClientProvider client={queryClient}>
-        <I18nProvider initialLang={routeLang as "en" | "es" | "pt" | "pl" | "zh"}>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">
-              <Outlet />
-            </main>
-            <Footer />
-          </div>
-          <Toaster position="bottom-center" />
-          {/*
+        <SessionProvider>
+          <I18nProvider initialLang={routeLang as "en" | "es" | "pt" | "pl" | "zh"}>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">
+                <Outlet />
+              </main>
+              <Footer />
+            </div>
+            <Toaster position="bottom-center" />
+            {/*
             Crawlers receive full HTML only:
             - No Turnstile challenge widget / dialog.
             - No cookie / privacy consent banner.
             - No language-preference redirect.
             Normal users still get all interactive UI and cookie persistence.
           */}
-          {!isCrawler && (
-            <>
-              <CookieConsentBanner />
-              <TurnstileProvider />
-            </>
-          )}
-        </I18nProvider>
+            {!isCrawler && (
+              <>
+                <CookieConsentBanner />
+                <TurnstileProvider />
+              </>
+            )}
+          </I18nProvider>
+        </SessionProvider>
       </QueryClientProvider>
     </CrawlerContext.Provider>
   );

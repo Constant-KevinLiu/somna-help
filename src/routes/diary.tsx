@@ -21,6 +21,9 @@ import { ShareModal } from "@/components/ShareModal";
 import { TimeWheelPicker } from "@/components/ui/TimeWheelPicker";
 import { trackShare } from "@/lib/share-analytics";
 import { Share2 } from "lucide-react";
+import { GuidedReflectionCard, ReflectionHistory } from "@/components/diary";
+import { loadReminders, loadOccurrences, updateOccurrence } from "@/services/habit/habit-storage";
+import { logOccurrenceCompleted } from "@/services/habit/habit-events";
 
 export const Route = createFileRoute("/diary")({
   component: DiaryPage,
@@ -45,6 +48,8 @@ export function DiaryPage() {
   const [mood, setMood] = useState(4);
   const [feedback, setFeedback] = useState<SleepRecord | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [editDate, setEditDate] = useState<string | null>(null);
 
   // Load existing records so we can share the latest weekly summary.
   const records = useMemo(() => loadRecords(), []);
@@ -77,6 +82,10 @@ export function DiaryPage() {
     try {
       saveRecord(record);
       setFeedback(record);
+
+      // Complete any matching diary reminders
+      completeMatchingReminders();
+
       if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
       // localStorage may be full (QuotaExceededError) or disabled — surface a
@@ -92,6 +101,33 @@ export function DiaryPage() {
                 ? "Nie udało się zapisać. Sprawdź ustawienia pamięci przeglądarki i spróbuj ponownie."
                 : "Could not save your entry. Please check your browser storage settings and try again.",
       );
+    }
+  };
+
+  // Complete any due diary reminders when user saves a diary entry
+  const completeMatchingReminders = () => {
+    const reminders = loadReminders();
+    const occurrences = loadOccurrences();
+    const now = new Date().toISOString();
+
+    // Find reminders related to diary entries
+    const diaryReminders = reminders.filter(
+      (r: any) => r.relatedAction === "diary_morning" || r.relatedAction === "diary_evening"
+    );
+
+    for (const reminder of diaryReminders) {
+      // Find any due occurrences for this reminder
+      const dueOccurrences = occurrences.filter(
+        (o: any) =>
+          o.reminderId === reminder.id &&
+          (o.status === "scheduled" || o.status === "due" || o.status === "delivered") &&
+          o.dueAt <= now
+      );
+
+      for (const occurrence of dueOccurrences) {
+        updateOccurrence(occurrence.id, { status: "completed_by_related_action" });
+        logOccurrenceCompleted(reminder, occurrence, "diary_integration");
+      }
     }
   };
 
@@ -182,6 +218,25 @@ export function DiaryPage() {
             </div>
           )}
 
+          {/* Guided CBT-I Reflection Section */}
+          {showHistory ? (
+            <ReflectionHistory
+              onBack={() => {
+                setShowHistory(false);
+                setEditDate(null);
+              }}
+              onEditDate={(date) => {
+                setEditDate(date);
+                setShowHistory(false);
+              }}
+            />
+          ) : (
+            <GuidedReflectionCard
+              onViewHistory={() => setShowHistory(true)}
+              key={editDate || "today"}
+            />
+          )}
+
           {/* Weekly summary share */}
           {records.length > 0 && (
             <div className="glass-strong rounded-3xl p-6 md:p-8 animate-fade-up">
@@ -214,6 +269,13 @@ export function DiaryPage() {
           )}
 
           <p className="text-center text-xs text-muted-foreground">{ts("diary.feedback.note")}</p>
+
+          <GuidedReflectionCard
+            showHistory={showHistory}
+            setShowHistory={setShowHistory}
+            editDate={editDate}
+            setEditDate={setEditDate}
+          />
         </div>
       </section>
     </>

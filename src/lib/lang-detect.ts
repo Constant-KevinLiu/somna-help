@@ -12,16 +12,36 @@
  *   /de/, /ja/, /zh/.
  */
 
-export type Lang = "en" | "es" | "pt" | "pl" | "de" | "ja" | "zh";
+import {
+  isBrowser,
+  isDocumentAvailable,
+  isNavigatorAvailable,
+  safeLocalStorageGet,
+  safeLocalStorageSet,
+} from "./safe-storage";
+import type { SupportedLocale, ActiveLocale } from "./locale-registry";
+import {
+  ACTIVE_LOCALES,
+  RESERVED_LOCALES,
+  SUPPORTED_LOCALES,
+  normalizePersistedLocale,
+  isSupportedLocale,
+} from "./locale-registry";
+
+/**
+ * @deprecated Import SupportedLocale from @/lib/locale-registry instead.
+ * Lang is re-exported here for backward compatibility.
+ */
+export type Lang = SupportedLocale;
 
 /** Idiomas atualmente ativos (com rotas e locales criados). */
-export const ACTIVE_LANGS: Lang[] = ["en", "es", "pt", "pl"];
+export const ACTIVE_LANGS: ActiveLocale[] = ACTIVE_LOCALES;
 
 /** Idiomas reservados para futuro (sem rotas ainda). */
-export const RESERVED_LANGS: Lang[] = ["de", "ja", "zh"];
+export const RESERVED_LANGS: SupportedLocale[] = RESERVED_LOCALES;
 
 /** Mapeamento de idioma → prefixo de rota. en não tem prefixo. */
-export const LANG_PREFIX: Record<Lang, string> = {
+export const LANG_PREFIX: Record<SupportedLocale, string> = {
   en: "",
   es: "/es",
   pt: "/pt",
@@ -45,7 +65,7 @@ export const LANG_LOCAL_STORAGE = "somna-language";
  * Devuelve null si no existe o si se ejecuta en SSR sin document.
  */
 function readCookie(name: string): string | null {
-  if (typeof document === "undefined") return null;
+  if (!isDocumentAvailable()) return null;
   const match = document.cookie.match(new RegExp("(?:^|;\\s*)" + name + "=([^;]+)"));
   return match ? decodeURIComponent(match[1]) : null;
 }
@@ -53,46 +73,45 @@ function readCookie(name: string): string | null {
 /**
  * getBrowserLang: lê o idioma do navegador (navigator.language) e o normaliza
  * para um dos idiomas suportados. Retorna "en" como fallback.
- * - pt-BR, pt-PT → "pt"
- * - pl-PL → "pl"
- * - es-ES, es-MX, es-AR → "es"
- * - de-DE, de-AT → "de"
- * - ja-JP → "ja"
- * - zh-CN, zh-TW → "zh"
+ * Uses normalizePersistedLocale from the locale registry for consistent
+ * mapping of full locale tags (e.g. pt-BR → pt, zh-CN → zh).
  */
 export function getBrowserLang(): Lang {
-  if (typeof navigator === "undefined") return "en";
+  if (!isNavigatorAvailable()) return "en";
   const langs = [navigator.language, ...(navigator.languages ?? [])];
   for (const l of langs) {
     if (!l) continue;
-    const lower = l.toLowerCase();
-    if (lower.startsWith("pt")) return "pt";
-    if (lower.startsWith("pl")) return "pl";
-    if (lower.startsWith("es")) return "es";
-    if (lower.startsWith("de")) return "de";
-    if (lower.startsWith("ja")) return "ja";
-    if (lower.startsWith("zh")) return "zh";
+    const normalized = normalizePersistedLocale(l);
+    if (normalized !== "en") return normalized;
+    // If normalized to "en", confirm it's actually English (not just fallback)
+    if (l.toLowerCase().startsWith("en")) return "en";
   }
   return "en";
 }
 
 function isValidLang(v: string | null): v is Lang {
-  return (
-    v === "en" || v === "es" || v === "pt" || v === "pl" || v === "de" || v === "ja" || v === "zh"
-  );
+  return isSupportedLocale(v);
 }
 
 /**
  * getSavedUserLang: lê a preferência manual salva pelo usuário no cookie
  * somna_lang ou no localStorage somna-language. Retorna null se não houver
  * preferência salva.
+ *
+ * Handles legacy values (e.g. "pt-BR") by normalizing to the canonical code.
  */
 export function getSavedUserLang(): Lang | null {
   const cookie = readCookie(LANG_COOKIE);
-  if (isValidLang(cookie)) return cookie;
-  if (typeof window !== "undefined") {
-    const stored = window.localStorage.getItem(LANG_LOCAL_STORAGE);
-    if (isValidLang(stored)) return stored;
+  if (cookie) {
+    const normalized = normalizePersistedLocale(cookie);
+    if (normalized) return normalized;
+  }
+  if (isBrowser()) {
+    const stored = safeLocalStorageGet<string | null>(LANG_LOCAL_STORAGE, null);
+    if (stored) {
+      const normalized = normalizePersistedLocale(stored);
+      if (normalized) return normalized;
+    }
   }
   return null;
 }
@@ -104,9 +123,8 @@ export function getSavedUserLang(): Lang | null {
  * la preferencia al usuario.
  */
 export function setUserLangCookie(lang: Lang): void {
-  if (typeof document === "undefined") return;
-  const secure =
-    typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
+  if (!isDocumentAvailable()) return;
+  const secure = isBrowser() && window.location.protocol === "https:" ? "; Secure" : "";
   document.cookie = `${LANG_COOKIE}=${lang}; Path=/; Max-Age=${LANG_COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
   if (!readCookie(UID_COOKIE)) {
     document.cookie = `${UID_COOKIE}=${generateUid()}; Path=/; Max-Age=${LANG_COOKIE_MAX_AGE}; SameSite=Lax${secure}`;
@@ -119,8 +137,8 @@ export function setUserLangCookie(lang: Lang): void {
  */
 export function setUserLangPreference(lang: Lang): void {
   setUserLangCookie(lang);
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(LANG_LOCAL_STORAGE, lang);
+  if (isBrowser()) {
+    safeLocalStorageSet(LANG_LOCAL_STORAGE, lang);
   }
 }
 

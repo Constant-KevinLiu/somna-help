@@ -1,0 +1,529 @@
+文件夹 PATH 列表
+卷序列号为 0000015C 0EFD:16F0
+D:\WORKSPACE\SLEEP-APP-V8\SRC
+│  router.tsx
+│  routeTree.gen.ts
+│  server.ts
+│  start.ts
+│  styles.css
+│  
+├─components
+│  │  AccountDataDialog.tsx
+│  │  AssessmentShareCard.tsx
+│  │  AuthModal.tsx
+│  │  CalculatorShareCard.tsx
+│  │  DashboardShareCard.tsx
+│  │  FAQ.tsx
+│  │  Footer.tsx
+│  │  Header.tsx
+│  │  IdentityMenu.tsx
+│  │  LanguageSwitcher.tsx
+│  │  PageHero.tsx
+│  │  RelatedTools.tsx
+│  │  RelaxAudioPlayer.tsx
+│  │  ShareExportDialogEs.tsx
+│  │  ShareModal.tsx
+│  │  SyncStatus.tsx
+│  │  TurnstileDialog.tsx
+│  │  TurnstileProvider.tsx
+│  │  TurnstileWidget.tsx
+│  │  
+│  ├─cbti
+│  │      CbtiArticleShell.tsx
+│  │      
+│  ├─common
+│  │      SafeLink.tsx
+│  │      
+│  ├─diary
+│  │      GuidedReflectionCard.tsx
+│  │      index.ts
+│  │      ReflectionEditor.tsx
+│  │      ReflectionHistory.tsx
+│  │      ReflectionHistoryItem.tsx
+│  │      ReflectionPromptsList.tsx
+│  │      
+│  ├─learn
+│  │      LearnLessonTemplate.tsx
+│  │      
+│  ├─program
+│  │      LessonTemplate.tsx
+│  │      SleepRestrictionWidget.tsx
+│  │      WeekPageTemplate.tsx
+│  │      
+│  ├─reminder
+│  │      HabitProgressCard.tsx
+│  │      InAppReminder.tsx
+│  │      NotificationPermission.tsx
+│  │      ReminderForm.tsx
+│  │      ReminderList.tsx
+│  │      
+│  ├─seo
+│  │      Hreflang.tsx
+│  │      
+│  ├─time-picker
+│  │      index.ts
+│  │      TimeWheelPicker.tsx
+│  │      VirtualWheel.test.ts
+│  │      VirtualWheel.ts
+│  │      WheelAccessibility.ts
+│  │      WheelAnimation.ts
+│  │      WheelColumn.tsx
+│  │      WheelDebug.test.ts
+│  │      WheelDebug.ts
+│  │      WheelEngine.ts
+│  │      WheelGesture.test.ts
+│  │      WheelGesture.ts
+│  │      WheelHaptics.ts
+│  │      WheelPhysics.test.ts
+│  │      WheelPhysics.ts
+│  │      WheelRenderer.test.ts
+│  │      WheelRenderer.ts
+│  │      WheelSound.ts
+│  │      
+│  └─ui
+│          accordion.tsx
+│          alert-dialog.tsx
+│          alert.tsx
+│          aspect-ratio.tsx
+│          avatar.tsx
+│          badge.tsx
+│          breadcrumb.tsx
+│          button.tsx
+│          calendar.tsx
+│          card.tsx
+│          carousel.tsx
+│          chart.tsx
+│          checkbox.tsx
+│          collapsible.tsx
+│          command.tsx
+│          context-menu.tsx
+│          dialog.tsx
+│          drawer.tsx
+│          dropdown-menu.tsx
+│          form.tsx
+│          hover-card.tsx
+│          input-otp.tsx
+│          input.tsx
+│          label.tsx
+│          menubar.tsx
+│          navigation-menu.tsx
+│          pagination.tsx
+│          popover.tsx
+│          progress.tsx
+│          radio-group.tsx
+│          resizable.tsx
+│          scroll-area.tsx
+│          select.tsx
+│          separator.tsx
+│          sheet.tsx
+│          sidebar.tsx
+│          skeleton.tsx
+│          slider.tsx
+│          sonner.tsx
+│          switch.tsx
+│          table.tsx
+│          tabs.tsx
+│          textarea.tsx
+│          TimeWheelPicker.tsx
+│          toggle-group.tsx
+│          toggle.tsx
+│          tooltip.tsx
+│          
+├─content
+│  │  auth-content.ts
+│  │  content-types.ts
+│  │  
+│  ├─blog
+│  │  └─es
+│  │          como-dormir-rapido.md
+│  │          
+│  ├─en
+│  │  ├─auth
+│  │  │      auth-copy.ts
+│  │  │      
+│  │  └─diary
+│  │          reflection-prompts.ts
+│  │          reflection-ui.ts
+│  │          
+│  ├─es
+│  │  ├─auth
+│  │  │      auth-copy.ts
+│  │  │      
+│  │  └─diary
+│  │          reflection-prompts.ts
+│  │          reflection-ui.ts
+│  │          
+│  ├─pl
+│  │  ├─auth
+│  │  │      auth-copy.ts
+│  │  │      
+│  │  └─diary
+│  │          reflection-prompts.ts
+│  │          reflection-ui.ts
+│  │          
+│  └─pt-BR
+│      ├─auth
+│      │      auth-copy.ts
+│      │      
+│      └─diary
+│              reflection-prompts.ts
+│              reflection-ui.ts
+│              
+├─emails
+│  │  reminder-en.ts
+│  │  reminder-es.ts
+│  │  reminder-pt.ts
+│  │  
+│  └─es
+│          activation.html
+│          base.html
+│          dunning.html
+│          reengage.html
+│          renew.html
+│          wake.html
+│          weekly.html
+│          
+├─hooks
+│      use-mobile.tsx
+│      use-session.tsx
+│      useHabitProgress.ts
+│      useReflectionDraft.ts
+│      useReminders.ts
+│      
+├─lib
+│  │  calc-i18n.ts
+│  │  cbti-brain.test.ts
+│  │  cbti-brain.ts
+│  │  cbti-de-i18n.ts
+│  │  cbti-i18n.ts
+│  │  cbti-pl-i18n.ts
+│  │  cbti-pt-i18n.ts
+│  │  crawler-context.tsx
+│  │  crawler.ts
+│  │  error-capture.ts
+│  │  error-page.ts
+│  │  format.ts
+│  │  i18n-pl-dict.ts
+│  │  i18n.tsx
+│  │  lang-detect.ts
+│  │  learn-de-i18n.ts
+│  │  learn-i18n.ts
+│  │  learn-pl-i18n.ts
+│  │  learn-pt-i18n.ts
+│  │  pl-lesson-head.ts
+│  │  program-lessons-i18n.ts
+│  │  program-lessons.ts
+│  │  program-progress.ts
+│  │  program-weeks.ts
+│  │  pt-lesson-head.ts
+│  │  relax-tracks.ts
+│  │  share-analytics.ts
+│  │  share-config.ts
+│  │  share-image.ts
+│  │  share-text.ts
+│  │  sleep-i18n.ts
+│  │  sleep-records.ts
+│  │  time-picker-utils.ts
+│  │  utils.ts
+│  │  
+│  ├─program-lessons-content
+│  │  │  week-1.ts
+│  │  │  week-2.ts
+│  │  │  week-3.ts
+│  │  │  week-4.ts
+│  │  │  week-5.ts
+│  │  │  week-6.ts
+│  │  │  
+│  │  ├─de
+│  │  │      de-week-1.ts
+│  │  │      de-week-2.ts
+│  │  │      de-week-3.ts
+│  │  │      de-week-4.ts
+│  │  │      de-week-5.ts
+│  │  │      de-week-6.ts
+│  │  │      
+│  │  └─pl
+│  │          pl-week-1.ts
+│  │          pl-week-2.ts
+│  │          pl-week-3.ts
+│  │          pl-week-4.ts
+│  │          pl-week-5.ts
+│  │          pl-week-6.ts
+│  │          
+│  ├─reflection
+│  │      reflection-prompts.test.ts
+│  │      reflection-prompts.ts
+│  │      reflection-stats.test.ts
+│  │      reflection-stats.ts
+│  │      reflection-storage.ts
+│  │      reflection-types.ts
+│  │      reflection-validation.ts
+│  │      reflection-word-count.test.ts
+│  │      reflection-word-count.ts
+│  │      
+│  └─share
+│          canvasConfig.ts
+│          qr.ts
+│          README.md
+│          shareService.ts
+│          
+├─locales
+│  ├─de
+│  │      index.ts
+│  │      
+│  ├─es
+│  │      blog.json
+│  │      common.json
+│  │      diary.json
+│  │      email.json
+│  │      faq.json
+│  │      index.ts
+│  │      legal.json
+│  │      payment.json
+│  │      pricing.json
+│  │      share-card.json
+│  │      
+│  ├─pl
+│  │      common.json
+│  │      index.ts
+│  │      week-1.json
+│  │      week-2.json
+│  │      week-3.json
+│  │      week-4.json
+│  │      week-5.json
+│  │      week-6.json
+│  │      
+│  └─pt
+│          common.json
+│          index.ts
+│          week-1.json
+│          week-2.json
+│          week-3.json
+│          week-4.json
+│          week-5.json
+│          week-6.json
+│          
+├─routes
+│  │  assessment.tsx
+│  │  bedtime-calculator.tsx
+│  │  calculator.tsx
+│  │  cbt-i-guide.tsx
+│  │  dashboard.tsx
+│  │  diary.tsx
+│  │  es.tsx
+│  │  how-to-fall-asleep-fast.tsx
+│  │  index.tsx
+│  │  insomnia-treatment.tsx
+│  │  learn.4-7-8-breathing.tsx
+│  │  learn.90-minute-sleep-cycle.tsx
+│  │  learn.circadian-rhythm.tsx
+│  │  learn.index.tsx
+│  │  learn.racing-thoughts-at-night.tsx
+│  │  learn.stimulus-control.tsx
+│  │  learn.what-is-cbti.tsx
+│  │  melatonin-calculator.tsx
+│  │  nap-calculator.tsx
+│  │  pl.tsx
+│  │  program.$slug.tsx
+│  │  program.$week.$lesson.tsx
+│  │  program.index.tsx
+│  │  pt.tsx
+│  │  relax.tsx
+│  │  reminder.tsx
+│  │  reminders.tsx
+│  │  sleep-anxiety.tsx
+│  │  sleep-calculator.tsx
+│  │  wake-up-at-3am.tsx
+│  │  __root.tsx
+│  │  
+│  ├─es
+│  │      assessment.tsx
+│  │      bedtime-calculator.tsx
+│  │      calculator.tsx
+│  │      cbt-i-guide.tsx
+│  │      diario.tsx
+│  │      diary.tsx
+│  │      evaluacion.tsx
+│  │      how-to-fall-asleep-fast.tsx
+│  │      index.tsx
+│  │      insomnia-treatment.tsx
+│  │      learn.4-7-8-breathing.tsx
+│  │      learn.90-minute-sleep-cycle.tsx
+│  │      learn.circadian-rhythm.tsx
+│  │      learn.index.tsx
+│  │      learn.racing-thoughts-at-night.tsx
+│  │      learn.stimulus-control.tsx
+│  │      learn.what-is-cbti.tsx
+│  │      melatonin-calculator.tsx
+│  │      nap-calculator.tsx
+│  │      panel.tsx
+│  │      program.$slug.tsx
+│  │      program.$week.$lesson.tsx
+│  │      program.index.tsx
+│  │      program.tsx
+│  │      relajacion.tsx
+│  │      relax.tsx
+│  │      sleep-anxiety.tsx
+│  │      sleep-calculator.tsx
+│  │      wake-up-at-3am.tsx
+│  │      
+│  ├─pl
+│  │  │  assessment.tsx
+│  │  │  bedtime-calculator.tsx
+│  │  │  calculator.tsx
+│  │  │  cbt-i-guide.tsx
+│  │  │  dashboard.tsx
+│  │  │  diary.tsx
+│  │  │  how-to-fall-asleep-fast.tsx
+│  │  │  index.tsx
+│  │  │  insomnia-treatment.tsx
+│  │  │  learn.4-7-8-breathing.tsx
+│  │  │  learn.90-minute-sleep-cycle.tsx
+│  │  │  learn.circadian-rhythm.tsx
+│  │  │  learn.index.tsx
+│  │  │  learn.racing-thoughts-at-night.tsx
+│  │  │  learn.stimulus-control.tsx
+│  │  │  learn.what-is-cbti.tsx
+│  │  │  melatonin-calculator.tsx
+│  │  │  nap-calculator.tsx
+│  │  │  program.$slug.tsx
+│  │  │  program.$week.$lesson.tsx
+│  │  │  program.index.tsx
+│  │  │  program.tsx
+│  │  │  relax.tsx
+│  │  │  sleep-anxiety.tsx
+│  │  │  sleep-calculator.tsx
+│  │  │  wake-up-at-3am.tsx
+│  │  │  
+│  │  ├─learn
+│  │  ├─program
+│  │  │  ├─week-1
+│  │  │  ├─week-2
+│  │  │  ├─week-3
+│  │  │  │      sleep-restriction-mistakes.tsx
+│  │  │  │      sleep-restriction-therapy.tsx
+│  │  │  │      what-is-sleep-efficiency.tsx
+│  │  │  │      
+│  │  │  ├─week-4
+│  │  │  │      breathing-exercises-for-sleep.tsx
+│  │  │  │      racing-thoughts-at-night.tsx
+│  │  │  │      relaxation-techniques.tsx
+│  │  │  │      
+│  │  │  ├─week-5
+│  │  │  │      cbti-changes-sleep-beliefs.tsx
+│  │  │  │      common-insomnia-thoughts.tsx
+│  │  │  │      realistic-sleep-expectations.tsx
+│  │  │  │      
+│  │  │  └─week-6
+│  │  │          long-term-sleep-health.tsx
+│  │  │          preventing-relapse.tsx
+│  │  │          travel-jet-lag-sleep.tsx
+│  │  │          
+│  │  └─tools
+│  └─pt
+│      │  assessment.tsx
+│      │  bedtime-calculator.tsx
+│      │  calculator.tsx
+│      │  cbt-i-guide.tsx
+│      │  diary.tsx
+│      │  how-to-fall-asleep-fast.tsx
+│      │  index.tsx
+│      │  insomnia-treatment.tsx
+│      │  learn.4-7-8-breathing.tsx
+│      │  learn.90-minute-sleep-cycle.tsx
+│      │  learn.circadian-rhythm.tsx
+│      │  learn.index.tsx
+│      │  learn.racing-thoughts-at-night.tsx
+│      │  learn.stimulus-control.tsx
+│      │  learn.what-is-cbti.tsx
+│      │  melatonin-calculator.tsx
+│      │  nap-calculator.tsx
+│      │  painel.tsx
+│      │  program.$slug.tsx
+│      │  program.$week.$lesson.tsx
+│      │  program.index.tsx
+│      │  program.tsx
+│      │  relax.tsx
+│      │  sleep-anxiety.tsx
+│      │  sleep-calculator.tsx
+│      │  wake-up-at-3am.tsx
+│      │  
+│      └─program
+│          ├─week-3
+│          │      sleep-restriction-mistakes.tsx
+│          │      sleep-restriction-therapy.tsx
+│          │      what-is-sleep-efficiency.tsx
+│          │      
+│          ├─week-4
+│          │      breathing-exercises-for-sleep.tsx
+│          │      racing-thoughts-at-night.tsx
+│          │      relaxation-techniques.tsx
+│          │      
+│          ├─week-5
+│          │      cbti-changes-sleep-beliefs.tsx
+│          │      common-insomnia-thoughts.tsx
+│          │      realistic-sleep-expectations.tsx
+│          │      
+│          └─week-6
+│                  long-term-sleep-health.tsx
+│                  preventing-relapse.tsx
+│                  travel-jet-lag-sleep.tsx
+│                  
+└─services
+    ├─account
+    │      account-api.test.ts
+    │      account-api.ts
+    │      
+    ├─auth
+    │      auth-api.ts
+    │      auth-db.ts
+    │      auth-mailer.ts
+    │      auth-types.ts
+    │      auth-utils.ts
+    │      
+    ├─email
+    │      send-es.ts
+    │      
+    ├─habit
+    │      habit-delivery.ts
+    │      habit-events.ts
+    │      habit-progress.ts
+    │      habit-scheduler.ts
+    │      habit-storage.ts
+    │      habit-types.ts
+    │      notification-service.ts
+    │      
+    ├─i18n
+    │      de.ts
+    │      
+    ├─reminder
+    │      email-provider.ts
+    │      reminder-i18n.ts
+    │      reminder-mailer.ts
+    │      reminder-model.test.ts
+    │      reminder-model.ts
+    │      reminder-service.ts
+    │      reminder-storage-server.ts
+    │      reminder-storage.ts
+    │      reminder-templates.ts
+    │      reminder-types.ts
+    │      reminder-validation.ts
+    │      reminder-worker.ts
+    │      
+    └─sync
+        │  sync-client.ts
+        │  sync-conflicts.ts
+        │  sync-migration.ts
+        │  sync-queue.ts
+        │  sync-types.ts
+        │  sync-validation.ts
+        │  
+        ├─api
+        │      sync-api.ts
+        │      
+        └─db
+                reflections-db.ts
+                reminders-db.ts
+                sleep-records-db.ts
+                sync-db.ts
+                

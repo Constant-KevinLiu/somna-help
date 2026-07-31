@@ -268,10 +268,98 @@ run("No mixed-language strings in main i18n dict", () => {
   return "en dict clean of CJK";
 });
 
+run("Reflection prompt content packages for all 4 locales", () => {
+  const locales = ["en", "es", "pt-BR", "pl"];
+  for (const locale of locales) {
+    const path = `src/content/${locale}/diary/reflection-prompts.ts`;
+    if (!existsSync(join(ROOT, path))) throw new Error(`missing: ${path}`);
+    const content = read(path);
+    if (!content.includes("metadata")) throw new Error(`${locale}: no content governance metadata`);
+    if (!content.includes("approved")) throw new Error(`${locale}: not marked as approved`);
+  }
+  return "en/es/pt-BR/pl prompt packages with governance metadata";
+});
+
+run("Reflection UI strings for all 4 locales", () => {
+  const locales = ["en", "es", "pt-BR", "pl"];
+  for (const locale of locales) {
+    const path = `src/content/${locale}/diary/reflection-ui.ts`;
+    if (!existsSync(join(ROOT, path))) throw new Error(`missing: ${path}`);
+  }
+  return "en/es/pt-BR/pl reflection UI strings";
+});
+
 run("Fallback mechanism present", () => {
   const content = read("src/lib/i18n.tsx");
   if (!content.includes("dicts.en")) throw new Error("no English fallback");
   return "falls back to en";
+});
+
+// ---------------------------------------------------------------------------
+// Gate 4.5 — Account Data Controls (Phase D)
+// ---------------------------------------------------------------------------
+console.log("\n═══ Gate 4.5: Account Data Controls ═══");
+
+run("Account export endpoint wired", () => {
+  const server = read("src/server.ts");
+  if (!server.includes("ACCOUNT_EXPORT_PATH")) throw new Error("export path constant missing");
+  if (!server.includes("handleAccountExport")) throw new Error("handleAccountExport not wired");
+  if (!server.includes("/api/account/export")) throw new Error("export route not present");
+  return "GET /api/account/export wired";
+});
+
+run("Account delete endpoint wired", () => {
+  const server = read("src/server.ts");
+  if (!server.includes("ACCOUNT_DELETE_PATH")) throw new Error("delete path constant missing");
+  if (!server.includes("handleAccountDelete")) throw new Error("handleAccountDelete not wired");
+  if (!server.includes("/api/account/data")) throw new Error("delete route not present");
+  return "DELETE /api/account/data wired";
+});
+
+run("Export implementation exists", () => {
+  const api = read("src/services/account/account-api.ts");
+  const required = ["schemaVersion", "exportedAt", "sleepRecords", "reflections", "reminderSettings"];
+  const missing = required.filter((r) => !api.includes(r));
+  if (missing.length) throw new Error(`export fields missing: ${missing.join(", ")}`);
+  return "export schema complete";
+});
+
+run("Delete requires confirmation", () => {
+  const api = read("src/services/account/account-api.ts");
+  if (!api.includes("DELETE_MY_SLEEP_DATA")) throw new Error("confirmation phrase missing");
+  if (!api.includes("revokeAllSessions")) throw new Error("session revocation missing");
+  return "confirmation + session revocation present";
+});
+
+run("Identity menu has export/delete buttons", () => {
+  const menu = read("src/components/IdentityMenu.tsx");
+  if (!menu.includes("AccountDataDialog")) throw new Error("AccountDataDialog not imported");
+  if (!menu.includes("handleExportClick")) throw new Error("export handler missing");
+  if (!menu.includes("handleDeleteClick")) throw new Error("delete handler missing");
+  return "export/delete UI wired";
+});
+
+run("Account dialog component exists", () => {
+  const dialog = read("src/components/AccountDataDialog.tsx");
+  const required = ["Download", "Trash2", "AlertTriangle", "confirmation"];
+  const missing = required.filter((r) => !dialog.includes(r));
+  if (missing.length) throw new Error(`dialog elements missing: ${missing.join(", ")}`);
+  return "AccountDataDialog complete";
+});
+
+run("All 4 locales have account copy", () => {
+  const locales = ["en", "es", "pt-BR", "pl"];
+  for (const locale of locales) {
+    const path = `src/content/${locale}/auth/auth-copy.ts`;
+    const content = read(path);
+    if (!content.includes("accountExport")) throw new Error(`${locale}: missing accountExport`);
+    if (!content.includes("accountDelete")) throw new Error(`${locale}: missing accountDelete`);
+    if (!content.includes("Export") && !content.includes("Exportar") && !content.includes("Eksportuj") && !content.includes("Exporte"))
+      throw new Error(`${locale}: no export text`);
+    if (!content.includes("Delete") && !content.includes("Elimina") && !content.includes("Usuń") && !content.includes("Exclua"))
+      throw new Error(`${locale}: no delete text`);
+  }
+  return "en/es/pt-BR/pl account copy complete";
 });
 
 // ---------------------------------------------------------------------------
@@ -284,6 +372,34 @@ run("Single SleepRecord source (one SLEEP_RECORDS_KEY)", () => {
   const keyCount = (records.match(/SLEEP_RECORDS_KEY\s*=\s*"/g) || []).length;
   if (keyCount !== 1) throw new Error(`found ${keyCount} key definitions`);
   return "one canonical key";
+});
+
+run("Single Reflection storage key", () => {
+  const storage = read("src/lib/reflection/reflection-storage.ts");
+  const keyCount = (storage.match(/REFLECTIONS_STORAGE_KEY\s*=\s*"/g) || []).length;
+  if (keyCount !== 1) throw new Error(`found ${keyCount} key definitions`);
+  return "one canonical storage key";
+});
+
+run("Reflection word limit (750) enforced", () => {
+  const wordCount = read("src/lib/reflection/reflection-word-count.ts");
+  if (!wordCount.includes("MAX_WORDS = 750")) throw new Error("750 word limit not defined");
+  return "750 word MAX constant";
+});
+
+run("Reflection prompt selection is deterministic", () => {
+  const prompts = read("src/lib/reflection/reflection-prompts.ts");
+  if (!prompts.includes("hashSeed")) throw new Error("no deterministic hash function");
+  if (!prompts.includes("getDeterministicIndex")) throw new Error("no deterministic index selection");
+  return "uses seeded hash for date-based selection";
+});
+
+run("Reflection storage validation guards exist", () => {
+  const validation = read("src/lib/reflection/reflection-validation.ts");
+  const required = ["LocalReflectionSchema", "validateReflection", "filterValidReflections"];
+  const missing = required.filter((r) => !validation.includes(r));
+  if (missing.length) throw new Error(`validation missing: ${missing.join(", ")}`);
+  return "schema validation + filtering";
 });
 
 run("loadRecords validates every field", () => {

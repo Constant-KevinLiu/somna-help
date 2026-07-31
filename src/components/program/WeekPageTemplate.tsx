@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   Clock,
   Heart,
+  Pause,
   Sparkles,
 } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
@@ -22,7 +23,19 @@ import {
 } from "@/lib/program-weeks";
 import { getLessonsByWeek, loadLesson } from "@/lib/program-lessons";
 import { getProgramLessonUI } from "@/lib/program-lessons-i18n";
-import { useProgramProgress, weekCompletionPercent, resolveWeekSlug } from "@/lib/program-progress";
+import { useProgramService } from "@/lib/program/use-program-service";
+import { ProgramUnsupportedBanner } from "./ProgramUnsupportedBanner";
+
+/**
+ * Resolve a week slug to its canonical short form ("week-1" .. "week-6").
+ */
+function resolveWeekSlug(weekSlug: string): string | null {
+  const match = /^week-(\d+)(?:-|$)/.exec(weekSlug);
+  if (!match) return null;
+  const n = Number(match[1]);
+  if (!Number.isInteger(n) || n < 1 || n > 6) return null;
+  return `week-${n}`;
+}
 
 export function WeekPageTemplate({ week }: { week: WeekContent }) {
   const { lang } = useI18n();
@@ -30,20 +43,35 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
   const ui = getProgramLessonUI(lang);
   const c = week.i18n[lang] ?? week.i18n.en!;
   const { prev, next } = getAdjacentWeeks(week.slug);
-  const { progress, hydrated } = useProgramProgress();
+  const { progress, hydrated, getWeekCompletion, isUnsupportedSchema } = useProgramService();
   const langPrefix = LANG_PREFIX[lang];
 
-  const weekLessons = getLessonsByWeek(
-    resolveWeekSlug(week.slug) ??
-      resolveWeekSlug(week.slug) ??
-      resolveWeekSlug(week.slug) ??
-      week.slug,
-  );
-  const weekPct = hydrated ? weekCompletionPercent(progress, week.slug) : 0;
+  const shortSlug = resolveWeekSlug(week.slug) ?? week.slug;
+  const weekLessons = getLessonsByWeek(shortSlug);
+  const weekPct = hydrated ? getWeekCompletion(shortSlug) : 0;
+  const isPaused = hydrated && !isUnsupportedSchema && progress.status === "paused";
 
   return (
     <>
       <PageHero eyebrow={c.eyebrow} title={weekHeading(lang, week.number, c.title)} sub={c.intro} />
+
+      {/* Unsupported schema warning */}
+      <ProgramUnsupportedBanner />
+
+      {/* Paused banner */}
+      {isPaused && (
+        <section className="px-5 pt-4">
+          <div className="mx-auto max-w-3xl">
+            <div className="flex items-center gap-3 rounded-2xl border border-accent/30 bg-accent/[0.07] p-4">
+              <Pause className="h-5 w-5 shrink-0 text-accent" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-foreground">{ui.pausedBannerTitle}</p>
+                <p className="text-xs text-muted-foreground">{ui.lessonPausedNote}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Lessons in this week */}
       <section className="px-5 pb-8" aria-label={ui.lessonsLabel}>
@@ -69,7 +97,7 @@ export function WeekPageTemplate({ week }: { week: WeekContent }) {
           )}
           <div className="space-y-3">
             {weekLessons.map((lm) => {
-              const done = hydrated && progress.completedLessons.includes(lm.slug);
+              const done = hydrated && progress.completedLessonIds.includes(lm.slug);
               return (
                 <SafeLink
                   key={lm.slug}

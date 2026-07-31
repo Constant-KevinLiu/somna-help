@@ -294,7 +294,7 @@ export const lessonMetas: LessonMeta[] = [
 export const TOTAL_LESSONS = lessonMetas.length; // 18
 
 export function lessonPath(weekSlug: string, lessonSlug: string, lang?: Lang): string {
-  const prefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : lang === "pl" ? "/pl" : "";
+  const prefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : lang === "pl" ? "/pl" : lang === "de" ? "/de" : "";
   return `${prefix}/program/${weekSlug}/${lessonSlug}`;
 }
 
@@ -330,6 +330,7 @@ export function isValidWeekSlug(slug: string): slug is WeekSlug {
 
 /** Dynamic import of a week's full lesson content (lazy-loaded per week).
  *  When lang is "pl", loads the native Polish content module.
+ *  When lang is "de", loads the native German content module.
  */
 export async function loadWeekLessons(weekSlug: string, lang?: Lang): Promise<LessonContent[]> {
   if (lang === "pl") {
@@ -346,6 +347,25 @@ export async function loadWeekLessons(weekSlug: string, lang?: Lang): Promise<Le
         return (await import("./program-lessons-content/pl/pl-week-5")).plWeek5Lessons;
       case "week-6":
         return (await import("./program-lessons-content/pl/pl-week-6")).plWeek6Lessons;
+      default:
+        return [];
+    }
+  }
+
+  if (lang === "de") {
+    switch (weekSlug) {
+      case "week-1":
+        return (await import("./program-lessons-content/de/de-week-1")).deWeek1Lessons;
+      case "week-2":
+        return (await import("./program-lessons-content/de/de-week-2")).deWeek2Lessons;
+      case "week-3":
+        return (await import("./program-lessons-content/de/de-week-3")).deWeek3Lessons;
+      case "week-4":
+        return (await import("./program-lessons-content/de/de-week-4")).deWeek4Lessons;
+      case "week-5":
+        return (await import("./program-lessons-content/de/de-week-5")).deWeek5Lessons;
+      case "week-6":
+        return (await import("./program-lessons-content/de/de-week-6")).deWeek6Lessons;
       default:
         return [];
     }

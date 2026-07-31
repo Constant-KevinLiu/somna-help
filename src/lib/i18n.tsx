@@ -1,8 +1,22 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { setUserLangPreference } from "./lang-detect";
 import { pl } from "./i18n-pl-dict";
+import { de } from "@/services/i18n/de";
+import { analyticsEn } from "@/locales/analytics/en";
+import { analyticsEs } from "@/locales/analytics/es";
+import { analyticsPt } from "@/locales/analytics/pt";
+import { analyticsPl } from "@/locales/analytics/pl";
+import { analyticsDe } from "@/locales/analytics/de";
+import type { SupportedLocale } from "./locale-registry";
+import { resolveTranslation, safeKeyFallback, getContentLocale } from "./locale-registry";
 
-export type Lang = "en" | "zh" | "es" | "pt" | "pl";
+/**
+ * @deprecated Import SupportedLocale from @/lib/locale-registry instead.
+ * Lang is re-exported here for backward compatibility.
+ */
+export type Lang = SupportedLocale;
+
+export { getContentLocale } from "./locale-registry";
 
 export type Dict = Record<string, string>;
 
@@ -12,12 +26,14 @@ export const localeMap: Record<Lang, string> = {
   es: "es-ES",
   pt: "pt-BR",
   pl: "pl-PL",
+  de: "de-DE",
+  ja: "ja-JP",
 };
 
 export function formatTime(d: Date, lang: Lang) {
   // Brasil e Polônia usam formato 24h (convenções pt-BR e pl-PL).
   // Demais idiomas mantêm 12h.
-  const hour12 = lang !== "pt" && lang !== "pl";
+  const hour12 = lang !== "pt" && lang !== "pl" && lang !== "de";
   return d.toLocaleTimeString(localeMap[lang], {
     hour: "2-digit",
     minute: "2-digit",
@@ -37,6 +53,7 @@ const en: Dict = {
   "nav.assessment": "Assessment",
   "nav.diary": "Diary",
   "nav.relax": "Relax",
+  "nav.reminders": "Reminders",
   "nav.learn": "Learn",
   "nav.dashboard": "Dashboard",
   "nav.tools": "Tools",
@@ -150,6 +167,14 @@ const en: Dict = {
   "diary.save": "Save entry",
   "diary.cta.dashboard": "View dashboard",
   "diary.saved": "Entry saved 🌙",
+
+  "error.generic.title": "Something went wrong",
+  "error.generic.body": "We couldn't load this page. Please try again.",
+  "error.retry": "Try again",
+  "error.goHome": "Go to home",
+  "error.404.title": "Page not found",
+  "error.404.body": "The page you're looking for doesn't exist or has been moved.",
+
   "dash.title": "Tonight's sleep plan",
   "dash.bed": "Suggested bedtime",
   "dash.wake": "Wake time",
@@ -331,6 +356,14 @@ const zh: Dict = {
   "diary.save": "保存记录",
   "diary.cta.dashboard": "查看仪表盘",
   "diary.saved": "已保存 🌙",
+
+  "error.generic.title": "出了些问题",
+  "error.generic.body": "我们无法加载此页面。请重试。",
+  "error.retry": "重试",
+  "error.goHome": "返回首页",
+  "error.404.title": "页面未找到",
+  "error.404.body": "您寻找的页面不存在或已被移动。",
+
   "dash.title": "今晚的睡眠计划",
   "dash.bed": "建议上床时间",
   "dash.wake": "起床时间",
@@ -340,7 +373,7 @@ const zh: Dict = {
   "relax.title": "放松与入眠",
   "relax.sub": "一个让一天慢慢落下的安静角落。",
   "relax.breathe": "4-7-8 呼吸法",
-  "relax.breale": "吸气",
+  "relax.breathe.sub": "吸气",
   "relax.hold": "屏息",
   "relax.exhale": "呼气",
   "relax.start": "开始",
@@ -412,11 +445,27 @@ const es: Dict = {
   "nav.tools.section": "Calculadoras del sueño",
   "nav.guides": "Guías CBT-I",
   "nav.lessons": "Lecciones",
+  "nav.blog": "Blog",
+  "nav.faq": "Perguntas frequentes",
+  "nav.pricing": "Planos",
+  "nav.language": "Idioma",
+  "nav.language.pt": "Português",
+  "nav.language.en": "English",
+  "nav.language.es": "Español",
+
   "cta.start": "Comenzar plan de sueño",
   "cta.calc": "Probar calculadora de sueño",
+  "cta.continue": "Continuar meu plano",
+  "cta.subscribe": "Assinar Premium",
+  "cta.tryFree": "Testar 7 dias grátis",
+  "cta.readMore": "Ler mais",
+  "cta.backHome": "Voltar ao início",
+
   "hero.title": "Duerme mejor, desde esta noche",
   "hero.sub":
     "Una plataforma de sueño basada en CBT-I, diseñada para ayudarte a recuperar patrones de sueño saludables de forma natural.",
+  "hero.badge": "TCC-I · Baseado em evidência clínica",
+
   "features.title": "Un camino suave de regreso a noches reparadoras",
   "features.1.t": "Programa CBT-I",
   "features.1.d":
@@ -524,6 +573,14 @@ const es: Dict = {
   "diary.save": "Guardar entrada",
   "diary.cta.dashboard": "Ver panel",
   "diary.saved": "Entrada guardada 🌙",
+
+  "error.generic.title": "Algo salió mal",
+  "error.generic.body": "No pudimos cargar esta página. Por favor, inténtelo de nuevo.",
+  "error.retry": "Intentar de nuevo",
+  "error.goHome": "Ir al inicio",
+  "error.404.title": "Página no encontrada",
+  "error.404.body": "La página que buscas no existe o ha sido movida.",
+
   "dash.title": "Plan de sueño de esta noche",
   "dash.bed": "Hora sugerida para dormir",
   "dash.wake": "Hora de despertar",
@@ -545,6 +602,10 @@ const es: Dict = {
   "footer.rights": "© 2026 somna. Todos los derechos reservados.",
   "footer.disc":
     "No es consejo médico. Para problemas de sueño persistentes, consulta a un clínico.",
+  "footer.legal.privacy": "Privacidade",
+  "footer.legal.terms": "Termos",
+  "footer.legal.cookies": "Cookies",
+
   "home.return.title": "Continúa tu viaje del sueño",
   "home.return.cta": "Ir al panel",
   "share.title": "Comparte tu progreso",
@@ -558,11 +619,11 @@ const es: Dict = {
   "share.linkedin": "LinkedIn",
   "share.whatsapp": "WhatsApp",
   "share.pinterestFallback":
-    "Primero genera la imagen para compartir y luego publícala en Pinterest.",
+    "Primeiro gere a imagem para compartilhar e depois publique no Pinterest.",
   "share.copyLink": "Copiar enlace",
   "share.copied": "Enlace copiado",
   "share.copyFailed": "No se pudo copiar el enlace",
-  "share.failed": "Error al compartir. Inténtalo de nuevo.",
+  "share.failed": "Error al compartir. Tente novamente.",
   "share.uploadError": "Error al subir la imagen. Comprueba tu conexión.",
   "share.previewTitle": "Vista previa",
   "share.hidePreview": "Ocultar vista previa",
@@ -710,7 +771,7 @@ const pt: Dict = {
   "assess.level1.name": "Dormidor saudável",
   "assess.level1.desc": "Seus hábitos de sono parecem saudáveis.",
   "assess.level2.name": "Dificuldades leves de sono",
-  "assess.level2.desc": "Existem alguns desafios leves relacionados ao sono.",
+  "assess.level2.desc": "Existem alguns desafíos leves relacionados ao sono.",
   "assess.level3.name": "Padrão moderado de insônia",
   "assess.level3.desc": "As técnicas de TCC-I podem ajudar a melhorar seu sono.",
   "assess.level4.name": "Padrão significativo de insônia",
@@ -877,7 +938,26 @@ const pt: Dict = {
   lang: "PT",
 };
 
-const dicts: Record<Lang, Dict> = { en, zh, es, pt, pl };
+// Phase F: merge analytics dictionaries into the main dictionaries.
+// Analytics strings are kept in separate files for organization.
+const _en: Dict = { ...en, ...analyticsEn };
+const _es: Dict = { ...es, ...analyticsEs };
+const _pt: Dict = { ...pt, ...analyticsPt };
+const _pl: Dict = { ...pl, ...analyticsPl };
+const _de: Dict = { ...de, ...analyticsDe };
+const _zh: Dict = { ...zh }; // zh has no analytics translations yet (falls back to en)
+
+// Dictionary per locale. English is always present (baseline).
+// Other supported locales may be absent (fall back to English via resolveTranslation).
+// zh/de: partial translations; ja: reserved for future use (no dictionary yet).
+const dicts: { en: Dict } & Partial<Record<Lang, Dict>> = {
+  en: _en,
+  zh: _zh,
+  es: _es,
+  pt: _pt,
+  pl: _pl,
+  de: _de,
+};
 
 const Ctx = createContext<{ lang: Lang; setLang: (l: Lang) => void; t: (k: string) => string }>({
   lang: "en",
@@ -909,9 +989,7 @@ export function I18nProvider({
     setUserLangPreference(l);
   };
   const t = (k: string) => {
-    const localized = dicts[lang][k];
-    if (localized !== undefined) return localized;
-    return dicts.en[k] ?? k;
+    return resolveTranslation(k, dicts[lang], dicts.en);
   };
   return <Ctx.Provider value={{ lang, setLang, t }}>{children}</Ctx.Provider>;
 }

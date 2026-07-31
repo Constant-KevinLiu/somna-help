@@ -1,0 +1,18 @@
+# Auto-detect text files and normalize line endings to LF on check-in
+* text=auto eol=lf
+
+# Explicitly binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+
+# Generated files - don't normalize (handled by tooling)
+package-lock.json binary
