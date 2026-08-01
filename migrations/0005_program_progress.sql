@@ -44,10 +44,14 @@ CREATE TABLE IF NOT EXISTS program_progress (
   client_id TEXT,
 
   -- One progress record per user per program
-  UNIQUE(user_id, program_id),
-
-  -- Indexes
-  INDEX idx_program_progress_user_id (user_id),
-  INDEX idx_program_progress_updated_at (updated_at),
-  INDEX idx_program_progress_status (status)
+  UNIQUE(user_id, program_id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_program_progress_user_id
+  ON program_progress(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_program_progress_updated_at
+  ON program_progress(updated_at);
+
+CREATE INDEX IF NOT EXISTS idx_program_progress_status
+  ON program_progress(status);

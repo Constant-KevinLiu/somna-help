@@ -10,13 +10,17 @@ CREATE TABLE IF NOT EXISTS users (
   timezone TEXT NOT NULL DEFAULT 'UTC',
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   last_login_at TEXT,
-  deleted_at TEXT,
-  
-  -- Indexes
-  INDEX idx_users_email_normalized (email_normalized),
-  INDEX idx_users_email_hash (email_hash),
-  INDEX idx_users_deleted_at (deleted_at)
+  deleted_at TEXT
 );
+
+CREATE INDEX IF NOT EXISTS idx_users_email_normalized
+  ON users(email_normalized);
+
+CREATE INDEX IF NOT EXISTS idx_users_email_hash
+  ON users(email_hash);
+
+CREATE INDEX IF NOT EXISTS idx_users_deleted_at
+  ON users(deleted_at);
 
 -- Sessions table - secure HttpOnly cookie-based sessions
 CREATE TABLE IF NOT EXISTS sessions (
@@ -26,14 +30,20 @@ CREATE TABLE IF NOT EXISTS sessions (
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   expires_at TEXT NOT NULL,
   last_used_at TEXT NOT NULL DEFAULT (datetime('now')),
-  revoked_at TEXT,
-  
-  -- Indexes
-  INDEX idx_sessions_user_id (user_id),
-  INDEX idx_sessions_token_hash (token_hash),
-  INDEX idx_sessions_expires_at (expires_at),
-  INDEX idx_sessions_revoked_at (revoked_at)
+  revoked_at TEXT
 );
+
+CREATE INDEX IF NOT EXISTS idx_sessions_user_id
+  ON sessions(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_token_hash
+  ON sessions(token_hash);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_expires_at
+  ON sessions(expires_at);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_revoked_at
+  ON sessions(revoked_at);
 
 -- OTP Challenges - one-time password verification codes
 CREATE TABLE IF NOT EXISTS otp_challenges (
@@ -44,10 +54,14 @@ CREATE TABLE IF NOT EXISTS otp_challenges (
   attempt_count INTEGER NOT NULL DEFAULT 0,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   consumed_at TEXT,
-  request_ip_hash TEXT NOT NULL,
-  
-  -- Indexes
-  INDEX idx_otp_challenges_email_normalized (email_normalized),
-  INDEX idx_otp_challenges_expires_at (expires_at),
-  INDEX idx_otp_challenges_consumed_at (consumed_at)
+  request_ip_hash TEXT NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_otp_challenges_email_normalized
+  ON otp_challenges(email_normalized);
+
+CREATE INDEX IF NOT EXISTS idx_otp_challenges_expires_at
+  ON otp_challenges(expires_at);
+
+CREATE INDEX IF NOT EXISTS idx_otp_challenges_consumed_at
+  ON otp_challenges(consumed_at);

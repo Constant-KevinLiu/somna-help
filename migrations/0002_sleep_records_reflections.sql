@@ -17,15 +17,19 @@ CREATE TABLE IF NOT EXISTS sleep_records (
   sleep_score INTEGER NOT NULL,
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-  
+
   -- Ensure one record per user per date
-  UNIQUE(user_id, local_date),
-  
-  -- Indexes
-  INDEX idx_sleep_records_user_id (user_id),
-  INDEX idx_sleep_records_local_date (local_date),
-  INDEX idx_sleep_records_updated_at (updated_at)
+  UNIQUE(user_id, local_date)
 );
+
+CREATE INDEX IF NOT EXISTS idx_sleep_records_user_id
+  ON sleep_records(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_sleep_records_local_date
+  ON sleep_records(local_date);
+
+CREATE INDEX IF NOT EXISTS idx_sleep_records_updated_at
+  ON sleep_records(updated_at);
 
 -- Guided CBT-I Reflections - sensitive private journal content
 CREATE TABLE IF NOT EXISTS reflections (
@@ -41,15 +45,19 @@ CREATE TABLE IF NOT EXISTS reflections (
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now')),
   sync_status TEXT NOT NULL DEFAULT 'synced',
-  
+
   -- Ensure one reflection per user per date
-  UNIQUE(user_id, local_date),
-  
-  -- Indexes
-  INDEX idx_reflections_user_id (user_id),
-  INDEX idx_reflections_local_date (local_date),
-  INDEX idx_reflections_updated_at (updated_at)
+  UNIQUE(user_id, local_date)
 );
+
+CREATE INDEX IF NOT EXISTS idx_reflections_user_id
+  ON reflections(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_reflections_local_date
+  ON reflections(local_date);
+
+CREATE INDEX IF NOT EXISTS idx_reflections_updated_at
+  ON reflections(updated_at);
 
 -- Sync Metadata - for conflict resolution and migration tracking
 CREATE TABLE IF NOT EXISTS sync_metadata (
@@ -58,9 +66,9 @@ CREATE TABLE IF NOT EXISTS sync_metadata (
   entity_type TEXT NOT NULL,
   last_synced_at TEXT NOT NULL DEFAULT (datetime('now')),
   client_generation TEXT NOT NULL,
-  
-  UNIQUE(user_id, entity_type),
-  
-  -- Indexes
-  INDEX idx_sync_metadata_user_id (user_id)
+
+  UNIQUE(user_id, entity_type)
 );
+
+CREATE INDEX IF NOT EXISTS idx_sync_metadata_user_id
+  ON sync_metadata(user_id);

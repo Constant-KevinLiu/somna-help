@@ -15,13 +15,15 @@ CREATE TABLE IF NOT EXISTS reminder_settings (
   reminder_type TEXT NOT NULL DEFAULT 'BEDTIME_REMINDER',
   updated_at TEXT NOT NULL DEFAULT (datetime('now')),
   last_sent_at TEXT,
-  
-  UNIQUE(user_id),
-  
-  -- Indexes
-  INDEX idx_reminder_settings_user_id (user_id),
-  INDEX idx_reminder_settings_enabled (enabled)
+
+  UNIQUE(user_id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_reminder_settings_user_id
+  ON reminder_settings(user_id);
+
+CREATE INDEX IF NOT EXISTS idx_reminder_settings_enabled
+  ON reminder_settings(enabled);
 
 -- Lesson Progress - authenticated CBT-I program progress
 CREATE TABLE IF NOT EXISTS lesson_progress (
@@ -30,12 +32,12 @@ CREATE TABLE IF NOT EXISTS lesson_progress (
   lesson_id TEXT NOT NULL,
   completed_at TEXT NOT NULL DEFAULT (datetime('now')),
   locale TEXT NOT NULL DEFAULT 'en',
-  
-  UNIQUE(user_id, lesson_id),
-  
-  -- Indexes
-  INDEX idx_lesson_progress_user_id (user_id)
+
+  UNIQUE(user_id, lesson_id)
 );
+
+CREATE INDEX IF NOT EXISTS idx_lesson_progress_user_id
+  ON lesson_progress(user_id);
 
 -- User Preferences - general user settings
 CREATE TABLE IF NOT EXISTS user_preferences (
@@ -44,9 +46,9 @@ CREATE TABLE IF NOT EXISTS user_preferences (
   preference_key TEXT NOT NULL,
   preference_value TEXT NOT NULL,
   updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-  
-  UNIQUE(user_id, preference_key),
-  
-  -- Indexes
-  INDEX idx_user_preferences_user_id (user_id)
+
+  UNIQUE(user_id, preference_key)
 );
+
+CREATE INDEX IF NOT EXISTS idx_user_preferences_user_id
+  ON user_preferences(user_id);
