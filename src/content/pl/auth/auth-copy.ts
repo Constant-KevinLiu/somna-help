@@ -54,6 +54,7 @@ export const authCopyPl: ContentPackage<AuthCopy> = {
       rateLimited: "Zbyt wiele żądań. Spróbuj ponownie później.",
       networkError: "Problem z połączeniem. Sprawdź internet i spróbuj ponownie.",
       unknownError: "Coś poszło nie tak. Spróbuj ponownie.",
+      emailSendFailed: "Nie udało nam się wysłać e-maila z weryfikacją. Spróbuj ponownie.",
     },
     identityMenu: {
       syncProgress: "Synchronizuj Postęp",

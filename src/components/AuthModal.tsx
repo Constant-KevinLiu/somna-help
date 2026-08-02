@@ -30,6 +30,30 @@ interface AuthModalProps {
 
 type Step = "email" | "otp" | "success";
 
+// Map server error codes to localized content keys.
+// Server uses snake_case; content uses camelCase.
+const ERROR_KEY_MAP: Record<string, keyof ReturnType<typeof getAuthCopy>["errors"]> = {
+  invalid_email: "invalidEmail",
+  invalid_code: "codeInvalid",
+  code_expired: "codeExpired",
+  max_attempts: "maxAttempts",
+  rate_limited: "rateLimited",
+  cooldown: "rateLimited",
+  network_error: "networkError",
+  server_error: "unknownError",
+  email_send_failed: "emailSendFailed",
+};
+
+function getErrorMessage(
+  copy: ReturnType<typeof getAuthCopy>,
+  errorCode: string | undefined
+): string {
+  if (!errorCode) return copy.errors.unknownError;
+  const key = ERROR_KEY_MAP[errorCode];
+  if (key && copy.errors[key]) return copy.errors[key];
+  return copy.errors.unknownError;
+}
+
 export function AuthModal({
   open,
   onOpenChange,
@@ -86,12 +110,12 @@ export function AuthModal({
         });
       } else if (data.error === "cooldown") {
         setCooldown(data.waitSeconds);
-        toast.info(copy.errors.rate_limited);
+        toast.info(copy.errors.rateLimited);
       } else {
-        toast.error(copy.errors[data.error as keyof typeof copy.errors] || copy.errors.unknown_error);
+        toast.error(getErrorMessage(copy, data.error));
       }
-    } catch (error) {
-      toast.error(copy.errors.network_error);
+    } catch (_error) {
+      toast.error(copy.errors.networkError);
     } finally {
       setBusy(false);
     }
@@ -121,14 +145,14 @@ export function AuthModal({
           onSuccess?.();
         }, 1500);
       } else {
-        toast.error(copy.errors[data.error as keyof typeof copy.errors] || copy.errors.unknown_error);
+        toast.error(getErrorMessage(copy, data.error));
         if (data.error === "code_expired" || data.error === "max_attempts") {
           setStep("email");
           setCode("");
         }
       }
-    } catch (error) {
-      toast.error(copy.errors.network_error);
+    } catch (_error) {
+      toast.error(copy.errors.networkError);
     } finally {
       setBusy(false);
     }
@@ -154,10 +178,10 @@ export function AuthModal({
           description: copy.otpForm.instructions,
         });
       } else {
-        toast.error(copy.errors[data.error as keyof typeof copy.errors] || copy.errors.unknown_error);
+        toast.error(getErrorMessage(copy, data.error));
       }
-    } catch (error) {
-      toast.error(copy.errors.network_error);
+    } catch (_error) {
+      toast.error(copy.errors.networkError);
     } finally {
       setBusy(false);
     }

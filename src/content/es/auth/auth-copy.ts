@@ -54,6 +54,7 @@ export const authCopyEs: ContentPackage<AuthCopy> = {
       rateLimited: "Demasiadas solicitudes. Por favor, inténtalo más tarde.",
       networkError: "Problema de conexión. Comprueba tu internet e inténtalo de nuevo.",
       unknownError: "Algo salió mal. Por favor, inténtalo de nuevo.",
+      emailSendFailed: "No pudimos enviar el correo de verificación. Por favor, inténtalo de nuevo.",
     },
     identityMenu: {
       syncProgress: "Sincronizar Progreso",

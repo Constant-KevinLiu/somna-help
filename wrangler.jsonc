@@ -22,6 +22,18 @@
   ],
 
   // =============================================================================
+  // Cloudflare Email Sending for OTP authentication and transactional email.
+  // Bound as EMAIL; sender is restricted to account@somna.help.
+  // No API key needed in application code — native binding handles auth.
+  // =============================================================================
+  "send_email": [
+    {
+      "binding": "EMAIL",
+      "allowed_destination_domains": ["*"],
+    },
+  ],
+
+  // =============================================================================
   // D1 Database for Sleep Diary v2.3
   // Stores users, sessions, OTP challenges, sleep records, reflections,
   // and reminder settings for authenticated cross-device sync.

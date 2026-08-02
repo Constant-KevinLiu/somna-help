@@ -43,6 +43,7 @@ export interface AuthCopy {
     rateLimited: string;
     networkError: string;
     unknownError: string;
+    emailSendFailed: string;
   };
   identityMenu: {
     syncProgress: string;
@@ -164,6 +165,7 @@ export const authCopyEn: ContentPackage<AuthCopy> = {
       rateLimited: "Too many requests. Please try again later.",
       networkError: "Connection issue. Please check your internet and try again.",
       unknownError: "Something went wrong. Please try again.",
+      emailSendFailed: "We couldn't send the verification email. Please try again.",
     },
     identityMenu: {
       syncProgress: "Sync Progress",

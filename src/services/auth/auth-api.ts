@@ -1,11 +1,16 @@
 /**
  * Sleep Diary v2.3 - Authentication API Handlers
- * 
+ *
  * Progressive Authentication endpoints for passwordless OTP login.
  * Security: Rate limiting, generic error messages, no email enumeration.
+ *
+ * Transaction semantics for request-code:
+ *   validate → rate-limit → generate OTP → persist → send email → success
+ * If email delivery fails, the OTP challenge is invalidated and an error
+ * with a stable code is returned (never success).
  */
 
-import type { D1Database } from "@cloudflare/workers-types";
+import type { D1Database, SendEmail } from "@cloudflare/workers-types";
 import {
   createUser,
   findUserByEmail,
@@ -18,6 +23,7 @@ import {
   findLatestOTPChallenge,
   incrementOTPAttempts,
   markOTPConsumed,
+  deleteOTPChallenge,
   countRecentOTPRequests,
 } from "./auth-db";
 import {
@@ -42,7 +48,7 @@ import { AUTH_COOKIE_NAME, COOKIE_OPTIONS, OTP_CONFIG } from "./auth-types";
 
 interface AuthEnv {
   DB?: D1Database;
-  RESEND_API_KEY?: string;
+  EMAIL?: SendEmail;
 }
 
 type RequestContext = {
@@ -74,7 +80,7 @@ function getClientIp(request: Request): string {
 function getLocaleFromRequest(request: Request): Locale {
   const acceptLanguage = request.headers.get("Accept-Language") || "";
   const cookie = request.headers.get("cookie") || "";
-  
+
   // Check cookie first
   const langMatch = /somna-language=([^;]+)/.exec(cookie);
   if (langMatch) {
@@ -89,7 +95,7 @@ function getLocaleFromRequest(request: Request): Locale {
   if (preferred?.startsWith("es")) return "es";
   if (preferred?.startsWith("pt")) return "pt-BR";
   if (preferred?.startsWith("pl")) return "pl";
-  
+
   return "en";
 }
 
@@ -111,6 +117,20 @@ function clearSessionCookie(response: Response): void {
   response.headers.append("Set-Cookie", cookie);
 }
 
+/**
+ * Generate a short request correlation id for logging.
+ * Not a security token — purely for tracing.
+ */
+function getRequestId(request: Request): string {
+  const cfRay = request.headers.get("CF-Ray");
+  if (cfRay) return cfRay;
+  // Fallback: derive from a few request properties (stable within the request)
+  const url = request.url;
+  const ua = request.headers.get("user-agent") || "";
+  const t = Date.now();
+  return `req_${t.toString(36)}_${(url.length + ua.length).toString(36)}`;
+}
+
 // =============================================================================
 // POST /api/auth/request-code
 // =============================================================================
@@ -120,6 +140,8 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
     return json(405, { success: false, error: "method_not_allowed" });
   }
 
+  const requestId = getRequestId(request);
+
   let payload: { email?: string; intent?: AuthIntent; locale?: string };
   try {
     payload = (await request.json()) as { email?: string; intent?: AuthIntent; locale?: string };
@@ -128,7 +150,7 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
   }
 
   const { email, intent = "general" } = payload;
-  
+
   // Validate email format
   if (!email || !isValidEmail(email)) {
     return json(400, { success: false, error: "invalid_email" });
@@ -165,28 +187,62 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
   const codeHash = hashSecret(code);
   const expiresAt = getOTPExpiry();
 
-  // Store challenge
+  // Persist challenge
+  let challengeId: string | null = null;
   try {
-    await createOTPChallenge(env, emailNormalized, codeHash, ipHash, expiresAt);
+    const challenge = await createOTPChallenge(env, emailNormalized, codeHash, ipHash, expiresAt);
+    challengeId = challenge.id;
   } catch (error) {
-    console.error("Failed to create OTP challenge:", error);
-    // Don't leak database errors to client
+    console.error(
+      JSON.stringify({
+        stage: "otp_create",
+        status: "failed",
+        errorCode: "AUTH_STORAGE_FAILED",
+        requestId,
+      })
+    );
     return json(500, { success: false, error: "server_error" });
   }
 
-  // Send email
-  const resendApiKey = env.RESEND_API_KEY || process.env.RESEND_API_KEY || "";
-  const emailResult = await sendOTPEmail({
+  // Send email via Cloudflare Email Sending
+  const emailResult = await sendOTPEmail(env, {
     to: email,
     code,
     locale,
-    resendApiKey,
+    expiryMinutes: OTP_CONFIG.EXPIRY_MINUTES,
+    requestId,
   });
 
   if (!emailResult.success) {
-    console.error("Failed to send OTP email:", emailResult.error);
-    // Still return success to avoid email enumeration
-    return json(200, { success: true });
+    // Invalidate the unusable OTP challenge so it cannot be consumed
+    try {
+      await deleteOTPChallenge(env, challengeId);
+    } catch {
+      // Best-effort cleanup; failure here doesn't change the outcome
+      console.warn(
+        JSON.stringify({
+          stage: "otp_cleanup",
+          status: "cleanup_failed",
+          requestId,
+        })
+      );
+    }
+
+    // Return a stable error code. We deliberately do NOT confirm whether
+    // the email exists — use generic phrasing in the UI.
+    const errorMap: Record<string, number> = {
+      AUTH_EMAIL_NOT_CONFIGURED: 503,
+      AUTH_EMAIL_REJECTED: 400,
+      AUTH_EMAIL_UNAVAILABLE: 503,
+      AUTH_EMAIL_RATE_LIMITED: 429,
+    };
+    const status = errorMap[emailResult.errorCode || "AUTH_EMAIL_UNAVAILABLE"] || 503;
+
+    return json(status, {
+      success: false,
+      error: "email_send_failed",
+      code: emailResult.errorCode,
+    });
   }
 
   return json(200, { success: true });
@@ -209,11 +265,11 @@ export async function handleVerifyCode({ request, env }: RequestContext): Promis
   }
 
   const { email, code } = payload;
-  
+
   if (!email || !isValidEmail(email)) {
     return json(400, { success: false, error: "invalid_email" });
   }
-  
+
   if (!code || !isValidOTPCode(code)) {
     return json(400, { success: false, error: "invalid_code" });
   }
@@ -284,7 +340,7 @@ export async function handleVerifyCode({ request, env }: RequestContext): Promis
 
 export async function handleGetSession({ request, env }: RequestContext): Promise<Response> {
   const sessionToken = getSessionCookie(request);
-  
+
   if (!sessionToken) {
     return json(200, { authenticated: false });
   }
@@ -329,7 +385,7 @@ export async function handleGetSession({ request, env }: RequestContext): Promis
 
 export async function handleLogout({ request, env }: RequestContext): Promise<Response> {
   const sessionToken = getSessionCookie(request);
-  
+
   if (sessionToken) {
     const tokenHash = hashSecret(sessionToken);
     const session = await findSessionByTokenHash(env, tokenHash);
@@ -352,7 +408,7 @@ export async function getAuthenticatedUser({
   env,
 }: RequestContext): Promise<SessionState | null> {
   const sessionToken = getSessionCookie(request);
-  
+
   if (!sessionToken) {
     return null;
   }

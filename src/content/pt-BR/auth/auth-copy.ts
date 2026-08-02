@@ -54,6 +54,7 @@ export const authCopyPtBr: ContentPackage<AuthCopy> = {
       rateLimited: "Muitas solicitações. Por favor, tente novamente mais tarde.",
       networkError: "Problema de conexão. Verifique sua internet e tente novamente.",
       unknownError: "Algo deu errado. Por favor, tente novamente.",
+      emailSendFailed: "Não conseguimos enviar o e-mail de verificação. Por favor, tente novamente.",
     },
     identityMenu: {
       syncProgress: "Sincronizar Progresso",

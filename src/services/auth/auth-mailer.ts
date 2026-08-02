@@ -1,11 +1,41 @@
 /**
  * Sleep Diary v2.3 - Authentication Mailer
- * 
+ *
  * OTP verification emails for passwordless authentication.
+ * Uses Cloudflare Email Sending native binding (env.EMAIL).
  * All emails are natively authored for each locale - no runtime translation.
+ *
+ * Privacy: never logs OTP codes, OTP hashes, or full email addresses.
  */
 
 import type { Locale } from "./auth-types";
+import type { SendEmail } from "@cloudflare/workers-types";
+
+// =============================================================================
+// Types
+// =============================================================================
+
+export type EmailSendErrorCode =
+  | "AUTH_EMAIL_NOT_CONFIGURED"
+  | "AUTH_EMAIL_REJECTED"
+  | "AUTH_EMAIL_UNAVAILABLE"
+  | "AUTH_EMAIL_RATE_LIMITED";
+
+export interface SendOTPEmailResult {
+  success: boolean;
+  errorCode?: EmailSendErrorCode;
+}
+
+interface AuthMailerEnv {
+  EMAIL?: SendEmail;
+}
+
+// =============================================================================
+// Constants
+// =============================================================================
+
+const SENDER_EMAIL = "account@somna.help";
+const SENDER_NAME = "Somna";
 
 // =============================================================================
 // Native Email Templates
@@ -13,14 +43,14 @@ import type { Locale } from "./auth-types";
 
 interface EmailTemplate {
   subject: string;
-  html: (code: string) => string;
-  text: (code: string) => string;
+  html: (code: string, expiryMinutes: number) => string;
+  text: (code: string, expiryMinutes: number) => string;
 }
 
 const emailTemplates: Record<Locale, EmailTemplate> = {
   "en": {
     subject: "Your Somna verification code",
-    html: (code) => `
+    html: (code, expiryMinutes) => `
       <!DOCTYPE html>
       <html>
       <head>
@@ -36,7 +66,7 @@ const emailTemplates: Record<Locale, EmailTemplate> = {
         <p>Hello,</p>
         <p>Use this verification code to sign in to Somna:</p>
         <div class="code">${code}</div>
-        <p>This code will expire in 10 minutes.</p>
+        <p>This code will expire in ${expiryMinutes} minutes.</p>
         <p>If you didn't request this code, you can safely ignore this email.</p>
         <div class="footer">
           <p>Somna — your sleep health companion</p>
@@ -44,14 +74,14 @@ const emailTemplates: Record<Locale, EmailTemplate> = {
       </body>
       </html>
     `,
-    text: (code) => `
+    text: (code, expiryMinutes) => `
 Verify your email
 
 Use this verification code to sign in to Somna:
 
 ${code}
 
-This code will expire in 10 minutes.
+This code will expire in ${expiryMinutes} minutes.
 
 If you didn't request this code, you can safely ignore this email.
 
@@ -62,7 +92,7 @@ Somna — your sleep health companion
 
   "es": {
     subject: "Tu código de verificación de Somna",
-    html: (code) => `
+    html: (code, expiryMinutes) => `
       <!DOCTYPE html>
       <html>
       <head>
@@ -78,7 +108,7 @@ Somna — your sleep health companion
         <p>Hola,</p>
         <p>Usa este código de verificación para iniciar sesión en Somna:</p>
         <div class="code">${code}</div>
-        <p>Este código caducará en 10 minutos.</p>
+        <p>Este código caducará en ${expiryMinutes} minutos.</p>
         <p>Si no solicitaste este código, puedes ignorar este correo con seguridad.</p>
         <div class="footer">
           <p>Somna — tu compañero de salud del sueño</p>
@@ -86,14 +116,14 @@ Somna — your sleep health companion
       </body>
       </html>
     `,
-    text: (code) => `
+    text: (code, expiryMinutes) => `
 Verifica tu correo
 
 Usa este código de verificación para iniciar sesión en Somna:
 
 ${code}
 
-Este código caducará en 10 minutos.
+Este código caducará en ${expiryMinutes} minutos.
 
 Si no solicitaste este código, puedes ignorar este correo con seguridad.
 
@@ -104,7 +134,7 @@ Somna — tu compañero de salud del sueño
 
   "pt-BR": {
     subject: "Seu código de verificação do Somna",
-    html: (code) => `
+    html: (code, expiryMinutes) => `
       <!DOCTYPE html>
       <html>
       <head>
@@ -120,7 +150,7 @@ Somna — tu compañero de salud del sueño
         <p>Olá,</p>
         <p>Use este código de verificação para entrar no Somna:</p>
         <div class="code">${code}</div>
-        <p>Este código expirará em 10 minutos.</p>
+        <p>Este código expirará em ${expiryMinutes} minutos.</p>
         <p>Se você não solicitou este código, pode ignorar este e-mail com segurança.</p>
         <div class="footer">
           <p>Somna — seu companheiro de saúde do sono</p>
@@ -128,14 +158,14 @@ Somna — tu compañero de salud del sueño
       </body>
       </html>
     `,
-    text: (code) => `
+    text: (code, expiryMinutes) => `
 Verifique seu e-mail
 
 Use este código de verificação para entrar no Somna:
 
 ${code}
 
-Este código expirará em 10 minutos.
+Este código expirará em ${expiryMinutes} minutos.
 
 Se você não solicitou este código, pode ignorar este e-mail com segurança.
 
@@ -146,7 +176,7 @@ Somna — seu companheiro de saúde do sono
 
   "pl": {
     subject: "Twój kod weryfikacyjny Somna",
-    html: (code) => `
+    html: (code, expiryMinutes) => `
       <!DOCTYPE html>
       <html>
       <head>
@@ -162,7 +192,7 @@ Somna — seu companheiro de saúde do sono
         <p>Cześć,</p>
         <p>Użyj tego kodu weryfikacyjnego, aby zalogować się do Somna:</p>
         <div class="code">${code}</div>
-        <p>Ten kod wygaśnie za 10 minut.</p>
+        <p>Ten kod wygaśnie za ${expiryMinutes} minut.</p>
         <p>Jeśli nie prosiłeś o ten kod, możesz bezpiecznie zignorować tę wiadomość.</p>
         <div class="footer">
           <p>Somna — Twój towarzysz zdrowia snu</p>
@@ -170,14 +200,14 @@ Somna — seu companheiro de saúde do sono
       </body>
       </html>
     `,
-    text: (code) => `
+    text: (code, expiryMinutes) => `
 Zweryfikuj swój adres e-mail
 
 Użyj tego kodu weryfikacyjnego, aby zalogować się do Somna:
 
 ${code}
 
-Ten kod wygaśnie za 10 minut.
+Ten kod wygaśnie za ${expiryMinutes} minut.
 
 Jeśli nie prosiłeś o ten kod, możesz bezpiecznie zignorować tę wiadomość.
 
@@ -188,61 +218,126 @@ Somna — Twój towarzysz zdrowia snu
 };
 
 // =============================================================================
-// Mailer
+// Privacy-safe logging
 // =============================================================================
 
-interface SendOTPEmailOptions {
+/**
+ * Produce a redacted recipient identifier safe for logs.
+ * Shows only first 2 chars of the local part and the domain.
+ * e.g. "jo...@example.com"
+ */
+function redactRecipient(email: string): string {
+  const atIndex = email.indexOf("@");
+  if (atIndex <= 2) return "...@" + email.slice(atIndex + 1);
+  return email.slice(0, 2) + "..." + email.slice(atIndex);
+}
+
+// =============================================================================
+// Mailer — Cloudflare Email Sending native binding
+// =============================================================================
+
+export interface SendOTPEmailOptions {
   to: string;
   code: string;
   locale: Locale;
-  resendApiKey: string;
+  expiryMinutes: number;
+  requestId?: string;
 }
 
-interface SendResult {
-  success: boolean;
-  error?: string;
-}
+/**
+ * Send an OTP verification email via Cloudflare Email Sending binding.
+ *
+ * Returns { success: true } when the provider accepts the message.
+ * Returns { success: false, errorCode } with a stable error code otherwise.
+ *
+ * Never throws. Never logs OTP codes or full email addresses.
+ */
+export async function sendOTPEmail(
+  env: AuthMailerEnv,
+  { to, code, locale, expiryMinutes, requestId }: SendOTPEmailOptions
+): Promise<SendOTPEmailResult> {
+  const provider = "cloudflare-email";
+  const recipient = redactRecipient(to);
 
-export async function sendOTPEmail({
-  to,
-  code,
-  locale,
-  resendApiKey,
-}: SendOTPEmailOptions): Promise<SendResult> {
-  if (!resendApiKey) {
-    return { success: false, error: "RESEND_API_KEY not configured" };
+  // 1. Binding check
+  if (!env.EMAIL || typeof env.EMAIL.send !== "function") {
+    console.warn(
+      JSON.stringify({
+        stage: "email_send",
+        provider,
+        status: "not_configured",
+        errorCode: "AUTH_EMAIL_NOT_CONFIGURED",
+        requestId: requestId || "unknown",
+        recipient,
+      })
+    );
+    return { success: false, errorCode: "AUTH_EMAIL_NOT_CONFIGURED" };
   }
 
-  const template = emailTemplates[locale];
-  if (!template) {
-    return { success: false, error: `No email template for locale: ${locale}` };
-  }
+  // 2. Template resolution
+  const template = emailTemplates[locale] || emailTemplates["en"];
 
+  // 3. Send
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${resendApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from: "Somna <no-reply@somna.help>",
-        to,
-        subject: template.subject,
-        html: template.html(code),
-        text: template.text(code),
-      }),
+    const result = await env.EMAIL.send({
+      from: { name: SENDER_NAME, email: SENDER_EMAIL },
+      to,
+      subject: template.subject,
+      text: template.text(code, expiryMinutes),
+      html: template.html(code, expiryMinutes),
     });
 
-    if (!response.ok) {
-      const error = await response.text().catch(() => "Unknown error");
-      console.error("Resend API error:", response.status, error);
-      return { success: false, error: `Email service error: ${response.status}` };
-    }
+    console.log(
+      JSON.stringify({
+        stage: "email_send",
+        provider,
+        status: "accepted",
+        requestId: requestId || "unknown",
+        recipient,
+        hasMessageId: Boolean(result?.messageId),
+      })
+    );
 
     return { success: true };
-  } catch (error) {
-    console.error("Failed to send OTP email:", error);
-    return { success: false, error: "Failed to send email" };
+  } catch (error: unknown) {
+    // Classify the error without leaking provider internals
+    const message = error instanceof Error ? error.message : String(error);
+    let errorCode: EmailSendErrorCode = "AUTH_EMAIL_UNAVAILABLE";
+
+    // Heuristic classification based on common Cloudflare Email Sending errors
+    const lowerMsg = message.toLowerCase();
+    if (
+      lowerMsg.includes("rate limit") ||
+      lowerMsg.includes("ratelimit") ||
+      lowerMsg.includes("too many")
+    ) {
+      errorCode = "AUTH_EMAIL_RATE_LIMITED";
+    } else if (
+      lowerMsg.includes("rejected") ||
+      lowerMsg.includes("invalid") ||
+      lowerMsg.includes("not allowed") ||
+      lowerMsg.includes("forbidden")
+    ) {
+      errorCode = "AUTH_EMAIL_REJECTED";
+    } else if (
+      lowerMsg.includes("not configured") ||
+      lowerMsg.includes("not found") ||
+      lowerMsg.includes("not bound")
+    ) {
+      errorCode = "AUTH_EMAIL_NOT_CONFIGURED";
+    }
+
+    console.warn(
+      JSON.stringify({
+        stage: "email_send",
+        provider,
+        status: "failed",
+        errorCode,
+        requestId: requestId || "unknown",
+        recipient,
+      })
+    );
+
+    return { success: false, errorCode };
   }
 }

@@ -424,3 +424,24 @@ export async function countRecentOTPRequests(
 
   return (result?.count as number) || 0;
 }
+
+export async function deleteOTPChallenge(
+  env: AuthEnv,
+  challengeId: string | null
+): Promise<boolean> {
+  if (!challengeId) return false;
+  const db = env.DB;
+  if (!db) return false;
+
+  const result = await db
+    .prepare(
+      `
+      DELETE FROM otp_challenges
+      WHERE id = ?
+    `
+    )
+    .bind(challengeId)
+    .run();
+
+  return result.meta.changes > 0;
+}
