@@ -13,6 +13,21 @@
  *    that don't actually navigate).
  *
  * SSR-safe: returns early on the server with no side effects.
+ *
+ * Fail-safe: the analytics hook itself is wrapped in a try/catch so that
+ * ANY failure in analytics initialization, path computation, or emission
+ * can never propagate into React's error boundary.
+ *
+ * TanStack Router `onResolved` callback contract:
+ *   router.subscribe("onResolved", (event) => { ... })
+ *   The callback receives a NavigationEventInfo object:
+ *     { type: 'onResolved', fromLocation?, toLocation, pathChanged,
+ *       hrefChanged, hashChanged }
+ *   This hook IGNORES the event object and always reads from
+ *   router.state.location, which is a stable ParsedLocation with
+ *   string primitives (pathname, search, hash).
+ *   The callback parameter is intentionally unused to prevent accidental
+ *   use of the event object as a string.
  */
 
 import { useEffect, useRef } from "react";
@@ -27,46 +42,90 @@ export function useAnalyticsPageView(
   const isCrawler = options.isCrawler ?? false;
 
   useEffect(() => {
-    // SSR guard
-    if (typeof window === "undefined") return;
+    // ── Outermost defensive boundary ──────────────────────────────────────
+    // If ANYTHING goes wrong in analytics setup or tracking, the app must
+    // continue to render. This try/catch catches errors during initialization,
+    // subscription setup, and the initial page view emission.
+    try {
+      // SSR guard
+      if (typeof window === "undefined") return;
 
-    // Never load analytics for crawlers.
-    if (isCrawler) return;
+      // Never load analytics for crawlers.
+      if (isCrawler) return;
 
-    // Initialize GA4 (idempotent — safe to call even if already initialized
-    // by another component).
-    initializeAnalytics();
+      // Initialize GA4 (idempotent — safe to call even if already initialized
+      // by another component).
+      initializeAnalytics();
 
-    if (!isAnalyticsEnabled()) return;
+      if (!isAnalyticsEnabled()) return;
 
-    // ── Initial page view (after hydration) ────────────────────────────────
-    const initialPath =
-      router.state.location.pathname + router.state.location.search + router.state.location.hash;
+      // ── Helper: read normalized primitives from router state ──────────
+      function readPathFromRouter(): { pathname: string; search: string; hash: string } | null {
+        const loc = router.state?.location;
+        if (!loc) return null;
+        const pathname = loc.pathname;
+        const search = loc.search ?? "";
+        const hash = loc.hash ?? "";
+        // Defense-in-depth: confirm each is a string primitive
+        if (typeof pathname !== "string") return null;
+        if (typeof search !== "string") return null;
+        if (typeof hash !== "string") return null;
+        return { pathname, search, hash };
+      }
 
-    lastPathRef.current = initialPath;
-    trackPageView({
-      path: initialPath,
-      title: document.title,
-    });
+      // ── Initial page view (after hydration) ────────────────────────────
+      const initial = readPathFromRouter();
+      if (initial) {
+        const initialFull = initial.pathname + initial.search + initial.hash;
+        lastPathRef.current = initialFull;
+        trackPageView({
+          pathname: initial.pathname,
+          search: initial.search,
+          hash: initial.hash,
+          title: typeof document !== "undefined" ? document.title : undefined,
+        });
+      }
 
-    // ── Subscribe to route changes ─────────────────────────────────────────
-    const unsubscribe = router.subscribe("onResolved", () => {
-      const currentPath =
-        router.state.location.pathname + router.state.location.search + router.state.location.hash;
+      // ── Subscribe to route changes ─────────────────────────────────────
+      // The callback receives a router event object, but we intentionally
+      // do not use it — we read directly from router.state.location which
+      // always has string primitives for pathname/search/hash.
+      const unsubscribe = router.subscribe("onResolved", () => {
+        // Inner defensive boundary: analytics callback must never throw
+        // into the router's event system.
+        try {
+          const current = readPathFromRouter();
+          if (!current) return;
 
-      // Deduplicate: if the path hasn't changed, don't send another page view.
-      // onResolved can fire for same-document navigations or internal re-resolves.
-      if (currentPath === lastPathRef.current) return;
+          const currentFull = current.pathname + current.search + current.hash;
 
-      lastPathRef.current = currentPath;
-      trackPageView({
-        path: currentPath,
-        title: document.title,
+          // Deduplicate: if the path hasn't changed, don't send another page view.
+          // onResolved can fire for same-document navigations or internal re-resolves.
+          if (currentFull === lastPathRef.current) return;
+
+          lastPathRef.current = currentFull;
+          trackPageView({
+            pathname: current.pathname,
+            search: current.search,
+            hash: current.hash,
+            title: typeof document !== "undefined" ? document.title : undefined,
+          });
+        } catch {
+          // Analytics callback failure must never propagate.
+        }
       });
-    });
 
-    return () => {
-      unsubscribe();
-    };
+      return () => {
+        try {
+          unsubscribe();
+        } catch {
+          // Unsubscribe failure is non-critical.
+        }
+      };
+    } catch {
+      // If analytics setup fails entirely, the app still renders normally.
+      // Return no cleanup — there's nothing to clean up.
+      return;
+    }
   }, [router, isCrawler]);
 }

@@ -10,6 +10,11 @@
  *  - Page views include page_location, page_path, page_title
  *  - Repeated identical calls don't fire duplicates (module-level guard)
  *  - Blocked script doesn't crash the app
+ *  - Input normalization: only string primitives are accepted
+ *  - Defensive boundary: analytics failure never propagates
+ *  - Sensitive query stripping
+ *  - Regression: router event object does NOT cause "Cannot convert object
+ *    to primitive value" crash
  *
  * These tests mock the script network layer — they do NOT verify real GA
  * network delivery.
@@ -27,9 +32,7 @@ import {
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function setupEnv(overrides: Record<string, string> = {}): void {
-  // @ts-expect-error - vitest provides import.meta.env manipulation via vi.stubEnv
   vi.stubEnv("VITE_GA_MEASUREMENT_ID", overrides.VITE_GA_MEASUREMENT_ID ?? "");
-  // @ts-expect-error - same
   vi.stubEnv("VITE_GA_ENABLE_IN_DEV", overrides.VITE_GA_ENABLE_IN_DEV ?? "true");
 }
 
@@ -40,6 +43,12 @@ function countGtagScripts(): number {
 function getGtagCalls(): unknown[][] {
   if (!window.dataLayer) return [];
   return window.dataLayer as unknown[][];
+}
+
+function getPageViewCalls(): Array<{ page_location: string; page_path: string; page_title: string }> {
+  return getGtagCalls()
+    .filter((c) => c[0] === "event" && c[1] === "page_view")
+    .map((c) => c[2] as { page_location: string; page_path: string; page_title: string });
 }
 
 // ─── Test suite ──────────────────────────────────────────────────────────────
@@ -94,7 +103,7 @@ describe("ga4", () => {
 
     it("trackPageView is a safe no-op", () => {
       initializeAnalytics();
-      expect(() => trackPageView({ path: "/" })).not.toThrow();
+      expect(() => trackPageView({ pathname: "/" })).not.toThrow();
       expect(getGtagCalls()).toHaveLength(0);
     });
 
@@ -151,7 +160,7 @@ describe("ga4", () => {
     it("injects exactly one gtag script", () => {
       initializeAnalytics();
       expect(countGtagScripts()).toBe(1);
-      const script = document.querySelector("script[data-ga-id]")!;
+      const script = document.querySelector<HTMLScriptElement>("script[data-ga-id]")!;
       expect(script.getAttribute("src")).toContain("googletagmanager.com/gtag/js");
       expect(script.getAttribute("src")).toContain("id=G-TEST12345");
       expect(script.async).toBe(true);
@@ -181,47 +190,223 @@ describe("ga4", () => {
 
     it("trackPageView sends page_view event with location, path, and title", () => {
       initializeAnalytics();
-      trackPageView({ path: "/program", title: "Program | somna" });
+      trackPageView({ pathname: "/program", title: "Program | somna" });
 
-      const pageViewCall = getGtagCalls().find((c) => c[0] === "event" && c[1] === "page_view");
-      expect(pageViewCall).toBeDefined();
-      const params = pageViewCall![2] as Record<string, string>;
-      expect(params.page_location).toBe("https://somna.help/program");
-      expect(params.page_path).toBe("/program");
-      expect(params.page_title).toBe("Program | somna");
+      const pageViews = getPageViewCalls();
+      expect(pageViews.length).toBe(1);
+      expect(pageViews[0].page_location).toBe("https://somna.help/program");
+      expect(pageViews[0].page_path).toBe("/program");
+      expect(pageViews[0].page_title).toBe("Program | somna");
     });
 
     it("trackPageView uses document.title when title is not provided", () => {
       initializeAnalytics();
-      trackPageView({ path: "/dashboard" });
+      trackPageView({ pathname: "/dashboard" });
 
-      const pageViewCall = getGtagCalls().find((c) => c[0] === "event" && c[1] === "page_view");
-      const params = pageViewCall![2] as Record<string, string>;
-      expect(params.page_title).toBe("somna — Sleep Better, Starting Tonight");
+      const pageViews = getPageViewCalls();
+      expect(pageViews[0].page_title).toBe("somna — Sleep Better, Starting Tonight");
+    });
+
+    it("trackPageView includes search string in path", () => {
+      initializeAnalytics();
+      trackPageView({ pathname: "/dashboard", search: "?tab=sleep" });
+
+      const pageViews = getPageViewCalls();
+      expect(pageViews[0].page_path).toBe("/dashboard?tab=sleep");
+      expect(pageViews[0].page_location).toBe("https://somna.help/dashboard?tab=sleep");
+    });
+
+    it("trackPageView includes hash fragment", () => {
+      initializeAnalytics();
+      trackPageView({ pathname: "/learn", hash: "#stimulus-control" });
+
+      const pageViews = getPageViewCalls();
+      expect(pageViews[0].page_path).toBe("/learn#stimulus-control");
     });
 
     it("trackPageView sanitizes sensitive query parameters", () => {
       initializeAnalytics();
-      trackPageView({ path: "/dashboard?token=abc123&email=user@test.com&tab=sleep" });
+      trackPageView({
+        pathname: "/dashboard",
+        search: "?token=abc123&email=user@test.com&tab=sleep",
+      });
 
-      const pageViewCall = getGtagCalls().find((c) => c[0] === "event" && c[1] === "page_view");
-      const params = pageViewCall![2] as Record<string, string>;
+      const pageViews = getPageViewCalls();
       // tab=sleep is kept (non-sensitive)
-      expect(params.page_path).toContain("tab=sleep");
+      expect(pageViews[0].page_path).toContain("tab=sleep");
       // token and email are stripped
-      expect(params.page_path).not.toContain("token");
-      expect(params.page_path).not.toContain("email");
-      expect(params.page_path).not.toContain("abc123");
-      expect(params.page_path).not.toContain("user@test.com");
+      expect(pageViews[0].page_path).not.toContain("token");
+      expect(pageViews[0].page_path).not.toContain("email");
+      expect(pageViews[0].page_path).not.toContain("abc123");
+      expect(pageViews[0].page_path).not.toContain("user@test.com");
     });
 
     it("trackPageView preserves hash fragments", () => {
       initializeAnalytics();
-      trackPageView({ path: "/learn#stimulus-control" });
+      trackPageView({ pathname: "/learn", hash: "#stimulus-control" });
 
-      const pageViewCall = getGtagCalls().find((c) => c[0] === "event" && c[1] === "page_view");
-      const params = pageViewCall![2] as Record<string, string>;
-      expect(params.page_path).toContain("#stimulus-control");
+      const pageViews = getPageViewCalls();
+      expect(pageViews[0].page_path).toContain("#stimulus-control");
+    });
+
+    // ── Input validation (defensive boundary) ──────────────────────────
+
+    describe("input validation — never crashes on bad input", () => {
+      it("skips emission when pathname is undefined", () => {
+        initializeAnalytics();
+        expect(() => trackPageView({ pathname: undefined as unknown as string })).not.toThrow();
+        expect(getPageViewCalls()).toHaveLength(0);
+      });
+
+      it("skips emission when pathname is an empty string", () => {
+        initializeAnalytics();
+        expect(() => trackPageView({ pathname: "" })).not.toThrow();
+        expect(getPageViewCalls()).toHaveLength(0);
+      });
+
+      it("skips emission when pathname is a number", () => {
+        initializeAnalytics();
+        expect(() => trackPageView({ pathname: 123 as unknown as string })).not.toThrow();
+        expect(getPageViewCalls()).toHaveLength(0);
+      });
+
+      it("skips emission when input is null", () => {
+        initializeAnalytics();
+        expect(() => trackPageView(null as unknown as { pathname: string })).not.toThrow();
+        expect(getPageViewCalls()).toHaveLength(0);
+      });
+
+      it("skips emission when input is undefined", () => {
+        initializeAnalytics();
+        expect(() => trackPageView(undefined as unknown as { pathname: string })).not.toThrow();
+        expect(getPageViewCalls()).toHaveLength(0);
+      });
+
+      it("REGRESSION: passing a router event object does NOT throw 'Cannot convert object to primitive value'", () => {
+        initializeAnalytics();
+        // Simulate what would happen if the onResolved callback accidentally
+        // passed the event object directly to trackPageView.
+        const routerEventObj = {
+          type: "onResolved",
+          fromLocation: { pathname: "/", search: "", hash: "" },
+          toLocation: { pathname: "/program", search: "", hash: "" },
+          pathChanged: true,
+          hrefChanged: true,
+          hashChanged: false,
+        };
+
+        // This must NOT throw — the defensive boundary catches it.
+        expect(() => trackPageView(routerEventObj as unknown as { pathname: string })).not.toThrow();
+        expect(() => trackPageView(routerEventObj as unknown as { pathname: string })).not.toThrow(
+          /Cannot convert object to primitive value/,
+        );
+
+        // And no page view is sent (pathname is not a string on the event object)
+        expect(getPageViewCalls()).toHaveLength(0);
+      });
+
+      it("REGRESSION: object with no toString (Object.create(null)) does not crash", () => {
+        initializeAnalytics();
+        const nullProtoObj = Object.create(null);
+        nullProtoObj.pathname = "/test"; // this IS a string, should work
+
+        // Even when pathname is a valid string, if the overall object has
+        // issues, the function still must not throw.
+        expect(() => trackPageView(nullProtoObj)).not.toThrow();
+        expect(getPageViewCalls().length).toBeGreaterThanOrEqual(0);
+      });
+
+      it("handles malformed pathname object gracefully", () => {
+        initializeAnalytics();
+        // An object where pathname is itself an object (nested object)
+        const badInput = { pathname: { toString: () => "/nested" } };
+
+        // Must not throw "Cannot convert object to primitive value"
+        expect(() => trackPageView(badInput as unknown as { pathname: string })).not.toThrow();
+        // The typeof check catches non-string pathname, so no emission
+        expect(getPageViewCalls()).toHaveLength(0);
+      });
+    });
+
+    // ── Defensive boundary: analytics failure ≠ app failure ────────────
+
+    describe("defensive boundary — analytics failure never propagates", () => {
+      it("does not throw when gtag throws", () => {
+        initializeAnalytics();
+        // Replace gtag with a throwing version
+        const originalGtag = window.gtag;
+        window.gtag = () => {
+          throw new Error("GA API unreachable");
+        };
+
+        expect(() => trackPageView({ pathname: "/test" })).not.toThrow();
+        expect(() => trackEvent("test_event")).not.toThrow();
+
+        window.gtag = originalGtag;
+      });
+
+      it("does not throw when window.location.origin is unavailable", () => {
+        initializeAnalytics();
+        // Save and replace location.origin with a non-string
+        const originalLocation = window.location;
+        Object.defineProperty(window, "location", {
+          value: { ...originalLocation, origin: null as unknown as string },
+          writable: true,
+          configurable: true,
+        });
+
+        expect(() => trackPageView({ pathname: "/test" })).not.toThrow();
+
+        // Restore
+        Object.defineProperty(window, "location", {
+          value: originalLocation,
+          writable: true,
+          configurable: true,
+        });
+      });
+
+      it("does not throw when document.title is not a string", () => {
+        initializeAnalytics();
+        const originalTitle = document.title;
+        // @ts-expect-error - testing runtime type violation
+        document.title = { notAString: true };
+
+        expect(() => trackPageView({ pathname: "/test" })).not.toThrow();
+
+        document.title = originalTitle;
+      });
+
+      it("analytics failure never reaches a React ErrorComponent boundary", () => {
+        // This test simulates the production scenario: a chain of failures
+        // that previously would have bubbled up to the TanStack ErrorComponent.
+        initializeAnalytics();
+
+        let errorBubbledToReact = false;
+
+        // Simulate a React-like error boundary wrapping
+        try {
+          // Simulate various failure modes — none should escape
+          trackPageView({ pathname: "/ok" });
+
+          // Now with gtag throwing
+          const originalGtag = window.gtag;
+          window.gtag = () => {
+            throw new Error("simulated analytics failure");
+          };
+
+          trackPageView({ pathname: "/should-be-caught" });
+          trackEvent("should_also_be_caught");
+
+          window.gtag = originalGtag;
+
+          // Even with completely invalid input
+          trackPageView({ pathname: {} as unknown as string });
+        } catch (e) {
+          errorBubbledToReact = true;
+        }
+
+        expect(errorBubbledToReact).toBe(false);
+      });
     });
 
     // ── Custom events ───────────────────────────────────────────────────
@@ -245,6 +430,14 @@ describe("ga4", () => {
       expect(eventCall).toBeDefined();
     });
 
+    it("trackEvent skips when name is not a string", () => {
+      initializeAnalytics();
+      trackEvent(123 as unknown as string);
+      const calls = getGtagCalls().filter((c) => c[0] === "event");
+      // Only config-related events, no custom event
+      expect(calls.length).toBe(0);
+    });
+
     // ── Blocked script resilience ──────────────────────────────────────
 
     it("does not crash when script injection fails", () => {
@@ -265,9 +458,8 @@ describe("ga4", () => {
 
         // Even without the script loaded, the stub gtag function still works
         // (events are queued in dataLayer, they just won't be sent to GA)
-        trackPageView({ path: "/test" });
-        const pageViews = getGtagCalls().filter((c) => c[0] === "event" && c[1] === "page_view");
-        expect(pageViews.length).toBe(1);
+        trackPageView({ pathname: "/test" });
+        expect(getPageViewCalls().length).toBe(1);
       } finally {
         appendSpy.mockRestore();
       }

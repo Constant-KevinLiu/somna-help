@@ -14,6 +14,7 @@ import type { D1Database, SendEmail } from "@cloudflare/workers-types";
 import {
   createUser,
   findUserByEmail,
+  findUserById,
   updateUserLastLogin,
   createSession,
   findSessionByTokenHash,
@@ -357,8 +358,8 @@ export async function handleGetSession({ request, env }: RequestContext): Promis
   // Update last used
   await updateSessionLastUsed(env, session.id);
 
-  // Get user
-  const user = await findUserByEmail(env, session.userId);
+  // Get user by ID (session.userId is a user ID, not an email)
+  const user = await findUserById(env, session.userId);
   if (!user) {
     const response = json(200, { authenticated: false });
     clearSessionCookie(response);
@@ -420,7 +421,8 @@ export async function getAuthenticatedUser({
     return null;
   }
 
-  const user = await findUserByEmail(env, session.userId);
+  // Get user by ID (session.userId is a user ID, not an email)
+  const user = await findUserById(env, session.userId);
   if (!user) {
     return null;
   }

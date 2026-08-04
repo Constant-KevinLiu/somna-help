@@ -29,6 +29,17 @@ declare global {
 }
 
 export interface PageViewInput {
+  pathname: string;
+  search?: string;
+  hash?: string;
+  title?: string;
+}
+
+/**
+ * @deprecated Use PageViewInput with pathname/search/hash instead.
+ * Temporary backward-compat shape — callers should migrate.
+ */
+export interface LegacyPageViewInput {
   path: string;
   title?: string;
 }
@@ -83,8 +94,22 @@ function shouldEnable(): boolean {
  *
  * Currently strips ALL query parameters and hash fragments that look like
  * tokens. The full pathname + safe search is preserved.
+ *
+ * Always returns a string — never throws. If input cannot be parsed safely,
+ * returns "/" as a safe fallback.
  */
-function sanitizePath(fullPath: string): string {
+function sanitizePath(fullPath: unknown): string {
+  // Defense-in-depth: if input is not a string, return a safe fallback.
+  // This prevents "Cannot convert object to primitive value" errors when
+  // a router event object or other non-primitive accidentally reaches here.
+  if (typeof fullPath !== "string") {
+    return "/";
+  }
+
+  if (fullPath.length === 0) {
+    return "/";
+  }
+
   try {
     // Build a URL we can parse. Use a dummy origin since we only care about
     // path + query + hash.
@@ -122,7 +147,11 @@ function sanitizePath(fullPath: string): string {
             qIndex === -1 ? fullPath.length : qIndex,
             hIndex === -1 ? fullPath.length : hIndex,
           );
-    return fullPath.slice(0, Math.max(1, end));
+    const result = fullPath.slice(0, Math.max(1, end));
+    // Final guard: ensure we always return a non-empty string starting with "/"
+    if (!result || result.length === 0) return "/";
+    if (!result.startsWith("/")) return `/${result}`;
+    return result;
   }
 }
 
@@ -192,27 +221,73 @@ export function initializeAnalytics(): void {
  *
  * Call after initial hydration and on every successful client-side route change.
  *
- * @param input.path - The page path (pathname + search + hash).
+ * Accepts normalized primitives: pathname, optional search, optional hash,
+ * and optional title. All values are validated to be strings before use.
+ *
+ * Analytics failure must NEVER propagate into the React error boundary.
+ * The entire function body is wrapped in a try/catch defensive boundary.
+ *
+ * @param input.pathname - The page pathname (e.g. "/program").
+ * @param input.search - Optional query string including "?" prefix.
+ * @param input.hash - Optional hash fragment including "#" prefix.
  * @param input.title - Optional document title override.
  */
 export function trackPageView(input: PageViewInput): void {
-  if (!initialized) return;
-  if (!isBrowser()) return;
-  if (!measurementId) return;
-  if (typeof window.gtag !== "function") return;
-
-  const sanitizedPath = sanitizePath(input.path);
-  const pageLocation = window.location.origin + sanitizedPath;
-  const pageTitle = input.title ?? document.title;
-
+  // ── Defensive boundary: analytics failure ≠ application failure ────────
   try {
+    if (!initialized) return;
+    if (!isBrowser()) return;
+    if (!measurementId) return;
+    if (typeof window.gtag !== "function") return;
+
+    // Validate pathname is a valid string — skip emission if not.
+    // This guards against accidental passing of router event objects,
+    // undefined values, or other non-primitive inputs.
+    const pathname = input?.pathname;
+    if (typeof pathname !== "string") return;
+    if (pathname.length === 0) return;
+
+    // Validate search and hash are strings (or undefined)
+    const search = input.search !== undefined && typeof input.search === "string"
+      ? input.search
+      : "";
+    const hash = input.hash !== undefined && typeof input.hash === "string"
+      ? input.hash
+      : "";
+
+    // Build full path from normalized parts
+    const fullPath = pathname + search + hash;
+
+    // Sanitize (strips sensitive query params)
+    const sanitizedPath = sanitizePath(fullPath);
+
+    // Build page_location from window.location.origin + sanitized path
+    // window.location.origin is always a string in browser environments.
+    const origin = typeof window.location?.origin === "string"
+      ? window.location.origin
+      : "";
+    const pageLocation = origin + sanitizedPath;
+
+    // Title: use provided string, else fall back to document.title
+    let pageTitle: string;
+    if (typeof input.title === "string") {
+      pageTitle = input.title;
+    } else if (typeof document?.title === "string") {
+      pageTitle = document.title;
+    } else {
+      pageTitle = "";
+    }
+
     window.gtag("event", "page_view", {
       page_location: pageLocation,
       page_path: sanitizedPath,
       page_title: pageTitle,
     });
   } catch {
-    // Never let analytics errors break the app.
+    // Analytics must never crash the application.
+    // Swallow ALL errors from the analytics path silently.
+    // Real errors can be diagnosed via dev tools console if needed,
+    // but they must never reach a React ErrorComponent.
   }
 }
 
@@ -229,12 +304,14 @@ export function trackEvent(
   name: string,
   parameters?: Record<string, AnalyticsParameterValue>,
 ): void {
-  if (!initialized) return;
-  if (!isBrowser()) return;
-  if (!measurementId) return;
-  if (typeof window.gtag !== "function") return;
-
+  // ── Defensive boundary: analytics failure ≠ application failure ────────
   try {
+    if (!initialized) return;
+    if (!isBrowser()) return;
+    if (!measurementId) return;
+    if (typeof window.gtag !== "function") return;
+    if (typeof name !== "string" || name.length === 0) return;
+
     window.gtag("event", name, parameters ?? {});
   } catch {
     // Never let analytics errors break the app.

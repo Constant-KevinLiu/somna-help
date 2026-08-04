@@ -21,6 +21,7 @@ const mockDeleteOTPChallenge = vi.fn();
 const mockIncrementOTPAttempts = vi.fn();
 const mockMarkOTPConsumed = vi.fn();
 const mockFindUserByEmail = vi.fn();
+const mockFindUserById = vi.fn();
 const mockCreateUser = vi.fn();
 const mockCreateSession = vi.fn();
 const mockFindSessionByTokenHash = vi.fn();
@@ -36,6 +37,7 @@ vi.mock("./auth-db", () => ({
   incrementOTPAttempts: (...args: unknown[]) => mockIncrementOTPAttempts(...args),
   markOTPConsumed: (...args: unknown[]) => mockMarkOTPConsumed(...args),
   findUserByEmail: (...args: unknown[]) => mockFindUserByEmail(...args),
+  findUserById: (...args: unknown[]) => mockFindUserById(...args),
   createUser: (...args: unknown[]) => mockCreateUser(...args),
   createSession: (...args: unknown[]) => mockCreateSession(...args),
   findSessionByTokenHash: (...args: unknown[]) => mockFindSessionByTokenHash(...args),
@@ -311,5 +313,389 @@ describe("handleRequestCode", () => {
 
     expect(response.status).toBe(400);
     expect(mockSendOTPEmail).not.toHaveBeenCalled();
+  });
+});
+
+// =============================================================================
+// handleGetSession tests
+// =============================================================================
+
+import { handleGetSession, getAuthenticatedUser } from "./auth-api";
+import { hashSecret } from "./auth-utils";
+
+describe("handleGetSession", () => {
+  const VALID_TOKEN = "test_session_token_12345";
+  const VALID_USER_ID = "user_abc123";
+  const VALID_SESSION_ID = "sess_test123";
+
+  function makeSessionRequest(token: string | null): Request {
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["cookie"] = `somna_session=${token}`;
+    }
+    return new Request("https://somna.help/api/auth/session", {
+      method: "GET",
+      headers,
+    });
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockFindSessionByTokenHash.mockResolvedValue(null);
+    mockFindUserById.mockResolvedValue(null);
+    mockUpdateSessionLastUsed.mockResolvedValue(undefined);
+  });
+
+  describe("anonymous / no session cookie", () => {
+    it("returns { authenticated: false } when no cookie is present", async () => {
+      const env = { DB: makeMockDB() as any };
+      const response = await handleGetSession({
+        request: makeSessionRequest(null),
+        env,
+        ctx: {},
+      });
+
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body.authenticated).toBe(false);
+      // No session cookie should be cleared (none was sent)
+      expect(response.headers.getSetCookie?.() ?? []).toEqual([]);
+    });
+
+    it("does not query the database when no cookie is present", async () => {
+      const env = { DB: makeMockDB() as any };
+      await handleGetSession({
+        request: makeSessionRequest(null),
+        env,
+        ctx: {},
+      });
+
+      expect(mockFindSessionByTokenHash).not.toHaveBeenCalled();
+      expect(mockFindUserById).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("invalid / expired session", () => {
+    it("returns { authenticated: false } and clears cookie when session not found", async () => {
+      mockFindSessionByTokenHash.mockResolvedValue(null);
+
+      const env = { DB: makeMockDB() as any };
+      const response = await handleGetSession({
+        request: makeSessionRequest(VALID_TOKEN),
+        env,
+        ctx: {},
+      });
+
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body.authenticated).toBe(false);
+
+      // Cookie should be cleared
+      const setCookie = response.headers.getSetCookie?.() ?? [];
+      expect(setCookie.some((c: string) => c.startsWith("somna_session="))).toBe(true);
+      expect(setCookie.some((c: string) => c.includes("Max-Age=0"))).toBe(true);
+
+      expect(mockFindUserById).not.toHaveBeenCalled();
+    });
+
+    it("returns { authenticated: false } and clears cookie when session is expired", async () => {
+      mockFindSessionByTokenHash.mockResolvedValue({
+        id: VALID_SESSION_ID,
+        userId: VALID_USER_ID,
+        tokenHash: "abc",
+        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        expiresAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // expired 1 day ago
+        lastUsedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        revokedAt: undefined,
+      });
+
+      const env = { DB: makeMockDB() as any };
+      const response = await handleGetSession({
+        request: makeSessionRequest(VALID_TOKEN),
+        env,
+        ctx: {},
+      });
+
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body.authenticated).toBe(false);
+
+      const setCookie = response.headers.getSetCookie?.() ?? [];
+      expect(setCookie.some((c: string) => c.includes("Max-Age=0"))).toBe(true);
+
+      expect(mockFindUserById).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("valid authenticated session", () => {
+    beforeEach(() => {
+      mockFindSessionByTokenHash.mockResolvedValue({
+        id: VALID_SESSION_ID,
+        userId: VALID_USER_ID,
+        tokenHash: hashSecret(VALID_TOKEN),
+        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        lastUsedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+        revokedAt: undefined,
+      });
+    });
+
+    it("returns authenticated user data with findUserById (not findUserByEmail)", async () => {
+      mockFindUserById.mockResolvedValue({
+        id: VALID_USER_ID,
+        emailNormalized: "user@example.com",
+        emailHash: "hash123",
+        preferredLocale: "en",
+        timezone: "America/New_York",
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+        deletedAt: undefined,
+      });
+
+      const env = { DB: makeMockDB() as any };
+      const response = await handleGetSession({
+        request: makeSessionRequest(VALID_TOKEN),
+        env,
+        ctx: {},
+      });
+
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body.authenticated).toBe(true);
+      expect(body.user.id).toBe(VALID_USER_ID);
+      expect(body.user.locale).toBe("en");
+      expect(body.user.timezone).toBe("America/New_York");
+      expect(body.session.expiresAt).toBeDefined();
+      expect(body.session.lastUsedAt).toBeDefined();
+
+      // CRITICAL: must use findUserById with session.userId, NOT findUserByEmail
+      expect(mockFindUserById).toHaveBeenCalledTimes(1);
+      expect(mockFindUserById).toHaveBeenCalledWith(env, VALID_USER_ID);
+      // findUserByEmail must NOT be called for session lookup
+      expect(mockFindUserByEmail).not.toHaveBeenCalled();
+    });
+
+    it("does NOT clear the session cookie for valid users", async () => {
+      mockFindUserById.mockResolvedValue({
+        id: VALID_USER_ID,
+        emailNormalized: "user@example.com",
+        emailHash: "hash123",
+        preferredLocale: "en",
+        timezone: "UTC",
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+        deletedAt: undefined,
+      });
+
+      const env = { DB: makeMockDB() as any };
+      const response = await handleGetSession({
+        request: makeSessionRequest(VALID_TOKEN),
+        env,
+        ctx: {},
+      });
+
+      const setCookie = response.headers.getSetCookie?.() ?? [];
+      // Session cookie should NOT be cleared (no Max-Age=0 for somna_session)
+      const sessionCookies = setCookie.filter((c: string) =>
+        c.startsWith("somna_session="),
+      );
+      const clearedCookies = sessionCookies.filter((c: string) =>
+        c.includes("Max-Age=0"),
+      );
+      expect(clearedCookies).toHaveLength(0);
+    });
+
+    it("updates session last_used timestamp", async () => {
+      mockFindUserById.mockResolvedValue({
+        id: VALID_USER_ID,
+        emailNormalized: "user@example.com",
+        emailHash: "hash123",
+        preferredLocale: "en",
+        timezone: "UTC",
+        createdAt: new Date().toISOString(),
+        lastLoginAt: new Date().toISOString(),
+        deletedAt: undefined,
+      });
+
+      const env = { DB: makeMockDB() as any };
+      await handleGetSession({
+        request: makeSessionRequest(VALID_TOKEN),
+        env,
+        ctx: {},
+      });
+
+      expect(mockUpdateSessionLastUsed).toHaveBeenCalledWith(env, VALID_SESSION_ID);
+    });
+  });
+
+  describe("missing user (valid session but user deleted)", () => {
+    beforeEach(() => {
+      mockFindSessionByTokenHash.mockResolvedValue({
+        id: VALID_SESSION_ID,
+        userId: VALID_USER_ID,
+        tokenHash: "abc",
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        lastUsedAt: new Date().toISOString(),
+        revokedAt: undefined,
+      });
+      mockFindUserById.mockResolvedValue(null);
+    });
+
+    it("returns { authenticated: false } and clears cookie when user not found", async () => {
+      const env = { DB: makeMockDB() as any };
+      const response = await handleGetSession({
+        request: makeSessionRequest(VALID_TOKEN),
+        env,
+        ctx: {},
+      });
+
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body.authenticated).toBe(false);
+
+      const setCookie = response.headers.getSetCookie?.() ?? [];
+      expect(setCookie.some((c: string) => c.includes("Max-Age=0"))).toBe(true);
+    });
+
+    it("uses findUserById for user lookup", async () => {
+      const env = { DB: makeMockDB() as any };
+      await handleGetSession({
+        request: makeSessionRequest(VALID_TOKEN),
+        env,
+        ctx: {},
+      });
+
+      expect(mockFindUserById).toHaveBeenCalledWith(env, VALID_USER_ID);
+      expect(mockFindUserByEmail).not.toHaveBeenCalled();
+    });
+  });
+});
+
+// =============================================================================
+// getAuthenticatedUser tests
+// =============================================================================
+
+describe("getAuthenticatedUser", () => {
+  const VALID_TOKEN = "auth_user_token_789";
+  const VALID_USER_ID = "user_xyz789";
+  const VALID_SESSION_ID = "sess_auth456";
+
+  function makeAuthRequest(token: string | null): Request {
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers["cookie"] = `somna_session=${token}`;
+    }
+    return new Request("https://somna.help/api/protected", {
+      method: "GET",
+      headers,
+    });
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockFindSessionByTokenHash.mockResolvedValue(null);
+    mockFindUserById.mockResolvedValue(null);
+    mockUpdateSessionLastUsed.mockResolvedValue(undefined);
+  });
+
+  it("returns null when no session cookie", async () => {
+    const env = { DB: makeMockDB() as any };
+    const result = await getAuthenticatedUser({
+      request: makeAuthRequest(null),
+      env,
+      ctx: {},
+    });
+
+    expect(result).toBeNull();
+    expect(mockFindSessionByTokenHash).not.toHaveBeenCalled();
+  });
+
+  it("returns null when session is expired", async () => {
+    mockFindSessionByTokenHash.mockResolvedValue({
+      id: VALID_SESSION_ID,
+      userId: VALID_USER_ID,
+      tokenHash: "abc",
+      createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+      expiresAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      lastUsedAt: new Date().toISOString(),
+      revokedAt: undefined,
+    });
+
+    const env = { DB: makeMockDB() as any };
+    const result = await getAuthenticatedUser({
+      request: makeAuthRequest(VALID_TOKEN),
+      env,
+      ctx: {},
+    });
+
+    expect(result).toBeNull();
+    expect(mockFindUserById).not.toHaveBeenCalled();
+  });
+
+  it("returns user session state when session and user are valid", async () => {
+    mockFindSessionByTokenHash.mockResolvedValue({
+      id: VALID_SESSION_ID,
+      userId: VALID_USER_ID,
+      tokenHash: "abc",
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUsedAt: new Date().toISOString(),
+      revokedAt: undefined,
+    });
+    mockFindUserById.mockResolvedValue({
+      id: VALID_USER_ID,
+      emailNormalized: "test@example.com",
+      emailHash: "hash",
+      preferredLocale: "pt-BR",
+      timezone: "Europe/Lisbon",
+      createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+      lastLoginAt: new Date().toISOString(),
+      deletedAt: undefined,
+    });
+
+    const env = { DB: makeMockDB() as any };
+    const result = await getAuthenticatedUser({
+      request: makeAuthRequest(VALID_TOKEN),
+      env,
+      ctx: {},
+    });
+
+    expect(result).not.toBeNull();
+    if (!result) throw new Error("result should not be null");
+    expect(result.isAuthenticated).toBe(true);
+    expect(result.user.id).toBe(VALID_USER_ID);
+    expect(result.user.preferredLocale).toBe("pt-BR");
+    expect(result.user.timezone).toBe("Europe/Lisbon");
+    expect(result.sessionId).toBe(VALID_SESSION_ID);
+    expect(result.expiresAt).toBeDefined();
+
+    // CRITICAL: must use findUserById, not findUserByEmail
+    expect(mockFindUserById).toHaveBeenCalledTimes(1);
+    expect(mockFindUserById).toHaveBeenCalledWith(env, VALID_USER_ID);
+    expect(mockFindUserByEmail).not.toHaveBeenCalled();
+  });
+
+  it("returns null when user is not found (valid session but user missing)", async () => {
+    mockFindSessionByTokenHash.mockResolvedValue({
+      id: VALID_SESSION_ID,
+      userId: VALID_USER_ID,
+      tokenHash: "abc",
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      lastUsedAt: new Date().toISOString(),
+      revokedAt: undefined,
+    });
+    mockFindUserById.mockResolvedValue(null);
+
+    const env = { DB: makeMockDB() as any };
+    const result = await getAuthenticatedUser({
+      request: makeAuthRequest(VALID_TOKEN),
+      env,
+      ctx: {},
+    });
+
+    expect(result).toBeNull();
+    expect(mockFindUserById).toHaveBeenCalledWith(env, VALID_USER_ID);
   });
 });
