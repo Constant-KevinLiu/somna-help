@@ -21,10 +21,20 @@
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
+/**
+ * The canonical gtag function signature.
+ *
+ * The real gtag() function is variadic and is called with `arguments` passed
+ * (the IArguments object), which gtag.js processes from Google Tag Manager
+ * expects on the dataLayer. We preserve that shape precisely so queued commands
+ * are consumable by the real Google runtime.
+ */
+type GtagFn = (...args: unknown[]) => void;
+
 declare global {
   interface Window {
     dataLayer?: unknown[];
-    gtag?: (...args: unknown[]) => void;
+    gtag?: GtagFn;
   }
 }
 
@@ -50,8 +60,50 @@ export type AnalyticsParameterValue = string | number | boolean;
 
 let initialized = false;
 let measurementId: string | null = null;
+/** Whether initialization was explicitly skipped (disabled / invalid ID / dev). */
+let initializationSkipped = false;
 
 const MEASUREMENT_ID_RE = /^G-[A-Z0-9]+$/;
+
+// ─── Dev diagnostics ────────────────────────────────────────────────────────
+
+/**
+ * Privacy-safe development diagnostics.
+ *
+ * Only active when VITE_GA_DEBUG === "true". Never logs full URLs, query
+ * strings, or sensitive values. Logs are short, stable reason strings so
+ * developers can understand why a page_view was or wasn't sent without
+ * exposing user data.
+ *
+ * The flag is read dynamically (not cached as a module-level const) so that
+ * tests and runtime toggles can enable/disable diagnostics without a reload.
+ */
+function isDebugEnabled(): boolean {
+  try {
+    if (typeof import.meta === "undefined") return false;
+    if (!import.meta.env) return false;
+    return import.meta.env.VITE_GA_DEBUG === "true";
+  } catch {
+    return false;
+  }
+}
+
+function debugLog(event: string, detail?: string): void {
+  if (!isDebugEnabled()) return;
+  if (!isBrowser()) return;
+  try {
+    const prefix = "[ga4]";
+    if (detail !== undefined) {
+      // eslint-disable-next-line no-console
+      console.log(prefix, event, detail);
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(prefix, event);
+    }
+  } catch {
+    // console access can fail in restricted environments — silently ignore.
+  }
+}
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -164,11 +216,19 @@ function sanitizePath(fullPath: unknown): string {
  * No-op during SSR, in tests, or when the measurement ID is absent/invalid.
  */
 export function initializeAnalytics(): void {
-  if (initialized) return;
-  if (!isBrowser()) return;
+  if (initialized) {
+    debugLog("init:skipped", "already_initialized");
+    return;
+  }
+  if (!isBrowser()) {
+    debugLog("init:skipped", "ssr");
+    return;
+  }
   if (!shouldEnable()) {
     // Mark as initialized so we don't repeatedly check.
     initialized = true;
+    initializationSkipped = true;
+    debugLog("init:skipped", "disabled");
     return;
   }
 
@@ -178,10 +238,32 @@ export function initializeAnalytics(): void {
 
   // Set up dataLayer and gtag stub BEFORE injecting the script, so any
   // queued events are picked up when the script loads.
+  //
+  // CRITICAL: the gtag stub MUST use `dataLayer.push(arguments)` — NOT an
+  // array spread, NOT Array.from(), NOT a rest parameter that converts to a
+  // plain Array. The real Google gtag.js runtime iterates dataLayer entries
+  // by treating each pushed item as the canonical `arguments` / IArguments
+  // object shape. Pushing a plain Array (e.g. `dataLayer.push(args)`) causes
+  // the loaded runtime to fail silently — commands queue forever, no
+  // `/g/collect` requests fire, the `_ga` cookie is never set, and
+  // `gtag('get', ...)` callbacks are never invoked.
+  //
+  // This is the canonical Google snippet, reproduced verbatim in spirit:
+  //   window.dataLayer = window.dataLayer || [];
+  //   function gtag(){dataLayer.push(arguments);}
+  //   window.gtag = gtag;
   window.dataLayer = window.dataLayer || [];
 
-  function gtag(...args: unknown[]): void {
-    window.dataLayer!.push(args);
+  // IMPORTANT: the rest parameter `_args` exists only for TypeScript's type
+  // system. At runtime we push the native `arguments` object (IArguments),
+  // NOT the rest-parameter array. The rest param lets TypeScript verify
+  // call sites while preserving the canonical gtag command shape.
+  //
+  // `arguments` is always available in non-arrow functions regardless of
+  // whether rest params are declared — it is the real IArguments object.
+  function gtag(..._args: unknown[]): void {
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer!.push(arguments);
   }
 
   window.gtag = gtag;
@@ -211,9 +293,11 @@ export function initializeAnalytics(): void {
     }
   } catch {
     // CSP or other error — analytics disabled, app continues normally.
+    debugLog("init:script_injection_failed");
   }
 
   initialized = true;
+  debugLog("init:success");
 }
 
 /**
@@ -235,17 +319,35 @@ export function initializeAnalytics(): void {
 export function trackPageView(input: PageViewInput): void {
   // ── Defensive boundary: analytics failure ≠ application failure ────────
   try {
-    if (!initialized) return;
-    if (!isBrowser()) return;
-    if (!measurementId) return;
-    if (typeof window.gtag !== "function") return;
+    if (!initialized) {
+      debugLog("page_view:skipped", "not_initialized");
+      return;
+    }
+    if (!isBrowser()) {
+      debugLog("page_view:skipped", "ssr");
+      return;
+    }
+    if (!measurementId) {
+      debugLog("page_view:skipped", "no_measurement_id");
+      return;
+    }
+    if (typeof window.gtag !== "function") {
+      debugLog("page_view:skipped", "no_gtag");
+      return;
+    }
 
     // Validate pathname is a valid string — skip emission if not.
     // This guards against accidental passing of router event objects,
     // undefined values, or other non-primitive inputs.
     const pathname = input?.pathname;
-    if (typeof pathname !== "string") return;
-    if (pathname.length === 0) return;
+    if (typeof pathname !== "string") {
+      debugLog("page_view:skipped", "pathname_not_string");
+      return;
+    }
+    if (pathname.length === 0) {
+      debugLog("page_view:skipped", "pathname_empty");
+      return;
+    }
 
     // Validate search and hash are strings (or undefined)
     const search = input.search !== undefined && typeof input.search === "string"
@@ -283,11 +385,14 @@ export function trackPageView(input: PageViewInput): void {
       page_path: sanitizedPath,
       page_title: pageTitle,
     });
+
+    debugLog("page_view:queued", sanitizedPath);
   } catch {
     // Analytics must never crash the application.
     // Swallow ALL errors from the analytics path silently.
     // Real errors can be diagnosed via dev tools console if needed,
     // but they must never reach a React ErrorComponent.
+    debugLog("page_view:skipped", "error");
   }
 }
 
@@ -328,6 +433,7 @@ export function resetAnalytics(): void {
   if (!isBrowser()) {
     initialized = false;
     measurementId = null;
+    initializationSkipped = false;
     return;
   }
   if (measurementId) {
@@ -340,6 +446,7 @@ export function resetAnalytics(): void {
   }
   initialized = false;
   measurementId = null;
+  initializationSkipped = false;
   // Intentionally leave window.dataLayer / window.gtag in place — other code
   // might reference them. Tests should set up their own window state.
 }

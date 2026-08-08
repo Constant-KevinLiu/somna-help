@@ -27,11 +27,13 @@
   // No API key needed in application code — native binding handles auth.
   // =============================================================================
   "send_email": [
-    {
-      "binding": "EMAIL",
-      "allowed_destination_domains": ["*"],
-    },
-  ],
+  {
+    "name": "EMAIL",
+    "allowed_sender_addresses": [
+      "account@somna.help"
+    ]
+  }
+],
 
   // =============================================================================
   // D1 Database for Sleep Diary v2.3

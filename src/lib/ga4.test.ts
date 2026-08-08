@@ -40,15 +40,28 @@ function countGtagScripts(): number {
   return document.querySelectorAll("script[data-ga-id]").length;
 }
 
-function getGtagCalls(): unknown[][] {
+function getGtagCalls(): ArrayLike<unknown>[] {
   if (!window.dataLayer) return [];
-  return window.dataLayer as unknown[][];
+  return window.dataLayer as ArrayLike<unknown>[];
+}
+
+/**
+ * Access a dataLayer entry's nth argument.
+ *
+ * Canonical gtag entries are IArguments objects (not plain Arrays).
+ * We must index them the same way the Google runtime does: by numeric
+ * property access, NOT by Array methods. This helper ensures tests
+ * work with both shapes (but the canonical-command-shape test below
+ * verifies the shape is IArguments, not Array).
+ */
+function getNthArg(entry: ArrayLike<unknown>, index: number): unknown {
+  return entry[index];
 }
 
 function getPageViewCalls(): Array<{ page_location: string; page_path: string; page_title: string }> {
   return getGtagCalls()
-    .filter((c) => c[0] === "event" && c[1] === "page_view")
-    .map((c) => c[2] as { page_location: string; page_path: string; page_title: string });
+    .filter((c) => getNthArg(c, 0) === "event" && getNthArg(c, 1) === "page_view")
+    .map((c) => getNthArg(c, 2) as { page_location: string; page_path: string; page_title: string });
 }
 
 // ─── Test suite ──────────────────────────────────────────────────────────────
@@ -172,18 +185,32 @@ describe("ga4", () => {
       expect(countGtagScripts()).toBe(1);
       // js + config calls should be present but not duplicated
       const calls = getGtagCalls();
-      const jsCalls = calls.filter((c) => c[0] === "js");
-      const configCalls = calls.filter((c) => c[0] === "config");
+      const jsCalls = calls.filter((c) => getNthArg(c, 0) === "js");
+      const configCalls = calls.filter((c) => getNthArg(c, 0) === "config");
       expect(jsCalls.length).toBe(1);
       expect(configCalls.length).toBe(1);
     });
 
     it("config is set with send_page_view: false", () => {
       initializeAnalytics();
-      const configCall = getGtagCalls().find((c) => c[0] === "config");
+      const configCall = getGtagCalls().find((c) => getNthArg(c, 0) === "config");
       expect(configCall).toBeDefined();
-      const [, , options] = configCall!;
+      const options = getNthArg(configCall!, 2);
       expect(options).toEqual(expect.objectContaining({ send_page_view: false }));
+    });
+
+    it("send_page_view: false still results in an explicit page_view via trackPageView", () => {
+      // The GA config disables automatic page views, but our trackPageView
+      // function must still send explicit page_view events.
+      initializeAnalytics();
+      trackPageView({ pathname: "/test-page" });
+
+      const pageViews = getPageViewCalls();
+      expect(pageViews.length).toBe(1);
+      // Confirm it's an explicit "event" call, not a config-driven auto page_view
+      const allEvents = getGtagCalls().filter((c) => getNthArg(c, 0) === "event");
+      const explicitPageViews = allEvents.filter((c) => getNthArg(c, 1) === "page_view");
+      expect(explicitPageViews.length).toBe(1);
     });
 
     // ── Page view tracking ──────────────────────────────────────────────
@@ -415,9 +442,11 @@ describe("ga4", () => {
       initializeAnalytics();
       trackEvent("share_open", { context: "dashboard", count: 5 });
 
-      const eventCall = getGtagCalls().find((c) => c[0] === "event" && c[1] === "share_open");
+      const eventCall = getGtagCalls().find(
+        (c) => getNthArg(c, 0) === "event" && getNthArg(c, 1) === "share_open",
+      );
       expect(eventCall).toBeDefined();
-      const params = eventCall![2] as Record<string, string | number>;
+      const params = getNthArg(eventCall!, 2) as Record<string, string | number>;
       expect(params.context).toBe("dashboard");
       expect(params.count).toBe(5);
     });
@@ -426,14 +455,16 @@ describe("ga4", () => {
       initializeAnalytics();
       trackEvent("simple_event");
 
-      const eventCall = getGtagCalls().find((c) => c[0] === "event" && c[1] === "simple_event");
+      const eventCall = getGtagCalls().find(
+        (c) => getNthArg(c, 0) === "event" && getNthArg(c, 1) === "simple_event",
+      );
       expect(eventCall).toBeDefined();
     });
 
     it("trackEvent skips when name is not a string", () => {
       initializeAnalytics();
       trackEvent(123 as unknown as string);
-      const calls = getGtagCalls().filter((c) => c[0] === "event");
+      const calls = getGtagCalls().filter((c) => getNthArg(c, 0) === "event");
       // Only config-related events, no custom event
       expect(calls.length).toBe(0);
     });
@@ -463,6 +494,333 @@ describe("ga4", () => {
       } finally {
         appendSpy.mockRestore();
       }
+    });
+
+    // ── Dev diagnostics ────────────────────────────────────────────────
+
+    describe("dev diagnostics (VITE_GA_DEBUG)", () => {
+      it("does not log when VITE_GA_DEBUG is not set", () => {
+        setupEnv({ VITE_GA_MEASUREMENT_ID: VALID_ID, VITE_GA_ENABLE_IN_DEV: "true" });
+        const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+        initializeAnalytics();
+        trackPageView({ pathname: "/test" });
+
+        // No [ga4] prefixed logs when debug is off
+        const ga4Logs = logSpy.mock.calls.filter((c) => typeof c[0] === "string" && c[0].includes("[ga4]"));
+        expect(ga4Logs).toHaveLength(0);
+
+        logSpy.mockRestore();
+      });
+
+      it("logs initialization and page_view when VITE_GA_DEBUG is true", () => {
+        vi.stubEnv("VITE_GA_DEBUG", "true");
+        setupEnv({ VITE_GA_MEASUREMENT_ID: VALID_ID, VITE_GA_ENABLE_IN_DEV: "true" });
+
+        // Need to re-import to pick up the env var change
+        const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+        initializeAnalytics();
+        trackPageView({ pathname: "/test" });
+
+        const ga4Logs = logSpy.mock.calls.filter(
+          (c) => typeof c[0] === "string" && c[0].includes("[ga4]"),
+        );
+        // Should have init:success + page_view:queued at minimum
+        expect(ga4Logs.length).toBeGreaterThanOrEqual(2);
+        // Never logs full query strings or sensitive values
+        const hasFullQueryString = ga4Logs.some((c) =>
+          c.some((arg) => typeof arg === "string" && arg.includes("token=")),
+        );
+        expect(hasFullQueryString).toBe(false);
+
+        logSpy.mockRestore();
+      });
+
+      it("logs stable skip reason when pathname is not a string", () => {
+        vi.stubEnv("VITE_GA_DEBUG", "true");
+        setupEnv({ VITE_GA_MEASUREMENT_ID: VALID_ID, VITE_GA_ENABLE_IN_DEV: "true" });
+
+        const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+
+        initializeAnalytics();
+        trackPageView({ pathname: 123 as unknown as string });
+
+        const skipLogs = logSpy.mock.calls.filter(
+          (c) => c[1] === "page_view:skipped" && c[2] === "pathname_not_string",
+        );
+        expect(skipLogs.length).toBe(1);
+
+        logSpy.mockRestore();
+      });
+    });
+
+    // ── Canonical gtag command queue shape ─────────────────────────────
+    //
+    // These tests verify that commands pushed onto dataLayer use the
+    // canonical IArguments shape that Google's gtag.js runtime expects.
+    // Pushing plain Arrays (e.g. `dataLayer.push(args)`) causes the
+    // runtime to silently ignore commands — no /g/collect requests,
+    // no _ga cookie, gtag('get', ...) callbacks never fire.
+    //
+    // These tests MUST fail against the old `dataLayer.push(args)`
+    // implementation and pass against the canonical
+    // `dataLayer.push(arguments)` implementation.
+
+    describe("canonical gtag command queue shape", () => {
+      it("TEST A — queued commands are IArguments objects, not plain Arrays", () => {
+        initializeAnalytics();
+
+        const calls = getGtagCalls();
+        expect(calls.length).toBeGreaterThanOrEqual(2); // js + config at minimum
+
+        // Canonical gtag pushes `arguments` objects, not Arrays.
+        // Array.isArray() returns false for IArguments.
+        for (const entry of calls) {
+          expect(Array.isArray(entry)).toBe(false);
+          // IArguments has numeric indices and .length
+          expect(typeof entry.length).toBe("number");
+          expect(entry.length).toBeGreaterThanOrEqual(1);
+          // First argument is always accessible at index 0
+          expect(typeof entry[0]).toBe("string");
+        }
+      });
+
+      it("TEST B — js command contains Date and config has send_page_view: false", () => {
+        initializeAnalytics();
+
+        const calls = getGtagCalls();
+
+        const jsCall = calls.find((c) => getNthArg(c, 0) === "js");
+        expect(jsCall).toBeDefined();
+        expect(jsCall!.length).toBe(2);
+        expect(getNthArg(jsCall!, 1)).toBeInstanceOf(Date);
+
+        const configCall = calls.find((c) => getNthArg(c, 0) === "config");
+        expect(configCall).toBeDefined();
+        expect(configCall!.length).toBe(3);
+        expect(getNthArg(configCall!, 1)).toBe(VALID_ID);
+        const configOptions = getNthArg(configCall!, 2) as Record<string, unknown>;
+        expect(configOptions).toBeDefined();
+        expect(configOptions.send_page_view).toBe(false);
+      });
+
+      it("TEST C — explicit page_view is queued with page_location, page_path, page_title", () => {
+        initializeAnalytics();
+        trackPageView({
+          pathname: "/program",
+          search: "?tab=sleep",
+          hash: "#overview",
+          title: "Program | somna",
+        });
+
+        const calls = getGtagCalls();
+        const pvCall = calls.find(
+          (c) => getNthArg(c, 0) === "event" && getNthArg(c, 1) === "page_view",
+        );
+        expect(pvCall).toBeDefined();
+        expect(pvCall!.length).toBe(3);
+
+        const params = getNthArg(pvCall!, 2) as Record<string, unknown>;
+        expect(typeof params.page_location).toBe("string");
+        expect(typeof params.page_path).toBe("string");
+        expect(typeof params.page_title).toBe("string");
+
+        expect(params.page_location).toBe("https://somna.help/program?tab=sleep#overview");
+        expect(params.page_path).toBe("/program?tab=sleep#overview");
+        expect(params.page_title).toBe("Program | somna");
+
+        // Confirm it's an IArguments, not a plain Array
+        expect(Array.isArray(pvCall)).toBe(false);
+      });
+
+      it("TEST D — get callback uses same canonical command shape", () => {
+        initializeAnalytics();
+
+        const callback = vi.fn();
+        if (window.gtag) {
+          window.gtag("get", VALID_ID, "client_id", callback);
+        }
+
+        const calls = getGtagCalls();
+        const getCall = calls.find(
+          (c) => getNthArg(c, 0) === "get" && getNthArg(c, 1) === VALID_ID,
+        );
+        expect(getCall).toBeDefined();
+        expect(getCall!.length).toBe(4);
+        expect(getNthArg(getCall!, 2)).toBe("client_id");
+        expect(typeof getNthArg(getCall!, 3)).toBe("function");
+
+        // Must be IArguments shape, not a plain Array
+        expect(Array.isArray(getCall)).toBe(false);
+      });
+
+      it("TEST E — initialization is idempotent: one script, one set of init commands", () => {
+        initializeAnalytics();
+        const firstCallCount = getGtagCalls().length;
+        expect(countGtagScripts()).toBe(1);
+
+        // Second call should be a no-op
+        initializeAnalytics();
+        expect(countGtagScripts()).toBe(1);
+        expect(getGtagCalls().length).toBe(firstCallCount);
+
+        // Third call — still no change
+        initializeAnalytics();
+        expect(countGtagScripts()).toBe(1);
+        expect(getGtagCalls().length).toBe(firstCallCount);
+      });
+
+      it("TEST F — script load failure does not throw into React/app", () => {
+        // Simulate script.onerror being called (ad blocker, network failure)
+        initializeAnalytics();
+        const script = document.querySelector<HTMLScriptElement>("script[data-ga-id]");
+        expect(script).toBeDefined();
+
+        // Trigger error handler — must not throw
+        expect(() => {
+          const errorEvent = new Event("error");
+          script!.dispatchEvent(errorEvent);
+        }).not.toThrow();
+
+        // App continues to work: trackPageView still queues locally
+        expect(() => trackPageView({ pathname: "/after-error" })).not.toThrow();
+        const pageViews = getPageViewCalls();
+        expect(pageViews.length).toBe(1);
+      });
+
+      it("TEST G — no window/document access during SSR (SSR-safe)", () => {
+        // Simulate SSR by checking that initialization short-circuits
+        // before any window/document access when window is undefined.
+        // In jsdom, window is always defined, so we test the behavior
+        // that guards SSR: when shouldEnable() returns false because
+        // of invalid env, no script is injected and no errors occur.
+
+        // We can't actually remove window in jsdom, but we verify
+        // that the initialization path when disabled does not create
+        // a script tag or call any DOM APIs beyond basic checks.
+        vi.stubEnv("VITE_GA_MEASUREMENT_ID", "");
+        resetAnalytics();
+        window.dataLayer = [];
+        window.gtag = undefined;
+
+        expect(() => initializeAnalytics()).not.toThrow();
+        expect(countGtagScripts()).toBe(0);
+        expect(isAnalyticsEnabled()).toBe(false);
+
+        // dataLayer should still be empty (no commands queued)
+        expect(getGtagCalls().length).toBe(0);
+      });
+
+      it("TEST H — analytics disabled with invalid/missing measurement ID is safe no-op", () => {
+        vi.stubEnv("VITE_GA_MEASUREMENT_ID", "");
+        resetAnalytics();
+        window.dataLayer = [];
+        window.gtag = undefined;
+
+        initializeAnalytics();
+        expect(isAnalyticsEnabled()).toBe(false);
+        expect(() => trackPageView({ pathname: "/" })).not.toThrow();
+        expect(() => trackEvent("test")).not.toThrow();
+        expect(getGtagCalls().length).toBe(0);
+
+        // Invalid format
+        vi.stubEnv("VITE_GA_MEASUREMENT_ID", "not-a-real-id");
+        resetAnalytics();
+        window.dataLayer = [];
+
+        initializeAnalytics();
+        expect(isAnalyticsEnabled()).toBe(false);
+        expect(getGtagCalls().length).toBe(0);
+      });
+
+      it("TEST I — browser-level integration: simulated gtag consumer processes canonical commands", () => {
+        // This test simulates what happens when the real gtag.js loads
+        // and starts consuming the dataLayer. The canonical runtime
+        // iterates over dataLayer entries and reads them by numeric
+        // index, treating each entry as an IArguments-like object.
+        //
+        // We verify that a consumer written in the canonical style
+        // (iterating entries and reading entry[0], entry[1], entry[2])
+        // can correctly process all commands that were queued by the
+        // stub before "load".
+
+        // Queue commands via the stub
+        initializeAnalytics();
+        trackPageView({ pathname: "/test-page", title: "Test Page" });
+
+        const calls = getGtagCalls();
+        const consumed: Array<{ cmd: string; rest: unknown[] }> = [];
+
+        // Simulate the canonical gtag consumer pattern:
+        // iterate dataLayer entries, process each as arguments-like
+        for (let i = 0; i < calls.length; i++) {
+          const entry = calls[i];
+          const cmd = entry[0] as string;
+          const rest: unknown[] = [];
+          for (let j = 1; j < entry.length; j++) {
+            rest.push(entry[j]);
+          }
+          consumed.push({ cmd, rest });
+        }
+
+        // Verify the consumer successfully reads every queued command
+        const cmds = consumed.map((c) => c.cmd);
+        expect(cmds).toContain("js");
+        expect(cmds).toContain("config");
+        expect(cmds).toContain("event");
+
+        // Verify js command content
+        const jsCmd = consumed.find((c) => c.cmd === "js");
+        expect(jsCmd).toBeDefined();
+        expect(jsCmd!.rest[0]).toBeInstanceOf(Date);
+
+        // Verify config command content
+        const configCmd = consumed.find((c) => c.cmd === "config");
+        expect(configCmd).toBeDefined();
+        expect(configCmd!.rest[0]).toBe(VALID_ID);
+        expect((configCmd!.rest[1] as Record<string, unknown>).send_page_view).toBe(false);
+
+        // Verify page_view event
+        const pvCmd = consumed.find(
+          (c) => c.cmd === "event" && (c.rest[0] as string) === "page_view",
+        );
+        expect(pvCmd).toBeDefined();
+        const pvParams = pvCmd!.rest[1] as Record<string, unknown>;
+        expect(pvParams.page_path).toBe("/test-page");
+        expect(pvParams.page_title).toBe("Test Page");
+      });
+
+      it("REGRESSION: this test would fail if commands were plain Arrays", () => {
+        // Verify that the shape difference is real and detectable.
+        // If someone re-introduces `dataLayer.push(args)` (plain Array),
+        // this test must catch it.
+        //
+        // We do this by verifying Array.isArray() is false for entries
+        // AND that the entry still has a length property and numeric
+        // indices — the signature of IArguments.
+        initializeAnalytics();
+        trackPageView({ pathname: "/regression-check" });
+
+        const calls = getGtagCalls();
+        expect(calls.length).toBeGreaterThan(0);
+
+        for (const entry of calls) {
+          // The critical assertion: canonical commands are NOT Arrays
+          expect(Array.isArray(entry)).toBe(false);
+          // But they ARE array-like (have length and numeric indices)
+          expect(typeof entry.length).toBe("number");
+          expect(entry.length >= 1).toBe(true);
+          expect(typeof entry[0]).toBe("string");
+        }
+
+        // Sanity check: if we had pushed a plain Array, Array.isArray
+        // would be true. Let's verify by doing a direct push for comparison.
+        const plainArray = ["test", "arg"];
+        expect(Array.isArray(plainArray)).toBe(true);
+        // The real dataLayer entries should be different from a plain array
+        expect(Array.isArray(calls[0])).not.toBe(Array.isArray(plainArray));
+      });
     });
 
     // ── Reset ──────────────────────────────────────────────────────────

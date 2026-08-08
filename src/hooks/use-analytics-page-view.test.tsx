@@ -288,24 +288,53 @@ describe("useAnalyticsPageView", () => {
   // ── Missing / malformed pathname ─────────────────────────────────────
 
   describe("missing or malformed pathname", () => {
-    it("skips page view when router state location is missing", () => {
+    it("falls back to browser location when router state location is missing", () => {
       const router = createMockRouter("/");
       // Corrupt the state
       (router as any).state = { location: null };
 
       renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
 
-      // Should not crash, and no page view should be emitted
-      expect(mockTrackPageView).not.toHaveBeenCalled();
+      // Should NOT crash, and should still emit a page view from window.location
+      expect(mockTrackPageView).toHaveBeenCalledTimes(1);
+      const callArg = mockTrackPageView.mock.calls[0][0] as Record<string, unknown>;
+      expect(typeof callArg.pathname).toBe("string");
+      // Pathname comes from window.location fallback
+      expect(callArg.pathname).toBe("/");
     });
 
-    it("skips page view when pathname is not a string in router state", () => {
+    it("falls back to browser location when pathname is not a string in router state", () => {
       const router = createMockRouter("/");
       (router as any).state = { location: { pathname: 12345, search: "", hash: "" } };
 
       renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
 
+      // Falls back to window.location, so page view IS sent
+      expect(mockTrackPageView).toHaveBeenCalledTimes(1);
+      const callArg = mockTrackPageView.mock.calls[0][0] as Record<string, unknown>;
+      expect(typeof callArg.pathname).toBe("string");
+    });
+
+    it("skips page view when BOTH router state and window.location are unavailable", () => {
+      const router = createMockRouter("/");
+      (router as any).state = { location: null };
+
+      const originalLocation = window.location;
+      Object.defineProperty(window, "location", {
+        value: undefined,
+        writable: true,
+        configurable: true,
+      });
+
+      renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
+
       expect(mockTrackPageView).not.toHaveBeenCalled();
+
+      Object.defineProperty(window, "location", {
+        value: originalLocation,
+        writable: true,
+        configurable: true,
+      });
     });
   });
 
@@ -453,6 +482,182 @@ describe("useAnalyticsPageView", () => {
       expect(() => {
         renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
       }).not.toThrow();
+    });
+  });
+
+  // ── Browser location fallback ────────────────────────────────────────
+
+  describe("browser location fallback", () => {
+    it("falls back to window.location when router state location is null", () => {
+      const router = createMockRouter("/");
+      // Corrupt router state so readPathFromRouter returns null
+      (router as any).state = { location: null };
+      // But window.location is still available
+      Object.defineProperty(window, "location", {
+        value: {
+          href: "https://somna.help/program",
+          origin: "https://somna.help",
+          pathname: "/program",
+          search: "?tab=sleep",
+          hash: "#overview",
+        },
+        writable: true,
+        configurable: true,
+      });
+
+      renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
+
+      // Should still fire a page view using window.location fallback
+      expect(mockTrackPageView).toHaveBeenCalledTimes(1);
+      const callArg = mockTrackPageView.mock.calls[0][0] as Record<string, unknown>;
+      expect(callArg.pathname).toBe("/program");
+      expect(callArg.search).toBe("?tab=sleep");
+      expect(callArg.hash).toBe("#overview");
+    });
+
+    it("falls back to window.location when router pathname is not a string", () => {
+      const router = createMockRouter("/");
+      (router as any).state = { location: { pathname: 12345, search: "", hash: "" } };
+
+      Object.defineProperty(window, "location", {
+        value: {
+          href: "https://somna.help/dashboard",
+          origin: "https://somna.help",
+          pathname: "/dashboard",
+          search: "",
+          hash: "",
+        },
+        writable: true,
+        configurable: true,
+      });
+
+      renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
+
+      expect(mockTrackPageView).toHaveBeenCalledTimes(1);
+      const callArg = mockTrackPageView.mock.calls[0][0] as Record<string, unknown>;
+      expect(callArg.pathname).toBe("/dashboard");
+    });
+
+    it("uses window.location fallback during SPA navigation when router state is malformed", () => {
+      const router = createMockRouter("/");
+      renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
+
+      expect(mockTrackPageView).toHaveBeenCalledTimes(1); // initial
+
+      // Simulate a navigation where router state is corrupted but
+      // window.location has the correct URL
+      Object.defineProperty(window, "location", {
+        value: {
+          href: "https://somna.help/new-page",
+          origin: "https://somna.help",
+          pathname: "/new-page",
+          search: "",
+          hash: "",
+        },
+        writable: true,
+        configurable: true,
+      });
+      // Corrupt router state
+      (router as any).state = { location: null };
+
+      act(() => {
+        (router as any).__fireResolvedWithObject({ type: "onResolved" });
+      });
+
+      // Should still fire because it falls back to window.location
+      expect(mockTrackPageView).toHaveBeenCalledTimes(2);
+      const navCall = mockTrackPageView.mock.calls[1][0] as Record<string, unknown>;
+      expect(navCall.pathname).toBe("/new-page");
+    });
+
+  });
+
+  // ── send_page_view: false + explicit page_view ────────────────────────
+
+  describe("send_page_view: false still results in explicit page_view", () => {
+    it("explicit page_view is sent even though config has send_page_view: false", () => {
+      // This is an integration-level check: the hook calls trackPageView
+      // which emits an explicit "page_view" event. The GA config disables
+      // automatic page views, but our manual ones must still fire.
+      const router = createMockRouter("/verify-send-page-view-false");
+      renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
+
+      // trackPageView is called — that's our explicit page_view
+      expect(mockTrackPageView).toHaveBeenCalledTimes(1);
+      const callArg = mockTrackPageView.mock.calls[0][0] as Record<string, unknown>;
+      expect(callArg.pathname).toBe("/verify-send-page-view-false");
+    });
+  });
+
+  // ── Resolved state pathname is always string ──────────────────────────
+
+  describe("resolved state pathname is string primitive", () => {
+    it("initial page view reads pathname as string from resolved router state", () => {
+      const router = createMockRouter("/program", "?ref=twitter", "#top");
+      renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
+
+      const callArg = mockTrackPageView.mock.calls[0][0] as Record<string, unknown>;
+      expect(typeof callArg.pathname).toBe("string");
+      expect(typeof callArg.search).toBe("string");
+      expect(typeof callArg.hash).toBe("string");
+    });
+
+    it("navigation page view reads pathname as string from resolved router state", () => {
+      const router = createMockRouter("/");
+      renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
+
+      act(() => {
+        (router as any).__navigate("/learn", "?chapter=1", "#intro");
+      });
+
+      const callArg = mockTrackPageView.mock.calls[1][0] as Record<string, unknown>;
+      expect(typeof callArg.pathname).toBe("string");
+      expect(callArg.pathname).toBe("/learn");
+      expect(callArg.search).toBe("?chapter=1");
+      expect(callArg.hash).toBe("#intro");
+    });
+  });
+
+  // ── Unchanged URL deduplication ──────────────────────────────────────
+
+  describe("unchanged URL deduplication", () => {
+    it("deduplicates same pathname+search+hash exactly", () => {
+      const router = createMockRouter("/page", "?q=test", "#section");
+      renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
+
+      const initialCount = mockTrackPageView.mock.calls.length;
+
+      // Fire onResolved multiple times with identical URL
+      for (let i = 0; i < 5; i++) {
+        act(() => {
+          (router as any).__navigate("/page", "?q=test", "#section");
+        });
+      }
+
+      expect(mockTrackPageView).toHaveBeenCalledTimes(initialCount);
+    });
+
+    it("treats different search params as different pages", () => {
+      const router = createMockRouter("/search", "?q=sleep", "");
+      renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
+
+      act(() => {
+        (router as any).__navigate("/search", "?q=insomnia", "");
+      });
+
+      expect(mockTrackPageView).toHaveBeenCalledTimes(2);
+    });
+
+    it("treats different hash as different page", () => {
+      const router = createMockRouter("/doc", "", "#intro");
+      renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
+
+      act(() => {
+        (router as any).__navigate("/doc", "", "#chapter1");
+      });
+
+      // Hash change counts as a different URL in dedup
+      expect(mockTrackPageView).toHaveBeenCalledTimes(2);
     });
   });
 
