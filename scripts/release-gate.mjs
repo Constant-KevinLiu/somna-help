@@ -318,7 +318,13 @@ run("Account delete endpoint wired", () => {
 
 run("Export implementation exists", () => {
   const api = read("src/services/account/account-api.ts");
-  const required = ["schemaVersion", "exportedAt", "sleepRecords", "reflections", "reminderSettings"];
+  const required = [
+    "schemaVersion",
+    "exportedAt",
+    "sleepRecords",
+    "reflections",
+    "reminderSettings",
+  ];
   const missing = required.filter((r) => !api.includes(r));
   if (missing.length) throw new Error(`export fields missing: ${missing.join(", ")}`);
   return "export schema complete";
@@ -354,9 +360,19 @@ run("All 4 locales have account copy", () => {
     const content = read(path);
     if (!content.includes("accountExport")) throw new Error(`${locale}: missing accountExport`);
     if (!content.includes("accountDelete")) throw new Error(`${locale}: missing accountDelete`);
-    if (!content.includes("Export") && !content.includes("Exportar") && !content.includes("Eksportuj") && !content.includes("Exporte"))
+    if (
+      !content.includes("Export") &&
+      !content.includes("Exportar") &&
+      !content.includes("Eksportuj") &&
+      !content.includes("Exporte")
+    )
       throw new Error(`${locale}: no export text`);
-    if (!content.includes("Delete") && !content.includes("Elimina") && !content.includes("Usuń") && !content.includes("Exclua"))
+    if (
+      !content.includes("Delete") &&
+      !content.includes("Elimina") &&
+      !content.includes("Usuń") &&
+      !content.includes("Exclua")
+    )
       throw new Error(`${locale}: no delete text`);
   }
   return "en/es/pt-BR/pl account copy complete";
@@ -390,7 +406,8 @@ run("Reflection word limit (750) enforced", () => {
 run("Reflection prompt selection is deterministic", () => {
   const prompts = read("src/lib/reflection/reflection-prompts.ts");
   if (!prompts.includes("hashSeed")) throw new Error("no deterministic hash function");
-  if (!prompts.includes("getDeterministicIndex")) throw new Error("no deterministic index selection");
+  if (!prompts.includes("getDeterministicIndex"))
+    throw new Error("no deterministic index selection");
   return "uses seeded hash for date-based selection";
 });
 
@@ -430,7 +447,7 @@ run("WheelEngine unit tests pass", () => {
     "src/components/time-picker/WheelDebug.test.ts",
     "src/components/time-picker/WheelRenderer.test.ts",
   ];
-  sh(`node node_modules/tsx/dist/cli.mjs --test ${testFiles.join(" ")}`);
+  sh(`npx vitest run ${testFiles.join(" ")}`);
   return `${testFiles.length} WheelEngine test suites passed`;
 });
 
