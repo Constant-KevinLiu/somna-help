@@ -30,10 +30,7 @@ TypeScript debt cleanup. No new Program features.
 first finished the program. The old merge code:
 
 ```typescript
-const completedAt =
-  status === "completed"
-    ? local.completedAt ?? remote.completedAt
-    : null;
+const completedAt = status === "completed" ? (local.completedAt ?? remote.completedAt) : null;
 ```
 
 This prefers local when both sides have a value, regardless of which is earlier.
@@ -46,18 +43,16 @@ Added `resolveEarlierTimestamp(a, b)` helper and changed the merge to use it:
 
 ```typescript
 const completedAt =
-  status === "completed"
-    ? resolveEarlierTimestamp(local.completedAt, remote.completedAt)
-    : null;
+  status === "completed" ? resolveEarlierTimestamp(local.completedAt, remote.completedAt) : null;
 ```
 
 **Merge truth table:**
 
-| Local | Remote | Result |
-|-------|--------|--------|
-| `null` | `null` | `null` |
-| timestamp | `null` | local |
-| `null` | timestamp | remote |
+| Local       | Remote      | Result             |
+| ----------- | ----------- | ------------------ |
+| `null`      | `null`      | `null`             |
+| timestamp   | `null`      | local              |
+| `null`      | timestamp   | remote             |
 | timestamp A | timestamp B | earlier of A and B |
 
 ### Invalid timestamp policy
@@ -88,6 +83,7 @@ const completedAt =
 ### Problem
 
 The forward-schema guard already existed at the storage layer:
+
 - Detected future schema versions
 - Preserved raw data
 - Blocked writes
@@ -149,18 +145,19 @@ Reusable component at `src/components/program/ProgramUnsupportedBanner.tsx`:
 Localized in all active UI locales: `en`, `zh`, `es`, `pt`, `pl`, `de`.
 
 **Message intent:**
+
 > Your program data was created by a newer version of Somna.
 > Your progress is safe, but it cannot be edited in this version.
 > Refresh or update the application before continuing.
 
 #### Route behavior
 
-| Route | What changes |
-|-------|-------------|
-| `/program` | Banner visible. Progress bar, badges, and week completion hidden (not shown as 0% / empty). Week cards locked. Assessment CTA hidden. |
-| `/program/week-1` | Banner visible. Lesson links still work (content is readable). |
-| `/program/week-1/lesson-id` | Banner visible. Completion toggle disabled. Lesson content still readable. |
-| `/dashboard` | Compact banner inside Program card. No crash. No "not started" message. |
+| Route                       | What changes                                                                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `/program`                  | Banner visible. Progress bar, badges, and week completion hidden (not shown as 0% / empty). Week cards locked. Assessment CTA hidden. |
+| `/program/week-1`           | Banner visible. Lesson links still work (content is readable).                                                                        |
+| `/program/week-1/lesson-id` | Banner visible. Completion toggle disabled. Lesson content still readable.                                                            |
+| `/dashboard`                | Compact banner inside Program card. No crash. No "not started" message.                                                               |
 
 ### Guarantees
 
@@ -191,12 +188,12 @@ Localized in all active UI locales: `en`, `zh`, `es`, `pt`, `pl`, `de`.
 
 ## Tests Added
 
-| Suite | Tests Added | What they cover |
-|-------|------------|-----------------|
-| `sync-contracts.test.ts` | 12 | `resolveEarlierTimestamp` unit: both null, each side null, earlier wins, equal, invalid local, invalid remote, both invalid, empty string, timezone equivalents, commutative, idempotent |
-| `sync-contracts.test.ts` | 12 | `mergeLocalAndRemoteProgress` completedAt: local earlier, remote earlier, equal, local null, remote null, both null, invalid local, invalid remote, timezone equivalents, commutative, idempotent |
-| `storage.test.ts` | 7 | `loadProgramProgressResult`: empty state, ready state, migrated state, unsupported-version detection, raw data preserved, write blocking, no data deletion |
-| `integration.test.ts` | 6 | completedAt earliest wins, deterministic merge, commutative merge, lesson completion write-blocked, pause/resume write-blocked, unsupported ≠ empty status |
+| Suite                    | Tests Added | What they cover                                                                                                                                                                                   |
+| ------------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sync-contracts.test.ts` | 12          | `resolveEarlierTimestamp` unit: both null, each side null, earlier wins, equal, invalid local, invalid remote, both invalid, empty string, timezone equivalents, commutative, idempotent          |
+| `sync-contracts.test.ts` | 12          | `mergeLocalAndRemoteProgress` completedAt: local earlier, remote earlier, equal, local null, remote null, both null, invalid local, invalid remote, timezone equivalents, commutative, idempotent |
+| `storage.test.ts`        | 7           | `loadProgramProgressResult`: empty state, ready state, migrated state, unsupported-version detection, raw data preserved, write blocking, no data deletion                                        |
+| `integration.test.ts`    | 6           | completedAt earliest wins, deterministic merge, commutative merge, lesson completion write-blocked, pause/resume write-blocked, unsupported ≠ empty status                                        |
 
 **Total new tests: 37**
 
@@ -205,26 +202,29 @@ Localized in all active UI locales: `en`, `zh`, `es`, `pt`, `pl`, `de`.
 ## Validation Results
 
 ### Tests
+
 ```
 ✓ 28 test files, 481 tests passed
 ```
 
 ### TypeScript
 
-| Scope | Errors | Status |
-|-------|--------|--------|
-| Repository-wide | 78 | ❌ Pre-existing debt (not introduced by this fix) |
-| Modified program files | 0 | ✅ Clean |
+| Scope                  | Errors | Status                                            |
+| ---------------------- | ------ | ------------------------------------------------- |
+| Repository-wide        | 78     | ❌ Pre-existing debt (not introduced by this fix) |
+| Modified program files | 0      | ✅ Clean                                          |
 
 Pre-existing errors are in: `AuthModal.tsx`, `Header.tsx`, `RelaxAudioPlayer.tsx`,
 reflection modules, sync DB snake_case types, etc. None are in the Program domain.
 
 ### Build
+
 ```
 ✓ built in 5.37s
 ```
 
 ### Lint
+
 All errors are pre-existing `prettier/prettier` CRLF line-ending issues from Windows Git.
 No semantic lint errors in modified program files.
 

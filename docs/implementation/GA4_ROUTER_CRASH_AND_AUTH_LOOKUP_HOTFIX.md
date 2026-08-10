@@ -128,18 +128,18 @@ export interface PageViewInput {
 
 20 tests covering:
 
-| Suite | Tests |
-|-------|-------|
-| Initial page load | 3 |
-| SPA navigation | 2 |
-| Router event object contract | 2 |
-| Pathname as string validation | 1 |
-| Missing / malformed pathname | 2 |
-| Duplicate page view suppression | 2 |
-| Crawler suppression | 2 |
-| Analytics disabled (no measurement ID) | 1 |
-| Analytics failure → never reaches React | 4 |
-| Cleanup / unmount | 1 |
+| Suite                                   | Tests |
+| --------------------------------------- | ----- |
+| Initial page load                       | 3     |
+| SPA navigation                          | 2     |
+| Router event object contract            | 2     |
+| Pathname as string validation           | 1     |
+| Missing / malformed pathname            | 2     |
+| Duplicate page view suppression         | 2     |
+| Crawler suppression                     | 2     |
+| Analytics disabled (no measurement ID)  | 1     |
+| Analytics failure → never reaches React | 4     |
+| Cleanup / unmount                       | 1     |
 
 ### Updated test file: `src/lib/ga4.test.ts`
 
@@ -184,6 +184,7 @@ const user = await findUserByEmail(env, session.userId);
 ```
 
 This meant:
+
 1. Session tokens were correctly validated
 2. But user lookup always failed (looking up a UUID in the `email_normalized` column returns no rows)
 3. Sessions were incorrectly cleared with `{ authenticated: false }`
@@ -229,6 +230,7 @@ analytics failure ≠ application failure
 ```
 
 Every analytics code path is now wrapped in defensive try/catch boundaries:
+
 - `useAnalyticsPageView` outer `useEffect` → try/catch
 - `onResolved` callback → inner try/catch
 - `trackPageView` → full function body try/catch
@@ -239,15 +241,15 @@ Every analytics code path is now wrapped in defensive try/catch boundaries:
 
 ## Files Changed
 
-| File | Change |
-|------|--------|
-| `src/lib/ga4.ts` | New `PageViewInput` type, defensive boundaries, hardened `sanitizePath` |
-| `src/hooks/use-analytics-page-view.ts` | Normalized input shape, router state reading, multi-layer try/catch |
-| `src/services/auth/auth-api.ts` | `findUserByEmail` → `findUserById` in both session handlers |
-| `src/lib/ga4.test.ts` | Added regression tests for input validation and crash prevention |
-| `src/hooks/use-analytics-page-view.test.tsx` | New file — 20 hook integration tests |
-| `src/services/auth/auth-api.test.ts` | Added `handleGetSession` and `getAuthenticatedUser` tests |
-| `docs/implementation/GA4_ROUTER_CRASH_AND_AUTH_LOOKUP_HOTFIX.md` | This document |
+| File                                                             | Change                                                                  |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `src/lib/ga4.ts`                                                 | New `PageViewInput` type, defensive boundaries, hardened `sanitizePath` |
+| `src/hooks/use-analytics-page-view.ts`                           | Normalized input shape, router state reading, multi-layer try/catch     |
+| `src/services/auth/auth-api.ts`                                  | `findUserByEmail` → `findUserById` in both session handlers             |
+| `src/lib/ga4.test.ts`                                            | Added regression tests for input validation and crash prevention        |
+| `src/hooks/use-analytics-page-view.test.tsx`                     | New file — 20 hook integration tests                                    |
+| `src/services/auth/auth-api.test.ts`                             | Added `handleGetSession` and `getAuthenticatedUser` tests               |
+| `docs/implementation/GA4_ROUTER_CRASH_AND_AUTH_LOOKUP_HOTFIX.md` | This document                                                           |
 
 ---
 

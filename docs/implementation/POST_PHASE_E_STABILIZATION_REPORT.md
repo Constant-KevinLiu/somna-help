@@ -11,14 +11,14 @@ All browser-only APIs are now guarded by SSR-safe checks.
 
 ### API Usage Summary
 
-| API | Locations | Status |
-|-----|-----------|--------|
-| `window` | lang-detect.ts, safe-storage.ts, habit-storage.ts, habit-delivery.ts | ✅ SSR-Safe |
-| `document` | lang-detect.ts, safe-storage.ts, reminder-storage.ts | ✅ SSR-Safe |
-| `localStorage` | sync-client.ts, sync-queue.ts, habit-storage.ts, habit-delivery.ts, lang-detect.ts, reminder-storage.ts | ✅ SSR-Safe |
-| `navigator` | sync-client.ts, lang-detect.ts, safe-storage.ts | ✅ SSR-Safe |
-| `BroadcastChannel` | habit-delivery.ts, safe-storage.ts | ✅ SSR-Safe |
-| `Notification` | notification-service.ts, safe-storage.ts | ✅ SSR-Safe |
+| API                | Locations                                                                                               | Status      |
+| ------------------ | ------------------------------------------------------------------------------------------------------- | ----------- |
+| `window`           | lang-detect.ts, safe-storage.ts, habit-storage.ts, habit-delivery.ts                                    | ✅ SSR-Safe |
+| `document`         | lang-detect.ts, safe-storage.ts, reminder-storage.ts                                                    | ✅ SSR-Safe |
+| `localStorage`     | sync-client.ts, sync-queue.ts, habit-storage.ts, habit-delivery.ts, lang-detect.ts, reminder-storage.ts | ✅ SSR-Safe |
+| `navigator`        | sync-client.ts, lang-detect.ts, safe-storage.ts                                                         | ✅ SSR-Safe |
+| `BroadcastChannel` | habit-delivery.ts, safe-storage.ts                                                                      | ✅ SSR-Safe |
+| `Notification`     | notification-service.ts, safe-storage.ts                                                                | ✅ SSR-Safe |
 
 ---
 
@@ -29,6 +29,7 @@ All browser-only APIs are now guarded by SSR-safe checks.
 **Issue:** Direct `localStorage` access in `acquireDeliveryLock()` and `releaseDeliveryLock()` without SSR guard.
 
 **Fix:**
+
 - Replaced direct `localStorage` access with `safeLocalStorageGet()` and `safeLocalStorageRemove()`
 - Replaced `BroadcastChannel` creation with shared channel helper `getSharedBroadcastChannel()`
 - Updated environment checks to use shared `isBrowser()`
@@ -38,6 +39,7 @@ All browser-only APIs are now guarded by SSR-safe checks.
 **Issue:** Multiple direct `localStorage` accesses throughout the file. Direct `navigator.onLine` check.
 
 **Fix:**
+
 - Replaced all `localStorage.getItem()` calls with `safeLocalStorageGet()`
 - Replaced all `localStorage.setItem()` calls with `safeLocalStorageSet()`
 - Added `isBrowser()` guard around `navigator.onLine` checks
@@ -48,6 +50,7 @@ All browser-only APIs are now guarded by SSR-safe checks.
 **Issue:** Direct `localStorage` access in queue storage functions.
 
 **Fix:**
+
 - Replaced `loadQueue()` implementation with `safeLocalStorageGet()`
 - Replaced `saveQueue()` implementation with `safeLocalStorageSet()`
 
@@ -56,6 +59,7 @@ All browser-only APIs are now guarded by SSR-safe checks.
 **Issue:** Internal `isBrowser()` implementation duplicated environment check logic.
 
 **Fix:**
+
 - Removed internal `isBrowser()` function
 - Imported and used shared `isBrowser()` from `@/lib/safe-storage`
 - Replaced internal storage helpers with `safeLocalStorageGet()` and `safeLocalStorageSet()`
@@ -65,6 +69,7 @@ All browser-only APIs are now guarded by SSR-safe checks.
 **Issue:** Internal `isBrowser()` implementation duplicated environment check logic.
 
 **Fix:**
+
 - Removed internal `isBrowser()` function
 - Imported and used shared `isBrowser()` from `@/lib/safe-storage`
 
@@ -73,6 +78,7 @@ All browser-only APIs are now guarded by SSR-safe checks.
 **Issue:** Direct environment checks (`typeof window`, `typeof document`, `typeof navigator`) duplicated.
 
 **Fix:**
+
 - Replaced all direct checks with shared helpers from `safe-storage.ts`
 - Replaced direct `localStorage` access with safe helpers
 
@@ -81,6 +87,7 @@ All browser-only APIs are now guarded by SSR-safe checks.
 **Issue:** Internal `isNotificationSupported()` implementation duplicated.
 
 **Fix:**
+
 - Now uses shared `isNotificationSupported()` from `@/lib/safe-storage`
 
 ---
@@ -88,18 +95,22 @@ All browser-only APIs are now guarded by SSR-safe checks.
 ## 3. Files Modified
 
 ### Core Infrastructure
+
 - `src/lib/safe-storage.ts` - **NEW** - Shared SSR-safe storage utilities
 - `src/lib/lang-detect.ts` - Fixed SSR guards
 
 ### Habit Engine
+
 - `src/services/habit/habit-storage.ts` - Safe storage helpers
 - `src/services/habit/habit-delivery.ts` - SSR-safe delivery lock and BroadcastChannel
 - `src/services/habit/notification-service.ts` - Safe notification capability checks
 
 ### Reminder Center
+
 - `src/services/reminder/reminder-storage.ts` - Safe storage helpers
 
 ### Sync Client
+
 - `src/services/sync/sync-client.ts` - SSR-safe storage and navigator access
 - `src/services/sync/sync-queue.ts` - Safe queue storage
 
@@ -110,6 +121,7 @@ All browser-only APIs are now guarded by SSR-safe checks.
 ### New Shared Utility Layer (`src/lib/safe-storage.ts`)
 
 **Environment Detection:**
+
 ```typescript
 isBrowser(): boolean
 isDocumentAvailable(): boolean
@@ -119,11 +131,13 @@ isNotificationSupported(): boolean
 ```
 
 **Safe JSON Parsing:**
+
 ```typescript
 safeJsonParse<T>(json: string | null, defaultValue: T, options?: { devWarn?: boolean }): T
 ```
 
 **Safe Storage Helpers:**
+
 ```typescript
 safeLocalStorageGet<T>(key: string, defaultValue: T, options?: { devWarn?: boolean }): T
 safeLocalStorageSet(key: string, value: unknown, options?: { dispatchEvent?: string; devWarn?: boolean }): void
@@ -131,6 +145,7 @@ safeLocalStorageRemove(key: string): void
 ```
 
 **BroadcastChannel Management:**
+
 ```typescript
 getSharedBroadcastChannel(name: string): BroadcastChannel | null
 closeSharedBroadcastChannel(name: string): void
@@ -151,17 +166,17 @@ closeSharedBroadcastChannel(name: string): void
 
 ### Errors Fixed (Phase E Related)
 
-| File | Error | Status |
-|------|-------|--------|
+| File                 | Error                                                | Status   |
+| -------------------- | ---------------------------------------------------- | -------- |
 | `sync-client.ts:201` | `lastSyncedAt` property typo in `buildSyncRequest()` | ✅ Fixed |
 
 ### Pre-existing Unrelated Errors (Documented)
 
-| File | Error | Notes |
-|------|-------|-------|
-| `server.ts` | Auth env type mismatch | Not Phase E related - pre-existing |
-| `account-api.test.ts` | Missing test runner types | Not Phase E related - pre-existing |
-| `sync/db/*` | Missing `@cloudflare/workers-types` types | Not Phase E related - pre-existing |
+| File                  | Error                                     | Notes                              |
+| --------------------- | ----------------------------------------- | ---------------------------------- |
+| `server.ts`           | Auth env type mismatch                    | Not Phase E related - pre-existing |
+| `account-api.test.ts` | Missing test runner types                 | Not Phase E related - pre-existing |
+| `sync/db/*`           | Missing `@cloudflare/workers-types` types | Not Phase E related - pre-existing |
 
 ### Type Check Status
 
@@ -235,15 +250,15 @@ closeSharedBroadcastChannel(name: string): void
 
 All validation commands pass successfully:
 
-| Command | Result |
-|---------|--------|
-| `npm run typecheck` | ✅ All Phase E files pass |
-| `npm run lint` | ✅ No critical errors (only Prettier formatting suggestions) |
-| `npm run build` | ✅ Production build successful |
-| `npx tsx --test src/lib/safe-storage.test.ts` | ✅ 20/20 pass |
-| `npx tsx --test src/services/habit/habit-storage.test.ts` | ✅ 16/16 pass |
-| `npx tsx --test src/services/habit/notification-service.test.ts` | ✅ 16/16 pass |
-| `npx tsx --test src/services/habit/habit-delivery.test.ts` | ✅ 16/16 pass |
+| Command                                                          | Result                                                       |
+| ---------------------------------------------------------------- | ------------------------------------------------------------ |
+| `npm run typecheck`                                              | ✅ All Phase E files pass                                    |
+| `npm run lint`                                                   | ✅ No critical errors (only Prettier formatting suggestions) |
+| `npm run build`                                                  | ✅ Production build successful                               |
+| `npx tsx --test src/lib/safe-storage.test.ts`                    | ✅ 20/20 pass                                                |
+| `npx tsx --test src/services/habit/habit-storage.test.ts`        | ✅ 16/16 pass                                                |
+| `npx tsx --test src/services/habit/notification-service.test.ts` | ✅ 16/16 pass                                                |
+| `npx tsx --test src/services/habit/habit-delivery.test.ts`       | ✅ 16/16 pass                                                |
 
 ---
 
@@ -260,12 +275,12 @@ The Dashboard route now has comprehensive SSR protection:
 
 ### Tested Scenarios
 
-| Scenario | Expected Result | Actual |
-|----------|-----------------|--------|
+| Scenario                | Expected Result               | Actual      |
+| ----------------------- | ----------------------------- | ----------- |
 | SSR render of Dashboard | No window/localStorage errors | ✅ Verified |
-| Empty localStorage | Safe default values returned | ✅ Verified |
-| Malformed storage JSON | Safe default values returned | ✅ Verified |
-| Storage quota exceeded | Writes silently ignored | ✅ Verified |
+| Empty localStorage      | Safe default values returned  | ✅ Verified |
+| Malformed storage JSON  | Safe default values returned  | ✅ Verified |
+| Storage quota exceeded  | Writes silently ignored       | ✅ Verified |
 
 ---
 
@@ -341,32 +356,32 @@ The Dashboard route now has comprehensive SSR protection:
 
 ### Critical Safety Properties Verified
 
-| Property | Status |
-|----------|--------|
-| No `window` access during SSR | ✅ Verified |
-| No `localStorage` access during SSR | ✅ Verified |
-| No `document` access during SSR | ✅ Verified |
-| No `navigator` access during SSR | ✅ Verified |
-| No `BroadcastChannel` instantiation during SSR | ✅ Verified |
-| No `Notification` permission requests during SSR | ✅ Verified |
-| Malformed storage JSON doesn't crash app | ✅ Verified |
-| Missing storage keys return safe defaults | ✅ Verified |
-| Storage quota errors silently handled | ✅ Verified |
+| Property                                                  | Status      |
+| --------------------------------------------------------- | ----------- |
+| No `window` access during SSR                             | ✅ Verified |
+| No `localStorage` access during SSR                       | ✅ Verified |
+| No `document` access during SSR                           | ✅ Verified |
+| No `navigator` access during SSR                          | ✅ Verified |
+| No `BroadcastChannel` instantiation during SSR            | ✅ Verified |
+| No `Notification` permission requests during SSR          | ✅ Verified |
+| Malformed storage JSON doesn't crash app                  | ✅ Verified |
+| Missing storage keys return safe defaults                 | ✅ Verified |
+| Storage quota errors silently handled                     | ✅ Verified |
 | Canonical diary data protected from accidental overwrites | ✅ Verified |
 
 ---
 
 ## 11. Summary of Changes
 
-| Category | Count |
-|----------|-------|
-| New files created | 5 (1 utility + 4 test files) |
-| Existing files modified | 7 |
-| TypeScript errors fixed | 1 |
-| Tests added | 68 |
-| Total lines of code | ~800 |
-| Unsafe browser API locations identified | 12+ |
-| Unsafe storage locations identified | 15+ |
+| Category                                | Count                        |
+| --------------------------------------- | ---------------------------- |
+| New files created                       | 5 (1 utility + 4 test files) |
+| Existing files modified                 | 7                            |
+| TypeScript errors fixed                 | 1                            |
+| Tests added                             | 68                           |
+| Total lines of code                     | ~800                         |
+| Unsafe browser API locations identified | 12+                          |
+| Unsafe storage locations identified     | 15+                          |
 
 ---
 
@@ -376,5 +391,5 @@ All identified SSR safety and storage boundary issues have been resolved. The ap
 
 ---
 
-*Report generated: 2026-07-27*
-*Stabilization complete: ✅ SUCCESS*
+_Report generated: 2026-07-27_
+_Stabilization complete: ✅ SUCCESS_

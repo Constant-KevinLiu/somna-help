@@ -24,6 +24,7 @@ When entries are plain Arrays, the runtime silently skips them during its
 processing pass.
 
 This caused **total delivery failure** in production:
+
 - `gtag.js` loaded successfully ✓
 - `dataLayer` contained queued commands ✓
 - `google_tag_manager` object was present ✓
@@ -35,16 +36,16 @@ This caused **total delivery failure** in production:
 
 ## 2. Why `dataLayer.push(args)` Differed from `dataLayer.push(arguments)`
 
-| Aspect | `dataLayer.push(args)` (rest param) | `dataLayer.push(arguments)` (canonical) |
-|---|---|---|
-| Object type | `Array` | `IArguments` (arguments object) |
-| `Array.isArray()` | `true` | `false` |
-| `.length` | yes | yes |
-| Numeric indices (`[0]`, `[1]`) | yes | yes |
-| `.callee` | no | yes |
-| `.callee` | no | yes |
-| Prototype | `Array.prototype` | `Object.prototype` |
-| Processed by gtag.js runtime | ❌ No (silently skipped) | ✅ Yes |
+| Aspect                         | `dataLayer.push(args)` (rest param) | `dataLayer.push(arguments)` (canonical) |
+| ------------------------------ | ----------------------------------- | --------------------------------------- |
+| Object type                    | `Array`                             | `IArguments` (arguments object)         |
+| `Array.isArray()`              | `true`                              | `false`                                 |
+| `.length`                      | yes                                 | yes                                     |
+| Numeric indices (`[0]`, `[1]`) | yes                                 | yes                                     |
+| `.callee`                      | no                                  | yes                                     |
+| `.callee`                      | no                                  | yes                                     |
+| Prototype                      | `Array.prototype`                   | `Object.prototype`                      |
+| Processed by gtag.js runtime   | ❌ No (silently skipped)            | ✅ Yes                                  |
 
 The gtag.js runtime internally uses a specific iteration/checking pattern that
 expects each dataLayer entry to be the arguments object from a gtag() call.
@@ -124,12 +125,14 @@ was fixed.
 ## 5. Files Changed
 
 ### `src/lib/ga4.ts`
+
 - Replaced `dataLayer.push(args)` (plain Array) with `dataLayer.push(arguments)` (canonical IArguments)
 - Rest parameter `..._args: unknown[]` retained for TypeScript type safety (does not affect runtime — `arguments` is still the native object)
 - Renamed debug log `page_view:sent` → `page_view:queued` (more accurate)
 - Added extensive comments explaining why `arguments` must be used
 
 ### `src/lib/ga4.test.ts`
+
 - Updated test helpers to handle IArguments entries (numeric index access)
 - Added 10 new canonical command queue tests:
   - TEST A: IArguments shape verification (not plain Arrays)
@@ -144,6 +147,7 @@ was fixed.
   - REGRESSION: explicit guard against plain Array reintroduction
 
 ### Not changed
+
 - `src/hooks/use-analytics-page-view.ts` — all protections intact
 - `src/routes/__root.tsx` — crawler suppression, init pattern intact
 
@@ -171,16 +175,19 @@ Duration:    ~13s
 ## 7. Validation Results
 
 ### Tests — ✅ Pass
+
 - **38 test files, 666 tests, all passing**
 - 51 GA4-specific tests (including 10 new canonical queue tests)
 
 ### TypeScript — ⚠️ Pre-existing debt only
+
 - **0 new TypeScript errors** from this change
 - Pre-existing errors: many (locale/de/ja mismatch, sync service types,
   reflection-ui `word` property, reminder `timezone` field, etc.)
 - All pre-existing and unrelated to analytics
 
 ### Build — ✅ Pass
+
 - **Exit code 0**
 - Pre-existing chunk-size warnings only (unrelated)
 - Both client and server bundles built successfully
@@ -195,15 +202,15 @@ Unit tests verify the command **shape** is correct. They do **not** and
 After production deployment, the following browser checks must be performed
 on `https://somna.help`:
 
-| # | Check | Method | Expected |
-|---|---|---|---|
-| A | Command shape | `window.dataLayer` entries | IArguments objects (not plain Arrays) |
-| B | `_ga` cookie | `document.cookie` | `_ga` cookie present |
-| C | Client ID | `gtag('get', 'G-X7ZRF14YZ4', 'client_id', console.log)` | Callback receives client ID string |
-| D | Session ID | `gtag('get', 'G-X7ZRF14YZ4', 'session_id', console.log)` | Callback receives session ID |
-| E | Collector request | DevTools Network → filter `collect` | `google-analytics.com/g/collect` request |
-| F | Response status | Collector response | HTTP 204 No Content |
-| G | Realtime | GA4 Realtime report | Test visit/page_view visible |
+| #   | Check             | Method                                                   | Expected                                 |
+| --- | ----------------- | -------------------------------------------------------- | ---------------------------------------- |
+| A   | Command shape     | `window.dataLayer` entries                               | IArguments objects (not plain Arrays)    |
+| B   | `_ga` cookie      | `document.cookie`                                        | `_ga` cookie present                     |
+| C   | Client ID         | `gtag('get', 'G-X7ZRF14YZ4', 'client_id', console.log)`  | Callback receives client ID string       |
+| D   | Session ID        | `gtag('get', 'G-X7ZRF14YZ4', 'session_id', console.log)` | Callback receives session ID             |
+| E   | Collector request | DevTools Network → filter `collect`                      | `google-analytics.com/g/collect` request |
+| F   | Response status   | Collector response                                       | HTTP 204 No Content                      |
+| G   | Realtime          | GA4 Realtime report                                      | Test visit/page_view visible             |
 
 See [GA4_CANONICAL_GTAG_QUEUE_HOTFIX.md](docs/implementation/GA4_CANONICAL_GTAG_QUEUE_HOTFIX.md)
 for the full verification checklist.

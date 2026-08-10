@@ -1,6 +1,7 @@
 # 11_DESIGN_SYSTEM_AND_EXPERIENCE_PLATFORM_ARCHITECTURE.md
 
 # PAS-11 Design System & Experience Platform Architecture
+
 ### Product Architecture Specification
 
 > Defines the unified design language, component architecture, accessibility standards and cross-platform experience principles for Somna.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-11 |
-| Layer | Layer 4 – Experience |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00, PAS-01, PAS-03, PAS-09, PAS-10 |
-| Required By | PAS-12 |
+| Field        | Value                                  |
+| ------------ | -------------------------------------- |
+| Blueprint ID | PAS-11                                 |
+| Layer        | Layer 4 – Experience                   |
+| Status       | Canonical                              |
+| Version      | 2.0                                    |
+| Depends On   | PAS-00, PAS-01, PAS-03, PAS-09, PAS-10 |
+| Required By  | PAS-12                                 |
 
 ---
 
@@ -68,13 +69,13 @@ User Experience
 
 ## 5. Responsibilities
 
-| Component | Responsibility |
-|---|---|
-| Design System | Tokens & components |
-| Product Teams | Feature implementation |
+| Component             | Responsibility            |
+| --------------------- | ------------------------- |
+| Design System         | Tokens & components       |
+| Product Teams         | Feature implementation    |
 | Localization Platform | Multilingual presentation |
-| Accessibility | Compliance & usability |
-| Engineering | Technical implementation |
+| Accessibility         | Compliance & usability    |
+| Engineering           | Technical implementation  |
 
 ## 6. Architecture Invariants
 

@@ -1,6 +1,7 @@
 # 09_LOCALIZATION_PLATFORM_ARCHITECTURE.md
 
 # PAS-09 Localization Platform Architecture
+
 ### Product Architecture Specification
 
 > Defines the multilingual architecture, localization governance and terminology standards for the Somna platform.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-09 |
-| Layer | Layer 4 – Experience |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00, PAS-01, PAS-03, PAS-08 |
-| Required By | PAS-10 ~ PAS-12 |
+| Field        | Value                          |
+| ------------ | ------------------------------ |
+| Blueprint ID | PAS-09                         |
+| Layer        | Layer 4 – Experience           |
+| Status       | Canonical                      |
+| Version      | 2.0                            |
+| Depends On   | PAS-00, PAS-01, PAS-03, PAS-08 |
+| Required By  | PAS-10 ~ PAS-12                |
 
 ---
 
@@ -62,13 +63,13 @@ Published Experience
 
 ## 5. Responsibilities
 
-| Component | Responsibility |
-|---|---|
+| Component             | Responsibility      |
+| --------------------- | ------------------- |
 | Localization Platform | Language governance |
-| Knowledge Platform | Canonical content |
-| Design System | UI localization |
-| SEO Platform | hreflang & metadata |
-| Product Teams | Regional validation |
+| Knowledge Platform    | Canonical content   |
+| Design System         | UI localization     |
+| SEO Platform          | hreflang & metadata |
+| Product Teams         | Regional validation |
 
 ## 6. Architecture Invariants
 

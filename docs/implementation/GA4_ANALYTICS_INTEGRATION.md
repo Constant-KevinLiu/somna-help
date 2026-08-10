@@ -61,12 +61,12 @@ VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX
 
 Key files:
 
-| File | Purpose |
-|------|---------|
-| `src/lib/ga4.ts` | GA4 module: init, page views, custom events, sanitization |
-| `src/hooks/use-analytics-page-view.ts` | React hook: init + router subscription |
-| `src/routes/__root.tsx` | Integration point (calls hook in RootComponent) |
-| `src/lib/ga4.test.ts` | Unit tests (22 tests, jsdom environment) |
+| File                                   | Purpose                                                   |
+| -------------------------------------- | --------------------------------------------------------- |
+| `src/lib/ga4.ts`                       | GA4 module: init, page views, custom events, sanitization |
+| `src/hooks/use-analytics-page-view.ts` | React hook: init + router subscription                    |
+| `src/routes/__root.tsx`                | Integration point (calls hook in RootComponent)           |
+| `src/lib/ga4.test.ts`                  | Unit tests (22 tests, jsdom environment)                  |
 
 ---
 
@@ -138,15 +138,15 @@ resolves or internal re-resolves.
 GA4 may track **only** privacy-safe navigation metadata. The following are
 **never** sent to Google:
 
-| Category | Examples |
-|----------|----------|
-| Sleep diary data | Bedtime, wake time, sleep efficiency, TST, SOL, WASO |
-| Assessment data | Insomnia assessment answers, scores |
-| Reflection text | Journal entries, weekly reflections |
-| CBT-I responses | Lesson response text, quiz answers |
-| Account data | Email address, name, user ID, session tokens |
-| Program data | Lesson progress, habit data |
-| Sensitive URL params | Tokens, codes, OTP, emails, session IDs |
+| Category             | Examples                                             |
+| -------------------- | ---------------------------------------------------- |
+| Sleep diary data     | Bedtime, wake time, sleep efficiency, TST, SOL, WASO |
+| Assessment data      | Insomnia assessment answers, scores                  |
+| Reflection text      | Journal entries, weekly reflections                  |
+| CBT-I responses      | Lesson response text, quiz answers                   |
+| Account data         | Email address, name, user ID, session tokens         |
+| Program data         | Lesson progress, habit data                          |
+| Sensitive URL params | Tokens, codes, OTP, emails, session IDs              |
 
 ### URL sanitization
 
@@ -260,6 +260,7 @@ npm run dev
 ### 3. Verify in browser DevTools
 
 **Console:**
+
 ```js
 > window.dataLayer.length > 0
 true
@@ -268,6 +269,7 @@ true
 ```
 
 **Network tab:**
+
 - Filter by `gtag/js` — verify the script loads with 200 status.
 - Filter by `collect` — verify a `page_view` request is sent on load
   and again after navigating to a different route.
@@ -288,6 +290,7 @@ true
 Visit `https://somna.help` with DevTools open.
 
 Verify:
+
 - `gtag/js?id=G-...` returns 200 from `www.googletagmanager.com`.
 - Filter by `collect` — at least one request to `google-analytics.com`
   appears on initial load.
@@ -298,10 +301,10 @@ Verify:
 
 ```js
 // Check that gtag is loaded
-typeof window.gtag  // "function"
+typeof window.gtag; // "function"
 
 // Check dataLayer has events
-window.dataLayer
+window.dataLayer;
 // Should include at least:
 // - ["js", Date]
 // - ["config", "G-XXX", {send_page_view: false}]
@@ -343,6 +346,7 @@ window.dataLayer
 ### Script fails to load
 
 If `gtag/js` returns 404 or is blocked:
+
 - Confirm the Measurement ID is correct.
 - Check for CSP headers blocking `googletagmanager.com`.
 - Check for browser extensions or network-level blockers.
@@ -350,6 +354,7 @@ If `gtag/js` returns 404 or is blocked:
 ### Page views are duplicated
 
 If you see two `page_view` events per navigation:
+
 - Verify `send_page_view: false` is in the config call.
 - Check if another analytics integration is also sending page views.
 
@@ -365,11 +370,13 @@ If you see two `page_view` events per navigation:
 ## Files
 
 **Created:**
+
 - `src/lib/ga4.ts` — GA4 analytics module
 - `src/hooks/use-analytics-page-view.ts` — React hook for router integration
 - `src/lib/ga4.test.ts` — Unit tests
 - `docs/implementation/GA4_ANALYTICS_INTEGRATION.md` — This document
 
 **Modified:**
+
 - `src/routes/__root.tsx` — Added `useAnalyticsPageView` hook call
 - `.env.example` — Added `VITE_GA_MEASUREMENT_ID` and `VITE_GA_ENABLE_IN_DEV`

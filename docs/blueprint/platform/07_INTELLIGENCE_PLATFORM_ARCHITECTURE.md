@@ -1,6 +1,7 @@
 # 07_INTELLIGENCE_PLATFORM_ARCHITECTURE.md
 
 # PAS-07 Intelligence Platform Architecture
+
 ### Product Architecture Specification
 
 > Defines the architecture for explainable intelligence, insight generation and responsible AI across the Somna platform.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-07 |
-| Layer | Layer 3 – Behavior System |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00, PAS-02, PAS-04, PAS-05, PAS-06 |
-| Required By | PAS-08 ~ PAS-12 |
+| Field        | Value                                  |
+| ------------ | -------------------------------------- |
+| Blueprint ID | PAS-07                                 |
+| Layer        | Layer 3 – Behavior System              |
+| Status       | Canonical                              |
+| Version      | 2.0                                    |
+| Depends On   | PAS-00, PAS-02, PAS-04, PAS-05, PAS-06 |
+| Required By  | PAS-08 ~ PAS-12                        |
 
 ---
 
@@ -97,13 +98,13 @@ Behavior
 
 ## 6. Responsibilities
 
-| Component | Responsibility |
-|---|---|
-| Intelligence Platform | Generate insights |
-| Behavioral Platform | Supply canonical data |
-| Habit Engine | Supply habit context |
-| Learning Platform | Deliver educational content |
-| Dashboard | Present insights |
+| Component             | Responsibility              |
+| --------------------- | --------------------------- |
+| Intelligence Platform | Generate insights           |
+| Behavioral Platform   | Supply canonical data       |
+| Habit Engine          | Supply habit context        |
+| Learning Platform     | Deliver educational content |
+| Dashboard             | Present insights            |
 
 ---
 
@@ -159,13 +160,13 @@ Recommendation
 
 ## Consumer Matrix
 
-| Consumer | Read | Write |
-|---|:---:|:---:|
-| Dashboard | ✓ | |
-| Weekly Summary | ✓ | |
-| Learning | ✓ | |
-| Habit Engine | ✓ | |
-| AI Coach (Future) | ✓ | |
+| Consumer          | Read | Write |
+| ----------------- | :--: | :---: |
+| Dashboard         |  ✓   |       |
+| Weekly Summary    |  ✓   |       |
+| Learning          |  ✓   |       |
+| Habit Engine      |  ✓   |       |
+| AI Coach (Future) |  ✓   |       |
 
 ---
 

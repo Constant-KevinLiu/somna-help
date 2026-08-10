@@ -1,6 +1,7 @@
 # 06_HABIT_ENGINE_ARCHITECTURE.md
 
 # PAS-06 Habit Engine Architecture
+
 ### Product Architecture Specification
 
 > Defines how Somna transforms behavioral records into sustainable sleep habits through evidence-informed habit formation, reminders and adaptive routines.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-06 |
-| Layer | Layer 3 – Behavior System |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00, PAS-02, PAS-04, PAS-05 |
-| Required By | PAS-07 ~ PAS-12 |
+| Field        | Value                          |
+| ------------ | ------------------------------ |
+| Blueprint ID | PAS-06                         |
+| Layer        | Layer 3 – Behavior System      |
+| Status       | Canonical                      |
+| Version      | 2.0                            |
+| Depends On   | PAS-00, PAS-02, PAS-04, PAS-05 |
+| Required By  | PAS-07 ~ PAS-12                |
 
 ---
 
@@ -92,12 +93,12 @@ Habit
 
 ## 6. Responsibilities
 
-| Component | Responsibility |
-|---|---|
-| Habit Engine | Habit lifecycle |
-| Reminder Engine | Timely prompts |
-| Behavioral Platform | Source observations |
-| Dashboard | Progress visualization |
+| Component             | Responsibility               |
+| --------------------- | ---------------------------- |
+| Habit Engine          | Habit lifecycle              |
+| Reminder Engine       | Timely prompts               |
+| Behavioral Platform   | Source observations          |
+| Dashboard             | Progress visualization       |
 | Intelligence Platform | Personalized recommendations |
 
 ---
@@ -154,13 +155,13 @@ Adjust
 
 ## Consumer Matrix
 
-| Consumer | Read | Write |
-|---|:---:|:---:|
-| Behavioral Platform | ✓ | |
-| Habit Engine | ✓ | ✓ |
-| Reminder Engine | ✓ | ✓ |
-| Dashboard | ✓ | |
-| AI | ✓ | |
+| Consumer            | Read | Write |
+| ------------------- | :--: | :---: |
+| Behavioral Platform |  ✓   |       |
+| Habit Engine        |  ✓   |   ✓   |
+| Reminder Engine     |  ✓   |   ✓   |
+| Dashboard           |  ✓   |       |
+| AI                  |  ✓   |       |
 
 ---
 

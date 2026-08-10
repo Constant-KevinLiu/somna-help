@@ -201,14 +201,14 @@ PAS-04 Identity    PAS-05 Behavioral Data
 
 # Recommended Reading Order
 
-| Role | Recommended Chapters |
-|------|----------------------|
-| Product Manager | PAS-00 → PAS-03 → PAS-05 |
-| UX / UI Designer | PAS-00 → PAS-03 → PAS-11 |
+| Role              | Recommended Chapters     |
+| ----------------- | ------------------------ |
+| Product Manager   | PAS-00 → PAS-03 → PAS-05 |
+| UX / UI Designer  | PAS-00 → PAS-03 → PAS-11 |
 | Frontend Engineer | PAS-04 → PAS-05 → PAS-11 |
-| Backend Engineer | PAS-04 → PAS-05 → PAS-08 |
-| AI Engineer | PAS-05 → PAS-07 |
-| QA Engineer | PAS-12 |
+| Backend Engineer  | PAS-04 → PAS-05 → PAS-08 |
+| AI Engineer       | PAS-05 → PAS-07          |
+| QA Engineer       | PAS-12                   |
 
 ---
 
@@ -317,10 +317,10 @@ This ensures architectural consistency across documentation and implementation.
 
 # Versioning
 
-| Version | Description |
-|----------|-------------|
-| v1.0 | Initial Product Blueprint |
-| v2.0 | Enterprise Product Architecture Specification |
+| Version | Description                                   |
+| ------- | --------------------------------------------- |
+| v1.0    | Initial Product Blueprint                     |
+| v2.0    | Enterprise Product Architecture Specification |
 
 ---
 

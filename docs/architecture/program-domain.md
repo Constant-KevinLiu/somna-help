@@ -105,34 +105,34 @@ stateDiagram-v2
     completed --> active : lesson_uncompleted<br/>(reopen)
 ```
 
-| Transition | Valid? |
-|-----------|--------|
-| not_started → active | ✅ |
-| not_started → paused | ❌ |
-| not_started → completed | ❌ |
-| active → paused | ✅ |
-| active → completed | ✅ |
-| paused → active | ✅ |
-| paused → completed | ✅ |
-| completed → active | ✅ (reopen) |
+| Transition              | Valid?      |
+| ----------------------- | ----------- |
+| not_started → active    | ✅          |
+| not_started → paused    | ❌          |
+| not_started → completed | ❌          |
+| active → paused         | ✅          |
+| active → completed      | ✅          |
+| paused → active         | ✅          |
+| paused → completed      | ✅          |
+| completed → active      | ✅ (reopen) |
 
 ---
 
 ## Event Model (11 Event Types)
 
-| Event | Trigger | Effect |
-|-------|---------|--------|
-| `program_started` | User starts program | status→active, startedAt, currentWeekId→week-1 |
-| `program_paused` | User pauses | status→paused |
-| `program_resumed` | User resumes | status→active |
-| `program_completed` | All lessons done | status→completed, completedAt |
-| `lesson_completed` | User marks lesson done | Add to completedLessons, auto-start, milestones |
-| `lesson_uncompleted` | User unmarks lesson | Remove from completedLessons, maybe reopen |
-| `lesson_skipped` | User skips lesson | Add to skippedLessonIds |
-| `lesson_unskipped` | User unskips | Remove from skippedLessonIds |
-| `weekly_plan_accepted` | User accepts weekly plan | Add to acceptedPlanIds |
-| `weekly_plan_dismissed` | User dismisses plan | Add to dismissedRecommendationIds |
-| `milestone_earned` | Milestone achieved | Mark earnedAt |
+| Event                   | Trigger                  | Effect                                          |
+| ----------------------- | ------------------------ | ----------------------------------------------- |
+| `program_started`       | User starts program      | status→active, startedAt, currentWeekId→week-1  |
+| `program_paused`        | User pauses              | status→paused                                   |
+| `program_resumed`       | User resumes             | status→active                                   |
+| `program_completed`     | All lessons done         | status→completed, completedAt                   |
+| `lesson_completed`      | User marks lesson done   | Add to completedLessons, auto-start, milestones |
+| `lesson_uncompleted`    | User unmarks lesson      | Remove from completedLessons, maybe reopen      |
+| `lesson_skipped`        | User skips lesson        | Add to skippedLessonIds                         |
+| `lesson_unskipped`      | User unskips             | Remove from skippedLessonIds                    |
+| `weekly_plan_accepted`  | User accepts weekly plan | Add to acceptedPlanIds                          |
+| `weekly_plan_dismissed` | User dismisses plan      | Add to dismissedRecommendationIds               |
+| `milestone_earned`      | Milestone achieved       | Mark earnedAt                                   |
 
 **All events are idempotent.** Applying the same event twice produces the same result.
 
@@ -142,10 +142,10 @@ stateDiagram-v2
 
 Three default milestones, all earned automatically based on week completion:
 
-| ID | Trigger | Type |
-|----|---------|------|
-| `sleep-basics` | Week 1 complete | week_completion |
-| `behavior-change` | Week 3 complete | week_completion |
+| ID                  | Trigger         | Type               |
+| ------------------- | --------------- | ------------------ |
+| `sleep-basics`      | Week 1 complete | week_completion    |
+| `behavior-change`   | Week 3 complete | week_completion    |
 | `program-completed` | Week 6 complete | program_completion |
 
 Milestones are **revocable**: if a lesson is un-completed and the week is no longer fully complete, the milestone is revoked (earnedAt → null).
@@ -190,6 +190,7 @@ graph LR
 ### Export / Delete Ownership
 
 Program data is fully owned by the program module:
+
 - `exportProgramData(definition)` — returns `{ progress, plans, exportedAt }`
 - `deleteAllProgramData()` — clears all program localStorage keys
 - Server-side already includes `program_progress` in account export/delete
@@ -200,11 +201,11 @@ Program data is fully owned by the program module:
 
 ### Storage Keys
 
-| Key | Contents | Migration |
-|-----|----------|-----------|
-| `somna:program-progress:v1` | Canonical ProgramProgress | Current |
-| `cbtiProgramProgress` | Legacy `{completedLessons: string[]}` | Read-only, auto-migrates to v1 |
-| `somna:program-plans:v1` | WeeklyProgramPlan[] | Current |
+| Key                         | Contents                              | Migration                      |
+| --------------------------- | ------------------------------------- | ------------------------------ |
+| `somna:program-progress:v1` | Canonical ProgramProgress             | Current                        |
+| `cbtiProgramProgress`       | Legacy `{completedLessons: string[]}` | Read-only, auto-migrates to v1 |
+| `somna:program-plans:v1`    | WeeklyProgramPlan[]                   | Current                        |
 
 ### Migration Flow
 
@@ -228,6 +229,7 @@ flowchart TD
 ### SSR Safety
 
 All storage operations use `safeLocalStorageGet/Set/Remove` from `@/lib/safe-storage`:
+
 - Server → returns defaults / no-ops
 - Corrupt JSON → returns defaults (never throws)
 - Quota errors → silently ignored in production
@@ -236,15 +238,15 @@ All storage operations use `safeLocalStorageGet/Set/Remove` from `@/lib/safe-sto
 
 ## File Map
 
-| File | Responsibility | Tests |
-|------|---------------|-------|
-| `types.ts` | All program domain types, derived functions | — (types only) |
-| `service.ts` | Event-sourced state machine, migration | `service.test.ts` (38 tests) |
-| `storage.ts` | SSR-safe persistence, export/delete | `storage.test.ts` (12 tests) |
-| `definition.ts` | Adapter from lessonMetas, validation | `definition.test.ts` (19 tests) |
-| `weekly-plan.ts` | Weekly plan contract + storage | `weekly-plan.test.ts` (20 tests) |
-| `weekly-focus-adapter.ts` | WeeklyFocus → Program input | — (pure adapter) |
-| `reminder-contract.ts` | Program ↔ Reminder boundary | — (contract only) |
-| `sync-contracts.ts` | Sync types + merge strategies | `sync-contracts.test.ts` (24 tests) |
+| File                      | Responsibility                              | Tests                               |
+| ------------------------- | ------------------------------------------- | ----------------------------------- |
+| `types.ts`                | All program domain types, derived functions | — (types only)                      |
+| `service.ts`              | Event-sourced state machine, migration      | `service.test.ts` (38 tests)        |
+| `storage.ts`              | SSR-safe persistence, export/delete         | `storage.test.ts` (12 tests)        |
+| `definition.ts`           | Adapter from lessonMetas, validation        | `definition.test.ts` (19 tests)     |
+| `weekly-plan.ts`          | Weekly plan contract + storage              | `weekly-plan.test.ts` (20 tests)    |
+| `weekly-focus-adapter.ts` | WeeklyFocus → Program input                 | — (pure adapter)                    |
+| `reminder-contract.ts`    | Program ↔ Reminder boundary                 | — (contract only)                   |
+| `sync-contracts.ts`       | Sync types + merge strategies               | `sync-contracts.test.ts` (24 tests) |
 
 **Total test coverage for program domain**: 113 tests across 6 test files

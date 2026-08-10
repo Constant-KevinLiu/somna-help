@@ -27,37 +27,37 @@ infrastructure.
 
 ## 3. Existing Architecture Inspected
 
-| Area | Finding |
-|------|---------|
-| **TanStack Router** | v1.168.x with `useRouter()` and `router.subscribe("onResolved", fn)` API available |
-| **Root component** | `src/routes/__root.tsx` with `RootShell` (html/head/body) and `RootComponent` (providers + layout) |
-| **SSR** | Cloudflare Workers via TanStack Start, custom `src/server.ts` entry |
+| Area                   | Finding                                                                                                                                                  |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **TanStack Router**    | v1.168.x with `useRouter()` and `router.subscribe("onResolved", fn)` API available                                                                       |
+| **Root component**     | `src/routes/__root.tsx` with `RootShell` (html/head/body) and `RootComponent` (providers + layout)                                                       |
+| **SSR**                | Cloudflare Workers via TanStack Start, custom `src/server.ts` entry                                                                                      |
 | **Existing analytics** | `src/lib/analytics/` is all sleep-domain computation (not product analytics). `src/lib/share-analytics.ts` is localStorage-only. No GA/gtag code exists. |
-| **Consent** | `CookieConsentBanner` placeholder exists but returns `null`. No real consent mechanism. |
-| **CSP** | **No CSP header configured.** Only HSTS, X-Content-Type-Options, and Referrer-Policy. |
-| **Env vars** | `import.meta.env.VITE_*` for client-side. `.env.example` committed, `.env.local` gitignored. |
-| **Tests** | Vitest with jsdom for component tests, node for logic tests. 547 pre-existing tests. |
-| **Crawler detection** | `CrawlerContext` with `isCrawler` flag already suppresses UI for bots. |
+| **Consent**            | `CookieConsentBanner` placeholder exists but returns `null`. No real consent mechanism.                                                                  |
+| **CSP**                | **No CSP header configured.** Only HSTS, X-Content-Type-Options, and Referrer-Policy.                                                                    |
+| **Env vars**           | `import.meta.env.VITE_*` for client-side. `.env.example` committed, `.env.local` gitignored.                                                             |
+| **Tests**              | Vitest with jsdom for component tests, node for logic tests. 547 pre-existing tests.                                                                     |
+| **Crawler detection**  | `CrawlerContext` with `isCrawler` flag already suppresses UI for bots.                                                                                   |
 
 ---
 
 ## 4. Files Created
 
-| File | Purpose |
-|------|---------|
-| `src/lib/ga4.ts` | GA4 analytics module: initialization, page view tracking, custom events, URL sanitization, SSR safety |
-| `src/hooks/use-analytics-page-view.ts` | React hook: initializes GA4 on mount, subscribes to TanStack Router `onResolved` for SPA page views, deduplicates identical paths |
-| `src/lib/ga4.test.ts` | 22 unit tests in jsdom environment covering disabled states, valid ID behavior, idempotency, page_view payload, URL sanitization, blocked-script resilience, reset, production-only loading |
-| `docs/implementation/GA4_ANALYTICS_INTEGRATION.md` | Full architecture and operations documentation |
+| File                                               | Purpose                                                                                                                                                                                     |
+| -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/lib/ga4.ts`                                   | GA4 analytics module: initialization, page view tracking, custom events, URL sanitization, SSR safety                                                                                       |
+| `src/hooks/use-analytics-page-view.ts`             | React hook: initializes GA4 on mount, subscribes to TanStack Router `onResolved` for SPA page views, deduplicates identical paths                                                           |
+| `src/lib/ga4.test.ts`                              | 22 unit tests in jsdom environment covering disabled states, valid ID behavior, idempotency, page_view payload, URL sanitization, blocked-script resilience, reset, production-only loading |
+| `docs/implementation/GA4_ANALYTICS_INTEGRATION.md` | Full architecture and operations documentation                                                                                                                                              |
 
 ---
 
 ## 5. Files Modified
 
-| File | Change |
-|------|--------|
+| File                    | Change                                                                                                |
+| ----------------------- | ----------------------------------------------------------------------------------------------------- |
 | `src/routes/__root.tsx` | Added import of `useAnalyticsPageView` and one hook call in `RootComponent`, passing `isCrawler` flag |
-| `.env.example` | Added `VITE_GA_MEASUREMENT_ID` and `VITE_GA_ENABLE_IN_DEV` with documentation comments |
+| `.env.example`          | Added `VITE_GA_MEASUREMENT_ID` and `VITE_GA_ENABLE_IN_DEV` with documentation comments                |
 
 ---
 
@@ -98,10 +98,11 @@ gtag("event", "page_view", {
   page_location: window.location.origin + sanitizedPath,
   page_path: sanitizedPath,
   page_title: document.title,
-})
+});
 ```
 
 This happens after:
+
 - Browser environment is confirmed
 - Measurement ID is validated
 - Analytics is not disabled (production mode or dev override)
@@ -129,13 +130,13 @@ Uses TanStack Router's official `router.subscribe("onResolved", fn)` API:
 
 ## 10. SSR Safety
 
-| Mechanism | Purpose |
-|-----------|---------|
-| `typeof window === "undefined"` guard in `initializeAnalytics()` | Prevents any analytics code from running during SSR |
-| `typeof window === "undefined"` guard in hook `useEffect` | Hook body is a no-op on server |
-| `send_page_view: false` in GA config | Ensures GA4's automatic page_view doesn't double-fire |
-| `isCrawler` flag from `CrawlerContext` | Suppresses analytics for search engine bots and AI scrapers |
-| `useEffect` placement in `RootComponent` | Only runs after client hydration, never during server render |
+| Mechanism                                                        | Purpose                                                      |
+| ---------------------------------------------------------------- | ------------------------------------------------------------ |
+| `typeof window === "undefined"` guard in `initializeAnalytics()` | Prevents any analytics code from running during SSR          |
+| `typeof window === "undefined"` guard in hook `useEffect`        | Hook body is a no-op on server                               |
+| `send_page_view: false` in GA config                             | Ensures GA4's automatic page_view doesn't double-fire        |
+| `isCrawler` flag from `CrawlerContext`                           | Suppresses analytics for search engine bots and AI scrapers  |
+| `useEffect` placement in `RootComponent`                         | Only runs after client hydration, never during server render |
 
 No analytics script tag appears in the SSR HTML response.
 
@@ -144,11 +145,13 @@ No analytics script tag appears in the SSR HTML response.
 ## 11. Privacy Boundaries
 
 **GA4 tracks only:**
+
 - Page path (sanitized)
 - Page URL (origin + sanitized path)
 - Page title
 
 **Never sent to Google:**
+
 - Sleep diary entries, bedtime, wake time, sleep efficiency
 - Insomnia assessment answers or scores
 - Reflection text, CBT-I lesson response text
@@ -168,6 +171,7 @@ No analytics script tag appears in the SSR HTML response.
 is a placeholder that returns `null`.
 
 The analytics module is structured so that consent gating can be added later:
+
 - `initializeAnalytics()` is the single entry point for enabling analytics
 - Moving it from "mount" to "consent granted" is a one-line change
 - No historical page views are backfilled
@@ -184,6 +188,7 @@ remaining debt.
 **Current state: No CSP header is configured.**
 
 The application currently sets only:
+
 - `Strict-Transport-Security`
 - `X-Content-Type-Options: nosniff`
 - `Referrer-Policy: strict-origin-when-cross-origin`
@@ -197,6 +202,7 @@ img-src:     https://www.google-analytics.com
 ```
 
 CSP was NOT added in this task because:
+
 1. The site has never had a CSP; adding one risks breaking existing functionality
 2. A proper CSP rollout should start with `Content-Security-Policy-Report-Only`
 3. Per requirements: "do not introduce a broad CSP rewrite in this task"
@@ -208,12 +214,14 @@ CSP was NOT added in this task because:
 22 unit tests in `src/lib/ga4.test.ts` (jsdom environment):
 
 ### Disabled states (6 tests)
+
 - Absent measurement ID: no throw, `isAnalyticsEnabled()` false, no script, no-op trackPageView, no-op trackEvent
 - Invalid format: disabled without throwing
 - Rejects lowercase `g-` prefix
 - Rejects empty `G-` prefix
 
 ### Valid ID (14 tests)
+
 - Creates dataLayer and gtag function
 - Injects exactly one gtag script with correct src and async attribute
 - Idempotent initialization (second call does nothing)
@@ -229,9 +237,11 @@ CSP was NOT added in this task because:
 - After reset, initializeAnalytics works again
 
 ### Production-only behavior (1 test)
+
 - Disabled in dev mode when VITE_GA_ENABLE_IN_DEV is not set
 
 ### Framework verification (1 test)
+
 - All 22 tests pass with jsdom environment
 
 ---
@@ -290,10 +300,10 @@ successfully.
 
 ## 19. Deployment Variables Required
 
-| Variable | Required | Purpose | Where to set |
-|----------|----------|---------|--------------|
-| `VITE_GA_MEASUREMENT_ID` | Yes | GA4 Measurement ID (format: `G-XXXXXXXXXX`) | Build-time environment variable (Cloudflare Pages, CI, or `.env.local`) |
-| `VITE_GA_ENABLE_IN_DEV` | No | Set to `true` to enable analytics in dev mode (default: `false`) | `.env.local` only |
+| Variable                 | Required | Purpose                                                          | Where to set                                                            |
+| ------------------------ | -------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `VITE_GA_MEASUREMENT_ID` | Yes      | GA4 Measurement ID (format: `G-XXXXXXXXXX`)                      | Build-time environment variable (Cloudflare Pages, CI, or `.env.local`) |
+| `VITE_GA_ENABLE_IN_DEV`  | No       | Set to `true` to enable analytics in dev mode (default: `false`) | `.env.local` only                                                       |
 
 **Important:** Set `VITE_GA_MEASUREMENT_ID` as a **build-time** variable, not
 a runtime Worker variable. Vite embeds `import.meta.env.VITE_*` values into
@@ -317,8 +327,8 @@ under "Build & deploy" settings.
 ### Browser Console
 
 ```js
-typeof window.gtag       // "function"
-window.dataLayer.length  // > 0
+typeof window.gtag; // "function"
+window.dataLayer.length; // > 0
 // Inspect: window.dataLayer has "js", "config", and "event" entries
 ```
 
@@ -340,12 +350,12 @@ window.dataLayer.length  // > 0
 
 ## 21. Remaining Debt
 
-| Priority | Item |
-|----------|------|
-| **High** | Implement cookie / analytics consent banner and gate `initializeAnalytics()` on consent (required for GDPR/ePrivacy compliance) |
-| **High** | Update privacy policy to disclose GA4 usage and third-party cookies |
-| **Medium** | Implement Content-Security-Policy (start with report-only mode) including GA4 directives |
-| **Medium** | Add cookie preferences / consent-withdrawal mechanism |
-| **Low** | Consider Google Consent Mode v2 for granular consent signaling |
-| **Low** | Add custom events (e.g. `share_open`, `program_start`) once consent is in place |
-| **Low** | Add GA4 debug_mode flag for easier production debugging |
+| Priority   | Item                                                                                                                            |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **High**   | Implement cookie / analytics consent banner and gate `initializeAnalytics()` on consent (required for GDPR/ePrivacy compliance) |
+| **High**   | Update privacy policy to disclose GA4 usage and third-party cookies                                                             |
+| **Medium** | Implement Content-Security-Policy (start with report-only mode) including GA4 directives                                        |
+| **Medium** | Add cookie preferences / consent-withdrawal mechanism                                                                           |
+| **Low**    | Consider Google Consent Mode v2 for granular consent signaling                                                                  |
+| **Low**    | Add custom events (e.g. `share_open`, `program_start`) once consent is in place                                                 |
+| **Low**    | Add GA4 debug_mode flag for easier production debugging                                                                         |

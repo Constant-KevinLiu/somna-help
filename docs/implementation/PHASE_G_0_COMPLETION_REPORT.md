@@ -30,6 +30,7 @@ All 10 objectives are met. New code has zero TypeScript errors, 165 new tests al
 - 7-entry `LEGACY_LOCALE_MAP` for full-region tag migration
 
 **Integrated into**:
+
 - `src/lib/i18n.tsx` — `Lang = SupportedLocale` (deprecated alias), `t()` uses `resolveTranslation()`
 - `src/lib/lang-detect.ts` — `ACTIVE_LANGS = ACTIVE_LOCALES`, detection uses `normalizePersistedLocale()`
 - `src/content/content-types.ts` — `ContentLocale` type, `uiLocaleToContentLocale()`
@@ -136,14 +137,14 @@ File: `src/lib/program/sync-contracts.ts`
 
 165 new tests across 6 test files:
 
-| Test File | Tests | Coverage |
-|-----------|-------|----------|
-| `locale-registry.test.ts` | 52 | Lists, registry, guards, pt/pt-BR migration, normalization, safe fallback, resolveTranslation, LEGACY_LOCALE_MAP |
-| `program/service.test.ts` | 38 | Initial state, status transitions, lifecycle events, lesson completion idempotency, milestone auto-earning, uncomplete, skip/unskip, derived values, migration |
-| `program/storage.test.ts` | 12 | Load/save/clear, legacy migration, malformed JSON, export, delete |
-| `program/definition.test.ts` | 19 | Real definition validation, duplicate IDs, contiguous order, week references, related lessons, prerequisites |
-| `program/weekly-plan.test.ts` | 20 | Validation (lesson IDs, acceptance subset, full plan), storage CRUD, malformed data |
-| `program/sync-contracts.test.ts` | 24 | Serialization round-trip, merge strategies, LWW, milestone merge, full anonymous→authenticated merge |
+| Test File                        | Tests | Coverage                                                                                                                                                       |
+| -------------------------------- | ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `locale-registry.test.ts`        | 52    | Lists, registry, guards, pt/pt-BR migration, normalization, safe fallback, resolveTranslation, LEGACY_LOCALE_MAP                                               |
+| `program/service.test.ts`        | 38    | Initial state, status transitions, lifecycle events, lesson completion idempotency, milestone auto-earning, uncomplete, skip/unskip, derived values, migration |
+| `program/storage.test.ts`        | 12    | Load/save/clear, legacy migration, malformed JSON, export, delete                                                                                              |
+| `program/definition.test.ts`     | 19    | Real definition validation, duplicate IDs, contiguous order, week references, related lessons, prerequisites                                                   |
+| `program/weekly-plan.test.ts`    | 20    | Validation (lesson IDs, acceptance subset, full plan), storage CRUD, malformed data                                                                            |
+| `program/sync-contracts.test.ts` | 24    | Serialization round-trip, merge strategies, LWW, milestone merge, full anonymous→authenticated merge                                                           |
 
 **Full test suite: 397/397 passed** (no regressions)
 
@@ -152,6 +153,7 @@ File: `src/lib/program/sync-contracts.ts`
 **Status: ✅ Phase G can proceed**
 
 All foundational infrastructure is in place:
+
 - ✅ One locale authority to build upon
 - ✅ Typed program domain with state machine
 - ✅ Event-sourced progress (auditable, testable)
@@ -169,12 +171,12 @@ All foundational infrastructure is in place:
 
 ## Validation Results
 
-| Command | Result | Notes |
-|---------|--------|-------|
-| `npm test` | ✅ 397/397 passed | 27 test files, 0 failures |
-| `npx tsc --noEmit` | ⚠️ 78 errors total | **0 errors in new G-0 files** |
-| `npm run lint` | ⚠️ CRLF issues | 0 non-CRLF errors in new files |
-| `npm run build` | ✅ Built in 4.22s | Client + server build succeed |
+| Command            | Result             | Notes                          |
+| ------------------ | ------------------ | ------------------------------ |
+| `npm test`         | ✅ 397/397 passed  | 27 test files, 0 failures      |
+| `npx tsc --noEmit` | ⚠️ 78 errors total | **0 errors in new G-0 files**  |
+| `npm run lint`     | ⚠️ CRLF issues     | 0 non-CRLF errors in new files |
+| `npm run build`    | ✅ Built in 4.22s  | Client + server build succeed  |
 
 ---
 
@@ -247,12 +249,12 @@ None of these were implemented (as explicitly required):
 
 ## Risk Assessment
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| Lang type expansion breaks more files | Low | Medium | Already fixed main i18n modules; remaining errors are in peripheral files |
-| Legacy migration data loss | Low | High | Migration tested; canonical key written on first load; legacy key never modified |
-| Merge conflict data loss | Very Low | High | Union strategy for all additive fields; tested extensively |
-| SSR hydration mismatch | Low | Medium | All storage uses safe-storage utilities; initial state is deterministic |
+| Risk                                  | Likelihood | Impact | Mitigation                                                                       |
+| ------------------------------------- | ---------- | ------ | -------------------------------------------------------------------------------- |
+| Lang type expansion breaks more files | Low        | Medium | Already fixed main i18n modules; remaining errors are in peripheral files        |
+| Legacy migration data loss            | Low        | High   | Migration tested; canonical key written on first load; legacy key never modified |
+| Merge conflict data loss              | Very Low   | High   | Union strategy for all additive fields; tested extensively                       |
+| SSR hydration mismatch                | Low        | Medium | All storage uses safe-storage utilities; initial state is deterministic          |
 
 ---
 

@@ -19,6 +19,7 @@ All core acceptance criteria are met. Low-risk debt items are documented in Sect
 ✅ `useProgramService` remains the only runtime entry point for Program data.
 
 Verified:
+
 - All new components use `useProgramService()` for reads and writes
 - No direct `localStorage` access from any new Program UI component
 - No duplicate progress state in any component
@@ -29,6 +30,7 @@ Verified:
 ✅ All writes flow through the event-sourced state machine.
 
 Verified:
+
 - `startProgram()` dispatches `program_started`
 - `pauseProgram()` dispatches `program_paused`
 - `resumeProgram()` dispatches `program_resumed`
@@ -40,6 +42,7 @@ Verified:
 ✅ Forward-schema guard remains intact.
 
 Verified:
+
 - `isUnsupportedSchema` guard before every write action (in useProgramService)
 - Storage layer also has guard (defense in depth)
 - Program Home shows `ProgramUnsupportedBanner` and hides week list
@@ -52,6 +55,7 @@ Verified:
 ✅ No new component accesses storage directly.
 
 Verified:
+
 - All new components use `useProgramService()` methods
 - Sleep records for Weekly Focus loaded via canonical `loadRecords()`
 - No `localStorage.setItem()` or `.getItem()` in new component files
@@ -60,20 +64,21 @@ Verified:
 
 ### 4.1 Program Home — All Lifecycle States
 
-| State | Status | Verification |
-|-------|--------|-------------|
-| Not Started | ✅ | `ProgramStartCard` with intro, structure, privacy, what it does/doesn't, start CTA |
-| Active | ✅ | Progress bar, next lesson CTA, week list with states, pause button |
-| Paused | ✅ | Paused banner, resume CTA, progress preserved, week list visible |
-| Completed | ✅ | Completion summary, stats, milestone, review links, disclaimer |
-| Unsupported Version | ✅ | Warning banner, no start CTA, write actions blocked |
-| Corrupted | ✅ | Distinguished from not_started via loadStatus, warning shown |
+| State               | Status | Verification                                                                       |
+| ------------------- | ------ | ---------------------------------------------------------------------------------- |
+| Not Started         | ✅     | `ProgramStartCard` with intro, structure, privacy, what it does/doesn't, start CTA |
+| Active              | ✅     | Progress bar, next lesson CTA, week list with states, pause button                 |
+| Paused              | ✅     | Paused banner, resume CTA, progress preserved, week list visible                   |
+| Completed           | ✅     | Completion summary, stats, milestone, review links, disclaimer                     |
+| Unsupported Version | ✅     | Warning banner, no start CTA, write actions blocked                                |
+| Corrupted           | ✅     | Distinguished from not_started via loadStatus, warning shown                       |
 
 ### 4.2 Pause/Resume
 
 ✅ Pause and resume are visible and functional.
 
 Verified:
+
 - Pause button visible in active state (Program Home)
 - PauseConfirmDialog with explanation, cancel (default focus), confirm
 - Paused banner with resume CTA
@@ -86,6 +91,7 @@ Verified:
 ✅ Clear distinction between program progress, week progress, and lesson completion.
 
 Verified:
+
 - Overall progress bar (program level)
 - Per-week progress bars (week level)
 - Lesson completion checkmarks (lesson level)
@@ -97,6 +103,7 @@ Verified:
 ✅ All lessons use shared `LessonTemplate` architecture.
 
 Verified:
+
 - Paused state awareness added to existing template
 - Completion disabled when paused with explanation
 - Unsupported state already handled (pre-existing)
@@ -107,6 +114,7 @@ Verified:
 ✅ Calm completion summary exists.
 
 Verified:
+
 - `ProgramCompletionSummary` component
 - No medical success claims
 - Disclaimer present: "educational, not a substitute for professional medical care"
@@ -119,6 +127,7 @@ Verified:
 ✅ All 5 states render correctly on dashboard.
 
 Verified:
+
 - Loading: skeleton
 - Not started: intro + start CTA
 - Active: progress + continue CTA
@@ -131,6 +140,7 @@ Verified:
 ✅ Weekly Focus section shows why it appears, data window, and related lesson.
 
 Verified:
+
 - `ProgramWeeklyFocusSection` component
 - Shows reason text ("Why this appears")
 - Shows data basis ("X entries / 7 days")
@@ -144,6 +154,7 @@ Verified:
 ✅ No fake generic recommendation under personalized heading.
 
 Verified:
+
 - "Insufficient" and "none" data sufficiency → honest message
 - Message: "Complete a few more sleep diary entries..."
 - Shows actual entry count
@@ -155,15 +166,15 @@ Verified:
 
 ✅ Active locales covered.
 
-| Locale | Status |
-|--------|--------|
-| en | ✅ Complete |
-| es | ✅ Complete |
-| pt | ✅ Complete |
-| pl | ✅ Complete |
-| de | ✅ Complete (partial locale, program-only) |
-| zh | ✅ Complete (reserved locale, program-only) |
-| ja | ⚠️ English fallback (reserved) |
+| Locale | Status                                      |
+| ------ | ------------------------------------------- |
+| en     | ✅ Complete                                 |
+| es     | ✅ Complete                                 |
+| pt     | ✅ Complete                                 |
+| pl     | ✅ Complete                                 |
+| de     | ✅ Complete (partial locale, program-only)  |
+| zh     | ✅ Complete (reserved locale, program-only) |
+| ja     | ⚠️ English fallback (reserved)              |
 
 No raw i18n keys visible in active locales. Fallback chain intact.
 
@@ -172,6 +183,7 @@ No raw i18n keys visible in active locales. Fallback chain intact.
 ✅ Accessibility standards met.
 
 Verified:
+
 - Semantic headings (h1, h2 structure)
 - Progress bars: `role="progressbar"`, `aria-valuenow`, `aria-valuemin`, `aria-valuemax`, `aria-label`
 - Keyboard navigation (Tab, Enter, Space, Escape)
@@ -187,6 +199,7 @@ Verified:
 ✅ Mobile-first responsive design.
 
 Verified:
+
 - All components use existing responsive patterns (max-w-3xl, px-5, flex-col on mobile)
 - Week cards stack vertically
 - CTAs stack on mobile
@@ -223,19 +236,19 @@ Verified:
 
 ✅ All regression requirements met.
 
-| Requirement | Status |
-|-------------|--------|
-| earliest-valid `completedAt` merge active | ✅ (unchanged, storage layer) |
-| Future-schema data protected | ✅ (unchanged, storage + UI guards) |
-| ProgramUnsupportedBanner functional | ✅ (reused as-is) |
-| No unsupported state rendered as empty | ✅ (banner + hidden content) |
-| Diary data unchanged | ✅ (read-only access) |
-| Reflection data unchanged | ✅ (no reflection modifications) |
-| Export/delete behavior intact | ✅ (no storage changes) |
-| Sync tests passing | ✅ (all 485 tests pass) |
-| No production route uses deprecated module | ✅ (all use useProgramService) |
-| No new Program TS errors | ✅ (0 errors in program files) |
-| No production build regression | ✅ (build succeeds) |
+| Requirement                                | Status                              |
+| ------------------------------------------ | ----------------------------------- |
+| earliest-valid `completedAt` merge active  | ✅ (unchanged, storage layer)       |
+| Future-schema data protected               | ✅ (unchanged, storage + UI guards) |
+| ProgramUnsupportedBanner functional        | ✅ (reused as-is)                   |
+| No unsupported state rendered as empty     | ✅ (banner + hidden content)        |
+| Diary data unchanged                       | ✅ (read-only access)               |
+| Reflection data unchanged                  | ✅ (no reflection modifications)    |
+| Export/delete behavior intact              | ✅ (no storage changes)             |
+| Sync tests passing                         | ✅ (all 485 tests pass)             |
+| No production route uses deprecated module | ✅ (all use useProgramService)      |
+| No new Program TS errors                   | ✅ (0 errors in program files)      |
+| No production build regression             | ✅ (build succeeds)                 |
 
 ## 7. Performance
 
@@ -254,16 +267,19 @@ Verified:
 ## 9. Risk Assessment
 
 ### Resolved Risks
+
 - Architecture integrity: ✅ All writes through state machine
 - Unsupported schema: ✅ Defense in depth (storage + UI)
 - i18n coverage: ✅ All active locales complete
 
 ### Accepted Low-Risk Debt
+
 - See Section 11
 
 ## 10. Acceptance Criteria Checklist
 
 ### Architecture
+
 - [x] Canonical Program service remains the only runtime entry
 - [x] State machine remains the only write path
 - [x] No duplicate Program state
@@ -271,6 +287,7 @@ Verified:
 - [x] Unsupported-version protections remain intact
 
 ### Product
+
 - [x] Program Home supports all required lifecycle states
 - [x] Pause/resume is visible and functional
 - [x] Progress is understandable
@@ -281,6 +298,7 @@ Verified:
 - [x] Insufficient data is handled honestly
 
 ### Quality
+
 - [x] Active locales covered
 - [x] No raw i18n keys
 - [x] Keyboard use supported
@@ -298,6 +316,7 @@ Verified:
 
 Pause timestamp is captured in `updatedAt`, not as a dedicated `pausedAt` field.
 The UI doesn't display a pause date. Low risk because:
+
 - Pause date is less critical than start/completion dates
 - `updatedAt` provides approximate timing
 - Adding a field would require schema v2 migration
@@ -308,6 +327,7 @@ The UI doesn't display a pause date. Low risk because:
 
 The state machine allows `lesson_completed` even when status is "paused".
 Protection is at the UI layer (disabled buttons). Low risk because:
+
 - This is the current documented contract
 - All UI paths go through components that enforce the guard
 - The service test documents this behavior
@@ -319,6 +339,7 @@ Protection is at the UI layer (disabled buttons). Low risk because:
 
 Tests are at the service level (comprehensive) but there are no React component tests.
 Low risk because:
+
 - All business logic is in pure functions (tested)
 - UI is mostly presentational
 - The risk of UI bugs is lower than logic bugs
@@ -330,6 +351,7 @@ Low risk because:
 
 The related lesson suggestion shows "Lesson X" instead of the actual lesson title.
 This is because titles are in content modules loaded lazily. Low risk because:
+
 - The link goes to the correct lesson
 - The user sees the full title on the lesson page
 - Adding title lookup would increase bundle size or complexity
@@ -339,6 +361,7 @@ This is because titles are in content modules loaded lazily. Low risk because:
 ### 11.5 Habit Progress Not Loaded for Weekly Focus
 
 The Program Home weekly focus uses an empty `habitProgress` Map, so the `reminder_routine` focus category won't trigger on the Program page. It still works on the Dashboard page where habit progress is loaded. Low risk because:
+
 - Other 5 focus categories work fine
 - Dashboard already has full focus with habit progress
 - Adding reminder loading to program route is a small future change
@@ -348,6 +371,7 @@ The Program Home weekly focus uses an empty `habitProgress` Map, so the `reminde
 ## 12. Final Verdict Justification
 
 Phase G-1 is accepted with low-risk debt because:
+
 1. All core acceptance criteria are met
 2. Architecture integrity is preserved (canonical service, state machine, no duplicate state)
 3. All 5 lifecycle states are implemented and functional
@@ -369,6 +393,7 @@ The 5 low-risk debt items are documented, non-blocking, and deferrable without c
 Phase G-1.1 addresses the highest-risk debt items from Phase G-1:
 
 **Closed:**
+
 - **Pause enforcement moved to state machine** — was "only UI-level" (#1 risk), now enforced canonically
 - **Typed blocked results** — `ProgramMutationResult` discriminated union through service → hook → UI
 - **Component regression tests** — 40 new tests across 5 lifecycle components
@@ -376,6 +401,7 @@ Phase G-1.1 addresses the highest-risk debt items from Phase G-1:
 - **Weekly Focus lesson-title gap** — resolved via shared `useLessonTitle` hook
 
 **Still open (deferred):**
+
 - `pausedAt` timestamp — no current consumer; add when justified
 - `corrupted` dead code cleanup — type-only, no runtime impact
 

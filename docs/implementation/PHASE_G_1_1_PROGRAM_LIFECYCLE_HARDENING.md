@@ -14,6 +14,7 @@ Phase G-1.1 closes critical lifecycle-integrity gaps in the Program system. The 
 This release also adds typed blocked-result propagation, comprehensive regression tests, a `corrupted`-state reachability audit, and resolution of the Weekly Focus lesson-title localization gap.
 
 **Scope:**
+
 - Canonical state machine enforcement
 - Typed mutation results through service → hook → UI
 - UI-level disabled behavior preserved as supplementary guards
@@ -23,6 +24,7 @@ This release also adds typed blocked-result propagation, comprehensive regressio
 - `pausedAt` field decision documentation
 
 **Explicitly NOT in scope:**
+
 - Phase G-2 feature expansion
 - Program experience redesign
 - Database migration
@@ -38,6 +40,7 @@ This release also adds typed blocked-result propagation, comprehensive regressio
 Before this release, `program_paused` set the status to `paused`, but the state machine did **not** prevent progress-mutation events from being applied while paused. Lesson completion, skipping, plan acceptance, and milestone events all mutated progress regardless of pause status.
 
 Pause enforcement existed **only at the UI level** via disabled buttons. This meant:
+
 - A race condition or stale component could dispatch a completion during pause
 - Direct `applyEvent()` callers (tests, future APIs) could bypass the guard
 - The state machine's invariant — "paused means no progress changes" — was not enforced
@@ -52,19 +55,19 @@ isMutationAllowed(progress): progress.status !== "paused"
 
 This guard is applied to all **progress-mutation events** but NOT to **lifecycle events**:
 
-| Event Type | Guard | Reason |
-|---|---|---|
-| `lesson_completed` | `isMutationAllowed` | Progress mutation |
-| `lesson_uncompleted` | `isMutationAllowed` | Progress mutation |
-| `lesson_skipped` | `isMutationAllowed` | Progress mutation |
-| `lesson_unskipped` | `isMutationAllowed` | Progress mutation |
-| `weekly_plan_accepted` | `isMutationAllowed` | Progress mutation |
-| `weekly_plan_dismissed` | `isMutationAllowed` | Progress mutation |
-| `milestone_earned` | `isMutationAllowed` | Progress mutation |
-| `program_started` | `isValidStatusTransition` | Lifecycle transition |
-| `program_paused` | `isValidStatusTransition` | Lifecycle transition |
-| `program_resumed` | `isValidStatusTransition` | Lifecycle transition |
-| `program_completed` | `isValidStatusTransition` | Lifecycle transition |
+| Event Type              | Guard                     | Reason               |
+| ----------------------- | ------------------------- | -------------------- |
+| `lesson_completed`      | `isMutationAllowed`       | Progress mutation    |
+| `lesson_uncompleted`    | `isMutationAllowed`       | Progress mutation    |
+| `lesson_skipped`        | `isMutationAllowed`       | Progress mutation    |
+| `lesson_unskipped`      | `isMutationAllowed`       | Progress mutation    |
+| `weekly_plan_accepted`  | `isMutationAllowed`       | Progress mutation    |
+| `weekly_plan_dismissed` | `isMutationAllowed`       | Progress mutation    |
+| `milestone_earned`      | `isMutationAllowed`       | Progress mutation    |
+| `program_started`       | `isValidStatusTransition` | Lifecycle transition |
+| `program_paused`        | `isValidStatusTransition` | Lifecycle transition |
+| `program_resumed`       | `isValidStatusTransition` | Lifecycle transition |
+| `program_completed`     | `isValidStatusTransition` | Lifecycle transition |
 
 ### 2.3 Why Two Separate Guards
 
@@ -88,12 +91,14 @@ export type ProgramMutationResult =
 ```
 
 **Block reasons:**
+
 - `"program-paused"` — progress mutation attempted while paused
 - `"program-completed"` — (reserved for future use)
 - `"unsupported-version"` — (returned by hook layer, not state machine)
 - `"invalid-transition"` — lifecycle event with invalid status transition
 
 **Key properties:**
+
 - `blocked` and `unchanged` both return the **same progress reference** (identity-preserving)
 - `applied` returns a new progress object
 - No persistence happens on `blocked` or `unchanged`
@@ -111,6 +116,7 @@ export type ProgramActionResult =
 ```
 
 Write behavior:
+
 - `"applied"` → persist to storage + dispatch change event
 - `"blocked"` | `"unchanged"` → no write, no event
 - `"unsupported-version"` → no write (forward-schema guard)
@@ -127,33 +133,33 @@ UI components continue to use disabled buttons as supplementary guards. The type
 
 These are the canonical program lifecycle states:
 
-| State | Meaning |
-|---|---|
-| `not_started` | User has not started the program |
-| `active` | Program is in progress |
-| `paused` | Program is paused — no progress mutations allowed |
-| `completed` | All lessons completed |
+| State         | Meaning                                           |
+| ------------- | ------------------------------------------------- |
+| `not_started` | User has not started the program                  |
+| `active`      | Program is in progress                            |
+| `paused`      | Program is paused — no progress mutations allowed |
+| `completed`   | All lessons completed                             |
 
 ### 4.2 Storage/Load States (Infrastructure)
 
 These describe the result of loading progress from storage, NOT the program's lifecycle:
 
-| State | Meaning |
-|---|---|
-| `empty` | No progress found (first visit) |
-| `ready` | Progress loaded successfully |
-| `migrated` | Legacy data migrated to current schema |
+| State                 | Meaning                                               |
+| --------------------- | ----------------------------------------------------- |
+| `empty`               | No progress found (first visit)                       |
+| `ready`               | Progress loaded successfully                          |
+| `migrated`            | Legacy data migrated to current schema                |
 | `unsupported-version` | Stored schema is newer than supported (forward-guard) |
-| `corrupted` | **Defined but never returned** — see Section 5 |
+| `corrupted`           | **Defined but never returned** — see Section 5        |
 
 ### 4.3 Transient UI States (Presentation)
 
 These are UI-level states that don't exist in the state machine:
 
-| State | Meaning |
-|---|---|
-| `loading` | Hydration in progress (SSR → client handoff) |
-| `error` | UI-level error display (no canonical equivalent) |
+| State     | Meaning                                          |
+| --------- | ------------------------------------------------ |
+| `loading` | Hydration in progress (SSR → client handoff)     |
+| `error`   | UI-level error display (no canonical equivalent) |
 
 ---
 
@@ -191,18 +197,22 @@ The `corrupted` status is defined in `ProgramLoadResult` and `UnsupportedProgram
 `pausedAt` is not currently a field on `ProgramProgress`. We add the following analysis for future reference:
 
 ### Arguments For
+
 - Consistency with `startedAt`/`completedAt` pattern
 - Useful for analytics (how long were users paused?)
 - Could be shown in UI ("Paused since July 15")
 
 ### Arguments Against
+
 - No current consumer (UI doesn't show it, analytics don't track it)
 - Schema change = migration concern (even additive)
 - Can be approximated from `updatedAt` when status is `paused` (imperfect but sufficient for now)
 - In a fully event-sourced system, would be derived from event history
 
 ### When to Revisit
+
 When a specific use case justifies the schema change:
+
 - Analytics requirement for pause duration tracking
 - UI design calls for "Paused since X" display
 - Sync/merge logic needs precise pause timestamp
@@ -220,11 +230,13 @@ The `ProgramWeeklyFocusSection` component displayed related lessons as "Lesson 2
 Extracted the existing `useRelatedLessonTitle` hook from `LessonTemplate.tsx` into a shared `useLessonTitle` hook at `src/hooks/use-lesson-title.ts`, and applied it to the Weekly Focus section.
 
 **Files changed:**
+
 - `src/hooks/use-lesson-title.ts` (new) — shared hook with module-level cache
 - `src/components/program/LessonTemplate.tsx` — replaced local hook with shared import
 - `src/components/program/ProgramWeeklyFocusSection.tsx` — now shows localized lesson title
 
 **Behavior:**
+
 - Title loads asynchronously on first render
 - Falls back to "Lesson N" while loading (same as before)
 - Module-level cache prevents duplicate loads across components
@@ -241,6 +253,7 @@ Extracted the existing `useRelatedLessonTitle` hook from `LessonTemplate.tsx` in
 **New (G-1.1):** ~15 paused-state enforcement tests
 
 Coverage:
+
 - All 7 progress-mutation events blocked when paused
 - Lifecycle events (pause/resume) work correctly
 - Idempotent events return `unchanged`
@@ -253,6 +266,7 @@ Coverage:
 **New (G-1.1):** 10 paused-state enforcement tests
 
 Full end-to-end flow:
+
 ```
 start → complete lesson → pause → reload →
 blocked completion attempt → resume → complete → reload → persisted
@@ -262,13 +276,13 @@ blocked completion attempt → resume → complete → reload → persisted
 
 All tests use React Testing Library + jsdom + jest-dom matchers.
 
-| Component | Tests | Key Coverage |
-|---|---|---|
-| `ProgramPausedBanner` | 8 | Full + compact variants, role=status, onResume callback |
-| `ProgramStartCard` | 4 | Not-started copy, start CTA, structure info, heading level |
-| `PauseConfirmDialog` | 7 | Open/close, cancel, confirm, Escape, aria attributes |
-| `ProgramCompletionSummary` | 6 | Completion copy, review action, no medical claims, no restart, lessons count, week links |
-| `ProgramDashboardCard` | 20 | All 5 lifecycle states (not-started/active/paused/completed/unsupported), loading state, handler invocation |
+| Component                  | Tests | Key Coverage                                                                                                |
+| -------------------------- | ----- | ----------------------------------------------------------------------------------------------------------- |
+| `ProgramPausedBanner`      | 8     | Full + compact variants, role=status, onResume callback                                                     |
+| `ProgramStartCard`         | 4     | Not-started copy, start CTA, structure info, heading level                                                  |
+| `PauseConfirmDialog`       | 7     | Open/close, cancel, confirm, Escape, aria attributes                                                        |
+| `ProgramCompletionSummary` | 6     | Completion copy, review action, no medical claims, no restart, lessons count, week links                    |
+| `ProgramDashboardCard`     | 20    | All 5 lifecycle states (not-started/active/paused/completed/unsupported), loading state, handler invocation |
 
 **Total component tests: 40**
 
@@ -277,11 +291,13 @@ All tests use React Testing Library + jsdom + jest-dom matchers.
 ## 9. Files Changed
 
 ### Core Logic
+
 - `src/lib/program/types.ts` — added `ProgramMutationBlockReason`, `ProgramMutationResult`
 - `src/lib/program/service.ts` — `applyEvent()` returns `ProgramMutationResult`, paused-state guard
 - `src/lib/program/use-program-service.ts` — action methods return `ProgramActionResult`
 
 ### Tests
+
 - `src/lib/program/service.test.ts` — updated for new return type + pause enforcement tests
 - `src/lib/program/integration.test.ts` — updated + 10 new integration tests
 - `src/components/program/ProgramPausedBanner.test.tsx` (new)
@@ -291,11 +307,13 @@ All tests use React Testing Library + jsdom + jest-dom matchers.
 - `src/components/program/ProgramDashboardCard.test.tsx` (new)
 
 ### Weekly Focus Title Gap
+
 - `src/hooks/use-lesson-title.ts` (new) — shared async lesson title hook
 - `src/components/program/LessonTemplate.tsx` — uses shared hook
 - `src/components/program/ProgramWeeklyFocusSection.tsx` — now shows localized title
 
 ### Documentation
+
 - `docs/implementation/PHASE_G_1_1_CURRENT_STATE_AUDIT.md` — pre-implementation audit
 - `docs/implementation/PHASE_G_1_1_PROGRAM_LIFECYCLE_HARDENING.md` — (this file)
 
@@ -304,12 +322,15 @@ All tests use React Testing Library + jsdom + jest-dom matchers.
 ## 10. Remaining Debt (Low Risk)
 
 ### 10.1 `corrupted` Status Dead Code
+
 The `corrupted` variant in `ProgramLoadResult` is never returned. It's not harmful (just a type branch) but adds cognitive overhead. **Action:** Remove in a future cleanup, or implement actual corrupted detection with a clear non-destructive policy.
 
 ### 10.2 No UI Feedback on Blocked Actions
+
 When a lesson completion is blocked by pause (shouldn't happen in normal flow since buttons are disabled), there's no user-facing feedback. The action silently does nothing. **Action:** Add a toast or status message if/when blocked-action telemetry shows this happening in production.
 
 ### 10.3 `pausedAt` Field Absence
+
 No `pausedAt` timestamp on progress. See Section 6. **Action:** Add when a specific use case justifies it.
 
 ---

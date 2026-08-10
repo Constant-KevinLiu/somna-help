@@ -1,4 +1,5 @@
 # Sleep Diary v2.4 — Phase F Completion Report
+
 ## Behavior Analytics, Insight Dashboard & Weekly Reflection Engine
 
 **Status**: ✅ Complete  
@@ -20,47 +21,47 @@ Phase F delivers a production-quality, deterministic behavioral analytics layer 
 
 ### Core Analytics Engine (`src/lib/analytics/`)
 
-| File | Purpose | Tests |
-|------|---------|-------|
-| `types.ts` | All domain types (14 MetricKey, DataSufficiency, 8 WindowKey, TrendDirection, PatternFinding, InsightCard, WeeklySummary, MonthlySummary, WeeklyFocus, AnalyticsResult) | — |
-| `date-ranges.ts` | Pure date utilities, 8 window definitions, week/month boundaries, DST detection | 26 |
-| `metrics.ts` | HH:MM ↔ minutes converters, circular average + SD (vector mean), TST, regularity, completion rate, weekend diff, streaks, `computeMetrics()` bundle | 22 |
-| `sufficiency.ts` | Per-metric minimums, combined sufficiency, trend-show-ability | 10 |
-| `trends.ts` | Prior-period comparison, meaningful-change thresholds, rule-based confidence (high/medium/low), primary trend selection | 18 |
-| `patterns.ts` | 8 pattern detectors (weekend diff, consistent wake, variable bedtime, stable streak, reminder alignment, etc.) | — |
-| `insights.ts` | Insight generation pipeline (trends → patterns → encouragement → streak), 3-5 cards, priority-sorted | — |
-| `weekly-summary.ts` | Mon-Sun summary with completion, metrics, variability, regularity, reminder consistency, interpretation | — |
-| `monthly-summary.ts` | Monthly overview with weekly snapshots, best streak, notable changes, habit consistency | — |
-| `weekly-focus.ts` | 6 priority rules, localStorage persistence (`somna.weekly-focus.v1`), accept/dismiss/save | — |
+| File                 | Purpose                                                                                                                                                                 | Tests |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
+| `types.ts`           | All domain types (14 MetricKey, DataSufficiency, 8 WindowKey, TrendDirection, PatternFinding, InsightCard, WeeklySummary, MonthlySummary, WeeklyFocus, AnalyticsResult) | —     |
+| `date-ranges.ts`     | Pure date utilities, 8 window definitions, week/month boundaries, DST detection                                                                                         | 26    |
+| `metrics.ts`         | HH:MM ↔ minutes converters, circular average + SD (vector mean), TST, regularity, completion rate, weekend diff, streaks, `computeMetrics()` bundle                     | 22    |
+| `sufficiency.ts`     | Per-metric minimums, combined sufficiency, trend-show-ability                                                                                                           | 10    |
+| `trends.ts`          | Prior-period comparison, meaningful-change thresholds, rule-based confidence (high/medium/low), primary trend selection                                                 | 18    |
+| `patterns.ts`        | 8 pattern detectors (weekend diff, consistent wake, variable bedtime, stable streak, reminder alignment, etc.)                                                          | —     |
+| `insights.ts`        | Insight generation pipeline (trends → patterns → encouragement → streak), 3-5 cards, priority-sorted                                                                    | —     |
+| `weekly-summary.ts`  | Mon-Sun summary with completion, metrics, variability, regularity, reminder consistency, interpretation                                                                 | —     |
+| `monthly-summary.ts` | Monthly overview with weekly snapshots, best streak, notable changes, habit consistency                                                                                 | —     |
+| `weekly-focus.ts`    | 6 priority rules, localStorage persistence (`somna.weekly-focus.v1`), accept/dismiss/save                                                                               | —     |
 
 ### Weekly Reflection (`src/lib/weekly-reflection/`)
 
-| File | Purpose |
-|------|---------|
-| `types.ts` | Reflection types, 8 prompt categories, storage schema |
+| File         | Purpose                                                           |
+| ------------ | ----------------------------------------------------------------- |
+| `types.ts`   | Reflection types, 8 prompt categories, storage schema             |
 | `prompts.ts` | 10 prompts, rule-based selection (3-4 per week), adaptive to data |
-| `storage.ts` | SSR-safe localStorage, CRUD + validation, word count, timezone |
+| `storage.ts` | SSR-safe localStorage, CRUD + validation, word count, timezone    |
 
 ### React Integration
 
-| File | Purpose |
-|------|---------|
+| File                             | Purpose                                                                         |
+| -------------------------------- | ------------------------------------------------------------------------------- |
 | `src/hooks/useSleepAnalytics.ts` | `useSleepAnalytics()` hook + `computeAnalytics()` pure function, fully memoized |
 
 ### UI Components (`src/components/analytics/`)
 
-| Component | Purpose |
-|-----------|---------|
-| `MetricCard.tsx` | Single metric with trend arrow (up/down/stable), color-agnostic |
-| `TrendRangeSelector.tsx` | 7d/14d/30d/90d pill group, `aria-pressed` |
-| `SleepChart.tsx` | Recharts LineChart, metric toggle, null-handling, custom tooltip, empty state |
-| `InsightCard.tsx` | Explainable insight with progressive disclosure ("Show details" → evidence) |
-| `InsightSection.tsx` | Grid container for insight cards |
-| `WeeklySummary.tsx` | Full weekly summary: nav, completion bar, 4-metric grid, bedtime/wake + variability, reminder consistency, interpretation |
-| `WeeklyFocusCard.tsx` | Rule-based focus suggestion with accept/save/dismiss, evidence toggle |
-| `WeeklyReflectionFlow.tsx` | Guided reflection flow with 3-4 prompts, skip, save, edit, delete |
-| `DataSufficiencyBanner.tsx` | 4-level data sufficiency messaging (none/insufficient/limited/sufficient) |
-| `index.ts` | Barrel export |
+| Component                   | Purpose                                                                                                                   |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `MetricCard.tsx`            | Single metric with trend arrow (up/down/stable), color-agnostic                                                           |
+| `TrendRangeSelector.tsx`    | 7d/14d/30d/90d pill group, `aria-pressed`                                                                                 |
+| `SleepChart.tsx`            | Recharts LineChart, metric toggle, null-handling, custom tooltip, empty state                                             |
+| `InsightCard.tsx`           | Explainable insight with progressive disclosure ("Show details" → evidence)                                               |
+| `InsightSection.tsx`        | Grid container for insight cards                                                                                          |
+| `WeeklySummary.tsx`         | Full weekly summary: nav, completion bar, 4-metric grid, bedtime/wake + variability, reminder consistency, interpretation |
+| `WeeklyFocusCard.tsx`       | Rule-based focus suggestion with accept/save/dismiss, evidence toggle                                                     |
+| `WeeklyReflectionFlow.tsx`  | Guided reflection flow with 3-4 prompts, skip, save, edit, delete                                                         |
+| `DataSufficiencyBanner.tsx` | 4-level data sufficiency messaging (none/insufficient/limited/sufficient)                                                 |
+| `index.ts`                  | Barrel export                                                                                                             |
 
 ### Dashboard Integration (`src/routes/dashboard.tsx`)
 
@@ -75,25 +76,25 @@ All existing dashboard sections remain untouched.
 
 ### Localization (5 locales)
 
-| Locale | File | Keys |
-|--------|------|------|
+| Locale              | File                          | Keys |
+| ------------------- | ----------------------------- | ---- |
 | English (canonical) | `src/locales/analytics/en.ts` | ~180 |
-| Spanish | `src/locales/analytics/es.ts` | ~180 |
-| Portuguese (BR) | `src/locales/analytics/pt.ts` | ~180 |
-| Polish | `src/locales/analytics/pl.ts` | ~180 |
-| German | `src/locales/analytics/de.ts` | ~180 |
+| Spanish             | `src/locales/analytics/es.ts` | ~180 |
+| Portuguese (BR)     | `src/locales/analytics/pt.ts` | ~180 |
+| Polish              | `src/locales/analytics/pl.ts` | ~180 |
+| German              | `src/locales/analytics/de.ts` | ~180 |
 
 Integration: spread-merged into the existing `dicts` object in `src/lib/i18n.tsx`. Zero changes to existing translation strings.
 
 ### Documentation
 
-| Document | Path |
-|----------|------|
-| Implementation Plan | `docs/implementation/SLEEP_DIARY_V2_4_PHASE_F_IMPLEMENTATION_PLAN.md` |
-| Feature: Behavior Analytics | `docs/features/behavior-analytics.md` |
-| Feature: Insight Dashboard | `docs/features/insight-dashboard.md` |
-| Feature: Weekly Reflection | `docs/features/weekly-reflection.md` |
-| Completion Report | `docs/implementation/SLEEP_DIARY_V2_4_PHASE_F_COMPLETION_REPORT.md` (this file) |
+| Document                    | Path                                                                            |
+| --------------------------- | ------------------------------------------------------------------------------- |
+| Implementation Plan         | `docs/implementation/SLEEP_DIARY_V2_4_PHASE_F_IMPLEMENTATION_PLAN.md`           |
+| Feature: Behavior Analytics | `docs/features/behavior-analytics.md`                                           |
+| Feature: Insight Dashboard  | `docs/features/insight-dashboard.md`                                            |
+| Feature: Weekly Reflection  | `docs/features/weekly-reflection.md`                                            |
+| Completion Report           | `docs/implementation/SLEEP_DIARY_V2_4_PHASE_F_COMPLETION_REPORT.md` (this file) |
 
 ---
 
@@ -125,22 +126,27 @@ Integration: spread-merged into the existing `dicts` object in `src/lib/i18n.tsx
 ## Key Technical Decisions
 
 ### 1. Circular time averaging (vector mean on unit circle)
+
 **Problem**: Arithmetic mean of bedtimes breaks around midnight (23:00 + 01:00 ≠ 12:00).  
 **Solution**: Map times to angles on a unit circle, compute vector mean, convert back. Same approach for standard deviation (using resultant vector length). Correctly handles midnight wrap for both average and variability.
 
 ### 2. Spread-merged analytics dictionaries
+
 **Problem**: Existing i18n has massive inline dictionaries; inserting 180+ analytics keys per locale would be invasive.  
 **Solution**: Created standalone `src/locales/analytics/{lang}.ts` files and spread-merged them into the existing `dicts` object. Zero changes to existing translation strings.
 
 ### 3. Prior-period trend comparison
+
 **Problem**: Linear regression over small windows is noisy and hard to explain.  
 **Solution**: Simple prior-period comparison (current N days vs N days before that) with meaningful-change thresholds. Users understand "your efficiency improved 5% vs last week" far better than "the slope of your efficiency line is 0.42 points/day".
 
 ### 4. Weekly focus never auto-changes reminders
+
 **Problem**: A common temptation is to auto-adjust reminders or sleep schedule based on analytics.  
 **Solution**: Weekly focus is purely a suggestion. Users can accept, save, or dismiss. No automated mutation of reminder definitions or sleep windows. Domain boundary is enforced.
 
 ### 5. Progressive disclosure for insight evidence
+
 **Problem**: Showing all evidence upfront makes cards too dense.  
 **Solution**: "Show details" toggle reveals period, sample size, sufficiency, and supporting patterns. Cards are scannable at a glance but fully explainable on demand.
 
@@ -148,33 +154,33 @@ Integration: spread-merged into the existing `dicts` object in `src/lib/i18n.tsx
 
 ## Spec Section Coverage
 
-| # | Section | Status |
-|---|---------|--------|
-| 1 | Canonical metric calculations (TIB, TST, SE, SOL, WASO, awakenings, circular avg bedtime/wake, regularity, completion) | ✅ |
-| 2 | 8 analytics time windows (7/14/30/90d + this/last week + this/last month) | ✅ |
-| 3 | Data sufficiency framework (none/insufficient/limited/sufficient) | ✅ |
-| 4 | Per-metric minimum sample sizes | ✅ |
-| 5 | Trend engine with meaningful-change thresholds | ✅ |
-| 6 | Rule-based trend confidence (high/medium/low) | ✅ |
-| 7 | Prior-period comparison method | ✅ |
-| 8 | Pattern detection (weekday/weekend, consistency, streaks) | ✅ (8 detectors) |
-| 9 | Explainable insight cards (3-5 max, prioritized) | ✅ |
-| 10 | Insight evidence (period, sample size, sufficiency, supporting patterns) | ✅ |
-| 11 | Weekly summary (Mon-Sun, completion, metrics, variability, interpretation) | ✅ |
-| 12 | Monthly summary (weekly snapshots, best streak, notable changes) | ✅ |
-| 13 | Weekly reflection (rule-selected prompts, 3-4 per week) | ✅ |
-| 14 | Reflection storage (local, user-owned, CRUD) | ✅ |
-| 15 | Weekly focus (6 priority categories, rule-based) | ✅ |
-| 16 | Focus accept/save/dismiss + localStorage persistence | ✅ |
-| 17 | Dashboard integration (additive, not replacement) | ✅ |
-| 18 | Trend range selector (7d/14d/30d/90d) | ✅ |
-| 19 | Recharts-based trend charts | ✅ |
-| 20 | Full localization (5 locales) | ✅ |
-| 21 | Accessibility (ARIA, keyboard, semantic HTML) | ✅ |
-| 22 | SSR safety (hydration guards, safe-storage) | ✅ |
-| 23 | Privacy (PAS-08 compliant, all on-device) | ✅ |
-| 24 | Comprehensive tests (unit) | ✅ (67 tests) |
-| 25 | Documentation (feature docs + implementation plan + completion report) | ✅ (4 documents) |
+| #   | Section                                                                                                                | Status           |
+| --- | ---------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| 1   | Canonical metric calculations (TIB, TST, SE, SOL, WASO, awakenings, circular avg bedtime/wake, regularity, completion) | ✅               |
+| 2   | 8 analytics time windows (7/14/30/90d + this/last week + this/last month)                                              | ✅               |
+| 3   | Data sufficiency framework (none/insufficient/limited/sufficient)                                                      | ✅               |
+| 4   | Per-metric minimum sample sizes                                                                                        | ✅               |
+| 5   | Trend engine with meaningful-change thresholds                                                                         | ✅               |
+| 6   | Rule-based trend confidence (high/medium/low)                                                                          | ✅               |
+| 7   | Prior-period comparison method                                                                                         | ✅               |
+| 8   | Pattern detection (weekday/weekend, consistency, streaks)                                                              | ✅ (8 detectors) |
+| 9   | Explainable insight cards (3-5 max, prioritized)                                                                       | ✅               |
+| 10  | Insight evidence (period, sample size, sufficiency, supporting patterns)                                               | ✅               |
+| 11  | Weekly summary (Mon-Sun, completion, metrics, variability, interpretation)                                             | ✅               |
+| 12  | Monthly summary (weekly snapshots, best streak, notable changes)                                                       | ✅               |
+| 13  | Weekly reflection (rule-selected prompts, 3-4 per week)                                                                | ✅               |
+| 14  | Reflection storage (local, user-owned, CRUD)                                                                           | ✅               |
+| 15  | Weekly focus (6 priority categories, rule-based)                                                                       | ✅               |
+| 16  | Focus accept/save/dismiss + localStorage persistence                                                                   | ✅               |
+| 17  | Dashboard integration (additive, not replacement)                                                                      | ✅               |
+| 18  | Trend range selector (7d/14d/30d/90d)                                                                                  | ✅               |
+| 19  | Recharts-based trend charts                                                                                            | ✅               |
+| 20  | Full localization (5 locales)                                                                                          | ✅               |
+| 21  | Accessibility (ARIA, keyboard, semantic HTML)                                                                          | ✅               |
+| 22  | SSR safety (hydration guards, safe-storage)                                                                            | ✅               |
+| 23  | Privacy (PAS-08 compliant, all on-device)                                                                              | ✅               |
+| 24  | Comprehensive tests (unit)                                                                                             | ✅ (67 tests)    |
+| 25  | Documentation (feature docs + implementation plan + completion report)                                                 | ✅ (4 documents) |
 
 ---
 

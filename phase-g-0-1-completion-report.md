@@ -20,96 +20,116 @@ All 18 completion criteria are met. All 445 tests pass. Build succeeds.
 
 ## 10 Gaps Closed
 
-| # | Gap from Audit | Status |
-|---|----------------|--------|
-| 1 | Routes still use legacy `program-progress.ts` | ✅ Closed — 4 routes/components migrated to `useProgramService` |
-| 2 | No runtime source of truth (no single entry point) | ✅ Closed — `useProgramService` hook is the single entry point |
-| 3 | No validation enforcement on weekly plan save | ✅ Closed — `saveWeeklyPlan()` validates, throws `WeeklyPlanValidationError` |
-| 4 | No sync transport integration for Program | ✅ Closed — client + server sync both include `programProgress` |
-| 5 | No database migration for program progress | ✅ Closed — `migrations/0005_program_progress.sql` |
-| 6 | Export doesn't use new Program schema | ✅ Closed — server export reads canonical `program_progress` table |
-| 7 | Broad try/catch hides errors in export/delete | ✅ Closed — try/catch removed, table guaranteed by migration |
-| 8 | No integration tests for end-to-end flows | ✅ Closed — 28 integration tests in `integration.test.ts` |
-| 9 | No forward-schema guard (silent downgrade risk) | ✅ Closed — `UnsupportedProgramSchema` + write blocking + export preservation |
-| 10 | Legacy module not deprecated / still imported | ✅ Closed — marked `@deprecated`, zero production imports |
+| #   | Gap from Audit                                     | Status                                                                        |
+| --- | -------------------------------------------------- | ----------------------------------------------------------------------------- |
+| 1   | Routes still use legacy `program-progress.ts`      | ✅ Closed — 4 routes/components migrated to `useProgramService`               |
+| 2   | No runtime source of truth (no single entry point) | ✅ Closed — `useProgramService` hook is the single entry point                |
+| 3   | No validation enforcement on weekly plan save      | ✅ Closed — `saveWeeklyPlan()` validates, throws `WeeklyPlanValidationError`  |
+| 4   | No sync transport integration for Program          | ✅ Closed — client + server sync both include `programProgress`               |
+| 5   | No database migration for program progress         | ✅ Closed — `migrations/0005_program_progress.sql`                            |
+| 6   | Export doesn't use new Program schema              | ✅ Closed — server export reads canonical `program_progress` table            |
+| 7   | Broad try/catch hides errors in export/delete      | ✅ Closed — try/catch removed, table guaranteed by migration                  |
+| 8   | No integration tests for end-to-end flows          | ✅ Closed — 28 integration tests in `integration.test.ts`                     |
+| 9   | No forward-schema guard (silent downgrade risk)    | ✅ Closed — `UnsupportedProgramSchema` + write blocking + export preservation |
+| 10  | Legacy module not deprecated / still imported      | ✅ Closed — marked `@deprecated`, zero production imports                     |
 
 ---
 
 ## 18 Completion Criteria — Verdict
 
 ### 1. ✅ All routes use new Program domain (not legacy)
+
 **Verified by:** Grep for `from "@/lib/program-progress"` in `src/routes/` and `src/components/` — zero production imports.
 
 ### 2. ✅ Single runtime entry point (`useProgramService`)
+
 **Verified by:** `src/lib/program/use-program-service.ts` exists and is imported by all 4 UI files.
 
 ### 3. ✅ State machine is the only write path
+
 **Verified by:** `useProgramService.completeLesson()` → `applyEvent()` → `saveProgramProgress()`. No direct writes to storage from UI.
 
 ### 4. ✅ Forward-schema guard implemented
+
 **Verified by:** 12 tests in `storage.test.ts`, integration tests confirm: detection, write blocking, export preservation, explicit delete allowed.
 
 ### 5. ✅ Weekly plan validation enforced on save
+
 **Verified by:** `saveWeeklyPlan()` always validates, throws on failure, preserves previous valid state. 10+ validation checks.
 
 ### 6. ✅ Database migration for `program_progress`
+
 **Verified by:** `migrations/0005_program_progress.sql` — full schema with indexes, FK constraint, JSON array columns.
 
 ### 7. ✅ Server DB layer for program progress
+
 **Verified by:** `src/services/sync/db/program-progress-db.ts` — `getProgramProgressByUserId`, `upsertProgramProgress`, `deleteProgramProgressByUserId`.
 
 ### 8. ✅ Client sync integration
+
 **Verified by:** `src/services/sync/sync-client.ts` — `loadLocalProgramProgress()` + `saveProgramProgressToLocal()` with union merge + forward-schema guard.
 
 ### 9. ✅ Server sync integration
+
 **Verified by:** `src/services/sync/api/sync-api.ts` — `processSync()` handles program progress with union merge, non-fatal error isolation.
 
 ### 10. ✅ Sync types updated (new Canonical format)
+
 **Verified by:** `src/services/sync/sync-types.ts` — `SyncProgramProgress` and `CanonicalProgramProgress` from `sync-contracts`.
 
 ### 11. ✅ Server export uses new schema (no try/catch)
+
 **Verified by:** `src/services/account/account-api.ts` — reads from canonical `program_progress` table with correct columns, no try/catch.
 
 ### 12. ✅ Server delete uses new table (no try/catch)
+
 **Verified by:** `src/services/account/account-api.ts` — direct DELETE from `program_progress`, no try/catch.
 
 ### 13. ✅ Legacy module deprecated, zero production imports
+
 **Verified by:** Grep for `program-progress` imports in routes/components/services — zero production matches. File has `@deprecated` JSDoc.
 
 ### 14. ✅ Integration tests (28 tests, 6 suites)
+
 **Verified by:** `src/lib/program/integration.test.ts` — covers storage↔state-machine round-trip, validation enforcement, forward-schema guard, sync merge, legacy migration, export/delete.
 
 ### 15. ✅ All tests pass (445 total, 161 program-specific)
+
 **Verified by:** `npx vitest run` → 28 test files, 445 tests, all passing.
 
 ### 16. ✅ Build succeeds
+
 **Verified by:** `npm run build` → ✓ built in 5.22s.
 
 ### 17. ✅ Architecture documentation
+
 **Verified by:** Two new docs in `docs/architecture/`:
+
 - `program-runtime-integration.md` — runtime architecture, entry point, sync flow, DB schema
 - `program-data-ownership.md` — data ownership, safety guarantees, privacy, compliance
 
 ### 18. ✅ Implementation plan completed 19/19 sections
+
 **Verified by:** `docs/implementation/PHASE_G_0_1_IMPLEMENTATION_PLAN.md` — all 19 sections complete.
 
 ---
 
 ## Test Summary
 
-| Test Suite | Tests | Status |
-|------------|-------|--------|
-| `program/definition.test.ts` | 19 | ✅ |
-| `program/service.test.ts` | 38 | ✅ |
-| `program/weekly-plan.test.ts` | 28 | ✅ |
-| `program/storage.test.ts` | 24 | ✅ |
-| `program/sync-contracts.test.ts` | 24 | ✅ |
-| `program/integration.test.ts` | 28 | ✅ |
-| **Program subtotal** | **161** | **✅** |
-| All other test files | 284 | ✅ |
-| **Total** | **445** | **✅** |
+| Test Suite                       | Tests   | Status |
+| -------------------------------- | ------- | ------ |
+| `program/definition.test.ts`     | 19      | ✅     |
+| `program/service.test.ts`        | 38      | ✅     |
+| `program/weekly-plan.test.ts`    | 28      | ✅     |
+| `program/storage.test.ts`        | 24      | ✅     |
+| `program/sync-contracts.test.ts` | 24      | ✅     |
+| `program/integration.test.ts`    | 28      | ✅     |
+| **Program subtotal**             | **161** | **✅** |
+| All other test files             | 284     | ✅     |
+| **Total**                        | **445** | **✅** |
 
 ### Integration test coverage (28 tests)
+
 1. **Storage ↔ state machine round-trip** (4 tests)
    - Initial load from empty storage
    - Lesson completion persistence
@@ -155,6 +175,7 @@ All 18 completion criteria are met. All 445 tests pass. Build succeeds.
 ## Files Changed
 
 ### New Files (8)
+
 - `src/lib/program/use-program-service.ts` — React hook, single entry point
 - `src/lib/program/integration.test.ts` — 28 integration tests
 - `src/services/sync/db/program-progress-db.ts` — Server DB layer
@@ -165,6 +186,7 @@ All 18 completion criteria are met. All 445 tests pass. Build succeeds.
 - `phase-g-0-1-completion-report.md` — This report
 
 ### Modified Files (17)
+
 - `src/lib/program/storage.ts` — Forward-schema guard, export/delete integration
 - `src/lib/program/weekly-plan.ts` — Validation enforcement on save
 - `src/routes/program.index.tsx` — Uses `useProgramService`
@@ -200,12 +222,12 @@ Per the specification, the following were explicitly **not** implemented:
 
 ## Risk Assessment
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|------------|
-| Forward-schema guard blocks legitimate writes | Low | Medium | Guard only triggers when stored version > supported; clear dev warnings |
-| Sync merge produces unexpected state | Low | Medium | Set-union for completions is conservative (can only add, never remove) |
-| Legacy migration loses data | Very Low | High | Legacy key is never deleted; migration logic tested extensively |
-| Weekly plan validation rejects valid plans | Low | Low | Validation only enforces structural rules; error messages specific |
+| Risk                                          | Likelihood | Impact | Mitigation                                                              |
+| --------------------------------------------- | ---------- | ------ | ----------------------------------------------------------------------- |
+| Forward-schema guard blocks legitimate writes | Low        | Medium | Guard only triggers when stored version > supported; clear dev warnings |
+| Sync merge produces unexpected state          | Low        | Medium | Set-union for completions is conservative (can only add, never remove)  |
+| Legacy migration loses data                   | Very Low   | High   | Legacy key is never deleted; migration logic tested extensively         |
+| Weekly plan validation rejects valid plans    | Low        | Low    | Validation only enforces structural rules; error messages specific      |
 
 **Overall risk profile:** Low. All changes are additive and conservative.
 The most consequential change (forward-schema guard) is defensive by nature

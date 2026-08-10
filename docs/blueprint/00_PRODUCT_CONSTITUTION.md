@@ -1,6 +1,7 @@
 # 00_PRODUCT_CONSTITUTION.md
 
 # Somna Product Constitution
+
 ### Product Architecture Specification (PAS-00)
 
 > **The constitutional foundation of the Somna platform.**
@@ -9,16 +10,16 @@
 
 ## Architecture Metadata
 
-| Field | Value |
-|-------|-------|
-| Blueprint ID | PAS-00 |
-| Status | Canonical |
-| Version | 2.0 |
-| Layer | Layer 0 – Product Constitution |
-| Owner | Product Architecture |
-| Review Cycle | Quarterly |
-| Applies To | PAS-01 ~ PAS-12 |
-| Authority | Highest |
+| Field        | Value                          |
+| ------------ | ------------------------------ |
+| Blueprint ID | PAS-00                         |
+| Status       | Canonical                      |
+| Version      | 2.0                            |
+| Layer        | Layer 0 – Product Constitution |
+| Owner        | Product Architecture           |
+| Review Cycle | Quarterly                      |
+| Applies To   | PAS-01 ~ PAS-12                |
+| Authority    | Highest                        |
 
 ---
 
@@ -107,11 +108,13 @@ Every architectural decision should strengthen this behavioral loop.
 # 8. Product Boundaries
 
 Somna is:
+
 - A behavioral sleep improvement platform.
 - A CBT-I inspired self-management companion.
 - A private journaling and learning environment.
 
 Somna is not:
+
 - A medical diagnosis system.
 - A replacement for clinicians.
 - An emergency service.
@@ -122,6 +125,7 @@ Somna is not:
 # 9. Quality Philosophy
 
 Quality is defined by:
+
 - User trust
 - Scientific integrity
 - Reliability

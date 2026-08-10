@@ -24,6 +24,7 @@ storage.ts (localStorage wrapper with forward-schema guard)
 ```
 
 Key files:
+
 - `src/lib/program/types.ts` — types, events, transitions, derived values
 - `src/lib/program/service.ts` — `applyEvent()`, event handlers, migration
 - `src/lib/program/use-program-service.ts` — React hook, persistence, reactivity
@@ -33,18 +34,18 @@ Key files:
 
 ## 2. Operation Enforcement Matrix
 
-| Operation                  | Active | Paused | Completed | Unsupported | Current enforcement layer |
-| -------------------------- | :----: | :----: | :-------: | :---------: | ------------------------- |
-| complete lesson            |   ✅   |   ❌   |     ❌    |      ❌     | **UI only** (disabled button) — state machine allows it |
-| uncomplete lesson          |   ✅   |   ❌   |     ❌    |      ❌     | **UI only** — state machine allows it |
-| toggle lesson              |   ✅   |   ❌   |     ❌    |      ❌     | **UI only** (calls complete/uncomplete) |
-| pause                      |   ✅   |   ❌   |     ❌    |      ❌     | State machine (via `isValidStatusTransition`) |
-| resume                     |   ❌   |   ✅   |     ❌    |      ❌     | State machine (via `isValidStatusTransition`) |
-| advance week               |   ✅   |   ❌   |     ❌    |      ❌     | Implicit (side effect of lesson completion) |
-| restart (not implemented)  |   —    |   —    |     —     |      —     | N/A — no restart action exists |
-| recommendation persistence |   ✅   |   ❌   |     ❌    |      ❌     | **None** — weekly_plan events have no status guard |
-| milestone updates          |   ✅   |   ❌   |     ✅    |      ❌     | Implicit (side effect of lesson completion) |
-| lesson skip / unskip       |   ✅   |   ❌   |     ❌    |      ❌     | **None** — no status guard in state machine |
+| Operation                  | Active | Paused | Completed | Unsupported | Current enforcement layer                               |
+| -------------------------- | :----: | :----: | :-------: | :---------: | ------------------------------------------------------- |
+| complete lesson            |   ✅   |   ❌   |    ❌     |     ❌      | **UI only** (disabled button) — state machine allows it |
+| uncomplete lesson          |   ✅   |   ❌   |    ❌     |     ❌      | **UI only** — state machine allows it                   |
+| toggle lesson              |   ✅   |   ❌   |    ❌     |     ❌      | **UI only** (calls complete/uncomplete)                 |
+| pause                      |   ✅   |   ❌   |    ❌     |     ❌      | State machine (via `isValidStatusTransition`)           |
+| resume                     |   ❌   |   ✅   |    ❌     |     ❌      | State machine (via `isValidStatusTransition`)           |
+| advance week               |   ✅   |   ❌   |    ❌     |     ❌      | Implicit (side effect of lesson completion)             |
+| restart (not implemented)  |   —    |   —    |     —     |      —      | N/A — no restart action exists                          |
+| recommendation persistence |   ✅   |   ❌   |    ❌     |     ❌      | **None** — weekly_plan events have no status guard      |
+| milestone updates          |   ✅   |   ❌   |    ✅     |     ❌      | Implicit (side effect of lesson completion)             |
+| lesson skip / unskip       |   ✅   |   ❌   |    ❌     |     ❌      | **None** — no status guard in state machine             |
 
 Legend: ✅ = allowed, ❌ = blocked
 
@@ -83,6 +84,7 @@ not_started → active → paused → completed
 - `completed` — all required lessons completed
 
 Transition table (`PROGRAM_TRANSITIONS`, `types.ts:276`):
+
 - `not_started` → `active`
 - `active` → `paused`, `completed`
 - `paused` → `active`, `completed`
@@ -119,6 +121,7 @@ These are NOT lifecycle states — they're load-time protection states:
 3. Nothing → `empty`
 
 `migrateLegacyProgress` in `service.ts` handles all inputs:
+
 - `null/undefined` → returns initial progress
 - legacy shape → returns migrated progress
 - modern shape (with schemaVersion) → validates and returns
@@ -134,14 +137,15 @@ This is Case B: corrupted is NOT reachable in current implementation.
 
 Where pause guards exist in the UI:
 
-| Component | Guard | Mechanism |
-|-----------|-------|-----------|
-| `LessonTemplate` | `disabled={... isPaused}` on mark-complete button | HTML disabled attribute |
-| `ProgramDashboardCard` | Shows resume CTA instead of next lesson | Conditional rendering |
-| `ProgramPausedBanner` | Visible when paused | Separate component |
-| `WeekPageTemplate` | Likely has guards | TBD — verify |
+| Component              | Guard                                             | Mechanism               |
+| ---------------------- | ------------------------------------------------- | ----------------------- |
+| `LessonTemplate`       | `disabled={... isPaused}` on mark-complete button | HTML disabled attribute |
+| `ProgramDashboardCard` | Shows resume CTA instead of next lesson           | Conditional rendering   |
+| `ProgramPausedBanner`  | Visible when paused                               | Separate component      |
+| `WeekPageTemplate`     | Likely has guards                                 | TBD — verify            |
 
 Where pause guards are MISSING:
+
 - Lesson skip/unskip (if such UI exists)
 - Weekly plan acceptance (if such UI exists)
 
@@ -150,12 +154,14 @@ Where pause guards are MISSING:
 ## 8. Existing Test Coverage
 
 ### State machine tests (`service.test.ts`)
+
 - 30+ tests covering initial state, transitions, lesson completion, milestones, migration
 - One test explicitly **documents** that lesson completion works when paused (line 215)
 - Pause/resume round-trip tested
 - Progress preserved through pause/resume tested
 
 ### Integration tests (`integration.test.ts`)
+
 - Storage ↔ state machine round-trip
 - Forward-schema guard
 - Weekly plan validation
@@ -165,10 +171,12 @@ Where pause guards are MISSING:
 - Pause/resume round-trip in storage
 
 ### Component tests
+
 - Only `time-picker/` has component tests (5 files)
 - **No Program component tests exist** — this is a gap
 
 ### Total
+
 - 485 tests pass (per Phase G-1 baseline)
 
 ---

@@ -14,6 +14,7 @@ The GA4 page-view analytics path had no defensive runtime type checking. When a 
 Because the analytics code ran inside a React `useEffect` without any error boundary, the error propagated to TanStack Router's `ErrorComponent`, crashing the entire application on every page load.
 
 **The `onResolved` callback contract:**
+
 ```ts
 router.subscribe("onResolved", (event) => { ... })
 // event = { type, fromLocation?, toLocation, pathChanged, hrefChanged, hashChanged }
@@ -24,11 +25,13 @@ The callback receives a **NavigationEventInfo object**, not a path string. While
 ### Bug 2 — Auth User Lookup
 
 Both `handleGetSession()` and `getAuthenticatedUser()` called:
+
 ```ts
-findUserByEmail(env, session.userId)
+findUserByEmail(env, session.userId);
 ```
 
 `session.userId` is a UUID user ID, not an email. The query looked up a UUID in the `email_normalized` column, which always returned zero results. This meant:
+
 - Valid sessions were treated as anonymous
 - Session cookies were incorrectly cleared
 - `/api/auth/session` always returned `{ authenticated: false }`
@@ -38,6 +41,7 @@ findUserByEmail(env, session.userId)
 ## Files and Symbols Changed
 
 ### `src/lib/ga4.ts`
+
 - `PageViewInput` type: `{ path: string }` → `{ pathname: string; search?: string; hash?: string; title?: string }`
 - Added `LegacyPageViewInput` type (deprecated, for reference)
 - `sanitizePath(fullPath: string)` → `sanitizePath(fullPath: unknown)` with non-string guard returning `"/"`
@@ -45,6 +49,7 @@ findUserByEmail(env, session.userId)
 - `trackEvent()`: full body wrapped in `try/catch`, validates name is a string
 
 ### `src/hooks/use-analytics-page-view.ts`
+
 - Uses new `PageViewInput` shape (`pathname`/`search`/`hash` instead of `path`)
 - `readPathFromRouter()` helper validates each location part is a string
 - Entire `useEffect` body wrapped in outer `try/catch`
@@ -53,29 +58,32 @@ findUserByEmail(env, session.userId)
 - Unsubscribe cleanup wrapped in try/catch
 
 ### `src/services/auth/auth-api.ts`
+
 - Added `findUserById` import from `./auth-db`
 - `handleGetSession()`: `findUserByEmail(env, session.userId)` → `findUserById(env, session.userId)`
 - `getAuthenticatedUser()`: `findUserByEmail(env, session.userId)` → `findUserById(env, session.userId)`
 
 ### Test Files
+
 - `src/lib/ga4.test.ts` — expanded from ~20 to 37 tests (input validation, defensive boundary, regression)
 - `src/hooks/use-analytics-page-view.test.tsx` — **NEW:** 20 tests
 - `src/services/auth/auth-api.test.ts` — expanded from ~11 to 23 tests (session lookup tests)
 
 ### Documentation
+
 - `docs/implementation/GA4_ROUTER_CRASH_AND_AUTH_LOOKUP_HOTFIX.md` — **NEW:** full hotfix documentation
 
 ---
 
 ## Test Totals
 
-| Category | Count |
-|----------|-------|
-| Total test suite | **642 tests / 38 files** |
-| GA4 module tests | 37 tests |
-| Analytics hook tests | 20 tests |
-| Auth API tests | 23 tests |
-| All passing | ✅ 642 / 642 |
+| Category             | Count                    |
+| -------------------- | ------------------------ |
+| Total test suite     | **642 tests / 38 files** |
+| GA4 module tests     | 37 tests                 |
+| Analytics hook tests | 20 tests                 |
+| Auth API tests       | 23 tests                 |
+| All passing          | ✅ 642 / 642             |
 
 ---
 
@@ -112,6 +120,7 @@ Source files changed by this hotfix have zero TypeScript errors.
 6. **Unsubscribe cleanup** — wrapped in its own try/catch
 
 **Analytics is non-critical infrastructure:**
+
 ```
 analytics failure ≠ application failure
 ```
@@ -120,25 +129,25 @@ analytics failure ≠ application failure
 
 ## Production Verification Checklist
 
-| Item | Status |
-|------|--------|
-| Root cause identified and documented | ✅ |
-| Page-view input accepts only normalized primitives | ✅ |
-| Never concatenates object with string | ✅ |
-| Derives location from router state (string primitives) | ✅ |
-| Sensitive query stripping preserved | ✅ |
-| Skips emission if pathname is not valid string | ✅ |
-| Analytics wrapped in defensive try/catch | ✅ |
-| Crawler suppression preserved | ✅ |
-| SSR safety preserved | ✅ |
-| One page view per initial load + navigation | ✅ |
-| No duplicate page views | ✅ |
-| Auth lookup uses `findUserById`, not `findUserByEmail` | ✅ |
-| Sessions not incorrectly cleared for valid users | ✅ |
-| Anonymous `{ authenticated: false }` preserved | ✅ |
-| 642 tests passing | ✅ |
-| Production build succeeds | ✅ |
-| Deployment to production required | ⚠️ |
+| Item                                                   | Status |
+| ------------------------------------------------------ | ------ |
+| Root cause identified and documented                   | ✅     |
+| Page-view input accepts only normalized primitives     | ✅     |
+| Never concatenates object with string                  | ✅     |
+| Derives location from router state (string primitives) | ✅     |
+| Sensitive query stripping preserved                    | ✅     |
+| Skips emission if pathname is not valid string         | ✅     |
+| Analytics wrapped in defensive try/catch               | ✅     |
+| Crawler suppression preserved                          | ✅     |
+| SSR safety preserved                                   | ✅     |
+| One page view per initial load + navigation            | ✅     |
+| No duplicate page views                                | ✅     |
+| Auth lookup uses `findUserById`, not `findUserByEmail` | ✅     |
+| Sessions not incorrectly cleared for valid users       | ✅     |
+| Anonymous `{ authenticated: false }` preserved         | ✅     |
+| 642 tests passing                                      | ✅     |
+| Production build succeeds                              | ✅     |
+| Deployment to production required                      | ⚠️     |
 
 ---
 

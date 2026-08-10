@@ -1,6 +1,7 @@
 # 04_IDENTITY_PLATFORM_ARCHITECTURE.md
 
 # PAS-04 Identity Platform Architecture
+
 ### Product Architecture Specification
 
 > Defines the identity lifecycle, authentication model, session management and cloud synchronization architecture for Somna.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-04 |
-| Layer | Layer 2 – Platform |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00, PAS-01, PAS-03 |
-| Required By | PAS-05 ~ PAS-12 |
+| Field        | Value                  |
+| ------------ | ---------------------- |
+| Blueprint ID | PAS-04                 |
+| Layer        | Layer 2 – Platform     |
+| Status       | Canonical              |
+| Version      | 2.0                    |
+| Depends On   | PAS-00, PAS-01, PAS-03 |
+| Required By  | PAS-05 ~ PAS-12        |
 
 ---
 
@@ -63,13 +64,13 @@ Recovered
 
 ## 5. Responsibilities
 
-| Component | Responsibility |
-|---|---|
-| Identity | User identity |
-| Authentication | Access verification |
-| Session | Active access |
-| Cloud Sync | Cross-device continuity |
-| Recovery | Restore ownership |
+| Component      | Responsibility          |
+| -------------- | ----------------------- |
+| Identity       | User identity           |
+| Authentication | Access verification     |
+| Session        | Active access           |
+| Cloud Sync     | Cross-device continuity |
+| Recovery       | Restore ownership       |
 
 ## 6. Architecture Invariants
 
@@ -110,12 +111,12 @@ Multi-device Access
 
 ## Data Ownership
 
-| Data | Owner |
-|---|---|
-| Identity | Identity Platform |
-| Session | Session Manager |
-| Behavior | Behavioral Data Platform |
-| Sync Metadata | Cloud Sync Engine |
+| Data          | Owner                    |
+| ------------- | ------------------------ |
+| Identity      | Identity Platform        |
+| Session       | Session Manager          |
+| Behavior      | Behavioral Data Platform |
+| Sync Metadata | Cloud Sync Engine        |
 
 ## Runtime Quality Gates
 

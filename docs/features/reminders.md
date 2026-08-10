@@ -63,7 +63,7 @@ interface Reminder {
   title: string;
   message?: string;
   status: "active" | "paused" | "archived";
-  channels: ReminderChannel[];  // "in_app" | "browser_notification"
+  channels: ReminderChannel[]; // "in_app" | "browser_notification"
   schedule: ReminderSchedule;
   timezone: string;
   snoozeOptionsMinutes: number[];
@@ -79,10 +79,10 @@ interface Reminder {
 ```typescript
 interface ReminderSchedule {
   type: "daily" | "weekdays";
-  time: string;            // HH:MM format
-  days?: number[];         // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-  startDate?: string;      // YYYY-MM-DD
-  endDate?: string;        // YYYY-MM-DD (optional)
+  time: string; // HH:MM format
+  days?: number[]; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  startDate?: string; // YYYY-MM-DD
+  endDate?: string; // YYYY-MM-DD (optional)
 }
 ```
 
@@ -90,15 +90,15 @@ interface ReminderSchedule {
 
 ```typescript
 type ReminderOccurrenceStatus =
-  | "scheduled"    // Not yet due
-  | "due"          // Currently due
-  | "delivered"    // Shown to user
-  | "completed"    // User marked as done
-  | "snoozed"      // User snoozed
-  | "dismissed"    // User dismissed
-  | "missed"       // Not resolved in time
-  | "cancelled"    // Reminder paused/archived
-  | "completed_by_related_action";  // Auto-completed by diary entry
+  | "scheduled" // Not yet due
+  | "due" // Currently due
+  | "delivered" // Shown to user
+  | "completed" // User marked as done
+  | "snoozed" // User snoozed
+  | "dismissed" // User dismissed
+  | "missed" // Not resolved in time
+  | "cancelled" // Reminder paused/archived
+  | "completed_by_related_action"; // Auto-completed by diary entry
 ```
 
 ## Delivery Flow
@@ -128,22 +128,27 @@ User Action Received
 ## Habit Progress Metrics
 
 ### Consistency Rate
+
 ```
 Completed Occurrences / Total Eligible Occurrences
 ```
 
 ### Current Streak
+
 Consecutive days with at least one completed reminder.
 
 ### Longest Streak
+
 Historical maximum streak achieved.
 
 ### Total Completions
+
 Count of all completed occurrences.
 
 ## Multi-Tab Coordination
 
 Uses:
+
 1. **BroadcastChannel API** - Notify other tabs of delivery
 2. **LocalStorage Locks** - Prevent duplicate concurrent delivery
 3. **Custom Events** - Cross-tab state synchronization
@@ -151,17 +156,20 @@ Uses:
 ## Browser Notification Limitations
 
 ### Current Capabilities
+
 - ✅ Works while browser is open and tab is active
 - ✅ Works across tabs (one tab can trigger all)
 - ✅ Privacy-first (no sensitive content in notification by default)
 
 ### Limitations
+
 - ❌ No background delivery when browser is closed
 - ❌ No push notifications from server
 - ❌ iOS Safari has stricter notification policies
 - ❌ Requires user permission (explicit gesture required)
 
 ### Privacy Features
+
 1. **Default Generic Text** - "Somna reminder: Your check-in is ready"
 2. **Opt-In Sensitive Content** - User must enable custom text
 3. **No External Servers** - All notifications are client-side only
@@ -180,22 +188,26 @@ This creates a seamless experience where the user's actual behavior reinforces t
 ## Future Enhancements
 
 ### Web Push Notifications (Service Worker)
+
 - Add service worker registration
 - Implement VAPID key authentication
 - Server-side delivery via Cloudflare Cron
 - Subscription storage & cleanup
 
 ### Advanced Scheduling
+
 - Bi-weekly patterns
 - Reminder windows (not just fixed times)
 - Intelligent scheduling based on sleep data
 
 ### Habit Insights
+
 - Correlation between reminder completion and sleep metrics
 - Personalized reminder recommendations
 - Adaptive difficulty
 
 ### Integration Points
+
 - Program lesson reminders
 - Relaxation practice reminders
 - Sleep restriction schedule reminders

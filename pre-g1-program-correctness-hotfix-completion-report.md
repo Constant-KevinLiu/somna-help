@@ -26,29 +26,29 @@ No rollback or rework was needed.
 
 **Modified (pre-existing from previous session):**
 
-| File | Change |
-|------|--------|
-| `src/lib/program/sync-contracts.ts` | `resolveEarlierTimestamp()` helper, corrected `completedAt` merge |
-| `src/lib/program/sync-contracts.test.ts` | 29 new tests for timestamp merge |
-| `src/lib/program/storage.ts` | `ProgramLoadResult` type, `loadProgramProgressResult()` |
-| `src/lib/program/storage.test.ts` | 7 new tests for load result contract |
-| `src/lib/program/use-program-service.ts` | `loadStatus` state, write-blocking guards |
-| `src/lib/program/integration.test.ts` | 6 new integration tests (completedAt + write blocking) |
-| `src/lib/program-lessons-i18n.ts` | 4 new i18n keys × 6 locales |
-| `src/components/program/LessonTemplate.tsx` | Banner + disabled toggle |
-| `src/components/program/WeekPageTemplate.tsx` | Banner integration |
-| `src/routes/program.index.tsx` | Banner + disabled actions |
-| `src/routes/dashboard.tsx` | Compact banner in Program card |
+| File                                          | Change                                                            |
+| --------------------------------------------- | ----------------------------------------------------------------- |
+| `src/lib/program/sync-contracts.ts`           | `resolveEarlierTimestamp()` helper, corrected `completedAt` merge |
+| `src/lib/program/sync-contracts.test.ts`      | 29 new tests for timestamp merge                                  |
+| `src/lib/program/storage.ts`                  | `ProgramLoadResult` type, `loadProgramProgressResult()`           |
+| `src/lib/program/storage.test.ts`             | 7 new tests for load result contract                              |
+| `src/lib/program/use-program-service.ts`      | `loadStatus` state, write-blocking guards                         |
+| `src/lib/program/integration.test.ts`         | 6 new integration tests (completedAt + write blocking)            |
+| `src/lib/program-lessons-i18n.ts`             | 4 new i18n keys × 6 locales                                       |
+| `src/components/program/LessonTemplate.tsx`   | Banner + disabled toggle                                          |
+| `src/components/program/WeekPageTemplate.tsx` | Banner integration                                                |
+| `src/routes/program.index.tsx`                | Banner + disabled actions                                         |
+| `src/routes/dashboard.tsx`                    | Compact banner in Program card                                    |
 
 **Newly created (pre-existing):**
 
-| File | Purpose |
-|------|---------|
-| `src/components/program/ProgramUnsupportedBanner.tsx` | Reusable warning banner component |
-| `docs/implementation/PRE_G1_PROGRAM_CORRECTNESS_HOTFIX.md` | Hotfix implementation doc |
-| `docs/architecture/program-sync-contracts.md` | Updated with completedAt rule |
-| `docs/architecture/program-runtime-integration.md` | Updated with load contract + UI protection |
-| `docs/audit/PHASE_G_0_2_FINAL_VERIFICATION.md` | Updated with hotfix addendum |
+| File                                                       | Purpose                                    |
+| ---------------------------------------------------------- | ------------------------------------------ |
+| `src/components/program/ProgramUnsupportedBanner.tsx`      | Reusable warning banner component          |
+| `docs/implementation/PRE_G1_PROGRAM_CORRECTNESS_HOTFIX.md` | Hotfix implementation doc                  |
+| `docs/architecture/program-sync-contracts.md`              | Updated with completedAt rule              |
+| `docs/architecture/program-runtime-integration.md`         | Updated with load contract + UI protection |
+| `docs/audit/PHASE_G_0_2_FINAL_VERIFICATION.md`             | Updated with hotfix addendum               |
 
 ---
 
@@ -64,13 +64,11 @@ and ran validation without modifying any source files.
 **Before the fix**, `mergeLocalAndRemoteProgress` used:
 
 ```typescript
-const completedAt =
-  status === "completed"
-    ? local.completedAt ?? remote.completedAt
-    : null;
+const completedAt = status === "completed" ? (local.completedAt ?? remote.completedAt) : null;
 ```
 
 This means:
+
 - If both sides are completed, `local.completedAt` always wins
 - The "earlier is more accurate" semantic was **not implemented**
 - Depending on which side is "local" in the merge call, different results
@@ -90,11 +88,11 @@ the semantic meaning of "first confirmed completion time."
 
 Truth table:
 
-| Local | Remote | Result |
-|-------|--------|--------|
-| `null` | `null` | `null` |
-| valid timestamp | `null` | local |
-| `null` | valid timestamp | remote |
+| Local             | Remote            | Result             |
+| ----------------- | ----------------- | ------------------ |
+| `null`            | `null`            | `null`             |
+| valid timestamp   | `null`            | local              |
+| `null`            | valid timestamp   | remote             |
 | valid timestamp A | valid timestamp B | earlier of A and B |
 
 Implementation: `resolveEarlierTimestamp(a, b)` in `sync-contracts.ts`.
@@ -104,6 +102,7 @@ in spirit but had inline logic; now refactored to use the shared helper
 for consistency).
 
 **Properties verified by tests:**
+
 - Commutative: `merge(a, b).completedAt === merge(b, a).completedAt`
 - Idempotent: merging self preserves the same completedAt
 - Deterministic: same inputs → same output every time
@@ -171,6 +170,7 @@ When `status === "unsupported-version"`:
   not blocked — intentional user action bypasses the guard
 
 The forward-schema guard is enforced at three levels:
+
 1. **Storage layer**: `saveProgramProgress()` checks stored schema before writing
 2. **Service hook**: all mutation methods short-circuit when `unsupportedRef.current`
 3. **Sync client**: upload is skipped, download merge is skipped
@@ -181,18 +181,19 @@ The forward-schema guard is enforced at three levels:
 
 When `loadStatus === "unsupported-version"`, the following are no-ops:
 
-| Operation | Blocked at | Result |
-|-----------|-----------|--------|
-| `completeLesson()` | `useProgramService` hook (short-circuit) | No state change, no persist |
-| `uncompleteLesson()` | `useProgramService` hook (short-circuit) | No state change, no persist |
-| `toggleLesson()` | delegates to above | No state change, no persist |
-| `pauseProgram()` | `useProgramService` hook (short-circuit) | No state change, no persist |
-| `resumeProgram()` | `useProgramService` hook (short-circuit) | No state change, no persist |
-| `saveProgramProgress()` | Storage guard | Returns `false`, no write |
-| Sync upload | `sync-client.ts` | Skipped entirely |
-| Sync download merge | `sync-client.ts` | Skipped (never overwrites newer) |
+| Operation               | Blocked at                               | Result                           |
+| ----------------------- | ---------------------------------------- | -------------------------------- |
+| `completeLesson()`      | `useProgramService` hook (short-circuit) | No state change, no persist      |
+| `uncompleteLesson()`    | `useProgramService` hook (short-circuit) | No state change, no persist      |
+| `toggleLesson()`        | delegates to above                       | No state change, no persist      |
+| `pauseProgram()`        | `useProgramService` hook (short-circuit) | No state change, no persist      |
+| `resumeProgram()`       | `useProgramService` hook (short-circuit) | No state change, no persist      |
+| `saveProgramProgress()` | Storage guard                            | Returns `false`, no write        |
+| Sync upload             | `sync-client.ts`                         | Skipped entirely                 |
+| Sync download merge     | `sync-client.ts`                         | Skipped (never overwrites newer) |
 
 Blocked operations:
+
 - Do not modify localStorage
 - Do not modify server state
 - Do not enqueue sync writes
@@ -207,6 +208,7 @@ schema version numbers).
 ## 10. Routes Verified
 
 ### `/program` (Program Home)
+
 - ✅ `ProgramUnsupportedBanner` visible below hero
 - ✅ Progress bar, badges, week completion **not shown as empty** (hidden entirely)
 - ✅ Week cards are locked/non-clickable
@@ -214,11 +216,13 @@ schema version numbers).
 - ✅ Page remains navigable (header, footer, other links work)
 
 ### `/program/week-1` (Week Page)
+
 - ✅ `ProgramUnsupportedBanner` visible below hero
 - ✅ Lesson content still readable (links work, content loads)
 - ✅ No completion controls on this page (they're on lesson pages)
 
 ### `/program/week-1/lesson-slug` (Lesson Page)
+
 - ✅ `ProgramUnsupportedBanner` visible below hero
 - ✅ Lesson content fully readable
 - ✅ "Mark as Completed" toggle is `disabled`
@@ -226,6 +230,7 @@ schema version numbers).
 - ✅ Navigation links (prev/next/back) still work
 
 ### `/dashboard` (Dashboard)
+
 - ✅ No crash
 - ✅ `ProgramUnsupportedBanner compact` shown inside Program card
 - ✅ No incorrect "Program not started" / 0% message
@@ -233,6 +238,7 @@ schema version numbers).
 - ✅ No raw i18n keys visible
 
 **SSR safety verified at code level:**
+
 - `ProgramUnsupportedBanner` returns `null` when `!hydrated`
 - First client render matches SSR output
 - No hydration mismatch
@@ -244,6 +250,7 @@ schema version numbers).
 ### Sync — `sync-contracts.test.ts` (+29 tests)
 
 **resolveEarlierTimestamp unit (12 tests):**
+
 - both null → null
 - local value + remote null → local
 - local null + remote value → remote
@@ -258,6 +265,7 @@ schema version numbers).
 - idempotent
 
 **mergeLocalAndRemoteProgress completedAt (12 tests):**
+
 - local earlier wins
 - remote earlier wins
 - equal timestamps stable
@@ -275,6 +283,7 @@ schema version numbers).
 ### Storage — `storage.test.ts` (+7 tests)
 
 **loadProgramProgressResult (7 tests):**
+
 - empty state → `status: "empty"`
 - stored canonical → `status: "ready"`
 - legacy migration → `status: "migrated"` with `fromVersion: 0`
@@ -305,13 +314,13 @@ Tests       481 passed (481)
 Duration    2.93s
 ```
 
-| Category | Count |
-|----------|-------|
-| Total test files | 28 |
-| Total tests | 481 |
-| Program-specific tests | 197 |
-| Tests added by hotfix | ~37 |
-| Failures | 0 |
+| Category               | Count |
+| ---------------------- | ----- |
+| Total test files       | 28    |
+| Total tests            | 481   |
+| Program-specific tests | 197   |
+| Tests added by hotfix  | ~37   |
+| Failures               | 0     |
 
 All tests pass. No regressions.
 
@@ -319,15 +328,16 @@ All tests pass. No regressions.
 
 ## 13. TypeScript Results
 
-| Check | Errors | Exit Code | Program Errors |
-|-------|--------|-----------|----------------|
-| `npm run typecheck` (main tsconfig) | 78 | 2 | 0 |
-| `npm run typecheck:app` | 51 | 2 | 0 |
-| `npm run typecheck:worker` | 36 | 2 | N/A |
-| `npm run typecheck:tests` | 32 | 2 | 0 |
+| Check                               | Errors | Exit Code | Program Errors |
+| ----------------------------------- | ------ | --------- | -------------- |
+| `npm run typecheck` (main tsconfig) | 78     | 2         | 0              |
+| `npm run typecheck:app`             | 51     | 2         | 0              |
+| `npm run typecheck:worker`          | 36     | 2         | N/A            |
+| `npm run typecheck:tests`           | 32     | 2         | 0              |
 
 **Repository-wide TypeScript does NOT pass.** This is pre-existing debt
 unrelated to the hotfix. Errors are in:
+
 - `AuthModal.tsx` (snake_case i18n key access)
 - `Header.tsx` (missing ja/de navigation entries)
 - `RelaxAudioPlayer.tsx` (missing de/ja locale entries)
@@ -366,12 +376,12 @@ Production build succeeds. Both client and server bundles generated cleanly.
 
 ## 16. Documentation Updated
 
-| Document | Change |
-|----------|--------|
-| `docs/implementation/PRE_G1_PROGRAM_CORRECTNESS_HOTFIX.md` | **New** — Full hotfix implementation report (258 lines) |
-| `docs/architecture/program-sync-contracts.md` | Updated v1.0 → v1.1 — Added completedAt merge truth table, invalid timestamp policy, and properties |
-| `docs/architecture/program-runtime-integration.md` | Updated v1.0 → v1.1 — Added ProgramLoadResult contract, loadStatus, write-blocking details, ProgramUnsupportedBanner, route behavior table |
-| `docs/audit/PHASE_G_0_2_FINAL_VERIFICATION.md` | Added hotfix addendum — H2 and H3 marked as resolved, verification summary |
+| Document                                                   | Change                                                                                                                                     |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `docs/implementation/PRE_G1_PROGRAM_CORRECTNESS_HOTFIX.md` | **New** — Full hotfix implementation report (258 lines)                                                                                    |
+| `docs/architecture/program-sync-contracts.md`              | Updated v1.0 → v1.1 — Added completedAt merge truth table, invalid timestamp policy, and properties                                        |
+| `docs/architecture/program-runtime-integration.md`         | Updated v1.0 → v1.1 — Added ProgramLoadResult contract, loadStatus, write-blocking details, ProgramUnsupportedBanner, route behavior table |
+| `docs/audit/PHASE_G_0_2_FINAL_VERIFICATION.md`             | Added hotfix addendum — H2 and H3 marked as resolved, verification summary                                                                 |
 
 ---
 
@@ -395,6 +405,7 @@ Production build succeeds. Both client and server bundles generated cleanly.
    for the important case (future schema).
 
 ### Verified NOT remaining
+
 - ✅ `completedAt` merge bug — FIXED
 - ✅ Unsupported schema has no user-facing warning — FIXED
 - ✅ Writes not blocked at service layer — FIXED
@@ -419,6 +430,7 @@ Both correctness issues are fully resolved:
    SSR-safe. Localized in 6 locales. 13+ dedicated tests.
 
 **Validation summary:**
+
 - 481 tests passing (0 failures)
 - 0 TypeScript errors in modified files
 - Build succeeds

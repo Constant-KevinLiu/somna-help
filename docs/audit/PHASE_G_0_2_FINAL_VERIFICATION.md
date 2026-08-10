@@ -1,4 +1,5 @@
 # Phase G-0.2 Final Verification Gate
+
 ## Program Foundation Production Readiness Check
 
 **Audit date:** 2026-07-29
@@ -15,6 +16,7 @@
 The Program Foundation implementation is functionally complete and production-ready for the core user journey. The service layer, storage system, migration path, and sync infrastructure are well-architected, thoroughly tested, and demonstrate strong design principles (event sourcing, forward-schema safety, preservative merging, SSR safety).
 
 Three areas carry notable debt that is **low risk for production launch** but should be tracked for Phase G-1 or G-2:
+
 1. **UI completeness gaps**: paused status unexposed, no route-level access guards, no future-schema warning banner
 2. **One functional sync bug**: `completedAt` merge does not pick earliest timestamp (cosmetic — no data loss)
 3. **Typecheck failures**: 65+ pre-existing type errors across the repo (none in `src/lib/program/`); build succeeds regardless
@@ -28,6 +30,7 @@ No critical data-loss, security, or stability issues were found.
 ### 1.1 Migration File: `migrations/0005_program_progress.sql`
 
 **Positive findings:**
+
 - **Idempotent**: Uses `CREATE TABLE IF NOT EXISTS` (line 17) — safe to re-apply.
 - **User ownership**: `user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE` (line 22) — correctly scoped to users table from migration 0001.
 - **Uniqueness**: `UNIQUE(user_id, program_id)` (line 47) — enforces one progress record per user per program.
@@ -50,12 +53,12 @@ No critical data-loss, security, or stability issues were found.
 
 ### 1.4 Notes / Minor Issues
 
-| # | Severity | Issue | Location |
-|---|----------|-------|----------|
-| 1 | Low | No CHECK constraint on `status` values — validation relies on app code | `migrations/0005_program_progress.sql:30` |
-| 2 | Low | `program_version` and `schema_version` not updated in ON CONFLICT SET clause | `program-progress-db.ts:168-178` |
-| 3 | Low | `lesson_progress` table from migration 0003 is orphaned (no code references it) | `migrations/0003_reminder_settings.sql` |
-| 4 | Low | No dedicated DB-level integration tests (consistent with project pattern) | — |
+| #   | Severity | Issue                                                                           | Location                                  |
+| --- | -------- | ------------------------------------------------------------------------------- | ----------------------------------------- |
+| 1   | Low      | No CHECK constraint on `status` values — validation relies on app code          | `migrations/0005_program_progress.sql:30` |
+| 2   | Low      | `program_version` and `schema_version` not updated in ON CONFLICT SET clause    | `program-progress-db.ts:168-178`          |
+| 3   | Low      | `lesson_progress` table from migration 0003 is orphaned (no code references it) | `migrations/0003_reminder_settings.sql`   |
+| 4   | Low      | No dedicated DB-level integration tests (consistent with project pattern)       | —                                         |
 
 **Verdict: PASS WITH NOTES** — Schema is correct, secure, and complete. All notes are minor observations, not blockers.
 
@@ -66,6 +69,7 @@ No critical data-loss, security, or stability issues were found.
 ### 2.1 Migration Flow
 
 Migration is triggered in `src/lib/program/storage.ts:149-176`:
+
 1. Try canonical key `somna:program-progress:v1`
 2. If missing, try legacy key `cbtiProgramProgress`
 3. If legacy found → migrate via `migrateLegacyProgress()` → auto-save to canonical key → return migrated
@@ -73,14 +77,14 @@ Migration is triggered in `src/lib/program/storage.ts:149-176`:
 
 ### 2.2 Data Integrity
 
-| Concern | Status | Detail |
-|---------|--------|--------|
-| Completed lessons preserved | ✅ | `completedLessons` → `completedLessonIds`, filtered to valid lesson IDs |
-| No duplicate completion | ⚠️ | No explicit deduplication in migration (mitigated: legacy loader always deduplicated on load) |
-| Status correctly derived | ✅ | All lessons done → `completed`, otherwise → `active` |
-| currentWeekId calculated | ✅ | First week not fully completed; null if all done |
-| Milestones earned | ✅ | Same `updateMilestones()` logic as event flow |
-| startedAt set | ✅ | Set to now when there are completed lessons (exact date not available in legacy) |
+| Concern                     | Status | Detail                                                                                        |
+| --------------------------- | ------ | --------------------------------------------------------------------------------------------- |
+| Completed lessons preserved | ✅     | `completedLessons` → `completedLessonIds`, filtered to valid lesson IDs                       |
+| No duplicate completion     | ⚠️     | No explicit deduplication in migration (mitigated: legacy loader always deduplicated on load) |
+| Status correctly derived    | ✅     | All lessons done → `completed`, otherwise → `active`                                          |
+| currentWeekId calculated    | ✅     | First week not fully completed; null if all done                                              |
+| Milestones earned           | ✅     | Same `updateMilestones()` logic as event flow                                                 |
+| startedAt set               | ✅     | Set to now when there are completed lessons (exact date not available in legacy)              |
 
 ### 2.3 Idempotency
 
@@ -93,6 +97,7 @@ Migration is triggered in `src/lib/program/storage.ts:149-176`:
 **161 tests across 6 program test files, all passing.**
 
 Migration-specific gaps (low risk):
+
 - No test for duplicate lesson IDs in legacy data
 - No test for migration idempotency (migrate twice yields same result)
 - No test for milestones correctly earned after migration
@@ -101,13 +106,13 @@ Migration-specific gaps (low risk):
 
 ### 2.5 Edge Case Verification
 
-| Edge Case | Result |
-|-----------|--------|
-| Invalid JSON in legacy key | Safe — falls through to fresh start (no crash) |
-| Unknown lesson IDs in legacy | Safe — filtered out by definition check |
-| Empty completedLessons | Correct — returns initial `not_started` state |
-| Extra unexpected fields | Safe — ignored by both type guard and migration function |
-| Non-string items in array | Safe — filtered out by validity check |
+| Edge Case                    | Result                                                   |
+| ---------------------------- | -------------------------------------------------------- |
+| Invalid JSON in legacy key   | Safe — falls through to fresh start (no crash)           |
+| Unknown lesson IDs in legacy | Safe — filtered out by definition check                  |
+| Empty completedLessons       | Correct — returns initial `not_started` state            |
+| Extra unexpected fields      | Safe — ignored by both type guard and migration function |
+| Non-string items in array    | Safe — filtered out by validity check                    |
 
 **Verdict: PASS WITH NOTES** — Core migration is correct and safe. Minor gaps in edge-case robustness and test coverage; no data loss risk.
 
@@ -117,23 +122,23 @@ Migration-specific gaps (low risk):
 
 ### 3.1 Route Inventory
 
-| Route | File | Status |
-|-------|------|--------|
-| `/program` | `src/routes/program.index.tsx` | Works correctly |
-| `/program/week-N` | `src/routes/program.$slug.tsx` | Works, but no access guard |
-| `/program/week-N/lesson-M` | `src/routes/program.$week.$lesson.tsx` | Works, but no access guard |
-| `/dashboard` | `src/routes/dashboard.tsx` | Works, minor new-user UX issue |
+| Route                      | File                                   | Status                         |
+| -------------------------- | -------------------------------------- | ------------------------------ |
+| `/program`                 | `src/routes/program.index.tsx`         | Works correctly                |
+| `/program/week-N`          | `src/routes/program.$slug.tsx`         | Works, but no access guard     |
+| `/program/week-N/lesson-M` | `src/routes/program.$week.$lesson.tsx` | Works, but no access guard     |
+| `/dashboard`               | `src/routes/dashboard.tsx`             | Works, minor new-user UX issue |
 
 ### 3.2 Scenario Results
 
-| Scenario | Result | Detail |
-|----------|--------|--------|
-| **New user** | ⚠️ Functional | Progress defaults to 0 correctly, but no onboarding state; dashboard shows "Week 6" as current (misleading) |
-| **Migrated user** | ✅ Pass | Migration is transparent; all progress, status, milestones correctly reflected |
-| **Completed lesson** | ✅ Pass | UI updates immediately; cross-tab sync via CustomEvent; progress bars animate |
-| **Paused program** | ❌ Gap | Service layer supports pause/resume, but **no UI exposes it** — no pause button, no paused indicator, no resume flow |
-| **Malformed storage** | ✅ Pass | Multi-layer try/catch with graceful fallback to initial progress |
-| **Future schema** | ❌ Gap | Service layer preserves data correctly, but **no user-facing warning** — user sees empty progress with no explanation |
+| Scenario              | Result        | Detail                                                                                                                |
+| --------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------- |
+| **New user**          | ⚠️ Functional | Progress defaults to 0 correctly, but no onboarding state; dashboard shows "Week 6" as current (misleading)           |
+| **Migrated user**     | ✅ Pass       | Migration is transparent; all progress, status, milestones correctly reflected                                        |
+| **Completed lesson**  | ✅ Pass       | UI updates immediately; cross-tab sync via CustomEvent; progress bars animate                                         |
+| **Paused program**    | ❌ Gap        | Service layer supports pause/resume, but **no UI exposes it** — no pause button, no paused indicator, no resume flow  |
+| **Malformed storage** | ✅ Pass       | Multi-layer try/catch with graceful fallback to initial progress                                                      |
+| **Future schema**     | ❌ Gap        | Service layer preserves data correctly, but **no user-facing warning** — user sees empty progress with no explanation |
 
 ### 3.3 Route Access Control
 
@@ -149,15 +154,15 @@ Migration-specific gaps (low risk):
 
 ### 3.5 Issues Summary
 
-| # | Severity | Issue | Location |
-|---|----------|-------|----------|
-| 1 | High | Paused program status completely unexposed in UI | All program route files |
-| 2 | High | Future/unsupported schema shows no user warning | All program route files |
-| 3 | Medium | No route-level access guards for locked weeks/lessons | `program.$slug.tsx`, `program.$week.$lesson.tsx` |
-| 4 | Medium | Dashboard card defaults to "Week 6" for new users | `dashboard.tsx:741` |
-| 5 | Medium | `document.title` set during render instead of useEffect | `program.$week.$lesson.tsx:42` |
-| 6 | Low | No onboarding state for brand-new users | `program.index.tsx` |
-| 7 | Low | Week page "Next" button links to locked weeks | `WeekPageTemplate.tsx:221-230` |
+| #   | Severity | Issue                                                   | Location                                         |
+| --- | -------- | ------------------------------------------------------- | ------------------------------------------------ |
+| 1   | High     | Paused program status completely unexposed in UI        | All program route files                          |
+| 2   | High     | Future/unsupported schema shows no user warning         | All program route files                          |
+| 3   | Medium   | No route-level access guards for locked weeks/lessons   | `program.$slug.tsx`, `program.$week.$lesson.tsx` |
+| 4   | Medium   | Dashboard card defaults to "Week 6" for new users       | `dashboard.tsx:741`                              |
+| 5   | Medium   | `document.title` set during render instead of useEffect | `program.$week.$lesson.tsx:42`                   |
+| 6   | Low      | No onboarding state for brand-new users                 | `program.index.tsx`                              |
+| 7   | Low      | Week page "Next" button links to locked weeks           | `WeekPageTemplate.tsx:221-230`                   |
 
 **Verdict: PASS WITH NOTES** — Core navigation and rendering work correctly for the happy path. Three notable UI gaps (paused status, future schema warning, route guards) are quality-of-implementation issues, not correctness issues.
 
@@ -167,26 +172,26 @@ Migration-specific gaps (low risk):
 
 ### 4.1 Upload / Download / Restore
 
-| Flow | Verdict | Detail |
-|------|---------|--------|
-| Local → Server upload | ✅ Pass | `toSyncProgress()` correctly serializes all fields; `clientId` included |
-| Server persistence | ✅ Pass | Upsert with LWW guard; user_id from session; parameterized queries |
-| Server → Client restore | ✅ Pass | `handleRestore()` includes program progress; client merges (doesn't overwrite) |
-| Forward-schema protection | ✅ Pass | Server data cannot downgrade local schema version |
+| Flow                      | Verdict | Detail                                                                         |
+| ------------------------- | ------- | ------------------------------------------------------------------------------ |
+| Local → Server upload     | ✅ Pass | `toSyncProgress()` correctly serializes all fields; `clientId` included        |
+| Server persistence        | ✅ Pass | Upsert with LWW guard; user_id from session; parameterized queries             |
+| Server → Client restore   | ✅ Pass | `handleRestore()` includes program progress; client merges (doesn't overwrite) |
+| Forward-schema protection | ✅ Pass | Server data cannot downgrade local schema version                              |
 
 ### 4.2 Conflict Merge Strategy Verification
 
-| Field | Documented Strategy | Implementation | Verified |
-|-------|--------------------|----------------|----------|
-| `completedLessonIds` | Set union | Set union | ✅ Pass |
-| `skippedLessonIds` | LWW (top-level doc) / Union (function doc) | Union | ⚠️ Doc inconsistency (union is safer) |
-| `acceptedPlanIds` | Not documented | Union | ✅ Pass (sensible default) |
-| `dismissedRecommendationIds` | Not documented | Union | ✅ Pass (sensible default) |
-| `status` | Most advanced wins | Most advanced wins | ✅ Pass (well-tested) |
-| `currentWeekId` | LWW (by updatedAt) | LWW (by updatedAt) | ✅ Pass (well-tested) |
-| `milestones` | Union, earliest earnedAt | Union, earliest earnedAt | ✅ Pass (well-tested) |
-| `startedAt` | Earliest | Earliest | ✅ Pass |
-| `completedAt` | Earliest of the two | **Local-first (not earliest)** | ❌ **BUG** |
+| Field                        | Documented Strategy                        | Implementation                 | Verified                              |
+| ---------------------------- | ------------------------------------------ | ------------------------------ | ------------------------------------- |
+| `completedLessonIds`         | Set union                                  | Set union                      | ✅ Pass                               |
+| `skippedLessonIds`           | LWW (top-level doc) / Union (function doc) | Union                          | ⚠️ Doc inconsistency (union is safer) |
+| `acceptedPlanIds`            | Not documented                             | Union                          | ✅ Pass (sensible default)            |
+| `dismissedRecommendationIds` | Not documented                             | Union                          | ✅ Pass (sensible default)            |
+| `status`                     | Most advanced wins                         | Most advanced wins             | ✅ Pass (well-tested)                 |
+| `currentWeekId`              | LWW (by updatedAt)                         | LWW (by updatedAt)             | ✅ Pass (well-tested)                 |
+| `milestones`                 | Union, earliest earnedAt                   | Union, earliest earnedAt       | ✅ Pass (well-tested)                 |
+| `startedAt`                  | Earliest                                   | Earliest                       | ✅ Pass                               |
+| `completedAt`                | Earliest of the two                        | **Local-first (not earliest)** | ❌ **BUG**                            |
 
 ### 4.3 completedAt Merge Bug
 
@@ -200,22 +205,22 @@ Migration-specific gaps (low risk):
 
 ### 4.4 Anonymous-to-Authenticated Merge
 
-| Aspect | Verdict | Detail |
-|--------|---------|--------|
-| Merge function exists | ✅ | `mergeLocalAndRemoteProgress()` explicitly designed for this |
-| Merge strategy correct | ✅ | Same union/LWW/most-advanced strategies as regular sync |
-| Triggered on sign-in | ❌ | No — auth success only refreshes session, does not trigger a sync |
-| Eventually consistent | ✅ | Merge happens on next manual/auto sync (online event, SyncStatus button) |
+| Aspect                 | Verdict | Detail                                                                   |
+| ---------------------- | ------- | ------------------------------------------------------------------------ |
+| Merge function exists  | ✅      | `mergeLocalAndRemoteProgress()` explicitly designed for this             |
+| Merge strategy correct | ✅      | Same union/LWW/most-advanced strategies as regular sync                  |
+| Triggered on sign-in   | ❌      | No — auth success only refreshes session, does not trigger a sync        |
+| Eventually consistent  | ✅      | Merge happens on next manual/auto sync (online event, SyncStatus button) |
 
 **Impact**: Low. Users who sign in will have their anonymous progress merged on the next sync cycle. The data is not lost — it just doesn't merge immediately.
 
 ### 4.5 Additional Sync Issues
 
-| # | Severity | Issue | Location |
-|---|----------|-------|----------|
-| 1 | Moderate | No program progress validation on server (sleep records + reflections have it) | `sync-api.ts` / no `sync-validation.ts` entry |
-| 2 | Low | Type cast smell: `SyncProgramProgress` cast to `CanonicalProgramProgress` | `sync-api.ts:247-249` |
-| 3 | Low | `skippedLessonIds` documented as LWW but implemented as union | `sync-contracts.ts:18` vs `:315` |
+| #   | Severity | Issue                                                                          | Location                                      |
+| --- | -------- | ------------------------------------------------------------------------------ | --------------------------------------------- |
+| 1   | Moderate | No program progress validation on server (sleep records + reflections have it) | `sync-api.ts` / no `sync-validation.ts` entry |
+| 2   | Low      | Type cast smell: `SyncProgramProgress` cast to `CanonicalProgramProgress`      | `sync-api.ts:247-249`                         |
+| 3   | Low      | `skippedLessonIds` documented as LWW but implemented as union                  | `sync-contracts.ts:18` vs `:315`              |
 
 **Verdict: PASS WITH NOTES** — Core sync works correctly. One functional bug (completedAt merge) with cosmetic-only impact. Auto-sync on sign-in is missing but the merge strategy itself is correct when sync does run.
 
@@ -226,11 +231,13 @@ Migration-specific gaps (low risk):
 ### 5.1 Export Contains Program Data
 
 **Server-side** (`src/services/account/account-api.ts:113-128`):
+
 - ✅ Queries `program_progress` table, includes all 15 non-user_id columns
 - ✅ Included in export payload as `programProgress` array
 - ✅ All data types separated in their own top-level keys (no mixing)
 
 **Client-side** (`src/lib/program/storage.ts:255-278`):
+
 - ✅ `exportProgramData()` returns structured `ProgramExportData` with schema version
 - ✅ Handles unsupported schema by including raw data alongside typed fields
 
@@ -239,10 +246,12 @@ Migration-specific gaps (low risk):
 ### 5.2 Delete Removes Program Data
 
 **Server-side** (`account-api.ts:289-294`):
+
 - ✅ `DELETE FROM program_progress WHERE user_id = ?` — properly scoped
 - ✅ Included in deletion stats
 
 **Client-side** (`src/lib/program/storage.ts:289-292`):
+
 - ✅ `deleteAllProgramData()` clears canonical key, legacy key, and plans key
 - ✅ Called from `IdentityMenu.handleClearCache()` after account deletion
 
@@ -283,6 +292,7 @@ Test Files  28 passed (28)
 **Result: ❌ FAIL (exit code 2, 65+ errors)**
 
 Errors are concentrated in:
+
 - `AuthModal.tsx` (snake_case vs camelCase key mismatch) — 7 errors
 - `Header.tsx` (locale type mismatches, missing `ja` locale entries) — ~8 errors
 - `src/components/diary/` (missing `de` locale in reflection content) — 3 errors
@@ -320,51 +330,51 @@ None.
 
 ### High (3) — UI/UX, not correctness
 
-| # | Area | Issue | Risk |
-|---|------|-------|------|
-| H1 | Routes | Paused program status completely unexposed in UI | Users cannot pause/resume; status field is dead weight in UI |
-| H2 | Routes | No user-facing warning for unsupported/future schema version | Users see empty progress, think data is lost (data is actually preserved) |
-| H3 | Sync | `completedAt` merge does not pick earliest timestamp (local-first instead) | Cosmetic only — completed date may not be the earliest; no data loss |
+| #   | Area   | Issue                                                                      | Risk                                                                      |
+| --- | ------ | -------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| H1  | Routes | Paused program status completely unexposed in UI                           | Users cannot pause/resume; status field is dead weight in UI              |
+| H2  | Routes | No user-facing warning for unsupported/future schema version               | Users see empty progress, think data is lost (data is actually preserved) |
+| H3  | Sync   | `completedAt` merge does not pick earliest timestamp (local-first instead) | Cosmetic only — completed date may not be the earliest; no data loss      |
 
 ### Medium (6)
 
-| # | Area | Issue |
-|---|------|-------|
-| M1 | Routes | No route-level access guards for locked weeks/lessons |
-| M2 | Routes | Dashboard card defaults to "Week 6" for new users |
-| M3 | Routes | `document.title` set during render instead of useEffect |
-| M4 | Sync | No auto-sync immediately after sign-in (anon-to-auth merge delayed) |
-| M5 | Sync | No program progress validation on server side |
-| M6 | Build | 65+ pre-existing typecheck errors (none in program code) |
+| #   | Area   | Issue                                                               |
+| --- | ------ | ------------------------------------------------------------------- |
+| M1  | Routes | No route-level access guards for locked weeks/lessons               |
+| M2  | Routes | Dashboard card defaults to "Week 6" for new users                   |
+| M3  | Routes | `document.title` set during render instead of useEffect             |
+| M4  | Sync   | No auto-sync immediately after sign-in (anon-to-auth merge delayed) |
+| M5  | Sync   | No program progress validation on server side                       |
+| M6  | Build  | 65+ pre-existing typecheck errors (none in program code)            |
 
 ### Low (10)
 
-| # | Area | Issue |
-|---|------|-------|
-| L1 | DB | No CHECK constraint on status values (app-level validation only) |
-| L2 | DB | `program_version`/`schema_version` not updated on conflict |
-| L3 | DB | `lesson_progress` table from migration 0003 is orphaned |
-| L4 | Migration | No deduplication of completedLessons during migration |
-| L5 | Migration | Legacy key never cleaned up after migration |
-| L6 | Sync | `skippedLessonIds` doc inconsistency (LWW vs union) |
-| L7 | Sync | Type cast smell in sync-api.ts (SyncProgramProgress → CanonicalProgramProgress) |
-| L8 | Export | Server export uses snake_case, client export uses camelCase |
-| L9 | Routes | No onboarding state for new users |
-| L10 | Tests | Vitest default thread pool has cross-test contamination |
+| #   | Area      | Issue                                                                           |
+| --- | --------- | ------------------------------------------------------------------------------- |
+| L1  | DB        | No CHECK constraint on status values (app-level validation only)                |
+| L2  | DB        | `program_version`/`schema_version` not updated on conflict                      |
+| L3  | DB        | `lesson_progress` table from migration 0003 is orphaned                         |
+| L4  | Migration | No deduplication of completedLessons during migration                           |
+| L5  | Migration | Legacy key never cleaned up after migration                                     |
+| L6  | Sync      | `skippedLessonIds` doc inconsistency (LWW vs union)                             |
+| L7  | Sync      | Type cast smell in sync-api.ts (SyncProgramProgress → CanonicalProgramProgress) |
+| L8  | Export    | Server export uses snake_case, client export uses camelCase                     |
+| L9  | Routes    | No onboarding state for new users                                               |
+| L10 | Tests     | Vitest default thread pool has cross-test contamination                         |
 
 ---
 
 ## 8. Test Coverage Summary
 
-| Area | Test Files | Tests | Status |
-|------|-----------|-------|--------|
-| Program service (events, state machine) | `service.test.ts` | 38 | ✅ All pass |
-| Program storage (load/save, schema guard) | `storage.test.ts` | 24 | ✅ All pass |
-| Sync contracts (merge strategies) | `sync-contracts.test.ts` | 24 | ✅ All pass |
-| Program definition | `definition.test.ts` | 19 | ✅ All pass |
-| Weekly plan | `weekly-plan.test.ts` | 28 | ✅ All pass |
-| Integration (full-stack flow) | `integration.test.ts` | 28 | ✅ All pass |
-| **Program Foundation total** | **6 files** | **161** | **✅ 100% pass** |
+| Area                                      | Test Files               | Tests   | Status           |
+| ----------------------------------------- | ------------------------ | ------- | ---------------- |
+| Program service (events, state machine)   | `service.test.ts`        | 38      | ✅ All pass      |
+| Program storage (load/save, schema guard) | `storage.test.ts`        | 24      | ✅ All pass      |
+| Sync contracts (merge strategies)         | `sync-contracts.test.ts` | 24      | ✅ All pass      |
+| Program definition                        | `definition.test.ts`     | 19      | ✅ All pass      |
+| Weekly plan                               | `weekly-plan.test.ts`    | 28      | ✅ All pass      |
+| Integration (full-stack flow)             | `integration.test.ts`    | 28      | ✅ All pass      |
+| **Program Foundation total**              | **6 files**              | **161** | **✅ 100% pass** |
 
 **Notable gaps**: No end-to-end browser tests, no server-side DB integration tests, no account API integration tests. Consistent with project-wide testing approach (unit tests only).
 
@@ -407,6 +417,7 @@ The identified issues fall into three categories:
 ### Recommendation
 
 Proceed to **Phase G-1** with the following conditions:
+
 - Track H1 (paused program UI) for Phase G-1 implementation
 - ~~Track H2 (unsupported schema warning) for Phase G-1 implementation~~ → **Resolved in Pre-G-1 Hotfix**
 - ~~Fix H3 (completedAt merge bug) in the next maintenance cycle~~ → **Resolved in Pre-G-1 Hotfix**
@@ -425,6 +436,7 @@ Proceed to **Phase G-1** with the following conditions:
 **After:** Uses `resolveEarlierTimestamp()` which picks the earliest valid timestamp. Invalid timestamps are treated as null (never silently converted to current time). Merge is commutative, idempotent, and deterministic.
 
 Test coverage added:
+
 - Local earlier wins / remote earlier wins / equal timestamps
 - Local null / remote null / both null
 - Invalid local / invalid remote / both invalid
@@ -437,6 +449,7 @@ Test coverage added:
 **Before:** Forward-schema guard existed at storage layer but UI showed empty "not started" progress with no indication that data was safe but unreadable.
 
 **After:**
+
 - `ProgramLoadResult` discriminated union added to storage layer (`ready | empty | migrated | unsupported-version | corrupted`)
 - `loadStatus` field exposed on `useProgramService` hook
 - All mutation actions (completeLesson, uncompleteLesson, toggleLesson, pauseProgram, resumeProgram) are no-ops in unsupported state
@@ -453,6 +466,6 @@ Test coverage added:
 
 ---
 
-*Report generated: 2026-07-29*
-*Verification method: Multi-agent deep code review + automated test/build execution*
-*Scope: Phase G-0.1 Program Foundation runtime integration + Pre-G-1 Hotfix verification*
+_Report generated: 2026-07-29_
+_Verification method: Multi-agent deep code review + automated test/build execution_
+_Scope: Phase G-0.1 Program Foundation runtime integration + Pre-G-1 Hotfix verification_

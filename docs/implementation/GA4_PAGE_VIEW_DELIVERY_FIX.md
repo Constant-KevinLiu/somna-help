@@ -15,6 +15,7 @@ SPA navigation.
 ## Background
 
 Production report:
+
 - Google tag loads with HTTP 200
 - `typeof window.gtag === "function"`
 - `window.dataLayer` contains `js`, `config` for `G-X7ZRF14YZ4`, and GTM events
@@ -75,26 +76,26 @@ User navigates → TanStack Router resolves new route
 
 ### `trackPageView()` returns early when:
 
-| Condition | Stable reason |
-|---|---|
-| Analytics not initialized | `not_initialized` |
-| Not in browser (SSR) | `ssr` |
-| No measurement ID | `no_measurement_id` |
-| `window.gtag` is not a function | `no_gtag` |
+| Condition                        | Stable reason         |
+| -------------------------------- | --------------------- |
+| Analytics not initialized        | `not_initialized`     |
+| Not in browser (SSR)             | `ssr`                 |
+| No measurement ID                | `no_measurement_id`   |
+| `window.gtag` is not a function  | `no_gtag`             |
 | `input.pathname` is not a string | `pathname_not_string` |
-| `input.pathname` is empty string | `pathname_empty` |
-| Any error in the function body | `error` |
+| `input.pathname` is empty string | `pathname_empty`      |
+| Any error in the function body   | `error`               |
 
 ### `useAnalyticsPageView` hook returns early when:
 
-| Condition | Stable reason |
-|---|---|
-| Not in browser (SSR) | (none — silent) |
-| Crawler detected | `crawler` |
-| Analytics disabled after init | `analytics_disabled` |
-| Both router state AND browser location unavailable | `no_path_source` |
-| Path identical to last tracked | `duplicate_path` |
-| Any error in setup or callback | `error` / `setup_failed` |
+| Condition                                          | Stable reason            |
+| -------------------------------------------------- | ------------------------ |
+| Not in browser (SSR)                               | (none — silent)          |
+| Crawler detected                                   | `crawler`                |
+| Analytics disabled after init                      | `analytics_disabled`     |
+| Both router state AND browser location unavailable | `no_path_source`         |
+| Path identical to last tracked                     | `duplicate_path`         |
+| Any error in setup or callback                     | `error` / `setup_failed` |
 
 ---
 
@@ -103,6 +104,7 @@ User navigates → TanStack Router resolves new route
 ### 1. `src/lib/ga4.ts`
 
 **Added privacy-safe dev diagnostics** (`VITE_GA_DEBUG="true"`):
+
 - `init:success` / `init:skipped:<reason>` — initialization events
 - `page_view:sent <sanitized_path>` — successful emission
 - `page_view:skipped <reason>` — stable skip reason codes
@@ -120,18 +122,21 @@ hotfix remains in place.
 
 **Added browser location fallback** — defense-in-depth against malformed
 router state:
+
 - `resolvePath()` tries `router.state.location` first
 - Falls back to `window.location` if router state is missing or malformed
 - Both sources validate pathname/search/hash as string primitives
 - Hook-level `hookDebug()` logs which source was used
 
 **Added hook-level dev diagnostics** (`VITE_GA_DEBUG="true"`):
+
 - `initialized`, `setup_failed`, `cleanup`
 - `page_view:initial <source>`, `page_view:navigation <source>`
 - `page_view:skipped <reason>`
 - `path_source browser_fallback` when fallback is used
 
 **Preserved existing safety**:
+
 - Outer try/catch around entire useEffect
 - Inner try/catch around onResolved callback
 - Try/catch around unsubscribe cleanup
@@ -151,6 +156,7 @@ both the router instance and the computed crawler flag.
 ### `src/lib/ga4.test.ts` (41 tests)
 
 Existing tests preserved. Added:
+
 - **send_page_view: false still results in explicit page_view** — verifies
   that even with automatic page views disabled, `trackPageView()` emits an
   explicit `"page_view"` event via `gtag("event", "page_view", ...)`.
@@ -162,6 +168,7 @@ Existing tests preserved. Added:
 
 Existing tests preserved (updated expectations where browser fallback
 changes behavior). Added:
+
 - **Browser location fallback when router state location is null**
 - **Browser location fallback when router pathname is not a string**
 - **Browser location fallback during SPA navigation with malformed router state**
@@ -201,16 +208,16 @@ changes behavior). Added:
 
 ## Preservation Checklist
 
-| Guarantee | Status |
-|---|---|
-| SSR safety | ✅ All functions return early when `window` is undefined |
-| Crawler suppression | ✅ `isCrawler` flag checked before any analytics init |
-| Sensitive query stripping | ✅ `sanitizePath()` strips token/email/uid/session/etc. |
-| Measurement ID validation | ✅ `MEASUREMENT_ID_RE = /^G-[A-Z0-9]+$/` |
-| Analytics failure isolation | ✅ try/catch at every boundary: module, hook, callback, cleanup |
-| `send_page_view: false` | ✅ Config preserved, explicit page_view sent manually |
-| Deduplication | ✅ `lastPathRef` compares full pathname+search+hash |
-| Defensive runtime boundaries | ✅ All P0 hotfix boundaries unchanged |
+| Guarantee                    | Status                                                          |
+| ---------------------------- | --------------------------------------------------------------- |
+| SSR safety                   | ✅ All functions return early when `window` is undefined        |
+| Crawler suppression          | ✅ `isCrawler` flag checked before any analytics init           |
+| Sensitive query stripping    | ✅ `sanitizePath()` strips token/email/uid/session/etc.         |
+| Measurement ID validation    | ✅ `MEASUREMENT_ID_RE = /^G-[A-Z0-9]+$/`                        |
+| Analytics failure isolation  | ✅ try/catch at every boundary: module, hook, callback, cleanup |
+| `send_page_view: false`      | ✅ Config preserved, explicit page_view sent manually           |
+| Deduplication                | ✅ `lastPathRef` compares full pathname+search+hash             |
+| Defensive runtime boundaries | ✅ All P0 hotfix boundaries unchanged                           |
 
 ---
 

@@ -49,11 +49,11 @@ graph TB
 
 ### Locale Tiers
 
-| Tier | Status | Locales | Description |
-|------|--------|---------|-------------|
-| **Active** | enabled: true | en, es, pt, pl | Full UI + routes + content. hreflang-exposed. |
-| **Partial** | enabled: false | de | In-progress translation. Loaded but not advertised. |
-| **Reserved** | enabled: false | zh, ja | Reserved for future. No routes, no content. |
+| Tier         | Status         | Locales        | Description                                         |
+| ------------ | -------------- | -------------- | --------------------------------------------------- |
+| **Active**   | enabled: true  | en, es, pt, pl | Full UI + routes + content. hreflang-exposed.       |
+| **Partial**  | enabled: false | de             | In-progress translation. Loaded but not advertised. |
+| **Reserved** | enabled: false | zh, ja         | Reserved for future. No routes, no content.         |
 
 ```mermaid
 pie title Locale Distribution (7 total)
@@ -67,14 +67,14 @@ pie title Locale Distribution (7 total)
 UI locale codes (short, route-friendly) may differ from content locale codes (IANA language tags).
 
 | UI Locale | Content Locale | HTML lang | hreflang |
-|-----------|---------------|-----------|----------|
-| en | en | en-US | en |
-| es | es | es-ES | es |
-| pt | pt-BR | pt-BR | pt-BR |
-| pl | pl | pl-PL | pl |
-| de | de | de-DE | de |
-| zh | zh-CN | zh-CN | zh-CN |
-| ja | ja | ja-JP | ja |
+| --------- | -------------- | --------- | -------- |
+| en        | en             | en-US     | en       |
+| es        | es             | es-ES     | es       |
+| pt        | pt-BR          | pt-BR     | pt-BR    |
+| pl        | pl             | pl-PL     | pl       |
+| de        | de             | de-DE     | de       |
+| zh        | zh-CN          | zh-CN     | zh-CN    |
+| ja        | ja             | ja-JP     | ja       |
 
 **Why pt → pt-BR?** The existing content system uses `"pt-BR"` as the content locale key (matching content directory naming), while the UI uses `"pt"` for routes and user preference storage. The `getContentLocale()` function maps between them.
 
@@ -103,6 +103,7 @@ flowchart LR
 ### safeKeyFallback
 
 Converts missing keys to human-readable form instead of showing raw dotted paths:
+
 - `"dashboard.weeklyFocus.title"` → `"Title"`
 - `"sleep_efficiency"` → `"Sleep Efficiency"`
 - `"weeklyFocus"` → `"Weekly Focus"`
@@ -127,14 +128,14 @@ normalizePersistedLocale("pt-PT") → "pt"
 ### Full region tag mappings (LEGACY_LOCALE_MAP)
 
 | Legacy Tag | Canonical |
-|-----------|-----------|
-| en-US | en |
-| es-ES | es |
-| pt-BR | pt |
-| pl-PL | pl |
-| de-DE | de |
-| zh-CN | zh |
-| ja-JP | ja |
+| ---------- | --------- |
+| en-US      | en        |
+| es-ES      | es        |
+| pt-BR      | pt        |
+| pl-PL      | pl        |
+| de-DE      | de        |
+| zh-CN      | zh        |
+| ja-JP      | ja        |
 
 Prefix matching also handles unknown region variants (e.g. `"es-MX"` → `"es"`).
 
@@ -152,12 +153,12 @@ Custom fallback locale can be provided as second argument.
 
 ## Type Guard Functions
 
-| Function | Returns true for |
-|----------|-----------------|
-| `isSupportedLocale(v)` | All 7 locales |
-| `isActiveLocale(v)` | en, es, pt, pl |
-| `isPartialLocale(v)` | de |
-| `isReservedLocale(v)` | zh, ja |
+| Function               | Returns true for |
+| ---------------------- | ---------------- |
+| `isSupportedLocale(v)` | All 7 locales    |
+| `isActiveLocale(v)`    | en, es, pt, pl   |
+| `isPartialLocale(v)`   | de               |
+| `isReservedLocale(v)`  | zh, ja           |
 
 All guards are type predicates (`v is X`) so TypeScript narrows types automatically.
 
@@ -165,13 +166,13 @@ All guards are type predicates (`v is X`) so TypeScript narrows types automatica
 
 ## Files & Ownership
 
-| File | Responsibility |
-|------|---------------|
-| `src/lib/locale-registry.ts` | **Authoritative** — definitions, guards, normalization, fallback |
-| `src/lib/lang-detect.ts` | Browser detection, cookie/localStorage persistence, route parsing |
-| `src/lib/i18n.tsx` | React i18n context + `t()` function |
-| `src/content/content-types.ts` | Content package types, ContentLocale, ui↔content mapping |
-| `src/components/Header.tsx` | Language switcher UI (uses SupportedLocale) |
+| File                           | Responsibility                                                    |
+| ------------------------------ | ----------------------------------------------------------------- |
+| `src/lib/locale-registry.ts`   | **Authoritative** — definitions, guards, normalization, fallback  |
+| `src/lib/lang-detect.ts`       | Browser detection, cookie/localStorage persistence, route parsing |
+| `src/lib/i18n.tsx`             | React i18n context + `t()` function                               |
+| `src/content/content-types.ts` | Content package types, ContentLocale, ui↔content mapping          |
+| `src/components/Header.tsx`    | Language switcher UI (uses SupportedLocale)                       |
 
 ### Deprecation Path
 

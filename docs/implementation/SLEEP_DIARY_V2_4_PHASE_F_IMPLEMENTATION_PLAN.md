@@ -1,4 +1,5 @@
 # Sleep Diary v2.4 — Phase F Implementation Plan
+
 ## Behavior Analytics, Insight Dashboard & Weekly Reflection Engine
 
 ---
@@ -8,18 +9,21 @@
 ### 1.1 Canonical Data Sources
 
 **Sleep Diary Records** (`src/lib/sleep-records.ts`)
+
 - Storage key: `sleepRecords` (localStorage)
 - `SleepRecord` interface: `date`, `bedtime`, `sleepLatency`, `nightAwakenings`, `wakeUpTime`, `sleepQuality`, `mood`, `sleepEfficiency`, `sleepScore`
 - Existing metric utilities: `minutesInBed()`, `computeEfficiency()`, `computeScore()`, `weeklyAverageEfficiency()`, `efficiencyTrend()`, `currentStreak()`, `tonightPlan()`
 - Trend compares last 7 days vs prior 7 days as simple point difference
 
 **Habit Engine** (`src/services/habit/`)
+
 - Reminders: `loadReminders()`, `calculateAllHabitProgress()` → `Map<string, HabitProgress>`
 - `HabitProgress` has: `completionCount`, `opportunityCount`, `consistencyRate`, `currentStreak`, `longestStreak`, `currentState`
 - Event-sourced: append-only `reminderEvents` log
 - Timezone-aware scheduling with DST-safe utilities
 
 **Guided Reflection System** (`src/lib/reflection/`)
+
 - Already exists: `LocalReflection` type, `reflection-storage.ts`, `reflection-prompts.ts`, `reflection-stats.ts`
 - Storage key: `somna.reflections.v1`
 - 10 reflection categories, daily prompt selection
@@ -28,6 +32,7 @@
 ### 1.2 Dashboard Architecture
 
 **File**: `src/routes/dashboard.tsx`
+
 - TanStack Router file-based route: `/dashboard`
 - Localized routes: `/pl/dashboard`, `/pt/painel`, `/es/panel`
 - Current sections: Today's Recommendation, CBT-I Brain (3 metrics), Program Progress, Last 7 Days Efficiency Chart, Weekly Insight, Streak, Habit Reminders, Next Lesson, Share CTA
@@ -47,6 +52,7 @@
 ### 1.4 SSR-Safe Storage
 
 **File**: `src/lib/safe-storage.ts`
+
 - `isBrowser()` — multi-check browser detection
 - `safeLocalStorageGet<T>()`, `safeLocalStorageSet()`, `safeLocalStorageRemove()`
 - `safeJsonParse<T>()` with defaultValue fallback
@@ -57,24 +63,27 @@
 - Node.js built-in test runner (`node:test`, `node:assert/strict`)
 - Execution via `tsx`
 - Pattern: `*.test.ts` files alongside source
-- Existing tests: cbti-brain, safe-storage, reflection-*, habit-*, reminder-model
+- Existing tests: cbti-brain, safe-storage, reflection-_, habit-_, reminder-model
 
 ---
 
 ## 2. Domain Boundaries
 
 ### Behavioral Data Platform owns (unchanged)
+
 - `SleepRecord` — canonical observations
 - Loading/saving diary records
 - Raw timestamp data
 
 ### Habit Engine owns (unchanged)
+
 - Reminder definitions and occurrences
 - Completion events
 - Streak and consistency calculation
 - `calculateAllHabitProgress()` is the public API
 
 ### Intelligence / Analytics Layer owns (NEW — Phase F)
+
 - Derived metric calculations (circular averages, variability, regularity)
 - Trend analysis with thresholds and confidence
 - Pattern detection (weekday/weekend, consistency patterns)
@@ -90,6 +99,7 @@
 ## 3. Files Expected to Change
 
 ### New Files (Core Analytics Service)
+
 ```
 src/lib/analytics/
 ├── types.ts                    # Core types: MetricKey, DataSufficiency, TrendDirection, etc.
@@ -120,6 +130,7 @@ src/hooks/
 ```
 
 ### New Files (Weekly Reflection Engine)
+
 ```
 src/lib/weekly-reflection/
 ├── types.ts                    # WeeklyReflection, ReflectionPromptWeekly
@@ -129,6 +140,7 @@ src/lib/weekly-reflection/
 ```
 
 ### New Files (Dashboard Components)
+
 ```
 src/components/analytics/
 ├── MetricCard.tsx              # Individual metric display card
@@ -145,6 +157,7 @@ src/components/analytics/
 ```
 
 ### New Files (i18n)
+
 ```
 src/locales/analytics/
 ├── en.ts
@@ -155,6 +168,7 @@ src/locales/analytics/
 ```
 
 ### Modified Files
+
 ```
 src/routes/dashboard.tsx          # Extend with analytics sections
 src/routes/pl/dashboard.tsx       # Keep reusing Dash component
@@ -166,6 +180,7 @@ src/lib/format.ts                 # Add duration formatting helpers if needed
 ```
 
 ### New Documentation Files
+
 ```
 docs/features/behavior-analytics.md
 docs/features/insight-dashboard.md
@@ -179,61 +194,75 @@ docs/implementation/SLEEP_DIARY_V2_4_PHASE_F_COMPLETION_REPORT.md
 ## 4. Canonical Metric Definitions
 
 ### 4.1 Time in Bed (TIB)
+
 ```
 minutesInBed(bedtime, wakeUpTime)  [already exists in sleep-records.ts]
 = minutes from bedtime to wakeUpTime, handling overnight wrap
 ```
+
 - Uses existing `minutesInBed()` utility
 - Pure function of `bedtime` and `wakeUpTime` strings
 
 ### 4.2 Total Sleep Time (TST)
+
 ```
 TST = TIB - sleepLatency - (nightAwakenings × 10 min)
 ```
+
 - Formula matches existing `computeEfficiency()` logic
 - Each awakening estimated at 10 minutes (same as efficiency calc)
 - Return `null` if TIB ≤ 0
 
 ### 4.3 Sleep Efficiency
+
 ```
 SE = TST / TIB × 100  [already exists as computeEfficiency()]
 ```
+
 - Use existing `sleepEfficiency` field from records (pre-computed at save time)
 - Analytics layer uses recorded value, does not recalculate
 - Return `null` for invalid denominator; never NaN or Infinity
 
 ### 4.4 Sleep Onset Latency (SOL)
+
 - Direct value from `sleepLatency` field
 - Units: minutes
 - No inference for missing values
 
 ### 4.5 Wake After Sleep Onset (WASO)
+
 ```
 WASO = nightAwakenings × 10 min
 ```
+
 - Estimated using same 10-min-per-awakening convention as efficiency calc
 - Not stored directly; derived from `nightAwakenings`
 
 ### 4.6 Number of Awakenings
+
 - Direct value from `nightAwakenings` field
 - Recorded data only
 
 ### 4.7 Average Bedtime (Circular)
+
 ```
 Convert each bedtime to minutes since noon (to avoid midnight wrap)
 Compute arithmetic mean of shifted values
 Shift back by 12 hours and normalize to 0-1440 min range
 Format as HH:MM
 ```
+
 - Why circular: prevents 23:30 + 00:30 averaging to noon
 - Use "noon reference" shift: times shifted by -720 minutes (12 hours) before averaging
 - Alternative: vector mean on unit circle (both produce same result for clustered times)
 
 ### 4.8 Average Wake Time (Circular)
+
 - Same circular approach as bedtime
 - Wake times typically cluster in early morning, less wrap risk, but still use circular for consistency
 
 ### 4.9 Sleep Regularity
+
 ```
 Definition: 100 - (bedtimeSD + wakeTimeSD) / 2
 Where SD = standard deviation of sleep onset/wake times in minutes
@@ -244,20 +273,24 @@ variabilityBedtime = stddev of bedtime minutes (circular)
 variabilityWakeTime = stddev of wakeTime minutes
 score = max(0, 100 - (variabilityBedtime + variabilityWakeTime) / 2)
 ```
+
 - Clamped to 0-100
 - Higher = more regular sleep schedule
 - Based on bedtime AND wake-time consistency
 - Minimum 3 records required
 
 ### 4.10 Diary Completion Rate
+
 ```
 completedEligibleDays / eligibleDays × 100
 ```
+
 - Eligible days: all days in the window from windowStart to today
 - Completed: days with a valid SleepRecord
 - Return `null` if no eligible days
 
 ### 4.11 Reminder Completion Rate
+
 - Read directly from Habit Engine's `calculateAllHabitProgress()`
 - `consistencyRate` field: completions / opportunities × 100
 - Analytics layer does not recalculate
@@ -271,20 +304,23 @@ type DataSufficiency = "none" | "insufficient" | "limited" | "sufficient";
 ```
 
 ### Default Thresholds (per 7-day window)
-| State | Records |
-|-------|---------|
-| none | 0 |
-| insufficient | 1-2 |
-| limited | 3-6 |
-| sufficient | 7+ |
+
+| State        | Records |
+| ------------ | ------- |
+| none         | 0       |
+| insufficient | 1-2     |
+| limited      | 3-6     |
+| sufficient   | 7+      |
 
 ### Metric-Specific Adjustments
+
 - **Sleep Regularity**: requires minimum 3 records (vs 1 for simple averages)
 - **Trend comparison**: requires minimum 2 records in each period
 - **Pattern detection (weekday/weekend)**: requires minimum 2 weekday + 2 weekend records = "limited"
 - **Insight cards**: at least "limited" data for most insights; "sufficient" for strong claims
 
 ### Messaging Tone
+
 - none: "Start recording your sleep to see your patterns."
 - insufficient: "Keep recording for a few more days to see a clearer pattern."
 - limited: "Here's what we're seeing so far — keep recording for a fuller picture."
@@ -295,39 +331,39 @@ type DataSufficiency = "none" | "insufficient" | "limited" | "sufficient";
 ## 6. Trend Engine
 
 ### 6.1 Trend Direction
+
 ```typescript
-type TrendDirection =
-  | "improving"
-  | "stable"
-  | "declining"
-  | "mixed"
-  | "insufficient_data";
+type TrendDirection = "improving" | "stable" | "declining" | "mixed" | "insufficient_data";
 ```
 
 ### 6.2 Comparison Method
+
 - Split window into two halves: first half vs second half
 - For 7-day: days 1-3 vs days 5-7 (skip middle day or include in first half)
 - Actually simpler: compare period N days back vs period 2N to N days back
 - For "7d trend": last 7 days vs prior 7 days (days 8-14 ago)
 
 ### 6.3 Meaningful Change Thresholds
-| Metric | Meaningful Change | Unit |
-|--------|-------------------|------|
-| Sleep Efficiency | ≥ 3 percentage points | % |
-| Total Sleep Time | ≥ 20 minutes | min |
-| Sleep Onset Latency | ≥ 5 minutes | min |
-| Bedtime | ≥ 15 minutes | min |
-| Wake Time | ≥ 15 minutes | min |
-| WASO | ≥ 10 minutes | min |
+
+| Metric              | Meaningful Change     | Unit |
+| ------------------- | --------------------- | ---- |
+| Sleep Efficiency    | ≥ 3 percentage points | %    |
+| Total Sleep Time    | ≥ 20 minutes          | min  |
+| Sleep Onset Latency | ≥ 5 minutes           | min  |
+| Bedtime             | ≥ 15 minutes          | min  |
+| Wake Time           | ≥ 15 minutes          | min  |
+| WASO                | ≥ 10 minutes          | min  |
 
 Below threshold = "stable" even if technically different.
 
 ### 6.4 Confidence (Rule-Based)
+
 - **high**: ≥ 7 records in each period, change exceeds threshold
 - **medium**: 4-6 records in each period, change exceeds threshold
 - **low**: 3 or fewer records, or change near threshold
 
 ### 6.5 Output Interface
+
 ```typescript
 interface MetricTrend {
   metric: MetricKey;
@@ -388,6 +424,7 @@ All patterns labeled as **associations**, not causes.
 ## 8. Insight Card System
 
 ### 8.1 Card Model
+
 ```typescript
 interface InsightCard {
   id: string;
@@ -411,6 +448,7 @@ interface InsightEvidence {
 ```
 
 ### 8.2 Prioritization
+
 - Show 3-5 cards maximum
 - Priority tiers:
   1. Strong pattern with high confidence (most actionable)
@@ -420,7 +458,9 @@ interface InsightEvidence {
   5. Encouragement / baseline-building (low data)
 
 ### 8.3 Explainability
+
 Every card answers:
+
 - What was observed? → `titleKey` + `bodyKey`
 - Which data supports it? → `evidence.dataPoints`
 - Over what time period? → `evidence.period`
@@ -433,6 +473,7 @@ Every card answers:
 ## 9. Weekly Summary
 
 ### 9.1 Contents
+
 1. Recorded nights count
 2. Diary completion rate
 3. Average total sleep time
@@ -448,11 +489,13 @@ Every card answers:
 13. Area to observe next
 
 ### 9.2 Navigation
+
 - Previous week / next week buttons
 - "This week" quick return
 - Disabled for future weeks
 
 ### 9.3 Data Integrity
+
 - Recorded data vs derived metrics clearly labeled
 - No fabrication of missing values
 - Missing days shown explicitly as gaps
@@ -462,6 +505,7 @@ Every card answers:
 ## 10. Monthly Summary
 
 ### 10.1 Contents
+
 1. Number of recorded nights
 2. Average key metrics (TST, SE, SOL)
 3. Weekly trend comparison (week 1 → week 4)
@@ -472,6 +516,7 @@ Every card answers:
 8. Insufficient-data messaging where applicable
 
 ### 10.2 Tone
+
 - Self-reflection tool, not clinical report
 - Calm language, no alarmist wording
 - Emphasize patterns over individual data points
@@ -481,6 +526,7 @@ Every card answers:
 ## 11. Guided Weekly Reflection
 
 ### 11.1 Flow
+
 1. User opens weekly reflection
 2. System presents 3-4 rule-selected prompts
 3. User writes responses (can skip)
@@ -488,6 +534,7 @@ Every card answers:
 5. Reflection stored separately from diary records
 
 ### 11.2 Prompt Categories (rule-selected)
+
 - Routine consistency: "What helped you keep a more consistent routine?"
 - Recording ease: "What made sleep recording easier or harder?"
 - Manageable parts: "Which part of your routine felt most manageable?"
@@ -496,12 +543,14 @@ Every card answers:
 - Challenges: "What was challenging about this week?"
 
 ### 11.3 Storage
+
 - New storage key: `somna.weekly-reflections.v1`
 - Separate from daily reflections and diary records
 - `WeeklyReflection` interface with `weekStart`, `responses`, `createdAt`, `updatedAt`
 - User-owned: exportable, deletable
 
 ### 11.4 Constraints
+
 - Saving does NOT modify diary records
 - All text localized
 - Prompts rule-selected, NOT AI-generated
@@ -513,6 +562,7 @@ Every card answers:
 ## 12. Weekly Focus (Rule-Based)
 
 ### 12.1 Categories
+
 ```typescript
 type WeeklyFocusCategory =
   | "recording_consistency"
@@ -524,6 +574,7 @@ type WeeklyFocusCategory =
 ```
 
 ### 12.2 Selection Rules (priority order)
+
 1. **baseline_building**: < 3 diary records this week
 2. **recording_consistency**: diary completion < 50%
 3. **wake_time_consistency**: wake time SD > 45 min and efficiency < 85%
@@ -532,11 +583,13 @@ type WeeklyFocusCategory =
 6. **maintenance**: everything going well (efficiency ≥ 85%, regularity ≥ 70%)
 
 ### 12.3 User Actions
+
 - Accept focus (sets as this week's focus)
 - Dismiss (don't show this week)
 - Save for later
 
 ### 12.4 Constraint
+
 - NEVER automatically changes reminders or sleep schedule
 - Suggestion only; user must act explicitly
 
@@ -579,6 +632,7 @@ Dashboard
 ## 15. Implementation Sequence
 
 ### Phase F.1 — Foundation
+
 1. Analytics types and interfaces
 2. Date range / time window utilities
 3. Core metric calculations (circular avg, TST, regularity)
@@ -586,28 +640,33 @@ Dashboard
 5. Unit tests for all of the above
 
 ### Phase F.2 — Trend & Pattern Engine
+
 1. Trend analysis service
 2. Pattern detection rules
 3. Unit tests
 
 ### Phase F.3 — Insight & Summary Engine
+
 1. Insight card generation and prioritization
 2. Weekly summary aggregation
 3. Monthly summary aggregation
 4. Unit tests
 
 ### Phase F.4 — Weekly Reflection
+
 1. Weekly reflection types
 2. Rule-based prompt selection
 3. SSR-safe storage
 4. Unit tests
 
 ### Phase F.5 — Weekly Focus
+
 1. Focus selection rules
 2. Focus storage (user accept/dismiss)
 3. Unit tests
 
 ### Phase F.6 — Dashboard UI
+
 1. Metric cards
 2. Trend range selector
 3. Enhanced chart with metric toggle
@@ -619,6 +678,7 @@ Dashboard
 9. Data sufficiency banners
 
 ### Phase F.7 — Localization
+
 1. English base strings
 2. Spanish translations
 3. Portuguese translations
@@ -626,6 +686,7 @@ Dashboard
 5. German translations
 
 ### Phase F.8 — Integration & Validation
+
 1. Dashboard route integration
 2. Integration tests
 3. SSR safety verification
@@ -662,6 +723,7 @@ Dashboard
 ## 18. Test Coverage Plan
 
 ### Unit Tests
+
 - ✅ Sleep efficiency calculation (already exists via computeEfficiency)
 - ✅ Time in bed (already exists via minutesInBed)
 - ✅ Circular average bedtime
@@ -680,6 +742,7 @@ Dashboard
 - ✅ Habit metric integration (read-only consumption)
 
 ### Integration Tests
+
 - ✅ Diary records → dashboard metrics
 - ✅ Reminder events → weekly summary
 - ✅ Reflections save/reload
@@ -691,4 +754,4 @@ Dashboard
 
 ---
 
-*End of Phase F Implementation Plan*
+_End of Phase F Implementation Plan_

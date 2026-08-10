@@ -1,6 +1,7 @@
 # PAS_TEMPLATE_AND_AUTHORING_STANDARD.md
 
 # Product Architecture Specification (PAS)
+
 ## Authoring Template & Writing Standard
 
 > Defines the mandatory structure, naming conventions and governance rules for every PAS document.
@@ -45,19 +46,19 @@ Always reference documents by Blueprint ID inside ADRs, design documents and cod
 
 Every PAS document begins with the following metadata table.
 
-| Field | Description |
-|--------|-------------|
-| Blueprint ID | PAS identifier |
-| Title | Official title |
-| Layer | Architecture layer |
-| Status | Draft / Review / Canonical |
-| Version | Semantic version |
-| Owner | Responsible role |
-| Review Cycle | Review cadence |
-| Depends On | Upstream PAS |
-| Required By | Downstream PAS |
-| Stability | Experimental / Stable |
-| Last Updated | Date |
+| Field        | Description                |
+| ------------ | -------------------------- |
+| Blueprint ID | PAS identifier             |
+| Title        | Official title             |
+| Layer        | Architecture layer         |
+| Status       | Draft / Review / Canonical |
+| Version      | Semantic version           |
+| Owner        | Responsible role           |
+| Review Cycle | Review cadence             |
+| Depends On   | Upstream PAS               |
+| Required By  | Downstream PAS             |
+| Stability    | Experimental / Stable      |
+| Last Updated | Date                       |
 
 ---
 

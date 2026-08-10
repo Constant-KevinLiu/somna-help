@@ -1,4 +1,5 @@
 # Phase G-1.1 Completion Report
+
 ## Program Lifecycle Hardening — State-Machine Pause Enforcement & Critical UI Regression Coverage
 
 **Date:** 2026-07-30
@@ -38,6 +39,7 @@ Duration:    8.74s
 Net: **+62 tests** from Phase G-1 baseline of 485.
 
 ### Breakdown
+
 - **State machine unit tests:** 54 (+~24)
 - **Integration tests:** 44 (+10)
 - **Component tests:** 40 (new — 5 files)
@@ -47,11 +49,13 @@ Net: **+62 tests** from Phase G-1 baseline of 485.
 ## Key Files
 
 ### Core Logic
+
 - `src/lib/program/types.ts` — `ProgramMutationResult`, `ProgramMutationBlockReason`
 - `src/lib/program/service.ts` — `isMutationAllowed()` guard, typed `applyEvent()`
 - `src/lib/program/use-program-service.ts` — action methods return `ProgramActionResult`
 
 ### Tests
+
 - `src/lib/program/service.test.ts` (54 tests)
 - `src/lib/program/integration.test.ts` (44 tests)
 - `src/components/program/ProgramPausedBanner.test.tsx` (8 tests)
@@ -61,11 +65,13 @@ Net: **+62 tests** from Phase G-1 baseline of 485.
 - `src/components/program/ProgramDashboardCard.test.tsx` (20 tests)
 
 ### Weekly Focus Title Fix
+
 - `src/hooks/use-lesson-title.ts` (new — shared async hook)
 - `src/components/program/LessonTemplate.tsx` (uses shared hook)
 - `src/components/program/ProgramWeeklyFocusSection.tsx` (now shows real titles)
 
 ### Documentation
+
 - `docs/implementation/PHASE_G_1_1_CURRENT_STATE_AUDIT.md`
 - `docs/implementation/PHASE_G_1_1_PROGRAM_LIFECYCLE_HARDENING.md`
 - `docs/audit/PHASE_G_1_1_ACCEPTANCE_REPORT.md`
@@ -74,15 +80,15 @@ Net: **+62 tests** from Phase G-1 baseline of 485.
 
 ## Architectural Constraints — All Met
 
-| Constraint | Status |
-|---|---|
-| No Program experience redesign | ✅ |
-| No Phase G-2 feature expansion | ✅ |
-| No canonical service replacement | ✅ |
-| No destructive data recovery | ✅ |
-| No database migration | ✅ |
-| All writes through canonical state machine | ✅ |
-| No UI directly accesses storage | ✅ |
+| Constraint                                 | Status |
+| ------------------------------------------ | ------ |
+| No Program experience redesign             | ✅     |
+| No Phase G-2 feature expansion             | ✅     |
+| No canonical service replacement           | ✅     |
+| No destructive data recovery               | ✅     |
+| No database migration                      | ✅     |
+| All writes through canonical state machine | ✅     |
+| No UI directly accesses storage            | ✅     |
 
 ---
 
@@ -99,6 +105,7 @@ None block release. All documented in the acceptance report.
 ## Next Steps
 
 Phase G-2 (Feature Expansion) planning may now proceed on a hardened foundation. Before that:
+
 - Consider cleaning up the `corrupted` dead code from `ProgramLoadResult`
 - Add blocked-action telemetry if curious about real-world bypass attempts
 - Revisit `pausedAt` when there's a specific UX or analytics need

@@ -144,12 +144,13 @@ intentional — that's how gtag.js is designed to work.
 
 ## Files Changed
 
-| File | Change |
-|---|---|
-| `src/lib/ga4.ts` | Replaced `dataLayer.push(args)` with `dataLayer.push(arguments)` for canonical IArguments command shape; renamed `page_view:sent` → `page_view:queued` debug diagnostic |
-| `src/lib/ga4.test.ts` | Updated dataLayer entry access to work with IArguments objects; added 10 new canonical command queue tests (Tests A–I + regression guard) |
+| File                  | Change                                                                                                                                                                  |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/lib/ga4.ts`      | Replaced `dataLayer.push(args)` with `dataLayer.push(arguments)` for canonical IArguments command shape; renamed `page_view:sent` → `page_view:queued` debug diagnostic |
+| `src/lib/ga4.test.ts` | Updated dataLayer entry access to work with IArguments objects; added 10 new canonical command queue tests (Tests A–I + regression guard)                               |
 
 **No changes to:**
+
 - `src/hooks/use-analytics-page-view.ts` — all existing protections intact
 - `src/routes/__root.tsx` — crawler suppression, initialization pattern intact
 
@@ -161,40 +162,50 @@ All tests are in `src/lib/ga4.test.ts` under the
 `canonical gtag command queue shape` describe block.
 
 ### Test A — Canonical command object shape
+
 Verifies queued commands are IArguments objects (`Array.isArray()` returns
 false), not plain Arrays. This test would fail against the old implementation.
 
 ### Test B — Command contents
+
 Verifies `js` command contains a `Date` and `config` command contains
 `send_page_view: false`.
 
 ### Test C — Explicit page_view
+
 Verifies `event page_view` is queued with `page_location`, `page_path`, and
 `page_title` parameters.
 
 ### Test D — get callback compatibility
+
 Verifies `gtag('get', id, 'client_id', callback)` uses the same canonical
 IArguments command shape.
 
 ### Test E — Idempotency
+
 Calling `initializeAnalytics()` multiple times injects exactly one script and
 queues initialization commands exactly once.
 
 ### Test F — Script blocked resilience
+
 Script load failure (ad blocker, CSP) must not throw into the application.
 
 ### Test G — SSR safety
+
 No `window`/`document` side effects when analytics is disabled / SSR context.
 
 ### Test H — Analytics disabled
+
 Invalid/missing measurement ID is a safe no-op with zero side effects.
 
 ### Test I — Browser-level integration
+
 Simulates a gtag.js-style consumer that iterates dataLayer entries by numeric
 index (as the real runtime does) and verifies all commands are fully readable
 and correctly structured.
 
 ### Regression guard
+
 Explicit test that verifies `Array.isArray(entry) === false` for every
 dataLayer entry, preventing silent reintroduction of the plain-Array bug.
 
@@ -203,6 +214,7 @@ dataLayer entry, preventing silent reintroduction of the plain-Array bug.
 ## Validation Results
 
 ### Tests
+
 ```
 Test Files:  38 passed (38)
 Tests:       666 passed (666)
@@ -213,6 +225,7 @@ All 51 GA4 module tests pass, including all 10 new canonical command queue
 tests.
 
 ### TypeScript
+
 ```
 GA4-related files:  0 errors
 Pre-existing debt:  many (unrelated — locale, diary, sync, Header, etc.)
@@ -221,6 +234,7 @@ Pre-existing debt:  many (unrelated — locale, diary, sync, Header, etc.)
 No new TypeScript errors introduced by this change.
 
 ### Build
+
 ```
 Exit code:  0
 Status:     Success (pre-existing chunk-size warnings only)
@@ -234,41 +248,52 @@ After deployment to `https://somna.help`, verify the following in browser
 DevTools:
 
 ### A. Command representation
+
 ```js
-window.dataLayer
+window.dataLayer;
 ```
+
 Inspect the first few entries. They should be **IArguments objects**, not plain
 Arrays. In Chrome DevTools, they appear as `Arguments(2) ['js', ...]` or similar
 —not `Array(2)`.
 
 ### B. Cookie
+
 ```js
-document.cookie.split(';').filter(x => x.includes('_ga'))
+document.cookie.split(";").filter((x) => x.includes("_ga"));
 ```
+
 Expected: `_ga` cookie present after GA initializes (subject to browser/privacy
 policy).
 
 ### C. Client ID
+
 ```js
-gtag('get', 'G-X7ZRF14YZ4', 'client_id', console.log)
+gtag("get", "G-X7ZRF14YZ4", "client_id", console.log);
 ```
+
 Expected: callback receives a client ID string.
 
 ### D. Session ID
+
 ```js
-gtag('get', 'G-X7ZRF14YZ4', 'session_id', console.log)
+gtag("get", "G-X7ZRF14YZ4", "session_id", console.log);
 ```
+
 Expected: callback receives a session ID where applicable.
 
 ### E. Collector request
+
 Network → All → filter: `collect`
 
 Expected: `google-analytics.com/g/collect` request (or regional equivalent).
 
 ### F. Response
+
 Expected collector HTTP response: **204 No Content**.
 
 ### G. GA4 Realtime
+
 GA4 property Realtime report should show the test visit/page_view after
 transport succeeds.
 
@@ -281,7 +306,7 @@ transport succeeds.
 
 2. **Surface-level checks pass** — `window.gtag` is a function,
    `window.dataLayer` has entries, `gtag.js` loads, `google_tag_manager`
-   object exists. Everything *looks* working.
+   object exists. Everything _looks_ working.
 
 3. **Common pattern in tutorials** — many TypeScript GA4 tutorials use rest
    parameters (`...args`) because they're "more modern" and type-safe. They

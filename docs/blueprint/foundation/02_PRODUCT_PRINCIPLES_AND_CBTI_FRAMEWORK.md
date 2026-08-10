@@ -1,6 +1,7 @@
 # 02_PRODUCT_PRINCIPLES_AND_CBTI_FRAMEWORK.md
 
 # PAS-02 Product Principles & CBT-I Framework
+
 ### Product Architecture Specification
 
 > Defines the behavioral philosophy and evidence-informed principles that guide every user experience within Somna.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-02 |
-| Layer | Layer 1 – Foundation |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00, PAS-01 |
-| Required By | PAS-03 ~ PAS-12 |
+| Field        | Value                |
+| ------------ | -------------------- |
+| Blueprint ID | PAS-02               |
+| Layer        | Layer 1 – Foundation |
+| Status       | Canonical            |
+| Version      | 2.0                  |
+| Depends On   | PAS-00, PAS-01       |
+| Required By  | PAS-03 ~ PAS-12      |
 
 ---
 
@@ -108,13 +109,13 @@ Review
 
 ## Consumer Matrix
 
-| Domain | Read | Write |
-|---|:---:|:---:|
-| Diary | ✓ | ✓ |
-| Reflection | ✓ | ✓ |
-| Learning | ✓ |  |
-| Habit Engine | ✓ |  |
-| AI | ✓ |  |
+| Domain       | Read | Write |
+| ------------ | :--: | :---: |
+| Diary        |  ✓   |   ✓   |
+| Reflection   |  ✓   |   ✓   |
+| Learning     |  ✓   |       |
+| Habit Engine |  ✓   |       |
+| AI           |  ✓   |       |
 
 ## Runtime Quality Gates
 

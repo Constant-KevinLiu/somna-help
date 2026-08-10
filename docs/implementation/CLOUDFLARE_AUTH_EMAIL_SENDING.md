@@ -77,42 +77,42 @@ interface AuthEnv {
 
 ### Backend
 
-| File | Change |
-|------|--------|
-| `wrangler.jsonc` | Added `send_email` binding named `EMAIL` |
-| `src/services/auth/auth-mailer.ts` | Rewritten: replaced Resend API with Cloudflare Email Sending binding |
-| `src/services/auth/auth-api.ts` | Updated `AuthEnv` to include `EMAIL` binding; corrected success semantics; OTP rollback on failure; stable error codes; privacy-safe logs |
-| `src/services/auth/auth-db.ts` | Added `deleteOTPChallenge()` for rollback |
+| File                               | Change                                                                                                                                    |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `wrangler.jsonc`                   | Added `send_email` binding named `EMAIL`                                                                                                  |
+| `src/services/auth/auth-mailer.ts` | Rewritten: replaced Resend API with Cloudflare Email Sending binding                                                                      |
+| `src/services/auth/auth-api.ts`    | Updated `AuthEnv` to include `EMAIL` binding; corrected success semantics; OTP rollback on failure; stable error codes; privacy-safe logs |
+| `src/services/auth/auth-db.ts`     | Added `deleteOTPChallenge()` for rollback                                                                                                 |
 
 ### Frontend
 
-| File | Change |
-|------|--------|
-| `src/components/AuthModal.tsx` | Added `ERROR_KEY_MAP` for server→content error code mapping; `email_send_failed` shows localized message |
-| `src/content/en/auth/auth-copy.ts` | Added `emailSendFailed` to `AuthCopy` interface + content |
-| `src/content/es/auth/auth-copy.ts` | Added `emailSendFailed` content (Spanish) |
-| `src/content/pt-BR/auth/auth-copy.ts` | Added `emailSendFailed` content (Portuguese) |
-| `src/content/pl/auth/auth-copy.ts` | Added `emailSendFailed` content (Polish) |
+| File                                  | Change                                                                                                   |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `src/components/AuthModal.tsx`        | Added `ERROR_KEY_MAP` for server→content error code mapping; `email_send_failed` shows localized message |
+| `src/content/en/auth/auth-copy.ts`    | Added `emailSendFailed` to `AuthCopy` interface + content                                                |
+| `src/content/es/auth/auth-copy.ts`    | Added `emailSendFailed` content (Spanish)                                                                |
+| `src/content/pt-BR/auth/auth-copy.ts` | Added `emailSendFailed` content (Portuguese)                                                             |
+| `src/content/pl/auth/auth-copy.ts`    | Added `emailSendFailed` content (Polish)                                                                 |
 
 ### Tests
 
-| File | Coverage |
-|------|----------|
-| `src/services/auth/auth-mailer.test.ts` | 9 tests: binding call, sender/recipient/subject, text+HTML content, locale templates, all 4 error codes, privacy log checks |
-| `src/services/auth/auth-api.test.ts` | 10 tests: success flow, call args, ordering, failure rollback, all error status codes, missing binding, rate limit/cooldown preserved, invalid email |
-| `src/components/AuthModal.test.tsx` | 6 tests: success advancement, failure block, ES/PL localization, cooldown preserved, resend flow |
+| File                                    | Coverage                                                                                                                                             |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/services/auth/auth-mailer.test.ts` | 9 tests: binding call, sender/recipient/subject, text+HTML content, locale templates, all 4 error codes, privacy log checks                          |
+| `src/services/auth/auth-api.test.ts`    | 10 tests: success flow, call args, ordering, failure rollback, all error status codes, missing binding, rate limit/cooldown preserved, invalid email |
+| `src/components/AuthModal.test.tsx`     | 6 tests: success advancement, failure block, ES/PL localization, cooldown preserved, resend flow                                                     |
 
 ---
 
 ## 4. Stable Error Codes
 
-| Code | HTTP Status | Meaning |
-|------|-------------|---------|
-| `AUTH_EMAIL_NOT_CONFIGURED` | 503 | EMAIL binding not available in the Worker environment |
-| `AUTH_EMAIL_REJECTED` | 400 | Provider rejected the message (bad recipient, policy violation) |
-| `AUTH_EMAIL_UNAVAILABLE` | 503 | Provider is down or returning unexpected errors |
-| `AUTH_EMAIL_RATE_LIMITED` | 429 | Provider rate limit hit |
-| `AUTH_STORAGE_FAILED` | 500 | D1 insert failed during OTP creation |
+| Code                        | HTTP Status | Meaning                                                         |
+| --------------------------- | ----------- | --------------------------------------------------------------- |
+| `AUTH_EMAIL_NOT_CONFIGURED` | 503         | EMAIL binding not available in the Worker environment           |
+| `AUTH_EMAIL_REJECTED`       | 400         | Provider rejected the message (bad recipient, policy violation) |
+| `AUTH_EMAIL_UNAVAILABLE`    | 503         | Provider is down or returning unexpected errors                 |
+| `AUTH_EMAIL_RATE_LIMITED`   | 429         | Provider rate limit hit                                         |
+| `AUTH_STORAGE_FAILED`       | 500         | D1 insert failed during OTP creation                            |
 
 The API response body includes both `error: "email_send_failed"` (generic) and
 `code: "AUTH_EMAIL_*"` (specific stable code). The UI only uses the generic

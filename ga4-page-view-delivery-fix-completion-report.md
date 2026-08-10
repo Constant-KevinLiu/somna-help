@@ -31,6 +31,7 @@ configured in the environment.
 ```
 
 All 656 tests pass, including:
+
 - 41 tests in `src/lib/ga4.test.ts` (GA4 module)
 - 30 tests in `src/hooks/use-analytics-page-view.test.tsx` (router hook)
 
@@ -47,30 +48,30 @@ dynamic/static import overlap are unrelated to analytics.
 
 ## Regression Test Matrix
 
-| Test Case | File | Status |
-|---|---|---|
-| Initial load page_view | hook test | ✅ |
-| SPA navigation page_view | hook test | ✅ |
-| Unchanged URL deduplication (exact match) | hook test | ✅ |
-| Deduplication: different search = different page | hook test | ✅ |
-| Deduplication: different hash = different page | hook test | ✅ |
-| Malformed router payload (event object not used) | hook test | ✅ |
-| Resolved state pathname is string (initial) | hook test | ✅ |
-| Resolved state pathname is string (navigation) | hook test | ✅ |
-| Browser-location fallback (router state null) | hook test | ✅ |
-| Browser-location fallback (pathname not string) | hook test | ✅ |
-| Browser-location fallback during navigation | hook test | ✅ |
-| No page view when both sources unavailable | hook test | ✅ |
-| Crawler suppression | hook test | ✅ |
-| Missing measurement ID disables analytics | ga4 test + hook test | ✅ |
-| Event failure does not reach React | ga4 test + hook test | ✅ |
-| send_page_view: false → explicit page_view sent | ga4 test + hook test | ✅ |
-| Analytics initialized debug log | ga4 test | ✅ |
-| page_view attempted debug log | ga4 test | ✅ |
-| page_view skipped with stable reason | ga4 test | ✅ |
-| No debug logging when flag off | ga4 test | ✅ |
-| Sensitive query stripping | ga4 test | ✅ |
-| Script injection failure doesn't crash app | ga4 test | ✅ |
+| Test Case                                        | File                 | Status |
+| ------------------------------------------------ | -------------------- | ------ |
+| Initial load page_view                           | hook test            | ✅     |
+| SPA navigation page_view                         | hook test            | ✅     |
+| Unchanged URL deduplication (exact match)        | hook test            | ✅     |
+| Deduplication: different search = different page | hook test            | ✅     |
+| Deduplication: different hash = different page   | hook test            | ✅     |
+| Malformed router payload (event object not used) | hook test            | ✅     |
+| Resolved state pathname is string (initial)      | hook test            | ✅     |
+| Resolved state pathname is string (navigation)   | hook test            | ✅     |
+| Browser-location fallback (router state null)    | hook test            | ✅     |
+| Browser-location fallback (pathname not string)  | hook test            | ✅     |
+| Browser-location fallback during navigation      | hook test            | ✅     |
+| No page view when both sources unavailable       | hook test            | ✅     |
+| Crawler suppression                              | hook test            | ✅     |
+| Missing measurement ID disables analytics        | ga4 test + hook test | ✅     |
+| Event failure does not reach React               | ga4 test + hook test | ✅     |
+| send_page_view: false → explicit page_view sent  | ga4 test + hook test | ✅     |
+| Analytics initialized debug log                  | ga4 test             | ✅     |
+| page_view attempted debug log                    | ga4 test             | ✅     |
+| page_view skipped with stable reason             | ga4 test             | ✅     |
+| No debug logging when flag off                   | ga4 test             | ✅     |
+| Sensitive query stripping                        | ga4 test             | ✅     |
+| Script injection failure doesn't crash app       | ga4 test             | ✅     |
 
 ---
 
@@ -153,14 +154,14 @@ of the above can be quickly identified) and add a browser-location fallback
 
 ## Files Changed
 
-| File | Lines | Change Summary |
-|---|---|---|
-| `src/lib/ga4.ts` | +57 / -3 | Dev diagnostics, initializationSkipped flag |
-| `src/hooks/use-analytics-page-view.ts` | +89 / -38 | Browser location fallback, hook diagnostics |
-| `src/lib/ga4.test.ts` | +67 / -0 | 4 new test cases |
-| `src/hooks/use-analytics-page-view.test.tsx` | +210 / -17 | 13 new test cases |
-| `docs/implementation/GA4_PAGE_VIEW_DELIVERY_FIX.md` | new | Technical design document |
-| `ga4-page-view-delivery-fix-completion-report.md` | new | This report |
+| File                                                | Lines      | Change Summary                              |
+| --------------------------------------------------- | ---------- | ------------------------------------------- |
+| `src/lib/ga4.ts`                                    | +57 / -3   | Dev diagnostics, initializationSkipped flag |
+| `src/hooks/use-analytics-page-view.ts`              | +89 / -38  | Browser location fallback, hook diagnostics |
+| `src/lib/ga4.test.ts`                               | +67 / -0   | 4 new test cases                            |
+| `src/hooks/use-analytics-page-view.test.tsx`        | +210 / -17 | 13 new test cases                           |
+| `docs/implementation/GA4_PAGE_VIEW_DELIVERY_FIX.md` | new        | Technical design document                   |
+| `ga4-page-view-delivery-fix-completion-report.md`   | new        | This report                                 |
 
 ---
 

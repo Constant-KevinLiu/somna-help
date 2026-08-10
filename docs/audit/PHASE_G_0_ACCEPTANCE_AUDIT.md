@@ -1,4 +1,5 @@
 # Phase G-0 Acceptance Audit
+
 ## Platform Consolidation, Locale Unification, Type Boundaries & Program Domain Foundation
 
 **Audit Date:** 2026-07-29
@@ -20,25 +21,25 @@ The core deliverables are present, well-tested, and architecturally sound. The l
 
 However, there is low-risk technical debt and one misstatement in the completion report that does not block Phase G but should be tracked:
 
-| Severity | Count | Description |
-|----------|-------|-------------|
-| Critical | 0 | — |
-| High | 0 | — |
-| Medium | 2 | Sync contracts not wired; `program-progress.ts` not delegating |
-| Low | 7 | Test coverage gaps, minor inconsistencies, forward-schema missing |
+| Severity | Count | Description                                                       |
+| -------- | ----- | ----------------------------------------------------------------- |
+| Critical | 0     | —                                                                 |
+| High     | 0     | —                                                                 |
+| Medium   | 2     | Sync contracts not wired; `program-progress.ts` not delegating    |
+| Low      | 7     | Test coverage gaps, minor inconsistencies, forward-schema missing |
 
 ### Build & Validation Status (correct exit-code methodology)
 
-| Command | Exit Code | Result | Notes |
-|---------|-----------|--------|-------|
-| `npm test` | **0** | ✅ PASS | 27 files, 397 tests, 0 failures |
-| `npm run typecheck` | **2** | ❌ FAIL | 78 total errors; **0 in new G-0 files** |
-| `npm run typecheck:app` | **2** | ❌ FAIL | Pre-existing errors (sync, server, auth) |
-| `npm run typecheck:worker` | **2** | ❌ FAIL | Pre-existing errors (same as app) |
-| `npm run typecheck:tests` | **2** | ❌ FAIL | Reminder type mismatches in test files |
-| `npm run typecheck:all` | **2** | ❌ FAIL | Combined all of the above |
-| `npm run lint` | **1** | ❌ FAIL | 13,112 errors; 13,080 are CRLF line-ending |
-| `npm run build` | **0** | ✅ PASS | Builds in ~4.0s; client + server |
+| Command                    | Exit Code | Result  | Notes                                      |
+| -------------------------- | --------- | ------- | ------------------------------------------ |
+| `npm test`                 | **0**     | ✅ PASS | 27 files, 397 tests, 0 failures            |
+| `npm run typecheck`        | **2**     | ❌ FAIL | 78 total errors; **0 in new G-0 files**    |
+| `npm run typecheck:app`    | **2**     | ❌ FAIL | Pre-existing errors (sync, server, auth)   |
+| `npm run typecheck:worker` | **2**     | ❌ FAIL | Pre-existing errors (same as app)          |
+| `npm run typecheck:tests`  | **2**     | ❌ FAIL | Reminder type mismatches in test files     |
+| `npm run typecheck:all`    | **2**     | ❌ FAIL | Combined all of the above                  |
+| `npm run lint`             | **1**     | ❌ FAIL | 13,112 errors; 13,080 are CRLF line-ending |
+| `npm run build`            | **0**     | ✅ PASS | Builds in ~4.0s; client + server           |
 
 **Important:** TypeScript errors are all pre-existing or expected consequences of the `Lang` type expansion (from 4→7 locales). Zero errors originate in new G-0 files. This matches the baseline document.
 
@@ -52,18 +53,18 @@ However, there is low-risk technical debt and one misstatement in the completion
 
 ### Verified Findings
 
-| Item | Status | Evidence |
-|------|--------|----------|
-| `SupportedLocale` is single source of truth | ✅ | Imported by i18n.tsx, lang-detect.ts, content-types.ts, program/* |
-| 7 supported locales (en, es, pt, pl, de, zh, ja) | ✅ | `SUPPORTED_LOCALES` in [locale-registry.ts:35-43](src/lib/locale-registry.ts#L35-L43) |
-| Tiered system (4 active + 1 partial + 2 reserved) | ✅ | `ACTIVE_LOCALES`, `PARTIAL_LOCALES`, `RESERVED_LOCALES` |
-| `normalizePersistedLocale()` handles pt-BR → pt | ✅ | Tested in locale-registry.test.ts (52 tests total) |
-| `LEGACY_LOCALE_MAP` with 7 entries | ✅ | en-US, es-ES, pt-BR, pl-PL, de-DE, zh-CN, ja-JP |
-| `resolveTranslation()` 4-tier fallback | ✅ | requested → feature → English → `safeKeyFallback()` |
-| `safeKeyFallback()` converts dotted keys to human-readable | ✅ | Never shows raw dotted keys to users |
-| Type guards (isSupportedLocale, isActiveLocale, etc.) | ✅ | All type predicates, TS narrows automatically |
-| UI locale vs ContentLocale separation | ✅ | `uiLocaleToContentLocale()` in content-types.ts |
-| SSR-safe locale operations | ✅ | `getBrowserLang()` returns "en" on server; `resolveTranslation()` is pure |
+| Item                                                       | Status | Evidence                                                                              |
+| ---------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------- |
+| `SupportedLocale` is single source of truth                | ✅     | Imported by i18n.tsx, lang-detect.ts, content-types.ts, program/*                     |
+| 7 supported locales (en, es, pt, pl, de, zh, ja)           | ✅     | `SUPPORTED_LOCALES` in [locale-registry.ts:35-43](src/lib/locale-registry.ts#L35-L43) |
+| Tiered system (4 active + 1 partial + 2 reserved)          | ✅     | `ACTIVE_LOCALES`, `PARTIAL_LOCALES`, `RESERVED_LOCALES`                               |
+| `normalizePersistedLocale()` handles pt-BR → pt            | ✅     | Tested in locale-registry.test.ts (52 tests total)                                    |
+| `LEGACY_LOCALE_MAP` with 7 entries                         | ✅     | en-US, es-ES, pt-BR, pl-PL, de-DE, zh-CN, ja-JP                                       |
+| `resolveTranslation()` 4-tier fallback                     | ✅     | requested → feature → English → `safeKeyFallback()`                                   |
+| `safeKeyFallback()` converts dotted keys to human-readable | ✅     | Never shows raw dotted keys to users                                                  |
+| Type guards (isSupportedLocale, isActiveLocale, etc.)      | ✅     | All type predicates, TS narrows automatically                                         |
+| UI locale vs ContentLocale separation                      | ✅     | `uiLocaleToContentLocale()` in content-types.ts                                       |
+| SSR-safe locale operations                                 | ✅     | `getBrowserLang()` returns "en" on server; `resolveTranslation()` is pure             |
 
 ### Integration Points
 
@@ -83,12 +84,12 @@ Categories: locale lists (6), registry definitions (10), type guards (10), pt/pt
 
 ### 3.1 States and Transitions
 
-| State | Valid Transitions To |
-|-------|---------------------|
-| `not_started` | `active` |
-| `active` | `paused`, `completed` |
-| `paused` | `active`, `completed` |
-| `completed` | `active` (reopen) |
+| State         | Valid Transitions To  |
+| ------------- | --------------------- |
+| `not_started` | `active`              |
+| `active`      | `paused`, `completed` |
+| `paused`      | `active`, `completed` |
+| `completed`   | `active` (reopen)     |
 
 All transitions are guarded by `isValidStatusTransition()` from [types.ts:286-291](src/lib/program/types.ts#L286-L291).
 
@@ -97,6 +98,7 @@ All transitions are guarded by `isValidStatusTransition()` from [types.ts:286-29
 ### 3.2 Invalid Transition Handling
 
 All status-changing event handlers in `service.ts` use this pattern:
+
 ```ts
 if (!isValidStatusTransition(progress.status, "<target>")) {
   return progress; // no-op
@@ -135,6 +137,7 @@ All timestamps are ISO 8601 strings (`new Date().toISOString()`).
 **Detection:** `isLegacyProgress()` checks for `completedLessons` array + absence of `schemaVersion`
 
 **Migration steps:**
+
 1. Filter to valid lesson IDs only
 2. Determine status (completed or active)
 3. Find current week (first incomplete week)
@@ -153,6 +156,7 @@ All timestamps are ISO 8601 strings (`new Date().toISOString()`).
 ### 3.7 Unknown Lesson Behavior
 
 **Finding:** The `lesson_completed` and `lesson_uncompleted` handlers do NOT validate that `lessonId` exists in the program definition. Unknown lesson IDs would be added to `completedLessonIds`. This has minor implications:
+
 - `calculateOverallCompletion()` counts all completed IDs, so unknown lessons would slightly inflate the percentage
 - `calculateWeekCompletion()` iterates `week.lessonIds`, so unknown lessons don't affect week percentages
 - Migration **does** filter invalid lesson IDs
@@ -173,6 +177,7 @@ Completing the same lesson twice is a complete no-op (line 212): `return progres
 ### 3.10 Definition Validation
 
 `validateProgramDefinition()` at [definition.ts:151-213](src/lib/program/definition.ts#L151-L213) checks:
+
 - Duplicate lesson IDs
 - Duplicate week IDs
 - Contiguous week order
@@ -185,9 +190,11 @@ Completing the same lesson twice is a complete no-op (line 212): `return progres
 ### Test Coverage: 38 tests in `service.test.ts` + 19 in `definition.test.ts`
 
 **service.test.ts categories:**
+
 - createInitialProgress (3), isValidStatusTransition (8), program_started (2), pause/resume (2), lesson_completed (4), lesson_uncompleted (3), skip/unskipped (2), overall completion (3), isLegacyProgress (3), migrateLegacyProgress (6), weekly_plan events (2)
 
 **Coverage gaps:**
+
 - `program_completed` event: 0 tests
 - `lesson_unskipped` event: 0 tests
 - `milestone_earned` standalone event: 0 tests
@@ -208,26 +215,28 @@ The `applyEvent(progress, event, definition) → progress` function is a standar
 
 ### What it is NOT:
 
-| Full Event Sourcing Feature | Present? | Evidence |
-|----------------------------|----------|----------|
-| Events persisted as append-only log | ❌ | State is stored as a `ProgramProgress` snapshot |
-| State replayed from events | ❌ | State is loaded directly from storage |
-| Event store / event log | ❌ | No event storage of any kind |
-| Competing sources of truth | ❌ | `ProgramProgress` is the single source of truth |
-| Event growth limits | N/A | No events are stored |
-| Event schema versioning | ❌ | Events are function parameters, not persisted |
-| Deterministic replay | ⚠️ | `applyEvent` is deterministic, but there's nothing to replay from |
-| Migration on events | ❌ | Migration is on state/snapshots, not events |
+| Full Event Sourcing Feature         | Present? | Evidence                                                          |
+| ----------------------------------- | -------- | ----------------------------------------------------------------- |
+| Events persisted as append-only log | ❌       | State is stored as a `ProgramProgress` snapshot                   |
+| State replayed from events          | ❌       | State is loaded directly from storage                             |
+| Event store / event log             | ❌       | No event storage of any kind                                      |
+| Competing sources of truth          | ❌       | `ProgramProgress` is the single source of truth                   |
+| Event growth limits                 | N/A      | No events are stored                                              |
+| Event schema versioning             | ❌       | Events are function parameters, not persisted                     |
+| Deterministic replay                | ⚠️       | `applyEvent` is deterministic, but there's nothing to replay from |
+| Migration on events                 | ❌       | Migration is on state/snapshots, not events                       |
 
 ### Assessment: **Proportionate**
 
 This is the right level of complexity for Phase G-0. The event-style command pattern gives:
+
 - Clear transition boundaries (11 event types)
 - Easy testability (pure function of state + event)
 - Idempotency guarantees
 - Auditable transition logic
 
 Without the overhead of:
+
 - Event log storage
 - Event schema migration
 - Replay infrastructure
@@ -247,15 +256,16 @@ The architecture doc calls it "event-sourced", which is slightly imprecise — "
 
 ### 5.2 Storage Keys
 
-| Key | Purpose | Writeable |
-|-----|---------|-----------|
-| `somna:program-progress:v1` | Canonical v1 progress | Yes |
-| `cbtiProgramProgress` | Legacy progress key | Read-only (never written) |
-| `somna:program-plans:v1` | Weekly program plans | Yes |
+| Key                         | Purpose               | Writeable                 |
+| --------------------------- | --------------------- | ------------------------- |
+| `somna:program-progress:v1` | Canonical v1 progress | Yes                       |
+| `cbtiProgramProgress`       | Legacy progress key   | Read-only (never written) |
+| `somna:program-plans:v1`    | Weekly program plans  | Yes                       |
 
 ### 5.3 Schema Validation
 
 On read, data flows through `migrateLegacyProgress()` which:
+
 - **Legacy shape:** Filters, computes status, recalculates milestones
 - **Modern shape:** Validates/coerces each field (status falls back, string arrays filtered for strings, milestones defaulted)
 - **Unknown shape:** Returns `createInitialProgress()`
@@ -265,6 +275,7 @@ On read, data flows through `migrateLegacyProgress()` which:
 ### 5.4 Malformed JSON Handling
 
 Two layers of protection:
+
 1. `safeJsonParse` wraps `JSON.parse` in try/catch → returns default value
 2. `loadProgramProgress` treats `null` (corrupt result) as "no data" → initial progress
 
@@ -325,6 +336,7 @@ Four statuses: `proposed`, `accepted`, `dismissed`, `completed`. Deferral is rep
 ### 6.3 Validation
 
 Three validation functions:
+
 - `validatePlanLessonIds(plan, definition)` — all recommended lessons exist in definition
 - `validatePlanAcceptance(plan)` — acceptedLessonIds ⊆ recommendedLessonIds
 - `validatePlan(plan, definition)` — full validation returning issue array (11 checks)
@@ -423,6 +435,7 @@ TypeScript compile-time safety only (closed union type). At runtime, whatever `f
 ### 8.1 Program Creates Request Contract Only
 
 ✅ **Yes.** The file defines:
+
 - `ProgramReminderRequest` interface (the request shape)
 - `ProgramReminderStatus` type (outcome statuses)
 - `ProgramReminderOutcome` interface (outcome shape)
@@ -442,6 +455,7 @@ No code creates, schedules, or persists reminders.
 ### 8.4 User Confirmation Requirement
 
 Explicitly documented as mandatory:
+
 - Line 20: "User confirmation is MANDATORY for any reminder change requested by Program."
 - Line 32-33: "This is a REQUEST only — the reminder service decides whether and how to schedule it, and the user must explicitly confirm."
 - `ProgramReminderStatus` includes `"requested"` as initial state (user asked to confirm).
@@ -485,10 +499,10 @@ This is the most important finding in the sync area. The new program sync contra
 
 ### 9.2 Entity Inventory
 
-| Entity | Type Name | Schema Version | Tombstones |
-|--------|-----------|---------------|------------|
-| Program Progress | `SyncProgramProgress` / `CanonicalProgramProgress` | 1 | No (syncStatus has "deleted" value only) |
-| Weekly Plan | `SyncWeeklyProgramPlan` / `CanonicalWeeklyProgramPlan` | 1 | Yes (`deleted?: boolean`) |
+| Entity           | Type Name                                              | Schema Version | Tombstones                               |
+| ---------------- | ------------------------------------------------------ | -------------- | ---------------------------------------- |
+| Program Progress | `SyncProgramProgress` / `CanonicalProgramProgress`     | 1              | No (syncStatus has "deleted" value only) |
+| Weekly Plan      | `SyncWeeklyProgramPlan` / `CanonicalWeeklyProgramPlan` | 1              | Yes (`deleted?: boolean`)                |
 
 ### 9.3 IDs
 
@@ -505,6 +519,7 @@ This is the most important finding in the sync area. The new program sync contra
 ### 9.5 Serialization Functions
 
 **For progress:**
+
 - `toSyncProgress(progress, entityId, options?) → SyncProgramProgress`
 - `fromCanonicalProgress(canonical) → ProgramProgress`
 - Round-trip integrity: all progress fields survive
@@ -513,17 +528,17 @@ This is the most important finding in the sync area. The new program sync contra
 
 ### 9.6 Conflict Resolution Strategy
 
-| Field | Strategy | Function |
-|-------|----------|----------|
-| completedLessonIds | Set union | `mergeCompletedLessons` |
-| skippedLessonIds | Set union | (in `mergeLocalAndRemoteProgress`) |
-| acceptedPlanIds | Set union | (in `mergeLocalAndRemoteProgress`) |
-| dismissedRecommendationIds | Set union | (in `mergeLocalAndRemoteProgress`) |
-| status | Most advanced wins | `resolveStatusConflict` |
-| currentWeekId | LWW by updatedAt | `resolveCurrentWeekId` |
-| milestones | Union + earlier timestamp | `mergeMilestones` |
-| startedAt | Earlier wins | (in merge function) |
-| completedAt | First completion | (in merge function) |
+| Field                      | Strategy                  | Function                           |
+| -------------------------- | ------------------------- | ---------------------------------- |
+| completedLessonIds         | Set union                 | `mergeCompletedLessons`            |
+| skippedLessonIds           | Set union                 | (in `mergeLocalAndRemoteProgress`) |
+| acceptedPlanIds            | Set union                 | (in `mergeLocalAndRemoteProgress`) |
+| dismissedRecommendationIds | Set union                 | (in `mergeLocalAndRemoteProgress`) |
+| status                     | Most advanced wins        | `resolveStatusConflict`            |
+| currentWeekId              | LWW by updatedAt          | `resolveCurrentWeekId`             |
+| milestones                 | Union + earlier timestamp | `mergeMilestones`                  |
+| startedAt                  | Earlier wins              | (in merge function)                |
+| completedAt                | First completion          | (in merge function)                |
 
 **Documentation-vs-code mismatch:** File header says `skippedLessonIds` is LWW, but the implementation uses set union. **Low-risk: the implementation (union) is safer than the documented LWW.**
 
@@ -566,6 +581,7 @@ The `exportProgramData()` function exists in `storage.ts` and returns `{ schemaV
 **Fields:** `id, program_slug, week_number, lesson_slug, completed, completed_at, created_at, updated_at`
 
 **Important caveats:**
+
 - The server-side schema is the **legacy** `program_progress` table shape, NOT the new v1 contract format
 - ⚠️ **The `program_progress` table does NOT exist in migrations.** The `migrations/` directory has no migration creating this table. The try/catch silently returns an empty array if the table is missing. In production today, this export is effectively empty.
 - ⚠️ **Weekly program plans (`program_plans`) are NOT exported server-side.** There is no server-side table for plans. Client-side plans live only in `localStorage` and are not synced/exported via the API.
@@ -575,6 +591,7 @@ The `exportProgramData()` function exists in `storage.ts` and returns `{ schemaV
 ✅ **Program data IS deleted.**
 
 `IdentityMenu.tsx` `handleClearCache()` (lines 72-82):
+
 - Dynamically imports `deleteAllProgramData()` from `@/lib/program/storage`
 - Calls it to clear all program keys
 - Has a fallback that directly removes known keys if the dynamic import fails
@@ -588,6 +605,7 @@ The clear-cache flow covers: sync queue, sync status, migration state, cloud sle
 `src/services/account/account-api.ts` line 291-299: `DELETE FROM program_progress WHERE user_id = ?`. Wrapped in try/catch.
 
 **Caveats:**
+
 - ⚠️ Same missing-table issue as export: `program_progress` table is not in migrations, so the DELETE currently affects 0 rows and silently succeeds.
 - ⚠️ **Weekly program plans are NOT deleted server-side** (no server-side table exists).
 
@@ -596,18 +614,19 @@ The clear-cache flow covers: sync queue, sync status, migration state, cloud sle
 ### 10.5 Domain Separation
 
 ✅ Program data is fully separate from:
+
 - **Diary / Sleep records:** Different storage keys, different DB tables, no cross-module imports
 - **Reflections:** Separate storage keys (`somna.reflections.v1` vs `somna:program-progress:v1`)
 - **Reminders:** Separate storage keys, no cross-module writes
 
 ### 10.6 Summary
 
-| Flow | Program Data Included? | Path |
-|------|----------------------|------|
-| Client UI export | ⚠️ Indirect (goes through server API) | AccountDataDialog → /api/account/export |
-| Server API export | ✅ Yes (legacy table format) | account-api.ts: SELECT FROM program_progress |
-| Client clear cache | ✅ Yes | IdentityMenu → deleteAllProgramData() |
-| Server account delete | ✅ Yes (legacy table format) | account-api.ts: DELETE FROM program_progress |
+| Flow                  | Program Data Included?                | Path                                         |
+| --------------------- | ------------------------------------- | -------------------------------------------- |
+| Client UI export      | ⚠️ Indirect (goes through server API) | AccountDataDialog → /api/account/export      |
+| Server API export     | ✅ Yes (legacy table format)          | account-api.ts: SELECT FROM program_progress |
+| Client clear cache    | ✅ Yes                                | IdentityMenu → deleteAllProgramData()        |
+| Server account delete | ✅ Yes (legacy table format)          | account-api.ts: DELETE FROM program_progress |
 
 ---
 
@@ -615,34 +634,35 @@ The clear-cache flow covers: sync queue, sync status, migration state, cloud sle
 
 ### 11.1 G-0 Test Files and Counts
 
-| Test File | Tests | Category | Type |
-|-----------|-------|----------|------|
-| `locale-registry.test.ts` | 52 | Locale registry | Unit |
-| `program/service.test.ts` | 38 | Program service / state machine | Unit |
-| `program/storage.test.ts` | 12 | Program storage | Unit |
-| `program/definition.test.ts` | 19 | Program definition validation | Unit |
-| `program/weekly-plan.test.ts` | 20 | Weekly plan | Unit |
-| `program/sync-contracts.test.ts` | 24 | Sync contracts | Unit |
-| **Total G-0 tests** | **165** | | |
+| Test File                        | Tests   | Category                        | Type |
+| -------------------------------- | ------- | ------------------------------- | ---- |
+| `locale-registry.test.ts`        | 52      | Locale registry                 | Unit |
+| `program/service.test.ts`        | 38      | Program service / state machine | Unit |
+| `program/storage.test.ts`        | 12      | Program storage                 | Unit |
+| `program/definition.test.ts`     | 19      | Program definition validation   | Unit |
+| `program/weekly-plan.test.ts`    | 20      | Weekly plan                     | Unit |
+| `program/sync-contracts.test.ts` | 24      | Sync contracts                  | Unit |
+| **Total G-0 tests**              | **165** |                                 |      |
 
 **Verification:** `npm test` reports 397 total tests across 27 files, all passing. The 165 G-0 tests represent ~42% of the test suite.
 
 ### 11.2 Test Categories Summary
 
-| Domain | Unit Tests | Integration Tests | Runtime Route Tests |
-|--------|-----------|-------------------|---------------------|
-| Locale registry | 52 | 0 | 0 |
-| Program service | 38 | 0 | 0 |
-| Program storage | 12 | 0 | 0 |
-| Program definition | 19 | 0 | 0 |
-| Weekly plans | 20 | 0 | 0 |
-| Weekly focus adapter | 0 | 0 | 0 |
-| Reminder boundary | 0 | 0 | 0 |
-| Sync contracts | 24 | 0 | 0 |
-| Export/delete | ~4 (in storage.test.ts) | 0 | 0 |
-| SSR | 0 | 0 | 0 |
+| Domain               | Unit Tests              | Integration Tests | Runtime Route Tests |
+| -------------------- | ----------------------- | ----------------- | ------------------- |
+| Locale registry      | 52                      | 0                 | 0                   |
+| Program service      | 38                      | 0                 | 0                   |
+| Program storage      | 12                      | 0                 | 0                   |
+| Program definition   | 19                      | 0                 | 0                   |
+| Weekly plans         | 20                      | 0                 | 0                   |
+| Weekly focus adapter | 0                       | 0                 | 0                   |
+| Reminder boundary    | 0                       | 0                 | 0                   |
+| Sync contracts       | 24                      | 0                 | 0                   |
+| Export/delete        | ~4 (in storage.test.ts) | 0                 | 0                   |
+| SSR                  | 0                       | 0                 | 0                   |
 
 **Notable absences:**
+
 - **Weekly focus adapter:** 0 tests (pure adapter, simple logic, low risk)
 - **Reminder boundary:** 0 tests (pure types + validation, low risk)
 - **SSR safety:** 0 dedicated tests (design relies on safe-storage pattern)
@@ -652,6 +672,7 @@ The clear-cache flow covers: sync queue, sync status, migration state, cloud sle
 ### 11.3 Coverage Quality Assessment
 
 **Strengths:**
+
 - Core state machine transitions are well tested
 - Migration paths are tested
 - Validation functions are tested
@@ -659,6 +680,7 @@ The clear-cache flow covers: sync queue, sync status, migration state, cloud sle
 - Edge cases (malformed JSON, invalid IDs) are tested
 
 **Gaps (low-risk):**
+
 - No tests for `program_completed` manual event
 - No tests for `lesson_unskipped` event
 - No direct tests for `updateCurrentWeekId` or `getWeekAccessStatus`
@@ -671,22 +693,24 @@ The clear-cache flow covers: sync queue, sync status, migration state, cloud sle
 
 ### 12.1 Program Route Stack
 
-| Route | File | Uses New Program Module? |
-|-------|------|-------------------------|
-| `/program` | `program.index.tsx` | ❌ Uses old `program-progress.ts` |
-| `/program/week-1` (etc.) | `program.$slug.tsx` | ❌ Uses old template components |
-| `/program/week-1/<lesson>` | `program.$week.$lesson.tsx` | ❌ Uses old template components |
-| `/dashboard` | `dashboard.tsx` | ❌ Uses old `useProgramProgress` |
-| `/` | `index.tsx` | N/A (landing) |
-| `/diary` | `diary.tsx` | N/A (diary domain) |
-| `/reminders` | `reminders.tsx` | N/A (reminder domain) |
+| Route                      | File                        | Uses New Program Module?          |
+| -------------------------- | --------------------------- | --------------------------------- |
+| `/program`                 | `program.index.tsx`         | ❌ Uses old `program-progress.ts` |
+| `/program/week-1` (etc.)   | `program.$slug.tsx`         | ❌ Uses old template components   |
+| `/program/week-1/<lesson>` | `program.$week.$lesson.tsx` | ❌ Uses old template components   |
+| `/dashboard`               | `dashboard.tsx`             | ❌ Uses old `useProgramProgress`  |
+| `/`                        | `index.tsx`                 | N/A (landing)                     |
+| `/diary`                   | `diary.tsx`                 | N/A (diary domain)                |
+| `/reminders`               | `reminders.tsx`             | N/A (reminder domain)             |
 
 ### 12.2 Key Finding: Old `program-progress.ts` Not Delegating
 
 The completion report's "Modified Files" list claims:
+
 > `src/lib/program-progress.ts` — delegate to program/service (backward compat)
 
 **This is NOT implemented.** The old `program-progress.ts` (206 lines) still:
+
 - Has its own `isBrowser()` check (duplicating safe-storage)
 - Has its own `loadProgress()` / `saveProgress()` direct localStorage access
 - Has its own `ProgramProgress` type (`{ completedLessons: string[] }` — legacy shape)
@@ -730,12 +754,14 @@ Existing routes use the old `isBrowser()` pattern in `program-progress.ts`, whic
 ### Rationale
 
 **Why not "ACCEPTED — READY FOR PHASE G":**
+
 1. The completion report misrepresents `program-progress.ts` as delegating to the new service when it does not.
 2. Sync contracts are contract-only and not wired into the actual sync transport — this is somewhat expected for G-0, but Phase G teams should be aware.
 3. No forward-schema guard exists on program progress or plans storage.
 4. Several test coverage gaps exist (manual `program_completed` event, `lesson_unskipped`, plan lifecycle transitions, SSR).
 
 **Why not "NOT ACCEPTED":**
+
 - All core deliverables are present and well-designed
 - 165 tests all pass (397 total test suite passes)
 - Zero TypeScript errors in new G-0 files
@@ -749,23 +775,24 @@ Existing routes use the old `isBrowser()` pattern in `program-progress.ts`, whic
 
 ### Summary of Debt Items
 
-| # | Item | Severity | Phase G Item? |
-|---|------|----------|---------------|
-| 1 | `program-progress.ts` not delegating to new service | Medium | Yes — Phase G should wire in new service |
-| 2 | Sync contracts not wired into transport layer | Medium | Yes — Phase G sync integration |
-| 3 | `program_progress` DB table not in migrations (server export/delete currently empty) | Medium | Yes — Phase G needs proper schema |
-| 4 | Weekly plans not in server export / delete / sync | Medium | Yes — Phase G plans persistence |
-| 5 | No forward-schema guard on storage | Low | Yes — before v2 schema |
-| 6 | Missing tests for some event types | Low | Nice-to-have |
-| 7 | `recalculateMilestones` generates its own timestamp | Low | Low priority |
-| 8 | Duplicate `PlansStorage` interface | Low | Cleanup |
-| 9 | `skippedLessonIds` docs say LWW, code uses union | Low | Fix docstring |
-| 10 | No plan serialization functions for sync | Low | Phase G sync work |
-| 11 | Release gate doesn't validate `programProgress` in export | Low | Cleanup |
+| #   | Item                                                                                 | Severity | Phase G Item?                            |
+| --- | ------------------------------------------------------------------------------------ | -------- | ---------------------------------------- |
+| 1   | `program-progress.ts` not delegating to new service                                  | Medium   | Yes — Phase G should wire in new service |
+| 2   | Sync contracts not wired into transport layer                                        | Medium   | Yes — Phase G sync integration           |
+| 3   | `program_progress` DB table not in migrations (server export/delete currently empty) | Medium   | Yes — Phase G needs proper schema        |
+| 4   | Weekly plans not in server export / delete / sync                                    | Medium   | Yes — Phase G plans persistence          |
+| 5   | No forward-schema guard on storage                                                   | Low      | Yes — before v2 schema                   |
+| 6   | Missing tests for some event types                                                   | Low      | Nice-to-have                             |
+| 7   | `recalculateMilestones` generates its own timestamp                                  | Low      | Low priority                             |
+| 8   | Duplicate `PlansStorage` interface                                                   | Low      | Cleanup                                  |
+| 9   | `skippedLessonIds` docs say LWW, code uses union                                     | Low      | Fix docstring                            |
+| 10  | No plan serialization functions for sync                                             | Low      | Phase G sync work                        |
+| 11  | Release gate doesn't validate `programProgress` in export                            | Low      | Cleanup                                  |
 
 ### Recommendation
 
 **Proceed to Phase G** with awareness that:
+
 1. The program domain foundation is solid and can be built upon
 2. Wiring the new program service into the UI routes is Phase G work that was claimed as done but isn't
 3. Sync integration is a larger piece of work than the completion report implies
@@ -777,15 +804,15 @@ Existing routes use the old `isBrowser()` pattern in `program-progress.ts`, whic
 
 All commands run with exit-code capture using the `> log 2>&1; EXIT=$?` pattern to avoid reporting `tail`/`grep` exit codes.
 
-| Command | EXIT_CODE | Evidence |
-|---------|-----------|----------|
-| `npm test` | 0 | 27 test files, 397 tests passed in 3.37s |
-| `npm run typecheck` | 2 | 78 TS errors (all pre-existing / expected Lang expansion) |
-| `npm run typecheck:app` | 2 | Errors in server.ts, sync services, auth |
-| `npm run typecheck:worker` | 2 | Same as app (same tsconfig scope) |
-| `npm run typecheck:tests` | 2 | Reminder type mismatches in test files |
-| `npm run typecheck:all` | 2 | Combined all above |
-| `npm run lint` | 1 | 13,112 errors (13,080 = CRLF prettier) |
-| `npm run build` | 0 | Built in 4.01s, dist/server/ output |
+| Command                    | EXIT_CODE | Evidence                                                  |
+| -------------------------- | --------- | --------------------------------------------------------- |
+| `npm test`                 | 0         | 27 test files, 397 tests passed in 3.37s                  |
+| `npm run typecheck`        | 2         | 78 TS errors (all pre-existing / expected Lang expansion) |
+| `npm run typecheck:app`    | 2         | Errors in server.ts, sync services, auth                  |
+| `npm run typecheck:worker` | 2         | Same as app (same tsconfig scope)                         |
+| `npm run typecheck:tests`  | 2         | Reminder type mismatches in test files                    |
+| `npm run typecheck:all`    | 2         | Combined all above                                        |
+| `npm run lint`             | 1         | 13,112 errors (13,080 = CRLF prettier)                    |
+| `npm run build`            | 0         | Built in 4.01s, dist/server/ output                       |
 
 **Baseline agreement:** The TypeScript error count of 78 matches the baseline document (`TYPESCRIPT_UNIQUE_ERROR_BASELINE.md`). Zero new errors in G-0 files.

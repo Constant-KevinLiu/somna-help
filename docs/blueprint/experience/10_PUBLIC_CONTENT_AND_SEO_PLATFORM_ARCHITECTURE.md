@@ -1,6 +1,7 @@
 # 10_PUBLIC_CONTENT_AND_SEO_PLATFORM_ARCHITECTURE.md
 
 # PAS-10 Public Content & SEO Platform Architecture
+
 ### Product Architecture Specification
 
 > Defines the architecture for Somna's public knowledge ecosystem, SEO platform, AI-search readiness and long-term content governance.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-10 |
-| Layer | Layer 4 – Experience |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00, PAS-01, PAS-03, PAS-09 |
-| Required By | PAS-11, PAS-12 |
+| Field        | Value                          |
+| ------------ | ------------------------------ |
+| Blueprint ID | PAS-10                         |
+| Layer        | Layer 4 – Experience           |
+| Status       | Canonical                      |
+| Version      | 2.0                            |
+| Depends On   | PAS-00, PAS-01, PAS-03, PAS-09 |
+| Required By  | PAS-11, PAS-12                 |
 
 ---
 
@@ -84,13 +85,13 @@ Internal Links
 
 ## 5. Responsibilities
 
-| Component | Responsibility |
-|---|---|
-| Content Platform | Canonical public content |
-| SEO Platform | Search visibility |
-| Knowledge Platform | Subject authority |
-| Localization Platform | Multilingual publishing |
-| Intelligence Platform | AI-ready summaries |
+| Component             | Responsibility           |
+| --------------------- | ------------------------ |
+| Content Platform      | Canonical public content |
+| SEO Platform          | Search visibility        |
+| Knowledge Platform    | Subject authority        |
+| Localization Platform | Multilingual publishing  |
+| Intelligence Platform | AI-ready summaries       |
 
 ---
 
@@ -174,14 +175,14 @@ Every public page must:
 
 ## Content Ownership Matrix
 
-| Content Type | Owner |
-|---|---|
-| Pillar Pages | Content Platform |
-| Learning Articles | Knowledge Platform |
-| SEO Landing Pages | Content Platform |
-| Calculators & Tools | Product Platform |
-| Metadata | SEO Platform |
-| Structured Data | SEO Platform |
+| Content Type        | Owner              |
+| ------------------- | ------------------ |
+| Pillar Pages        | Content Platform   |
+| Learning Articles   | Knowledge Platform |
+| SEO Landing Pages   | Content Platform   |
+| Calculators & Tools | Product Platform   |
+| Metadata            | SEO Platform       |
+| Structured Data     | SEO Platform       |
 
 ---
 

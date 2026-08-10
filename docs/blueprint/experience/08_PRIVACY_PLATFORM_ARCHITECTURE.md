@@ -1,6 +1,7 @@
 # 08_PRIVACY_PLATFORM_ARCHITECTURE.md
 
 # PAS-08 Privacy Platform Architecture
+
 ### Product Architecture Specification
 
 > Defines the privacy architecture, data lifecycle, consent model and user data governance for the Somna platform.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-08 |
-| Layer | Layer 4 – Experience |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00, PAS-04, PAS-05, PAS-07 |
-| Required By | PAS-09 ~ PAS-12 |
+| Field        | Value                          |
+| ------------ | ------------------------------ |
+| Blueprint ID | PAS-08                         |
+| Layer        | Layer 4 – Experience           |
+| Status       | Canonical                      |
+| Version      | 2.0                            |
+| Depends On   | PAS-00, PAS-04, PAS-05, PAS-07 |
+| Required By  | PAS-09 ~ PAS-12                |
 
 ---
 
@@ -67,11 +68,11 @@ Deletion
 
 ## 5. Responsibilities
 
-| Component | Responsibility |
-|---|---|
-| Privacy Platform | Policy enforcement |
-| Identity Platform | Identity verification |
-| Behavioral Platform | Canonical records |
+| Component             | Responsibility                   |
+| --------------------- | -------------------------------- |
+| Privacy Platform      | Policy enforcement               |
+| Identity Platform     | Identity verification            |
+| Behavioral Platform   | Canonical records                |
 | Intelligence Platform | Privacy-aware insight generation |
 
 ## 6. Architecture Invariants

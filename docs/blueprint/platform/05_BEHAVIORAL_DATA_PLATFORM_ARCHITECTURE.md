@@ -1,6 +1,7 @@
 # 05_BEHAVIORAL_DATA_PLATFORM_ARCHITECTURE.md
 
 # PAS-05 Behavioral Data Platform Architecture
+
 ### Product Architecture Specification
 
 > Defines the canonical behavioral data model, lifecycle, ownership and governance that power the entire Somna platform.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-05 |
-| Layer | Layer 2 – Platform |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00, PAS-01, PAS-02, PAS-04 |
-| Required By | PAS-06 ~ PAS-12 |
+| Field        | Value                          |
+| ------------ | ------------------------------ |
+| Blueprint ID | PAS-05                         |
+| Layer        | Layer 2 – Platform             |
+| Status       | Canonical                      |
+| Version      | 2.0                            |
+| Depends On   | PAS-00, PAS-01, PAS-02, PAS-04 |
+| Required By  | PAS-06 ~ PAS-12                |
 
 ---
 
@@ -124,14 +125,14 @@ The following rules must always remain true:
 
 ## 7. Responsibilities
 
-| Domain | Responsibility |
-|---|---|
-| Diary | Record behavior |
-| Reflection | Capture interpretation |
-| Metrics Engine | Calculate metrics |
-| Dashboard | Display metrics |
-| AI | Explain patterns |
-| Export | User data portability |
+| Domain         | Responsibility         |
+| -------------- | ---------------------- |
+| Diary          | Record behavior        |
+| Reflection     | Capture interpretation |
+| Metrics Engine | Calculate metrics      |
+| Dashboard      | Display metrics        |
+| AI             | Explain patterns       |
+| Export         | User data portability  |
 
 ---
 
@@ -175,26 +176,26 @@ Archived
 
 ## Data Ownership
 
-| Data Type | Owner |
-|---|---|
-| Sleep Session | Behavioral Platform |
-| Reflection | Behavioral Platform |
-| Metrics | Metrics Engine |
-| Dashboard Data | Dashboard |
-| AI Summary | Intelligence Platform |
+| Data Type      | Owner                 |
+| -------------- | --------------------- |
+| Sleep Session  | Behavioral Platform   |
+| Reflection     | Behavioral Platform   |
+| Metrics        | Metrics Engine        |
+| Dashboard Data | Dashboard             |
+| AI Summary     | Intelligence Platform |
 
 ---
 
 ## Consumer Matrix
 
-| Consumer | Read | Write |
-|---|:---:|:---:|
-| Diary | ✓ | ✓ |
-| Reflection | ✓ | ✓ |
-| Dashboard | ✓ | |
-| Habit Engine | ✓ | |
-| AI | ✓ | |
-| Export | ✓ | |
+| Consumer     | Read | Write |
+| ------------ | :--: | :---: |
+| Diary        |  ✓   |   ✓   |
+| Reflection   |  ✓   |   ✓   |
+| Dashboard    |  ✓   |       |
+| Habit Engine |  ✓   |       |
+| AI           |  ✓   |       |
+| Export       |  ✓   |       |
 
 Only the Behavioral Platform owns canonical records.
 

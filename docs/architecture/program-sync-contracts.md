@@ -50,26 +50,26 @@ graph TB
 
 Used when sending progress to / receiving from the sync endpoint.
 
-| Field | Type | Notes |
-|-------|------|-------|
-| `entityType` | `"program_progress"` | Discriminator |
-| `entityId` | string | Unique sync identifier |
-| `schemaVersion` | 1 | For future migration |
-| `programId` | string | Which program (always "cbti-core" for now) |
-| `programVersion` | number | Definition version |
-| `userId?` | string | Server-side only (stripped from responses) |
-| `status` | ProgramStatus | not_started / active / paused / completed |
-| `startedAt` | string \| null | ISO timestamp |
-| `completedAt` | string \| null | ISO timestamp |
-| `currentWeekId` | string \| null | |
-| `completedLessonIds` | string[] | |
-| `skippedLessonIds` | string[] | |
-| `acceptedPlanIds` | string[] | |
-| `dismissedRecommendationIds` | string[] | |
-| `milestones` | ProgramMilestone[] | |
-| `updatedAt` | string | ISO timestamp (for LWW resolution) |
-| `clientId?` | string | For reconciliation |
-| `syncStatus?` | string | local / pending / synced / conflict / deleted |
+| Field                        | Type                 | Notes                                         |
+| ---------------------------- | -------------------- | --------------------------------------------- |
+| `entityType`                 | `"program_progress"` | Discriminator                                 |
+| `entityId`                   | string               | Unique sync identifier                        |
+| `schemaVersion`              | 1                    | For future migration                          |
+| `programId`                  | string               | Which program (always "cbti-core" for now)    |
+| `programVersion`             | number               | Definition version                            |
+| `userId?`                    | string               | Server-side only (stripped from responses)    |
+| `status`                     | ProgramStatus        | not_started / active / paused / completed     |
+| `startedAt`                  | string \| null       | ISO timestamp                                 |
+| `completedAt`                | string \| null       | ISO timestamp                                 |
+| `currentWeekId`              | string \| null       |                                               |
+| `completedLessonIds`         | string[]             |                                               |
+| `skippedLessonIds`           | string[]             |                                               |
+| `acceptedPlanIds`            | string[]             |                                               |
+| `dismissedRecommendationIds` | string[]             |                                               |
+| `milestones`                 | ProgramMilestone[]   |                                               |
+| `updatedAt`                  | string               | ISO timestamp (for LWW resolution)            |
+| `clientId?`                  | string               | For reconciliation                            |
+| `syncStatus?`                | string               | local / pending / synced / conflict / deleted |
 
 ### CanonicalProgramProgress (server → client)
 
@@ -89,17 +89,17 @@ graph LR
 
 Weekly plans sync at the entity level (LWW per plan).
 
-| Field | Type | Notes |
-|-------|------|-------|
-| `entityType` | `"program_plan"` | Discriminator |
-| `entityId` | string | = plan.id |
-| `schemaVersion` | 1 | |
-| `plan` | WeeklyProgramPlan | Full plan object |
-| `userId?` | string | Server-side only |
-| `updatedAt` | string | ISO timestamp |
-| `clientId?` | string | |
-| `syncStatus?` | string | |
-| `deleted?` | boolean | Tombstone flag |
+| Field           | Type              | Notes            |
+| --------------- | ----------------- | ---------------- |
+| `entityType`    | `"program_plan"`  | Discriminator    |
+| `entityId`      | string            | = plan.id        |
+| `schemaVersion` | 1                 |                  |
+| `plan`          | WeeklyProgramPlan | Full plan object |
+| `userId?`       | string            | Server-side only |
+| `updatedAt`     | string            | ISO timestamp    |
+| `clientId?`     | string            |                  |
+| `syncStatus?`   | string            |                  |
+| `deleted?`      | boolean           | Tombstone flag   |
 
 ### CanonicalWeeklyProgramPlan
 
@@ -113,18 +113,18 @@ Conflicts are resolved **deterministically** — same inputs always produce the 
 
 ### Per-Field Merge Rules
 
-| Field | Strategy | Rationale |
-|-------|----------|-----------|
-| `completedLessonIds` | **Set union** | Completing a lesson is additive — never undone by sync |
-| `skippedLessonIds` | Set union | Skipping is additive |
-| `acceptedPlanIds` | Set union | Accepted plans accumulate |
-| `dismissedRecommendationIds` | Set union | Dismissals accumulate |
-| `milestones` | Union (earlier timestamp wins) | If either side earned it, it's earned |
-| `status` | **Most advanced wins** | completed > active ≡ paused > not_started |
-| `currentWeekId` | **LWW** (last write wins) | Uses updatedAt timestamp |
-| `startedAt` | Earlier timestamp | First time the user started |
-| `completedAt` | **Earliest valid timestamp** (if status is completed) | First confirmed completion time |
-| `updatedAt` | Now (merge timestamp) | Always refreshed on merge |
+| Field                        | Strategy                                              | Rationale                                              |
+| ---------------------------- | ----------------------------------------------------- | ------------------------------------------------------ |
+| `completedLessonIds`         | **Set union**                                         | Completing a lesson is additive — never undone by sync |
+| `skippedLessonIds`           | Set union                                             | Skipping is additive                                   |
+| `acceptedPlanIds`            | Set union                                             | Accepted plans accumulate                              |
+| `dismissedRecommendationIds` | Set union                                             | Dismissals accumulate                                  |
+| `milestones`                 | Union (earlier timestamp wins)                        | If either side earned it, it's earned                  |
+| `status`                     | **Most advanced wins**                                | completed > active ≡ paused > not_started              |
+| `currentWeekId`              | **LWW** (last write wins)                             | Uses updatedAt timestamp                               |
+| `startedAt`                  | Earlier timestamp                                     | First time the user started                            |
+| `completedAt`                | **Earliest valid timestamp** (if status is completed) | First confirmed completion time                        |
+| `updatedAt`                  | Now (merge timestamp)                                 | Always refreshed on merge                              |
 
 ### Status Advancement Order
 
@@ -145,11 +145,11 @@ earliest-wins strategy with explicit invalid-timestamp handling.
 
 **Truth table:**
 
-| Local | Remote | Result |
-|-------|--------|--------|
-| `null` | `null` | `null` |
-| timestamp | `null` | local timestamp |
-| `null` | timestamp | remote timestamp |
+| Local       | Remote      | Result                             |
+| ----------- | ----------- | ---------------------------------- |
+| `null`      | `null`      | `null`                             |
+| timestamp   | `null`      | local timestamp                    |
+| `null`      | timestamp   | remote timestamp                   |
 | timestamp A | timestamp B | earlier of A and B (if both valid) |
 
 **Invalid timestamp policy:**
@@ -187,22 +187,22 @@ When a user signs in and anonymous local progress needs to merge with server pro
 flowchart TD
     L[Local progress<br/>anonymous]
     R[Remote progress<br/>authenticated]
-    
+
     L --> C1[completedLessonIds<br/>union]
     R --> C1
-    
+
     L --> C2[status<br/>most advanced wins]
     R --> C2
-    
+
     L --> C3[currentWeekId<br/>LWW by updatedAt]
     R --> C3
-    
+
     L --> C4[milestones<br/>union + earlier ts]
     R --> C4
-    
+
     L --> C5[startedAt<br/>earlier wins]
     R --> C5
-    
+
     C1 --> M[merged progress]
     C2 --> M
     C3 --> M

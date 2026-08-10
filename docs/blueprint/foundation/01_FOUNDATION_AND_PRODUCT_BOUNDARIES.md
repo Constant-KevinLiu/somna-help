@@ -1,6 +1,7 @@
 # 01_FOUNDATION_AND_PRODUCT_BOUNDARIES.md
 
 # PAS-01 Foundation & Product Boundaries
+
 ### Product Architecture Specification
 
 > Defines what Somna is, what it is not, and the architectural boundaries that govern all downstream decisions.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-01 |
-| Layer | Layer 1 – Foundation |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00 |
-| Required By | PAS-02 ~ PAS-12 |
+| Field        | Value                |
+| ------------ | -------------------- |
+| Blueprint ID | PAS-01               |
+| Layer        | Layer 1 – Foundation |
+| Status       | Canonical            |
+| Version      | 2.0                  |
+| Depends On   | PAS-00               |
+| Required By  | PAS-02 ~ PAS-12      |
 
 ---
 
@@ -58,16 +59,19 @@ Somna does not aim to:
 ## 5. Target Users
 
 Primary:
+
 - Adults seeking better sleep habits.
 - Individuals experiencing occasional or persistent insomnia symptoms.
 
 Secondary:
+
 - Health-conscious users tracking sleep behavior.
 - Users following structured CBT-I style programs.
 
 ## 6. Product Boundaries
 
 Included:
+
 - Journaling
 - Reflection
 - Education
@@ -76,6 +80,7 @@ Included:
 - Progress tracking
 
 Excluded:
+
 - Prescription management
 - Clinical diagnosis
 - Telemedicine

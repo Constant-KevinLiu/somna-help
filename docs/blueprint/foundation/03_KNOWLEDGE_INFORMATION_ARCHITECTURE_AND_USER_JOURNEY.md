@@ -1,6 +1,7 @@
 # 03_KNOWLEDGE_INFORMATION_ARCHITECTURE_AND_USER_JOURNEY.md
 
 # PAS-03 Knowledge, Information Architecture & User Journey
+
 ### Product Architecture Specification
 
 > Defines how knowledge, navigation, content and user journeys are organized across the Somna platform.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-03 |
-| Layer | Layer 1 – Foundation |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00, PAS-01, PAS-02 |
-| Required By | PAS-04 ~ PAS-12 |
+| Field        | Value                  |
+| ------------ | ---------------------- |
+| Blueprint ID | PAS-03                 |
+| Layer        | Layer 1 – Foundation   |
+| Status       | Canonical              |
+| Version      | 2.0                    |
+| Depends On   | PAS-00, PAS-01, PAS-02 |
+| Required By  | PAS-04 ~ PAS-12        |
 
 ---
 
@@ -81,16 +82,16 @@ Improve
 
 Each section should have a single primary purpose.
 
-| Section | Primary Responsibility |
-|---|---|
-| Home | Orientation |
-| Assessment | Self-evaluation |
-| Diary | Behavioral recording |
-| Reflection | Personal insights |
-| Learn | Evidence-informed education |
-| Tools | Practical calculators |
-| Progress | Long-term trends |
-| Settings | Identity & privacy |
+| Section    | Primary Responsibility      |
+| ---------- | --------------------------- |
+| Home       | Orientation                 |
+| Assessment | Self-evaluation             |
+| Diary      | Behavioral recording        |
+| Reflection | Personal insights           |
+| Learn      | Evidence-informed education |
+| Tools      | Practical calculators       |
+| Progress   | Long-term trends            |
+| Settings   | Identity & privacy          |
 
 ---
 

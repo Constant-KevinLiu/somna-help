@@ -22,16 +22,16 @@ and zero new type errors were introduced in source files.
 
 ## Requirements Traceability
 
-| # | Requirement | Status | Location |
-|---|-------------|--------|----------|
-| 1 | Locate the actual endpoint | ✅ Done | `src/server.ts:65,584`, `src/services/auth/auth-api.ts:118` |
-| 2 | Add Email Binding contract | ✅ Done | `wrangler.jsonc`, `auth-mailer.ts` types |
-| 3 | Implement real email delivery | ✅ Done | `src/services/auth/auth-mailer.ts` |
-| 4 | Correct transaction/success semantics | ✅ Done | `src/services/auth/auth-api.ts:118-209` |
-| 5 | Privacy-safe logs | ✅ Done | `auth-mailer.ts` JSON structured logs |
-| 6 | Frontend behavior | ✅ Done | `src/components/AuthModal.tsx` + 4 locale files |
-| 7 | Tests | ✅ Done | 25 new tests across 3 files |
-| 8 | Validation | ✅ See below | Tests pass, build passes, typecheck source-clean |
+| #   | Requirement                           | Status       | Location                                                    |
+| --- | ------------------------------------- | ------------ | ----------------------------------------------------------- |
+| 1   | Locate the actual endpoint            | ✅ Done      | `src/server.ts:65,584`, `src/services/auth/auth-api.ts:118` |
+| 2   | Add Email Binding contract            | ✅ Done      | `wrangler.jsonc`, `auth-mailer.ts` types                    |
+| 3   | Implement real email delivery         | ✅ Done      | `src/services/auth/auth-mailer.ts`                          |
+| 4   | Correct transaction/success semantics | ✅ Done      | `src/services/auth/auth-api.ts:118-209`                     |
+| 5   | Privacy-safe logs                     | ✅ Done      | `auth-mailer.ts` JSON structured logs                       |
+| 6   | Frontend behavior                     | ✅ Done      | `src/components/AuthModal.tsx` + 4 locale files             |
+| 7   | Tests                                 | ✅ Done      | 25 new tests across 3 files                                 |
+| 8   | Validation                            | ✅ See below | Tests pass, build passes, typecheck source-clean            |
 
 ---
 

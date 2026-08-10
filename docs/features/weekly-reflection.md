@@ -19,18 +19,18 @@ Reflections are **100% user-owned**: stored locally in the browser, never sent t
 
 8 categories, 10 total prompts:
 
-| Category | Prompt | Condition |
-|----------|--------|-----------|
-| **wins** | What went well this week with your sleep? | Always shown |
-| **next_week_observation** | What's one thing you'd like to observe about your sleep next week? | Always shown |
-| **schedule_pattern** | Have you noticed a pattern in when you go to bed or wake up? | High bedtime variability |
-| **energy_pattern** | How has your energy been on days after better sleep? | Good efficiency + variable sleep |
-| **wind_down** | What helps you wind down before bed? | High SOL or variable bedtime |
-| **barrier** | What made it hard to stick with your sleep routine this week? | Low completion or declining trend |
-| **progress** | How is your sleep different from when you started? | 14+ records with positive trend |
-| **gratitude** | What are you grateful for right now? | Good week (high efficiency + regularity) |
-| **body_signals** | What physical cues tell you it's time for bed? | Low regularity |
-| **self_compassion** | What would you tell a friend with your sleep pattern? | Declining or difficult week |
+| Category                  | Prompt                                                             | Condition                                |
+| ------------------------- | ------------------------------------------------------------------ | ---------------------------------------- |
+| **wins**                  | What went well this week with your sleep?                          | Always shown                             |
+| **next_week_observation** | What's one thing you'd like to observe about your sleep next week? | Always shown                             |
+| **schedule_pattern**      | Have you noticed a pattern in when you go to bed or wake up?       | High bedtime variability                 |
+| **energy_pattern**        | How has your energy been on days after better sleep?               | Good efficiency + variable sleep         |
+| **wind_down**             | What helps you wind down before bed?                               | High SOL or variable bedtime             |
+| **barrier**               | What made it hard to stick with your sleep routine this week?      | Low completion or declining trend        |
+| **progress**              | How is your sleep different from when you started?                 | 14+ records with positive trend          |
+| **gratitude**             | What are you grateful for right now?                               | Good week (high efficiency + regularity) |
+| **body_signals**          | What physical cues tell you it's time for bed?                     | Low regularity                           |
+| **self_compassion**       | What would you tell a friend with your sleep pattern?              | Declining or difficult week              |
 
 ### Selection Rules
 
@@ -45,6 +45,7 @@ Reflections are **100% user-owned**: stored locally in the browser, never sent t
 ## User Experience
 
 ### Flow
+
 ```
 ┌─────────────────────────────────┐
 │ Weekly Reflection               │
@@ -65,7 +66,9 @@ Reflections are **100% user-owned**: stored locally in the browser, never sent t
 ```
 
 ### Saved View
+
 After saving, users see all their responses displayed clearly, with:
+
 - Word count
 - Edit button (returns to edit mode)
 - Delete button (with confirmation)
@@ -74,14 +77,14 @@ After saving, users see all their responses displayed clearly, with:
 
 ```ts
 interface WeeklyReflection {
-  id: string;                     // UUID-ish
-  weekStart: string;              // YYYY-MM-DD (Monday)
-  weekEnd: string;                // YYYY-MM-DD (Sunday)
-  timezone: string;               // e.g. "Asia/Shanghai"
-  locale: string;                 // en/es/pt/pl/de
+  id: string; // UUID-ish
+  weekStart: string; // YYYY-MM-DD (Monday)
+  weekEnd: string; // YYYY-MM-DD (Sunday)
+  timezone: string; // e.g. "Asia/Shanghai"
+  locale: string; // en/es/pt/pl/de
   responses: WeeklyReflectionResponse[];
   wordCount: number;
-  createdAt: string;              // ISO timestamp
+  createdAt: string; // ISO timestamp
   updatedAt: string;
   syncStatus: "local" | "synced" | "pending" | "conflict";
 }
@@ -98,6 +101,7 @@ interface WeeklyReflectionResponse {
 **Key**: `somna.weekly-reflections.v1`
 
 **Structure**:
+
 ```ts
 {
   version: "1",
@@ -106,12 +110,14 @@ interface WeeklyReflectionResponse {
 ```
 
 **Safety**:
+
 - Loaded via `safeLocalStorageGet` with defensive validation
 - Malformed entries silently dropped
 - Empty fallback returned if storage is corrupt
 - All operations are try/catch wrapped
 
 **Storage limits**:
+
 - No hard cap, but each reflection is ~1-2 KB
 - Even 52 weeks/year × 5 years = < 1 MB total
 - localStorage quota (5-10 MB) is not a concern
@@ -125,12 +131,12 @@ interface WeeklyReflectionResponse {
 
 ## Implementation
 
-| Module | Path |
-|--------|------|
-| Types | `src/lib/weekly-reflection/types.ts` |
-| Prompts & selection rules | `src/lib/weekly-reflection/prompts.ts` |
-| Storage | `src/lib/weekly-reflection/storage.ts` |
-| UI Component | `src/components/analytics/WeeklyReflectionFlow.tsx` |
+| Module                    | Path                                                |
+| ------------------------- | --------------------------------------------------- |
+| Types                     | `src/lib/weekly-reflection/types.ts`                |
+| Prompts & selection rules | `src/lib/weekly-reflection/prompts.ts`              |
+| Storage                   | `src/lib/weekly-reflection/storage.ts`              |
+| UI Component              | `src/components/analytics/WeeklyReflectionFlow.tsx` |
 
 ### Storage API
 
@@ -159,13 +165,13 @@ const prompts = selectWeeklyPrompts(weekRecords, habitProgress, weekStartStr);
 
 Weekly Reflection is separate from the existing daily diary reflection feature:
 
-| | Daily Reflection | Weekly Reflection |
-|---|---|---|
-| **Cadence** | Per-day, optional field | Per-week, structured flow |
-| **Context** | Tied to a specific night's sleep | Big-picture review |
-| **Prompts** | Single free-text note | 3-4 guided, adaptive prompts |
-| **Storage** | Part of `SleepRecord` | Separate `somna.weekly-reflections.v1` |
-| **Use case** | Quick note about the night | Self-awareness building |
+|              | Daily Reflection                 | Weekly Reflection                      |
+| ------------ | -------------------------------- | -------------------------------------- |
+| **Cadence**  | Per-day, optional field          | Per-week, structured flow              |
+| **Context**  | Tied to a specific night's sleep | Big-picture review                     |
+| **Prompts**  | Single free-text note            | 3-4 guided, adaptive prompts           |
+| **Storage**  | Part of `SleepRecord`            | Separate `somna.weekly-reflections.v1` |
+| **Use case** | Quick note about the night       | Self-awareness building                |
 
 ## Non-goals
 

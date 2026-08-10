@@ -32,25 +32,25 @@ type ProgramStatus = "not_started" | "active" | "paused" | "completed";
 
 ### 2.2 Display States (UI Layer)
 
-| UI State | Derived From | Primary CTA |
-|----------|-------------|-------------|
-| Loading | `!hydrated` | Skeleton, no CTA |
-| Not Started | `status === "not_started"` | Start Program |
-| Active | `status === "active"` | Continue / Next Lesson |
-| Paused | `status === "paused"` | Resume |
-| Completed | `status === "completed"` | Review Lessons |
-| Unsupported Version | `isUnsupportedSchema === true` | None (refresh) |
-| Corrupted | `loadStatus === "corrupted"` | None (warning) |
+| UI State            | Derived From                   | Primary CTA            |
+| ------------------- | ------------------------------ | ---------------------- |
+| Loading             | `!hydrated`                    | Skeleton, no CTA       |
+| Not Started         | `status === "not_started"`     | Start Program          |
+| Active              | `status === "active"`          | Continue / Next Lesson |
+| Paused              | `status === "paused"`          | Resume                 |
+| Completed           | `status === "completed"`       | Review Lessons         |
+| Unsupported Version | `isUnsupportedSchema === true` | None (refresh)         |
+| Corrupted           | `loadStatus === "corrupted"`   | None (warning)         |
 
 ### 2.3 State Machine Events
 
-| Event | Transitions From | To |
-|-------|-----------------|-----|
-| `program_started` | not_started | active |
-| `program_paused` | active | paused |
-| `program_resumed` | paused | active |
-| `program_completed` | active, paused | completed |
-| `lesson_completed` | any | (auto) |
+| Event               | Transitions From | To        |
+| ------------------- | ---------------- | --------- |
+| `program_started`   | not_started      | active    |
+| `program_paused`    | active           | paused    |
+| `program_resumed`   | paused           | active    |
+| `program_completed` | active, paused   | completed |
+| `lesson_completed`  | any              | (auto)    |
 
 ### 2.4 Valid Transitions
 
@@ -68,6 +68,7 @@ completed → active  (reopen via uncompleting final lesson)
 **Components:** `ProgramStartCard`
 
 **Displays:**
+
 - Program introduction and subtitle
 - Structure info: 6 weeks · 18 lessons · self-paced
 - What the program does (educational, connected journey)
@@ -76,11 +77,13 @@ completed → active  (reopen via uncompleting final lesson)
 - Start CTA button
 
 **Actions:**
+
 - `startProgram()` → dispatches `program_started` event
 
 ### 3.2 Active State
 
 **Displays:**
+
 - Overall progress bar with percentage
 - "Next lesson" CTA card (links to recommended next lesson)
 - Pause button (secondary)
@@ -91,6 +94,7 @@ completed → active  (reopen via uncompleting final lesson)
   - Each week: number, title, short description, lesson count, completion count, progress bar
 
 **Actions:**
+
 - Navigate to next lesson
 - Navigate to any available/completed week
 - Pause program (opens confirmation dialog)
@@ -100,6 +104,7 @@ completed → active  (reopen via uncompleting final lesson)
 **Components:** `ProgramPausedBanner`
 
 **Displays:**
+
 - Paused banner with icon and explanation
 - "All progress preserved" indicator
 - Resume CTA button
@@ -108,6 +113,7 @@ completed → active  (reopen via uncompleting final lesson)
 - Weekly Focus section (still visible, read-only context)
 
 **Actions:**
+
 - `resumeProgram()` → dispatches `program_resumed` event
 - Can still navigate to read available/completed weeks/lessons
 
@@ -116,6 +122,7 @@ completed → active  (reopen via uncompleting final lesson)
 **Components:** `ProgramCompletionSummary`
 
 **Displays:**
+
 - Graduation cap icon
 - Completion title and subtitle (calm, non-medical)
 - Stats: lessons completed (X of 18), completion date
@@ -124,6 +131,7 @@ completed → active  (reopen via uncompleting final lesson)
 - Review lessons section (quick links to all 6 weeks)
 
 **Actions:**
+
 - Review lessons (link to program home / individual weeks)
 - Can still toggle lesson completion (review mode)
 
@@ -132,6 +140,7 @@ completed → active  (reopen via uncompleting final lesson)
 **Reuses:** `ProgramUnsupportedBanner`
 
 **Behavior:**
+
 - Warning banner visible at top
 - Write actions unavailable
 - No week list shown (prevents misleading "not started" display)
@@ -140,6 +149,7 @@ completed → active  (reopen via uncompleting final lesson)
 ### 3.6 Corrupted State
 
 **Behavior:**
+
 - Warning banner with "Data unavailable"
 - Shows fallback progress (not_started shape) but clearly labeled as corrupted
 - No start CTA (unsafe to write)
@@ -153,17 +163,18 @@ completed → active  (reopen via uncompleting final lesson)
 type WeekStatus = "locked" | "available" | "current" | "in-progress" | "completed";
 ```
 
-| State | Derivation |
-|-------|-----------|
-| `completed` | All lessons in week completed |
-| `current` | Week matches `currentWeekId` AND program is active |
-| `in-progress` | Some but not all lessons completed |
-| `available` | Week 1, or previous week completed, or user started this week |
-| `locked` | Otherwise |
+| State         | Derivation                                                    |
+| ------------- | ------------------------------------------------------------- |
+| `completed`   | All lessons in week completed                                 |
+| `current`     | Week matches `currentWeekId` AND program is active            |
+| `in-progress` | Some but not all lessons completed                            |
+| `available`   | Week 1, or previous week completed, or user started this week |
+| `locked`      | Otherwise                                                     |
 
 ### 4.2 Week Card Display
 
 Each week card shows:
+
 - Week number badge
 - Week title (localized)
 - Short description
@@ -189,6 +200,7 @@ Uses existing `LessonTemplate` component with enhanced pause awareness.
 ### 5.2 Structure
 
 Each lesson page follows:
+
 1. Hero (title, subtitle, metadata: reading time, difficulty, lesson number, completed badge)
 2. Progress indicator (overall program progress)
 3. Unsupported schema banner
@@ -221,6 +233,7 @@ Each lesson page follows:
 **Component:** `PauseConfirmDialog`
 
 **Flow:**
+
 1. User clicks "Pause program" button (on Program Home, active state)
 2. Confirmation dialog appears with:
    - Pause icon
@@ -232,6 +245,7 @@ Each lesson page follows:
 4. UI transitions to paused state
 
 **Accessibility:**
+
 - Focus trap within dialog
 - Escape key closes dialog (without pausing)
 - Backdrop click closes dialog
@@ -243,6 +257,7 @@ Each lesson page follows:
 **Banner:** `ProgramPausedBanner`
 
 Shows:
+
 - Pause icon
 - "Program paused" title
 - "Your progress is saved. Resume whenever you're ready." body
@@ -250,17 +265,20 @@ Shows:
 - Resume button
 
 **Available actions:**
+
 - Resume program
 - Read and review content (lessons/weeks remain readable)
 - Share lessons (no writes involved)
 
 **Not available:**
+
 - Marking lessons complete (disabled at UI level)
 - Starting new lessons (can navigate but can't complete)
 
 ### 6.3 Resume Action
 
 **Flow:**
+
 1. User clicks "Resume" button (in paused banner or dashboard card)
 2. Immediately dispatches `program_resumed` event (no confirmation needed — it's a positive, reversible action)
 3. UI transitions back to active state
@@ -297,18 +315,19 @@ Shows:
 
 ### 8.1 States
 
-| State | Display | CTA |
-|-------|---------|-----|
-| Loading | Skeleton | None |
-| Not started | Intro subtitle, structure info | Start learning |
-| Active | Current week, current lesson, completion %, progress bar, recommended lesson | Continue learning |
-| Paused | Paused status badge, metrics, progress bar | Resume |
-| Completed | Completion acknowledgment, lessons count | Review |
-| Unsupported | Compact warning banner | None |
+| State       | Display                                                                      | CTA               |
+| ----------- | ---------------------------------------------------------------------------- | ----------------- |
+| Loading     | Skeleton                                                                     | None              |
+| Not started | Intro subtitle, structure info                                               | Start learning    |
+| Active      | Current week, current lesson, completion %, progress bar, recommended lesson | Continue learning |
+| Paused      | Paused status badge, metrics, progress bar                                   | Resume            |
+| Completed   | Completion acknowledgment, lessons count                                     | Review            |
+| Unsupported | Compact warning banner                                                       | None              |
 
 ### 8.2 Status Badge
 
 Top-right corner shows current program status:
+
 - Not started (muted)
 - In progress (accent)
 - Paused (accent)
@@ -353,6 +372,7 @@ Sleep records (loadRecords)
 ### 9.4 Insufficient Data State
 
 Honest display when data is insufficient or minimal:
+
 - Alert icon
 - Message: "Complete a few more sleep diary entries to receive a more data-informed weekly focus."
 - Data window indicator (shows actual entry count)
@@ -371,28 +391,28 @@ Honest display when data is insufficient or minimal:
 
 From `FOCUS_CATEGORY_TO_LESSON_DOMAINS`:
 
-| Category | Lesson Tags |
-|----------|-------------|
-| baseline_building | education, habit |
-| recording_consistency | habit |
-| wake_time_consistency | stimulus-control, habit |
-| bedtime_observation | stimulus-control, relaxation |
-| reminder_routine | habit |
-| maintenance | maintenance, cognitive |
+| Category              | Lesson Tags                  |
+| --------------------- | ---------------------------- |
+| baseline_building     | education, habit             |
+| recording_consistency | habit                        |
+| wake_time_consistency | stimulus-control, habit      |
+| bedtime_observation   | stimulus-control, relaxation |
+| reminder_routine      | habit                        |
+| maintenance           | maintenance, cognitive       |
 
 ## 10. Localization
 
 ### 10.1 Covered Locales
 
-| Locale | Status | Program UI | Weekly Focus |
-|--------|--------|------------|--------------|
-| en | Active | ✅ Complete | ✅ Complete |
-| es | Active | ✅ Complete | ✅ Complete |
-| pt | Active | ✅ Complete | ✅ Complete |
-| pl | Active | ✅ Complete | ✅ Complete |
-| de | Partial | ✅ Complete | ✅ Complete |
-| zh | Reserved | ✅ Complete | ⚠️ Falls back to en |
-| ja | Reserved | ❌ Falls back to en | ❌ Falls back to en |
+| Locale | Status   | Program UI          | Weekly Focus        |
+| ------ | -------- | ------------------- | ------------------- |
+| en     | Active   | ✅ Complete         | ✅ Complete         |
+| es     | Active   | ✅ Complete         | ✅ Complete         |
+| pt     | Active   | ✅ Complete         | ✅ Complete         |
+| pl     | Active   | ✅ Complete         | ✅ Complete         |
+| de     | Partial  | ✅ Complete         | ✅ Complete         |
+| zh     | Reserved | ✅ Complete         | ⚠️ Falls back to en |
+| ja     | Reserved | ❌ Falls back to en | ❌ Falls back to en |
 
 ### 10.2 New Key Categories Added
 
@@ -469,6 +489,7 @@ The existing `trackShare` function is used for lesson sharing (pre-existing).
 No additional analytics events are emitted in Phase G-1 to avoid introducing a new analytics abstraction.
 
 If a canonical analytics event system is added later, these would be the candidate events:
+
 - `program_started`
 - `program_paused`
 - `program_resumed`

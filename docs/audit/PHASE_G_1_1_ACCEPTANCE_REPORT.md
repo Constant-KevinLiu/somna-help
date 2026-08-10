@@ -1,4 +1,5 @@
 # Phase G-1.1 Acceptance Report
+
 ## Program Lifecycle Hardening — State-Machine Pause Enforcement & Critical UI Regression Coverage
 
 **Date:** 2026-07-30
@@ -25,17 +26,18 @@ All 18 sections of the Phase G-1.1 specification are complete. The canonical Pro
 
 Verified in `src/lib/program/service.ts` via `isMutationAllowed()` guard:
 
-| Event | Blocked When Paused? | Block Reason |
-|---|---|---|
-| `lesson_completed` | ✅ | `program-paused` |
-| `lesson_uncompleted` | ✅ | `program-paused` |
-| `lesson_skipped` | ✅ | `program-paused` |
-| `lesson_unskipped` | ✅ | `program-paused` |
-| `weekly_plan_accepted` | ✅ | `program-paused` |
-| `weekly_plan_dismissed` | ✅ | `program-paused` |
-| `milestone_earned` | ✅ | `program-paused` |
+| Event                   | Blocked When Paused? | Block Reason     |
+| ----------------------- | -------------------- | ---------------- |
+| `lesson_completed`      | ✅                   | `program-paused` |
+| `lesson_uncompleted`    | ✅                   | `program-paused` |
+| `lesson_skipped`        | ✅                   | `program-paused` |
+| `lesson_unskipped`      | ✅                   | `program-paused` |
+| `weekly_plan_accepted`  | ✅                   | `program-paused` |
+| `weekly_plan_dismissed` | ✅                   | `program-paused` |
+| `milestone_earned`      | ✅                   | `program-paused` |
 
 Lifecycle events use existing `isValidStatusTransition` guard (not `isMutationAllowed`):
+
 - `program_started` — `not_started → active` ✅
 - `program_paused` — `active → paused` ✅
 - `program_resumed` — `paused → active` ✅
@@ -66,6 +68,7 @@ Lifecycle events use existing `isValidStatusTransition` guard (not `isMutationAl
 ✅ **Buttons remain disabled as supplementary guards.**
 
 Verified across:
+
 - `LessonTemplate.tsx` — completion button disabled when paused
 - `ProgramDashboardCard.tsx` — pause/resume actions match status
 - `WeekPageTemplate.tsx` — lesson checkboxes disabled when paused
@@ -79,15 +82,16 @@ The state machine is now the **enforcer**, UI disabled state is **defense in dep
 
 ✅ **5 component test files, 40 tests, all passing.**
 
-| Component | Tests | Status |
-|---|---|---|
-| `ProgramPausedBanner` | 8 | ✅ |
-| `ProgramStartCard` | 4 | ✅ |
-| `PauseConfirmDialog` | 7 | ✅ |
-| `ProgramCompletionSummary` | 6 | ✅ |
-| `ProgramDashboardCard` | 20 | ✅ |
+| Component                  | Tests | Status |
+| -------------------------- | ----- | ------ |
+| `ProgramPausedBanner`      | 8     | ✅     |
+| `ProgramStartCard`         | 4     | ✅     |
+| `PauseConfirmDialog`       | 7     | ✅     |
+| `ProgramCompletionSummary` | 6     | ✅     |
+| `ProgramDashboardCard`     | 20    | ✅     |
 
 **Key coverage areas:**
+
 - All lifecycle states rendered correctly (not-started/active/paused/completed/unsupported)
 - Callback invocation verified (start, pause, resume, confirm, cancel)
 - Accessibility semantics (role=status, aria-labelledby, aria-describedby)
@@ -104,6 +108,7 @@ The state machine is now the **enforcer**, UI disabled state is **defense in dep
 ✅ **Finding: Case B — `corrupted` is NOT a reachable runtime state.**
 
 **Evidence:**
+
 1. `loadProgramProgressResult()` has 4 return paths (`empty`, `ready`, `migrated`, `unsupported-version`) — none return `corrupted`
 2. `safeLocalStorageGet()` returns `null` on parse error → falls through to `empty` path
 3. `migrateLegacyProgress()` always returns valid `ProgramProgress` (falls back to `createInitialProgress()` on malformed input)
@@ -123,6 +128,7 @@ The state machine is now the **enforcer**, UI disabled state is **defense in dep
 **The fix:** Extracted existing `useRelatedLessonTitle` hook from `LessonTemplate.tsx` into shared `src/hooks/use-lesson-title.ts`, applied to Weekly Focus section.
 
 **Properties:**
+
 - Uses same async-load + module-cache pattern already in the codebase
 - Falls back to "Lesson N" while loading (zero visual regression)
 - Shared cache between LessonTemplate and Weekly Focus (no duplicate loads)
@@ -155,13 +161,13 @@ Previously conflated — now documented clearly in the implementation report.
 
 ## 8. Test Counts
 
-| Category | Before G-1.1 | After G-1.1 | Delta |
-|---|---|---|---|
-| State machine unit tests | ~30 | 54 | +24 |
-| Integration tests | 34 | 44 | +10 |
-| Component tests (Program) | 0 | 40 | +40 |
-| Other tests | 421 | ~209 | -212* |
-| **Total** | **485** | **547** | **+62** |
+| Category                  | Before G-1.1 | After G-1.1 | Delta   |
+| ------------------------- | ------------ | ----------- | ------- |
+| State machine unit tests  | ~30          | 54          | +24     |
+| Integration tests         | 34           | 44          | +10     |
+| Component tests (Program) | 0            | 40          | +40     |
+| Other tests               | 421          | ~209        | -212*   |
+| **Total**                 | **485**      | **547**     | **+62** |
 
 *Note: The "other tests" delta reflects reorganization, not removal. All original test files remain. The baseline count may have varied due to test discovery timing; the important figure is +62 net new tests.
 
@@ -169,27 +175,29 @@ Previously conflated — now documented clearly in the implementation report.
 
 ## 9. Architectural Constraints Verification
 
-| Constraint | Status | Evidence |
-|---|---|---|
-| No Program experience redesign | ✅ | UI components unchanged except Weekly Focus title |
-| No Phase G-2 feature expansion | ✅ | No new features, only hardening and gap fixes |
-| No canonical service replacement | ✅ | `applyEvent()` signature changed but function preserved |
-| No destructive recovery | ✅ | `corrupted` not reachable; no destructive code paths added |
-| No database migration | ✅ | Schema version unchanged (v1) |
-| All writes through state machine | ✅ | `isMutationAllowed` guard inside `applyEvent()` |
-| No direct UI storage access | ✅ | All components use `useProgramService` |
-| Forward-schema guard preserved | ✅ | Hook layer returns `unsupported-version`; storage layer has guard |
+| Constraint                       | Status | Evidence                                                          |
+| -------------------------------- | ------ | ----------------------------------------------------------------- |
+| No Program experience redesign   | ✅     | UI components unchanged except Weekly Focus title                 |
+| No Phase G-2 feature expansion   | ✅     | No new features, only hardening and gap fixes                     |
+| No canonical service replacement | ✅     | `applyEvent()` signature changed but function preserved           |
+| No destructive recovery          | ✅     | `corrupted` not reachable; no destructive code paths added        |
+| No database migration            | ✅     | Schema version unchanged (v1)                                     |
+| All writes through state machine | ✅     | `isMutationAllowed` guard inside `applyEvent()`                   |
+| No direct UI storage access      | ✅     | All components use `useProgramService`                            |
+| Forward-schema guard preserved   | ✅     | Hook layer returns `unsupported-version`; storage layer has guard |
 
 ---
 
 ## 10. Files Changed Summary
 
 **Core logic (3 files):**
+
 - `src/lib/program/types.ts`
 - `src/lib/program/service.ts`
 - `src/lib/program/use-program-service.ts`
 
 **Tests (7 files, 5 new):**
+
 - `src/lib/program/service.test.ts`
 - `src/lib/program/integration.test.ts`
 - `src/components/program/ProgramPausedBanner.test.tsx` (new)
@@ -199,11 +207,13 @@ Previously conflated — now documented clearly in the implementation report.
 - `src/components/program/ProgramDashboardCard.test.tsx` (new)
 
 **Weekly Focus title gap (3 files, 1 new):**
+
 - `src/hooks/use-lesson-title.ts` (new)
 - `src/components/program/LessonTemplate.tsx`
 - `src/components/program/ProgramWeeklyFocusSection.tsx`
 
 **Documentation (4 files, 2 new):**
+
 - `docs/implementation/PHASE_G_1_1_CURRENT_STATE_AUDIT.md` (new)
 - `docs/implementation/PHASE_G_1_1_PROGRAM_LIFECYCLE_HARDENING.md` (new)
 - `docs/audit/PHASE_G_1_1_ACCEPTANCE_REPORT.md` (this file)

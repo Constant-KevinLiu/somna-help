@@ -8,6 +8,7 @@
 
 This document defines **who owns Program data**, **where it lives**, and the
 **safety guarantees** that protect it. It covers:
+
 - Local-first data ownership (the user owns their data)
 - Forward-schema guard (never silently downgrade)
 - Sync safety (never corrupt Diary data, never lose completed lessons)
@@ -19,6 +20,7 @@ This document defines **who owns Program data**, **where it lives**, and the
 ## Data Ownership Model
 
 ### Principle: User is the owner
+
 Sleep Diary follows a **user-owned, local-first** data model:
 
 1. **The canonical copy is on the user's device.** The server is a mirror.
@@ -27,7 +29,9 @@ Sleep Diary follows a **user-owned, local-first** data model:
 4. **Sync is a convenience, not a requirement.** The app works fully offline.
 
 ### Program data specifically
+
 Program progress data is **user-owned personal data**:
+
 - Completed lessons
 - Skipped lessons
 - Accepted / dismissed weekly plans
@@ -42,17 +46,19 @@ to help the user track their progress through the CBT-I program.
 
 ## Storage Locations
 
-| Layer | Storage | Key / Location | Format |
-|-------|---------|----------------|--------|
-| **Local (browser)** | `localStorage` | `somna:program-progress:v1` | JSON (ProgramProgress) |
-| **Local (legacy)** | `localStorage` | `cbtiProgramProgress` | JSON (legacy `{ completedLessons }`) |
-| **Local (plans)** | `localStorage` | `somna:program-plans:v1` | JSON `{ schemaVersion, plans: [...] }` |
-| **Server (sync)** | Cloudflare D1 | `program_progress` table | Relational row with JSON array columns |
-| **Sync payload** | HTTPS request/response | `programProgress` field | `SyncProgramProgress` / `CanonicalProgramProgress` |
-| **Export** | User-downloaded JSON | `programProgress` field | Full canonical structure |
+| Layer               | Storage                | Key / Location              | Format                                             |
+| ------------------- | ---------------------- | --------------------------- | -------------------------------------------------- |
+| **Local (browser)** | `localStorage`         | `somna:program-progress:v1` | JSON (ProgramProgress)                             |
+| **Local (legacy)**  | `localStorage`         | `cbtiProgramProgress`       | JSON (legacy `{ completedLessons }`)               |
+| **Local (plans)**   | `localStorage`         | `somna:program-plans:v1`    | JSON `{ schemaVersion, plans: [...] }`             |
+| **Server (sync)**   | Cloudflare D1          | `program_progress` table    | Relational row with JSON array columns             |
+| **Sync payload**    | HTTPS request/response | `programProgress` field     | `SyncProgramProgress` / `CanonicalProgramProgress` |
+| **Export**          | User-downloaded JSON   | `programProgress` field     | Full canonical structure                           |
 
 ### Migration state
+
 Legacy data (`cbtiProgramProgress` key) is **read-only**:
+
 - Migrated to canonical format on first load
 - Legacy key left in place as safety backup
 - Never written to by production code
@@ -68,6 +74,7 @@ Legacy data (`cbtiProgramProgress` key) is **read-only**:
 downgrade data created by a newer version.
 
 **How it works:**
+
 - Every `ProgramProgress` object has a `schemaVersion` field
 - `SUPPORTED_PROGRAM_SCHEMA_VERSION` is the highest version this build understands
 - On load: if stored version > supported, return `UnsupportedProgramSchema`:
@@ -78,12 +85,14 @@ downgrade data created by a newer version.
 - On export: raw unsupported data is included so users never lose anything
 
 **What this prevents:**
+
 - User opens app v2.5 (schema v2), completes lessons, data is saved as v2
 - User opens app v2.4 (schema v1) on another device/browser
 - Without the guard: v2.4 would overwrite v2 data with v1 format → data loss
 - With the guard: v2.4 detects v2 data, leaves it untouched, shows fallback
 
 **Exceptions:**
+
 - Explicit user deletion (clear data, account delete) bypasses the guard
   because it's an intentional user action, not a silent downgrade
 
@@ -93,6 +102,7 @@ downgrade data created by a newer version.
 a lesson that was completed on either device.
 
 **How it works:**
+
 - Merge strategy for `completedLessonIds` is **set union**
 - If client has `["lesson-a", "lesson-b"]` and server has `["lesson-b", "lesson-c"]`,
   merged result is `["lesson-a", "lesson-b", "lesson-c"]`
@@ -100,6 +110,7 @@ a lesson that was completed on either device.
   `dismissedRecommendationIds`, and `milestones`
 
 **Status resolution:**
+
 - Status follows a **most-advanced wins** rule:
   - `not_started` < `active` / `paused` < `completed`
   - If either side is `completed`, the merged result is `completed`
@@ -111,6 +122,7 @@ a lesson that was completed on either device.
 reflections. The Diary is always canonical and intact.
 
 **How it works:**
+
 - Server-side `processSync()` wraps program progress in a try/catch
 - If program progress sync fails:
   - Error is logged
@@ -125,6 +137,7 @@ reflections. The Diary is always canonical and intact.
 even if the current build doesn't fully understand it.
 
 **What's exported:**
+
 - `programProgress`: array of progress records (from `program_progress` table)
   - All fields: id, program_id, status, lesson arrays, milestones, timestamps
 - On local export: if stored schema is newer than supported, both
@@ -137,6 +150,7 @@ even if the current build doesn't fully understand it.
 it's gone.
 
 **What gets deleted:**
+
 - **Local delete**: Both canonical and legacy localStorage keys are removed
 - **Account delete (server)**: `program_progress` rows for the user are deleted
   - Along with sleep records, reflections, reminder settings, sync log
@@ -149,6 +163,7 @@ it's gone.
 **Guarantee**: Validation failures never leave partially-saved data.
 
 **How it works:**
+
 - `saveWeeklyPlan()` validates the full plan before writing
 - If validation fails, `WeeklyPlanValidationError` is thrown
 - Storage is not modified — the previous valid plan remains intact
@@ -160,17 +175,20 @@ it's gone.
 ## Privacy Considerations
 
 ### What program data contains
+
 - Lesson completion status (which lessons the user has done)
 - Program engagement patterns (start date, pace, pauses)
 - Weekly plan preferences (which lessons they chose to focus on)
 
 ### What program data does NOT contain
+
 - Sleep data (stored separately in sleep records)
 - Reflection content (stored separately in reflections)
 - Personal identifiable information (no name, email in program data)
 - Health metrics (sleep quality, duration — those are in sleep records)
 
 ### Server access
+
 - Program progress is stored encrypted-at-rest in Cloudflare D1
 - Access requires authenticated session (user ID derived from session cookie)
 - Server logs never contain lesson content or personal data
@@ -186,6 +204,7 @@ Weekly plan validation is not just a suggestion — it's enforced on every save.
 This prevents corrupted or malformed plan data from entering the system.
 
 **Enforced validations:**
+
 - Valid program ID (matches definition)
 - Valid source enum (`baseline`, `weekly_focus`, `manual_selection`)
 - Valid status enum (`proposed`, `accepted`, `dismissed`, `completed`)
@@ -196,6 +215,7 @@ This prevents corrupted or malformed plan data from entering the system.
 - Accepted lessons are subset of recommended (unless manual selection)
 
 **Error handling:**
+
 - `WeeklyPlanValidationError` with typed `issues: string[]` array
 - Callers can display issues to users programmatically
 - Storage is not modified on failure (existing valid state preserved)
@@ -219,10 +239,10 @@ If program data integrity is ever compromised:
 
 ## Compliance Mapping
 
-| Requirement | How we meet it |
-|-------------|----------------|
-| GDPR "right to data portability" | Account export includes all program data as structured JSON |
-| GDPR "right to erasure" | Account delete removes all program data (server + triggers local clear) |
-| Data minimization | Only progress state is stored — no content, no personal data in program tables |
-| Integrity | Validation enforcement + forward-schema guard + atomic writes |
-| Availability | Local-first design — works offline, server is a mirror |
+| Requirement                      | How we meet it                                                                 |
+| -------------------------------- | ------------------------------------------------------------------------------ |
+| GDPR "right to data portability" | Account export includes all program data as structured JSON                    |
+| GDPR "right to erasure"          | Account delete removes all program data (server + triggers local clear)        |
+| Data minimization                | Only progress state is stored — no content, no personal data in program tables |
+| Integrity                        | Validation enforcement + forward-schema guard + atomic writes                  |
+| Availability                     | Local-first design — works offline, server is a mirror                         |

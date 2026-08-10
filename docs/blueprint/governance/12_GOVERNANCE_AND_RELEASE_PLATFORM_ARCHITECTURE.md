@@ -1,6 +1,7 @@
 # 12_GOVERNANCE_AND_RELEASE_PLATFORM_ARCHITECTURE.md
 
 # PAS-12 Governance & Release Platform Architecture
+
 ### Product Architecture Specification
 
 > Defines the governance model, architecture decision process, quality gates and release lifecycle that ensure Somna evolves in a consistent, maintainable and trustworthy manner.
@@ -9,14 +10,14 @@
 
 # Architecture Metadata
 
-| Field | Value |
-|---|---|
-| Blueprint ID | PAS-12 |
-| Layer | Layer 5 – Governance |
-| Status | Canonical |
-| Version | 2.0 |
-| Depends On | PAS-00 through PAS-11 |
-| Required By | Future PAS revisions and all implementation projects |
+| Field        | Value                                                |
+| ------------ | ---------------------------------------------------- |
+| Blueprint ID | PAS-12                                               |
+| Layer        | Layer 5 – Governance                                 |
+| Status       | Canonical                                            |
+| Version      | 2.0                                                  |
+| Depends On   | PAS-00 through PAS-11                                |
+| Required By  | Future PAS revisions and all implementation projects |
 
 ---
 
@@ -81,14 +82,14 @@ Implementation must never contradict higher governance layers.
 
 ## 5. Responsibilities
 
-| Role | Responsibility |
-|---|---|
-| Product Architecture | Own PAS repository |
-| Engineering | Implement architecture |
-| Design | Maintain experience consistency |
-| Content | Maintain knowledge quality |
-| QA | Validate quality gates |
-| Release Management | Coordinate releases |
+| Role                 | Responsibility                  |
+| -------------------- | ------------------------------- |
+| Product Architecture | Own PAS repository              |
+| Engineering          | Implement architecture          |
+| Design               | Maintain experience consistency |
+| Content              | Maintain knowledge quality      |
+| QA                   | Validate quality gates          |
+| Release Management   | Coordinate releases             |
 
 ---
 
@@ -118,11 +119,11 @@ Every significant architectural decision should be recorded as an ADR.
 
 ## Versioning Strategy
 
-| Version | Meaning |
-|---|---|
-| Major | Architectural changes |
-| Minor | Backward-compatible capability additions |
-| Patch | Documentation corrections and clarifications |
+| Version | Meaning                                      |
+| ------- | -------------------------------------------- |
+| Major   | Architectural changes                        |
+| Minor   | Backward-compatible capability additions     |
+| Patch   | Documentation corrections and clarifications |
 
 ---
 

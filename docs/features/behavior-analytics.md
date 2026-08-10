@@ -16,22 +16,22 @@ Behavior Analytics transforms raw sleep diary entries into actionable, explainab
 
 ## Core Metrics
 
-| Metric | Definition | Unit |
-|--------|-----------|------|
-| **Time in Bed (TIB)** | Total minutes from bedtime to wake time | minutes |
-| **Total Sleep Time (TST)** | TIB − sleep onset latency − WASO | minutes |
-| **Sleep Efficiency (SE)** | TST / TIB × 100 | % |
-| **Sleep Onset Latency (SOL)** | Time to fall asleep | minutes |
-| **WASO** | Wake After Sleep Onset (≈10 min per awakening) | minutes |
-| **Number of Awakenings** | Count of nighttime awakenings | count |
-| **Avg Bedtime** | Circular average bedtime | HH:MM |
-| **Avg Wake Time** | Circular average wake time | HH:MM |
-| **Bedtime Variability** | Circular standard deviation of bedtimes | minutes |
-| **Wake Time Variability** | Circular standard deviation of wake times | minutes |
-| **Sleep Regularity** | 100 − avg(bedtimeSD, wakeSD) × 0.5, min 3 records | 0-100 |
-| **Completion Rate** | % of eligible days with a diary record | % |
-| **Sleep Quality** | Average self-reported quality (1-5) | score |
-| **Mood** | Average self-reported mood (1-5) | score |
+| Metric                        | Definition                                        | Unit    |
+| ----------------------------- | ------------------------------------------------- | ------- |
+| **Time in Bed (TIB)**         | Total minutes from bedtime to wake time           | minutes |
+| **Total Sleep Time (TST)**    | TIB − sleep onset latency − WASO                  | minutes |
+| **Sleep Efficiency (SE)**     | TST / TIB × 100                                   | %       |
+| **Sleep Onset Latency (SOL)** | Time to fall asleep                               | minutes |
+| **WASO**                      | Wake After Sleep Onset (≈10 min per awakening)    | minutes |
+| **Number of Awakenings**      | Count of nighttime awakenings                     | count   |
+| **Avg Bedtime**               | Circular average bedtime                          | HH:MM   |
+| **Avg Wake Time**             | Circular average wake time                        | HH:MM   |
+| **Bedtime Variability**       | Circular standard deviation of bedtimes           | minutes |
+| **Wake Time Variability**     | Circular standard deviation of wake times         | minutes |
+| **Sleep Regularity**          | 100 − avg(bedtimeSD, wakeSD) × 0.5, min 3 records | 0-100   |
+| **Completion Rate**           | % of eligible days with a diary record            | %       |
+| **Sleep Quality**             | Average self-reported quality (1-5)               | score   |
+| **Mood**                      | Average self-reported mood (1-5)                  | score   |
 
 ### Circular Time Math
 
@@ -63,14 +63,15 @@ Week starts on Monday (ISO 8601 convention).
 
 Each metric and insight carries a data sufficiency label:
 
-| Level | Records | What you see |
-|-------|---------|-------------|
-| **none** | 0 | Empty state with guidance to start recording |
-| **insufficient** | 1-2 | Raw values shown, no trends, explicit "collecting data" message |
-| **limited** | 3-6 | Trends shown with "low confidence" badge, regularity still hidden |
-| **sufficient** | 7+ | Full analytics, all patterns, high/medium confidence trends |
+| Level            | Records | What you see                                                      |
+| ---------------- | ------- | ----------------------------------------------------------------- |
+| **none**         | 0       | Empty state with guidance to start recording                      |
+| **insufficient** | 1-2     | Raw values shown, no trends, explicit "collecting data" message   |
+| **limited**      | 3-6     | Trends shown with "low confidence" badge, regularity still hidden |
+| **sufficient**   | 7+      | Full analytics, all patterns, high/medium confidence trends       |
 
 Per-metric minimums override defaults:
+
 - `sleepRegularity` needs 3+ records (needs SD which needs ≥2)
 - `bedtimeVariability` / `wakeTimeVariability` need 2+ records
 - Other metrics default to same thresholds
@@ -84,6 +85,7 @@ Trends compare the current period to the immediately preceding period of equal l
 ```
 
 For each metric:
+
 1. Compute average in current window
 2. Compute average in previous window
 3. Calculate absolute and percentage change
@@ -92,15 +94,15 @@ For each metric:
 
 ### Meaningful Change Thresholds
 
-| Metric | Threshold | Direction |
-|--------|-----------|-----------|
-| Sleep Efficiency | 3 percentage points | higher = better |
-| Total Sleep Time | 20 minutes | higher = better |
-| SOL | 5 minutes | lower = better |
-| Bedtime | 15 minutes | neutral (just "shifted") |
-| Wake Time | 15 minutes | neutral |
-| Sleep Regularity | 5 points | higher = better |
-| Completion Rate | 10 percentage points | higher = better |
+| Metric           | Threshold            | Direction                |
+| ---------------- | -------------------- | ------------------------ |
+| Sleep Efficiency | 3 percentage points  | higher = better          |
+| Total Sleep Time | 20 minutes           | higher = better          |
+| SOL              | 5 minutes            | lower = better           |
+| Bedtime          | 15 minutes           | neutral (just "shifted") |
+| Wake Time        | 15 minutes           | neutral                  |
+| Sleep Regularity | 5 points             | higher = better          |
+| Completion Rate  | 10 percentage points | higher = better          |
 
 ### Confidence (rule-based)
 
@@ -127,19 +129,19 @@ Patterns are sorted by confidence and used both in insight generation and as sup
 
 ### Core modules
 
-| Module | Path |
-|--------|------|
-| Types | `src/lib/analytics/types.ts` |
-| Date ranges | `src/lib/analytics/date-ranges.ts` |
-| Metrics | `src/lib/analytics/metrics.ts` |
-| Sufficiency | `src/lib/analytics/sufficiency.ts` |
-| Trends | `src/lib/analytics/trends.ts` |
-| Patterns | `src/lib/analytics/patterns.ts` |
-| Insights | `src/lib/analytics/insights.ts` |
-| Weekly summary | `src/lib/analytics/weekly-summary.ts` |
+| Module          | Path                                   |
+| --------------- | -------------------------------------- |
+| Types           | `src/lib/analytics/types.ts`           |
+| Date ranges     | `src/lib/analytics/date-ranges.ts`     |
+| Metrics         | `src/lib/analytics/metrics.ts`         |
+| Sufficiency     | `src/lib/analytics/sufficiency.ts`     |
+| Trends          | `src/lib/analytics/trends.ts`          |
+| Patterns        | `src/lib/analytics/patterns.ts`        |
+| Insights        | `src/lib/analytics/insights.ts`        |
+| Weekly summary  | `src/lib/analytics/weekly-summary.ts`  |
 | Monthly summary | `src/lib/analytics/monthly-summary.ts` |
-| Weekly focus | `src/lib/analytics/weekly-focus.ts` |
-| React hook | `src/hooks/useSleepAnalytics.ts` |
+| Weekly focus    | `src/lib/analytics/weekly-focus.ts`    |
+| React hook      | `src/hooks/useSleepAnalytics.ts`       |
 
 ### Hook
 

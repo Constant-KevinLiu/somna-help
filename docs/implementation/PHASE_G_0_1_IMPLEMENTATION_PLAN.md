@@ -1,4 +1,5 @@
 # Phase G-0.1 Implementation Plan
+
 ## Program Foundation Runtime Integration & Data Ownership Remediation
 
 **Status**: In Progress
@@ -21,18 +22,18 @@ without adding adaptive learning, and without expanding the UI.
 
 ## 2. Verified Gaps (from audit)
 
-| # | Gap | Severity |
-|---|-----|----------|
-| 1 | Existing Program routes still use legacy `program-progress.ts` | High |
-| 2 | New Program service is not yet the runtime source of truth | High |
-| 3 | Weekly Plan validation is not enforced during persistence | Medium |
-| 4 | Program sync contracts are not connected to the real sync transport | High |
-| 5 | Old Program sync types remain active | Medium |
-| 6 | `program_progress` is missing from database migrations | High |
-| 7 | `exportProgramData()` has no production caller | Medium |
-| 8 | Program export/delete relies on conditional try/catch instead of verified schema | Medium |
-| 9 | No Program integration or route tests exist | Medium |
-| 10 | Program storage lacks an explicit forward-schema guard | Medium |
+| #   | Gap                                                                              | Severity |
+| --- | -------------------------------------------------------------------------------- | -------- |
+| 1   | Existing Program routes still use legacy `program-progress.ts`                   | High     |
+| 2   | New Program service is not yet the runtime source of truth                       | High     |
+| 3   | Weekly Plan validation is not enforced during persistence                        | Medium   |
+| 4   | Program sync contracts are not connected to the real sync transport              | High     |
+| 5   | Old Program sync types remain active                                             | Medium   |
+| 6   | `program_progress` is missing from database migrations                           | High     |
+| 7   | `exportProgramData()` has no production caller                                   | Medium   |
+| 8   | Program export/delete relies on conditional try/catch instead of verified schema | Medium   |
+| 9   | No Program integration or route tests exist                                      | Medium   |
+| 10  | Program storage lacks an explicit forward-schema guard                           | Medium   |
 
 ---
 
@@ -105,12 +106,14 @@ mergeLocalAndRemoteProgress() → saveProgramProgress()
 ### Step 2: Migrate Routes to New Service
 
 Files to update:
+
 - `src/routes/program.index.tsx` — replace `useProgramProgress` with `useProgramService`
 - `src/components/program/WeekPageTemplate.tsx` — replace usage
 - `src/components/program/LessonTemplate.tsx` — replace usage
 - `src/routes/dashboard.tsx` — replace `ProgramProgressCard` usage
 
 All routes must:
+
 - Read progress through new service
 - Write through event dispatch
 - Use derived values from new service
@@ -170,7 +173,7 @@ CREATE TABLE IF NOT EXISTS program_progress (
   milestones TEXT NOT NULL DEFAULT '[]',
   updated_at TEXT NOT NULL,
   client_id TEXT,
-  
+
   UNIQUE(user_id, program_id),
   INDEX idx_program_progress_user_id (user_id),
   INDEX idx_program_progress_updated_at (updated_at)
@@ -184,11 +187,13 @@ Weekly plans table deferred — not yet needed for production runtime.
 ### Step 7: Connect Program Sync to Transport
 
 #### Client side: `src/services/sync/sync-client.ts`
+
 - Add `loadLocalProgramProgress()` using new sync contracts
 - Add to `buildSyncRequest()` → `request.programProgress`
 - Add to `applyServerState()` → merge + save
 
 #### Server side: `src/services/sync/api/sync-api.ts`
+
 - Import new `SyncProgramProgress` / `CanonicalProgramProgress` from program module
 - Add DB helpers: `getProgramProgressByUserId`, `upsertProgramProgress`
 - Integrate into `processSync()` flow
@@ -197,6 +202,7 @@ Weekly plans table deferred — not yet needed for production runtime.
 ### Step 8: Deprecate Old Sync Types
 
 **File**: `src/services/sync/sync-types.ts`
+
 - Mark old `SyncProgramProgress` interface as `@deprecated`
 - Mark old `CanonicalProgramProgress` as `@deprecated`
 - Keep type-only export for backward compat
@@ -206,6 +212,7 @@ Weekly plans table deferred — not yet needed for production runtime.
 **File**: `src/services/account/account-api.ts`
 
 Remove broad try/catch pattern:
+
 ```ts
 // BEFORE: try { SELECT program_progress } catch { ignore }
 // AFTER: SELECT from properly-migrated table; surface real errors
@@ -221,6 +228,7 @@ Remove broad try/catch pattern:
 **File**: `src/lib/program/program-runtime.test.ts` (NEW)
 
 Test scenarios:
+
 1. Legacy progress → migration → new state renders
 2. Complete lesson → event applied → state saved → persists
 3. Invalid weekly plan → save rejected → previous valid preserved
@@ -233,15 +241,18 @@ Test scenarios:
 ### Step 11: Documentation
 
 New files:
+
 - `docs/architecture/program-runtime-integration.md`
 - `docs/architecture/program-data-ownership.md`
 
 Update files:
+
 - `docs/architecture/program-domain.md`
 - `docs/architecture/program-sync-contracts.md`
 - `docs/audit/PHASE_G_0_ACCEPTANCE_AUDIT.md` (add G-0.1 cross-ref)
 
 Create:
+
 - `docs/implementation/PHASE_G_0_1_COMPLETION_REPORT.md`
 
 ---
@@ -286,13 +297,13 @@ Remediation is complete only when ALL are true:
 
 ## 7. Risk Assessment
 
-| Risk | Mitigation |
-|------|------------|
-| Hydration mismatch from new hook | Ensure SSR returns same shape as legacy; test hydration |
+| Risk                                   | Mitigation                                                        |
+| -------------------------------------- | ----------------------------------------------------------------- |
+| Hydration mismatch from new hook       | Ensure SSR returns same shape as legacy; test hydration           |
 | Loss of user progress during migration | Migration is read-only on legacy key; write only to canonical key |
-| Sync merge corrupts data | Set-union for completed lessons; never undoes completions |
-| DB migration fails in production | Idempotent `CREATE TABLE IF NOT EXISTS`; verified with dry-run |
-| Type errors from large refactor | Run typecheck at each step |
+| Sync merge corrupts data               | Set-union for completed lessons; never undoes completions         |
+| DB migration fails in production       | Idempotent `CREATE TABLE IF NOT EXISTS`; verified with dry-run    |
+| Type errors from large refactor        | Run typecheck at each step                                        |
 
 ---
 

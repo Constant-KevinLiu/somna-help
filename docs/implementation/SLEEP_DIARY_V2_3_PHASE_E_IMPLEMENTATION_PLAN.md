@@ -5,38 +5,45 @@
 ### Current Architecture Summary
 
 **1. Persistence Layer**
+
 - Primary: `localStorage` with defensive patterns (SSR guard, try/catch recovery, validation)
 - Cloud Sync: Cloudflare D1 database via `/api/sync` endpoint
 - Sync mechanism: Offline queue with exponential backoff, conflict resolution
 - Data keys: `sleepRecords`, `reflections`, `reminderSettings`, `programProgress`
 
 **2. Existing Reminder System**
+
 - Email-only reminder system (Cloudflare Worker cron — `*/15 * * * *`)
 - Types: `ReminderSettings`, `ReminderPayload`, `ReminderProvider`
 - Storage: `reminder-storage.ts` (localStorage) + `reminder-storage-server.ts` (D1)
 - Limited to morning/evening/weekly email reminders
 
 **3. State Management**
+
 - React Context + localStorage pattern (no Zustand/Redux)
 - Custom events for cross-tab reactivity
 - `useSession.tsx` for auth context
 
 **4. PWA Status**
+
 - Web manifest available (`public/site.webmanifest`)
 - **No Service Worker implemented**
 - **No Web Push infrastructure**
 
 **5. Localization**
+
 - Languages: en, zh, es, pt, pl, de
 - Dictionary pattern: `Record<string, string>` via `useI18n()` hook
 - Date/time formatting utilities in `src/lib/format.ts` and `src/lib/i18n.tsx`
 
 **6. Design System**
+
 - Radix UI + shadcn/ui components
 - Tailwind CSS v4 with custom color palette
 - Key components: `card`, `button`, `dialog`, `switch`, `select`, `toast`, `TimeWheelPicker`
 
 **7. Testing**
+
 - Pure function unit tests exist (`.test.ts` files)
 - No test runner configured in package.json
 - TypeScript strict mode + ESLint as quality gates
@@ -46,6 +53,7 @@
 ## Files Expected to Change
 
 ### New Files (Core Services)
+
 ```
 src/services/habit/
 ├── habit-types.ts           # Domain models: Reminder, Occurrence, Event, HabitProgress
@@ -74,6 +82,7 @@ src/components/reminder/
 ```
 
 ### Modified Files
+
 ```
 # Existing reminder system extension
 src/services/reminder/reminder-types.ts      # Extend types for in-app/browser channels
@@ -100,15 +109,18 @@ src/routes/diary.tsx                         # Hook into diary save events
 ## Data Migration Requirements
 
 ### Migration 1: Reminder Settings → New Reminder System
+
 Existing `reminderSettings` (email reminders) should be preserved but separate from new in-app reminders.
 
 **Strategy:**
+
 1. Keep existing `reminderSettings` key unchanged for email functionality
 2. Create new storage keys: `habitReminders`, `reminderOccurrences`, `reminderEvents`
 3. No automatic migration — email and in-app reminders are separate systems
 4. User can configure both independently
 
 ### Migration 2: Storage Key Isolation
+
 ```
 # New keys (separate from canonical sleep diary):
 - habitReminders       # Reminder definitions
@@ -124,6 +136,7 @@ Existing `reminderSettings` (email reminders) should be preserved but separate f
 ## Browser Notification Limitations
 
 ### Current Capabilities
+
 1. **Level 1 (In-App):** ✅ Fully implementable
    - Works while app is open
    - Uses `setInterval` + visibilitychange events
@@ -142,6 +155,7 @@ Existing `reminderSettings` (email reminders) should be preserved but separate f
    - Missing: Secure subscription storage
 
 ### Documented Limitations
+
 - **No closed-tab delivery:** Without Service Worker + Web Push, notifications only work while tab is open
 - **Mobile browser variance:** iOS Safari has stricter notification policies
 - **Multi-tab coordination:** Will use BroadcastChannel to prevent duplicate delivery
@@ -154,6 +168,7 @@ Existing `reminderSettings` (email reminders) should be preserved but separate f
 **NOT CURRENTLY POSSIBLE**
 
 Required infrastructure missing:
+
 1. `sw.ts` — Service Worker registration and event handling
 2. Push subscription management UI
 3. VAPID key generation and storage
@@ -168,18 +183,21 @@ Required infrastructure missing:
 ## Implementation Sequence
 
 ### Phase E.1 — Foundation (Types & Storage)
+
 1. Create domain models (`habit-types.ts`)
 2. Create localStorage persistence (`habit-storage.ts`)
 3. Create event store (`habit-events.ts`)
 4. Add storage migration utilities
 
 ### Phase E.2 — Scheduling Engine
+
 1. Implement `ReminderScheduler` (next occurrence, range queries)
 2. Implement timezone handling
 3. Implement duplicate occurrence prevention
 4. Unit tests for scheduling logic
 
 ### Phase E.3 — Delivery System
+
 1. Implement delivery decision rules
 2. Level 1: In-app delivery
 3. Level 2: Browser notification service (with permission flow)
@@ -187,12 +205,14 @@ Required infrastructure missing:
 5. Recovery mechanism on page load
 
 ### Phase E.4 — Habit Progress Calculation
+
 1. Implement consistency rate
 2. Implement streak calculation
 3. Implement opportunity counting
 4. Unit tests for all metrics
 
 ### Phase E.5 — User Interface
+
 1. Reminder list page
 2. Create/edit reminder form
 3. In-app reminder dialog
@@ -201,17 +221,20 @@ Required infrastructure missing:
 6. Integrate with Dashboard
 
 ### Phase E.6 — Sleep Diary Integration
+
 1. Diary save → reminder resolution hook
 2. Explicit mapping rules documentation
 3. No automatic diary creation from reminders
 
 ### Phase E.7 — Localization & Accessibility
+
 1. Add i18n keys for all languages
 2. Keyboard navigation
 3. Screen reader announcements
 4. Reduced motion support
 
 ### Phase E.8 — Testing & Documentation
+
 1. Unit tests for pure functions
 2. Integration tests for reminder flow
 3. Update documentation (`docs/features/reminders.md`, `docs/features/habit-engine.md`)
@@ -236,14 +259,14 @@ Web Push can be added later without changing the core habit engine or scheduler.
 
 ## Risk Mitigation
 
-| Risk | Mitigation |
-|------|------------|
-| localStorage quota exceeded | Auto-prune old events (> 90 days) |
-| Multi-tab duplicate delivery | BroadcastChannel + idempotency keys |
-| Timezone changes | Store all times in UTC + original timezone |
-| Permission denied | Graceful fallback to in-app only |
-| Missed reminders on reload | Recalculate due occurrences on mount |
-| Clock manipulation | Compare with server time on sync |
+| Risk                         | Mitigation                                 |
+| ---------------------------- | ------------------------------------------ |
+| localStorage quota exceeded  | Auto-prune old events (> 90 days)          |
+| Multi-tab duplicate delivery | BroadcastChannel + idempotency keys        |
+| Timezone changes             | Store all times in UTC + original timezone |
+| Permission denied            | Graceful fallback to in-app only           |
+| Missed reminders on reload   | Recalculate due occurrences on mount       |
+| Clock manipulation           | Compare with server time on sync           |
 
 ---
 
