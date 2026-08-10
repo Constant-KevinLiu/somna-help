@@ -54,4 +54,10 @@ export default tseslint.config(
       "no-restricted-syntax": "off",
     },
   },
+  {
+    files: ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
 );
