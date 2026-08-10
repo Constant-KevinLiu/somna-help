@@ -56,10 +56,8 @@ function hookDebug(event: string, detail?: string): void {
   try {
     const prefix = "[ga4:hook]";
     if (detail !== undefined) {
-      // eslint-disable-next-line no-console
       console.log(prefix, event, detail);
     } else {
-      // eslint-disable-next-line no-console
       console.log(prefix, event);
     }
   } catch {
@@ -135,7 +133,12 @@ export function useAnalyticsPageView(
       }
 
       // ── Helper: resolve path, trying router first, then browser ───────
-      function resolvePath(): { pathname: string; search: string; hash: string; source: "router" | "browser" } | null {
+      function resolvePath(): {
+        pathname: string;
+        search: string;
+        hash: string;
+        source: "router" | "browser";
+      } | null {
         const fromRouter = readPathFromRouter();
         if (fromRouter) {
           return { ...fromRouter, source: "router" as const };

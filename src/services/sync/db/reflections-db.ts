@@ -39,7 +39,7 @@ interface D1Reflection {
 
 export async function getReflectionsByUserId(
   env: SyncEnv,
-  userId: string
+  userId: string,
 ): Promise<SyncReflection[]> {
   const db = env.DB;
   if (!db) return [];
@@ -52,18 +52,18 @@ export async function getReflectionsByUserId(
       FROM reflections
       WHERE user_id = ?
       ORDER BY local_date DESC
-    `
+    `,
     )
     .bind(userId)
     .all();
 
-  return (results.results as D1Reflection[]).map(mapToSyncReflection);
+  return results.results.map((row) => mapToSyncReflection(asD1Reflection(row)));
 }
 
 export async function getReflectionById(
   env: SyncEnv,
   userId: string,
-  reflectionId: string
+  reflectionId: string,
 ): Promise<SyncReflection | null> {
   const db = env.DB;
   if (!db) return null;
@@ -75,19 +75,19 @@ export async function getReflectionById(
              prompt_categories, content, word_count, created_at, updated_at
       FROM reflections
       WHERE id = ? AND user_id = ?
-    `
+    `,
     )
     .bind(reflectionId, userId)
     .first();
 
   if (!result) return null;
-  return mapToSyncReflection(result as D1Reflection);
+  return mapToSyncReflection(asD1Reflection(result));
 }
 
 export async function getReflectionByDate(
   env: SyncEnv,
   userId: string,
-  localDate: string
+  localDate: string,
 ): Promise<SyncReflection | null> {
   const db = env.DB;
   if (!db) return null;
@@ -99,19 +99,19 @@ export async function getReflectionByDate(
              prompt_categories, content, word_count, created_at, updated_at
       FROM reflections
       WHERE user_id = ? AND local_date = ?
-    `
+    `,
     )
     .bind(userId, localDate)
     .first();
 
   if (!result) return null;
-  return mapToSyncReflection(result as D1Reflection);
+  return mapToSyncReflection(asD1Reflection(result));
 }
 
 export async function upsertReflection(
   env: SyncEnv,
   userId: string,
-  reflection: SyncReflection
+  reflection: SyncReflection,
 ): Promise<SyncReflection> {
   const db = env.DB;
   if (!db) throw new Error("Database not available");
@@ -133,7 +133,7 @@ export async function upsertReflection(
         content = excluded.content,
         word_count = excluded.word_count,
         updated_at = excluded.updated_at
-    `
+    `,
     )
     .bind(
       reflection.id,
@@ -146,7 +146,7 @@ export async function upsertReflection(
       reflection.content,
       reflection.wordCount,
       reflection.createdAt || now,
-      reflection.updatedAt || now
+      reflection.updatedAt || now,
     )
     .run();
 
@@ -158,7 +158,7 @@ export async function upsertReflection(
 export async function deleteReflection(
   env: SyncEnv,
   userId: string,
-  reflectionId: string
+  reflectionId: string,
 ): Promise<boolean> {
   const db = env.DB;
   if (!db) return false;
@@ -168,7 +168,7 @@ export async function deleteReflection(
       `
       DELETE FROM reflections
       WHERE id = ? AND user_id = ?
-    `
+    `,
     )
     .bind(reflectionId, userId)
     .run();
@@ -179,7 +179,7 @@ export async function deleteReflection(
 export async function batchUpsertReflections(
   env: SyncEnv,
   userId: string,
-  reflections: SyncReflection[]
+  reflections: SyncReflection[],
 ): Promise<SyncReflection[]> {
   const results: SyncReflection[] = [];
 
@@ -194,6 +194,27 @@ export async function batchUpsertReflections(
 // =============================================================================
 // Mapping Helpers
 // =============================================================================
+
+/**
+ * Safely coerce a raw D1 row (Record<string, unknown>) into a typed D1Reflection.
+ * This is the single boundary where we assert the shape of data coming out of
+ * the database — everything downstream is fully typed.
+ */
+function asD1Reflection(row: Record<string, unknown>): D1Reflection {
+  return {
+    id: row.id as string,
+    user_id: row.user_id as string,
+    local_date: row.local_date as string,
+    timezone: row.timezone as string,
+    locale: row.locale as string,
+    prompt_ids: row.prompt_ids as string,
+    prompt_categories: row.prompt_categories as string,
+    content: row.content as string,
+    word_count: row.word_count as number,
+    created_at: row.created_at as string,
+    updated_at: row.updated_at as string,
+  };
+}
 
 function mapToSyncReflection(d1: D1Reflection): SyncReflection {
   return {

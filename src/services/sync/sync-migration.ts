@@ -6,7 +6,12 @@
  * Survives page refresh, network interruption, and expired sessions.
  */
 
-import type { MigrationState, SyncSleepRecord, SyncReflection, MigrationMetadata } from "./sync-types";
+import type {
+  MigrationState,
+  SyncSleepRecord,
+  SyncReflection,
+  MigrationMetadata,
+} from "./sync-types";
 import { getSyncClient } from "./sync-client";
 
 const MIGRATION_STORAGE_KEY = "somna:migration-state";
@@ -71,9 +76,7 @@ export function updateMigrationState(updates: Partial<MigrationMetadata>): void 
 
   // Dispatch event for UI
   if (typeof window !== "undefined") {
-    window.dispatchEvent(
-      new CustomEvent("migration-state-change", { detail: storage.migration })
-    );
+    window.dispatchEvent(new CustomEvent("migration-state-change", { detail: storage.migration }));
   }
 }
 
@@ -213,7 +216,7 @@ export async function restoreFromSnapshot(snapshotId: string): Promise<boolean> 
       JSON.stringify({
         version: "1",
         reflections: snapshot.reflections,
-      })
+      }),
     );
     return true;
   } catch {

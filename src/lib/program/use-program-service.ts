@@ -40,11 +40,7 @@ import type {
   WeekAccessStatus,
   ProgramMutationBlockReason,
 } from "./types";
-import {
-  applyEvent,
-  createInitialProgress,
-  CANONICAL_PROGRESS_KEY,
-} from "./service";
+import { applyEvent, createInitialProgress, CANONICAL_PROGRESS_KEY } from "./service";
 import {
   loadProgramProgressResult,
   saveProgramProgress,
@@ -61,12 +57,7 @@ const PROGRAM_CHANGE_EVENT = "somna-program-progress-change";
 // =============================================================================
 
 export type ProgramLoadStatus =
-  | "loading"
-  | "ready"
-  | "empty"
-  | "migrated"
-  | "unsupported-version"
-  | "corrupted";
+  "loading" | "ready" | "empty" | "migrated" | "unsupported-version" | "corrupted";
 
 /**
  * Result of a Program service action.
@@ -215,17 +206,11 @@ export function useProgramService(): UseProgramServiceResult {
     };
 
     window.addEventListener("storage", handleStorage);
-    window.addEventListener(
-      PROGRAM_CHANGE_EVENT,
-      handleCustomChange as EventListener
-    );
+    window.addEventListener(PROGRAM_CHANGE_EVENT, handleCustomChange as EventListener);
 
     return () => {
       window.removeEventListener("storage", handleStorage);
-      window.removeEventListener(
-        PROGRAM_CHANGE_EVENT,
-        handleCustomChange as EventListener
-      );
+      window.removeEventListener(PROGRAM_CHANGE_EVENT, handleCustomChange as EventListener);
     };
   }, [definition]);
 
@@ -238,7 +223,7 @@ export function useProgramService(): UseProgramServiceResult {
     if (unsupportedRef.current) {
       if (typeof process !== "undefined" && process.env?.NODE_ENV === "development") {
         console.warn(
-          "[program-service] Write blocked: stored program schema is newer than supported."
+          "[program-service] Write blocked: stored program schema is newer than supported.",
         );
       }
       return false;
@@ -279,7 +264,7 @@ export function useProgramService(): UseProgramServiceResult {
       }
       return { status: "unchanged" };
     },
-    [definition, persistAndNotify]
+    [definition, persistAndNotify],
   );
 
   const uncompleteLesson = useCallback(
@@ -304,7 +289,7 @@ export function useProgramService(): UseProgramServiceResult {
       }
       return { status: "unchanged" };
     },
-    [definition, persistAndNotify]
+    [definition, persistAndNotify],
   );
 
   const toggleLesson = useCallback(
@@ -316,7 +301,7 @@ export function useProgramService(): UseProgramServiceResult {
         return completeLesson(lessonId, weekId);
       }
     },
-    [completeLesson, uncompleteLesson]
+    [completeLesson, uncompleteLesson],
   );
 
   const startProgram = useCallback((): ProgramActionResult => {
@@ -399,28 +384,19 @@ export function useProgramService(): UseProgramServiceResult {
       if (week) return week.id;
     }
     // Derive from first incomplete lesson
-    const nextLesson = definition.lessons.find(
-      (l) => !progress.completedLessonIds.includes(l.id)
-    );
+    const nextLesson = definition.lessons.find((l) => !progress.completedLessonIds.includes(l.id));
     return nextLesson?.weekId ?? null;
   }, [progress.currentWeekId, progress.completedLessonIds, definition]);
 
   const recommendedNextLesson = useMemo(() => {
-    return (
-      definition.lessons.find(
-        (l) => !progress.completedLessonIds.includes(l.id)
-      ) ?? null
-    );
+    return definition.lessons.find((l) => !progress.completedLessonIds.includes(l.id)) ?? null;
   }, [progress.completedLessonIds, definition.lessons]);
 
   const milestones = useMemo(() => progress.milestones, [progress.milestones]);
 
   const earnedBadgeIds = useMemo(
-    () =>
-      progress.milestones
-        .filter((m) => m.earnedAt !== null)
-        .map((m) => m.id),
-    [progress.milestones]
+    () => progress.milestones.filter((m) => m.earnedAt !== null).map((m) => m.id),
+    [progress.milestones],
   );
 
   // ===========================================================================
@@ -433,7 +409,7 @@ export function useProgramService(): UseProgramServiceResult {
       if (!week) return "locked";
 
       const completedInWeek = week.lessonIds.filter((id) =>
-        progress.completedLessonIds.includes(id)
+        progress.completedLessonIds.includes(id),
       ).length;
 
       if (completedInWeek === week.lessonIds.length && week.lessonIds.length > 0) {
@@ -446,7 +422,7 @@ export function useProgramService(): UseProgramServiceResult {
       const prevWeek = definition.weeks.find((w) => w.order === week.order - 1);
       if (prevWeek) {
         const prevCompleted = prevWeek.lessonIds.filter((id) =>
-          progress.completedLessonIds.includes(id)
+          progress.completedLessonIds.includes(id),
         ).length;
         if (prevCompleted === prevWeek.lessonIds.length) return "available";
       }
@@ -456,30 +432,26 @@ export function useProgramService(): UseProgramServiceResult {
 
       return "locked";
     },
-    [progress.completedLessonIds, definition]
+    [progress.completedLessonIds, definition],
   );
 
   const getWeekCompletion = useCallback(
     (weekId: string): number => {
       const week = definition.weeks.find((w) => w.id === weekId);
       if (!week || week.lessonIds.length === 0) return 0;
-      const done = week.lessonIds.filter((id) =>
-        progress.completedLessonIds.includes(id)
-      ).length;
+      const done = week.lessonIds.filter((id) => progress.completedLessonIds.includes(id)).length;
       return Math.round((done / week.lessonIds.length) * 100);
     },
-    [progress.completedLessonIds, definition]
+    [progress.completedLessonIds, definition],
   );
 
   const getWeekCompletedCount = useCallback(
     (weekId: string): number => {
       const week = definition.weeks.find((w) => w.id === weekId);
       if (!week) return 0;
-      return week.lessonIds.filter((id) =>
-        progress.completedLessonIds.includes(id)
-      ).length;
+      return week.lessonIds.filter((id) => progress.completedLessonIds.includes(id)).length;
     },
-    [progress.completedLessonIds, definition]
+    [progress.completedLessonIds, definition],
   );
 
   // ===========================================================================

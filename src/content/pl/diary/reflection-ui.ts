@@ -11,6 +11,7 @@ export const PL_REFLECTION_UI: ReflectionUiStrings = {
   subtitle: "Trzy dzienne pytania do zbadania Twojej relacji ze snem",
   promptsHeader: "Dzienne pytania",
   word: "słowo",
+  wordCount: "liczba słów",
   wordLimit: "słów",
   wordLimitReached: "Osiągnięto limit słów — nadal możesz edytować i usuwać",
   saveButton: "Zapisz Refleksję",
@@ -39,7 +40,8 @@ export const PL_REFLECTION_UI: ReflectionUiStrings = {
     deleteConfirmAction: "Usuń",
     cancel: "Anuluj",
   },
-  privacy: "Twoje refleksje są przechowywane lokalnie na Twoim urządzeniu i nigdy nie są wysyłane na nasze serwery.",
+  privacy:
+    "Twoje refleksje są przechowywane lokalnie na Twoim urządzeniu i nigdy nie są wysyłane na nasze serwery.",
   accessibility: {
     editorLabel: "Edytor refleksji. Trzy dzienne pytania do zbadania Twojej relacji ze snem",
     wordCountAnnounce: "Napisałeś",

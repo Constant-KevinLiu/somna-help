@@ -1,29 +1,32 @@
 /**
  * Sleep Diary v2.3 - Progressive Authentication Modal
- * 
+ *
  * Passwordless OTP login modal that matches the Somna visual system.
  * All content is natively authored - no runtime translation.
  */
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { getAuthCopy } from "@/content/auth-content";
-import type { Locale, AuthIntent } from "@/services/auth/auth-types";
+import type { Locale as ContentLocale } from "@/content/content-types";
+import type { AuthIntent } from "@/services/auth/auth-types";
 import { toast } from "sonner";
 import { Loader2, Mail, CheckCircle2 } from "lucide-react";
 
 interface AuthModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  locale: Locale;
+  locale: ContentLocale;
   intent?: AuthIntent;
   onSuccess?: () => void;
 }
@@ -46,7 +49,7 @@ const ERROR_KEY_MAP: Record<string, keyof ReturnType<typeof getAuthCopy>["errors
 
 function getErrorMessage(
   copy: ReturnType<typeof getAuthCopy>,
-  errorCode: string | undefined
+  errorCode: string | undefined,
 ): string {
   if (!errorCode) return copy.errors.unknownError;
   const key = ERROR_KEY_MAP[errorCode];
@@ -233,9 +236,7 @@ export function AuthModal({
                 copy.emailForm.button
               )}
             </Button>
-            <p className="text-xs text-center text-muted-foreground">
-              {copy.modal.privacyNote}
-            </p>
+            <p className="text-xs text-center text-muted-foreground">{copy.modal.privacyNote}</p>
           </form>
         )}
 

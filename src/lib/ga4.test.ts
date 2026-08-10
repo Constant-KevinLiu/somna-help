@@ -58,10 +58,16 @@ function getNthArg(entry: ArrayLike<unknown>, index: number): unknown {
   return entry[index];
 }
 
-function getPageViewCalls(): Array<{ page_location: string; page_path: string; page_title: string }> {
+function getPageViewCalls(): Array<{
+  page_location: string;
+  page_path: string;
+  page_title: string;
+}> {
   return getGtagCalls()
     .filter((c) => getNthArg(c, 0) === "event" && getNthArg(c, 1) === "page_view")
-    .map((c) => getNthArg(c, 2) as { page_location: string; page_path: string; page_title: string });
+    .map(
+      (c) => getNthArg(c, 2) as { page_location: string; page_path: string; page_title: string },
+    );
 }
 
 // ─── Test suite ──────────────────────────────────────────────────────────────
@@ -323,7 +329,9 @@ describe("ga4", () => {
         };
 
         // This must NOT throw — the defensive boundary catches it.
-        expect(() => trackPageView(routerEventObj as unknown as { pathname: string })).not.toThrow();
+        expect(() =>
+          trackPageView(routerEventObj as unknown as { pathname: string }),
+        ).not.toThrow();
         expect(() => trackPageView(routerEventObj as unknown as { pathname: string })).not.toThrow(
           /Cannot convert object to primitive value/,
         );
@@ -507,7 +515,9 @@ describe("ga4", () => {
         trackPageView({ pathname: "/test" });
 
         // No [ga4] prefixed logs when debug is off
-        const ga4Logs = logSpy.mock.calls.filter((c) => typeof c[0] === "string" && c[0].includes("[ga4]"));
+        const ga4Logs = logSpy.mock.calls.filter(
+          (c) => typeof c[0] === "string" && c[0].includes("[ga4]"),
+        );
         expect(ga4Logs).toHaveLength(0);
 
         logSpy.mockRestore();

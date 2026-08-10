@@ -1,6 +1,6 @@
 /**
  * Sleep Diary v2.3 - Session Hook
- * 
+ *
  * React hook for authentication state management.
  * Provides session context for Identity-aware Navigation.
  */
@@ -25,7 +25,7 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     try {
       const response = await fetch("/api/auth/session");
       const data = await response.json();
-      
+
       if (data.authenticated) {
         setSession({
           isAuthenticated: true,

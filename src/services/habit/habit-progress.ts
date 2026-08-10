@@ -9,11 +9,7 @@
  *
  * All calculations are pure functions and unit-testable.
  */
-import {
-  type HabitProgress,
-  type Reminder,
-  type HabitState,
-} from "./habit-types";
+import { type HabitProgress, type Reminder, type HabitState } from "./habit-types";
 import { loadOccurrences } from "./habit-storage";
 import { getCompletionEvents, getMissedEvents } from "./habit-events";
 import { getLocalDate, addDays } from "./habit-scheduler";
@@ -21,10 +17,7 @@ import { getLocalDate, addDays } from "./habit-scheduler";
 // ============================================
 // Consistency Rate
 // ============================================
-export function calculateConsistencyRate(
-  completions: number,
-  opportunities: number
-): number {
+export function calculateConsistencyRate(completions: number, opportunities: number): number {
   if (opportunities === 0) return 0;
   return Math.round((completions / opportunities) * 100);
 }
@@ -33,14 +26,11 @@ export function calculateConsistencyRate(
 // Streak Calculation
 // ============================================
 interface CompletionDay {
-  date: string;  // YYYY-MM-DD
+  date: string; // YYYY-MM-DD
   completed: boolean;
 }
 
-export function getCompletionDays(
-  reminderId: string,
-  timezone: string
-): CompletionDay[] {
+export function getCompletionDays(reminderId: string, timezone: string): CompletionDay[] {
   const completions = getCompletionEvents(reminderId);
   const missed = getMissedEvents(reminderId);
 
@@ -68,7 +58,7 @@ export function getCompletionDays(
 export function calculateCurrentStreak(
   completionDays: CompletionDay[],
   timezone: string,
-  now: Date = new Date()
+  now: Date = new Date(),
 ): number {
   if (completionDays.length === 0) return 0;
 
@@ -76,10 +66,10 @@ export function calculateCurrentStreak(
   const sorted = [...completionDays].sort((a, b) => b.date.localeCompare(a.date));
 
   let streak = 0;
-  let currentDate = today;
+  const currentDate = today;
 
   // Check today first
-  const todayEntry = sorted.find(d => d.date === today);
+  const todayEntry = sorted.find((d) => d.date === today);
   if (todayEntry?.completed) {
     streak = 1;
   }
@@ -88,7 +78,7 @@ export function calculateCurrentStreak(
   let checkDate = getLocalDate(addDays(new Date(today), -1), timezone);
 
   while (true) {
-    const entry = sorted.find(d => d.date === checkDate);
+    const entry = sorted.find((d) => d.date === checkDate);
     if (entry?.completed) {
       streak++;
       checkDate = getLocalDate(addDays(new Date(checkDate), -1), timezone);
@@ -105,9 +95,7 @@ export function calculateCurrentStreak(
   return streak;
 }
 
-export function calculateLongestStreak(
-  completionDays: CompletionDay[]
-): number {
+export function calculateLongestStreak(completionDays: CompletionDay[]): number {
   if (completionDays.length === 0) return 0;
 
   const sorted = [...completionDays].sort((a, b) => a.date.localeCompare(b.date));
@@ -133,17 +121,19 @@ export function calculateLongestStreak(
 export function determineHabitState(
   reminder: Reminder,
   currentStreak: number,
-  consistencyRate: number
+  consistencyRate: number,
 ): HabitState {
   if (reminder.status === "archived") return "archived";
   if (reminder.status === "paused") return "paused";
 
   // Thresholds can be adjusted based on product requirements
-  const MAINTENANCE_STREAK_THRESHOLD = 21;  // 3 weeks
+  const MAINTENANCE_STREAK_THRESHOLD = 21; // 3 weeks
   const MAINTENANCE_CONSISTENCY_THRESHOLD = 80;
 
-  if (currentStreak >= MAINTENANCE_STREAK_THRESHOLD &&
-    consistencyRate >= MAINTENANCE_CONSISTENCY_THRESHOLD) {
+  if (
+    currentStreak >= MAINTENANCE_STREAK_THRESHOLD &&
+    consistencyRate >= MAINTENANCE_CONSISTENCY_THRESHOLD
+  ) {
     return "maintained";
   }
 
@@ -157,9 +147,7 @@ export function determineHabitState(
 // ============================================
 // Last Completed Date
 // ============================================
-export function getLastCompletedDate(
-  reminderId: string
-): string | undefined {
+export function getLastCompletedDate(reminderId: string): string | undefined {
   const completions = getCompletionEvents(reminderId);
   if (completions.length === 0) return undefined;
 
@@ -170,25 +158,23 @@ export function getLastCompletedDate(
 // ============================================
 // Full Progress Calculation
 // ============================================
-export function calculateHabitProgress(
-  reminder: Reminder,
-  now: Date = new Date()
-): HabitProgress {
+export function calculateHabitProgress(reminder: Reminder, now: Date = new Date()): HabitProgress {
   const reminderId = reminder.id;
   const timezone = reminder.timezone;
 
   // Get completion data
   const completionDays = getCompletionDays(reminderId, timezone);
-  const completionCount = completionDays.filter(d => d.completed).length;
+  const completionCount = completionDays.filter((d) => d.completed).length;
 
   // Get total opportunities (completed + missed)
   // For more accuracy, count occurrences that have reached their due time
-  const occurrences = loadOccurrences().filter(o => o.reminderId === reminderId);
-  const resolvedOccurrences = occurrences.filter(o =>
-    o.status === "completed" ||
-    o.status === "completed_by_related_action" ||
-    o.status === "missed" ||
-    o.status === "dismissed"
+  const occurrences = loadOccurrences().filter((o) => o.reminderId === reminderId);
+  const resolvedOccurrences = occurrences.filter(
+    (o) =>
+      o.status === "completed" ||
+      o.status === "completed_by_related_action" ||
+      o.status === "missed" ||
+      o.status === "dismissed",
   );
   const opportunityCount = resolvedOccurrences.length;
 
@@ -217,7 +203,7 @@ export function calculateHabitProgress(
 // ============================================
 export function calculateAllHabitProgress(
   reminders: Reminder[],
-  now: Date = new Date()
+  now: Date = new Date(),
 ): Map<string, HabitProgress> {
   const progressMap = new Map<string, HabitProgress>();
 

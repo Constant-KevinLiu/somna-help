@@ -41,11 +41,9 @@ function previousDay(dateStr: string): string {
  */
 export function calculateReflectionStreak(
   reflections: LocalReflection[],
-  todayStr: string = todayLocalISO()
+  todayStr: string = todayLocalISO(),
 ): number {
-  const datesWithReflections = new Set(
-    reflections.map((r) => r.localDate)
-  );
+  const datesWithReflections = new Set(reflections.map((r) => r.localDate));
 
   let streak = 0;
   let currentDate = todayStr;
@@ -78,9 +76,7 @@ export function calculateReflectionStreak(
 /**
  * Calculate longest reflection streak.
  */
-export function calculateLongestStreak(
-  reflections: LocalReflection[]
-): number {
+export function calculateLongestStreak(reflections: LocalReflection[]): number {
   if (reflections.length === 0) return 0;
 
   const sortedDates = [...new Set(reflections.map((r) => r.localDate))].sort();
@@ -108,7 +104,7 @@ export function calculateLongestStreak(
  */
 export function countThisMonth(
   reflections: LocalReflection[],
-  todayStr: string = todayLocalISO()
+  todayStr: string = todayLocalISO(),
 ): number {
   const [currentYear, currentMonth] = todayStr.split("-").map(Number);
   return reflections.filter((r) => {

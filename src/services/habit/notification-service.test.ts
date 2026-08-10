@@ -23,7 +23,7 @@ import {
   getAvailableChannels,
   deliverBrowserNotification,
 } from "./notification-service";
-import type { Reminder } from "./habit-types";
+import { makeReminder } from "./habit-test-fixtures";
 
 // =============================================================================
 // Browser Capability Tests (SSR Mode)
@@ -108,18 +108,12 @@ describe("isWithinQuietHours", () => {
 
 describe("buildNotificationContent", () => {
   it("returns privacy-safe content by default", () => {
-    const reminder: Reminder = {
+    const reminder = makeReminder({
       id: "rem-123",
-      ownerId: "anonymous",
       title: "Personal Reminder",
       message: "Very sensitive private information",
-      status: "active",
       channels: ["browser_notification"],
-      schedule: { type: "daily", time: "09:00" },
-      snoozeOptionsMinutes: [5, 10, 15],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    });
 
     const content = buildNotificationContent(reminder);
 
@@ -135,18 +129,12 @@ describe("buildNotificationContent", () => {
   });
 
   it("always returns valid title and body", () => {
-    const reminder: Reminder = {
+    const reminder = makeReminder({
       id: "rem-123",
-      ownerId: "anonymous",
       title: "",
       message: "",
-      status: "active",
       channels: ["browser_notification"],
-      schedule: { type: "daily", time: "09:00" },
-      snoozeOptionsMinutes: [5, 10, 15],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    });
 
     const content = buildNotificationContent(reminder);
 
@@ -186,17 +174,11 @@ describe("Channel Availability (SSR)", () => {
 
 describe("Browser Notification Delivery (SSR)", () => {
   it("deliverBrowserNotification returns safe fallback result in SSR", async () => {
-    const reminder: Reminder = {
+    const reminder = makeReminder({
       id: "rem-123",
-      ownerId: "anonymous",
       title: "Test",
-      status: "active",
       channels: ["browser_notification"],
-      schedule: { type: "daily", time: "09:00" },
-      snoozeOptionsMinutes: [5, 10, 15],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    });
 
     const result = await deliverBrowserNotification(reminder);
 
@@ -208,17 +190,11 @@ describe("Browser Notification Delivery (SSR)", () => {
   });
 
   it("deliverBrowserNotification accepts optional tag parameter", async () => {
-    const reminder: Reminder = {
+    const reminder = makeReminder({
       id: "rem-123",
-      ownerId: "anonymous",
       title: "Test",
-      status: "active",
       channels: ["browser_notification"],
-      schedule: { type: "daily", time: "09:00" },
-      snoozeOptionsMinutes: [5, 10, 15],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    });
 
     // Should work with tag parameter
     const result1 = await deliverBrowserNotification(reminder, "custom-tag");

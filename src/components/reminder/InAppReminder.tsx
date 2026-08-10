@@ -6,18 +6,22 @@
 import { useState, useEffect } from "react";
 import { Bell, Check, Clock, X, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  setInAppDeliveryCallback,
-  type InAppDeliveryEvent,
-} from "@/services/habit/habit-delivery";
+import { setInAppDeliveryCallback, type InAppDeliveryEvent } from "@/services/habit/habit-delivery";
+import type { Reminder, ReminderOccurrence } from "@/services/habit/habit-types";
 import { useReminders } from "@/hooks/useReminders";
 
 interface ActiveReminder {
-  reminder: any;
-  occurrence: any;
+  reminder: Reminder;
+  occurrence: ReminderOccurrence;
 }
 
 export function InAppReminderProvider() {
@@ -89,25 +93,17 @@ export function InAppReminderProvider() {
               onClick={() => handleSnooze(minutes)}
               className="flex items-center gap-1"
             >
-              <Clock className="h-4 w-4" />
-              +{minutes}m
+              <Clock className="h-4 w-4" />+{minutes}m
             </Button>
           ))}
         </div>
 
         <div className="flex flex-col gap-2">
-          <Button
-            onClick={handleComplete}
-            className="w-full bg-indigo-600 hover:bg-indigo-700"
-          >
+          <Button onClick={handleComplete} className="w-full bg-indigo-600 hover:bg-indigo-700">
             <Check className="mr-2 h-4 w-4" />
             Done
           </Button>
-          <Button
-            variant="secondary"
-            onClick={handleDismiss}
-            className="w-full"
-          >
+          <Button variant="secondary" onClick={handleDismiss} className="w-full">
             <X className="mr-2 h-4 w-4" />
             Dismiss
           </Button>

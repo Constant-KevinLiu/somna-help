@@ -24,9 +24,15 @@ beforeEach(() => {
   // Mock window.localStorage for safe-storage functions
   const mockLocalStorage: Storage = {
     getItem: (key: string) => mockStorage.get(key) ?? null,
-    setItem: (key: string, value: string) => { mockStorage.set(key, value); },
-    removeItem: (key: string) => { mockStorage.delete(key); },
-    clear: () => { mockStorage.clear(); },
+    setItem: (key: string, value: string) => {
+      mockStorage.set(key, value);
+    },
+    removeItem: (key: string) => {
+      mockStorage.delete(key);
+    },
+    clear: () => {
+      mockStorage.clear();
+    },
     key: (index: number) => Array.from(mockStorage.keys())[index] ?? null,
     length: 0,
   };
@@ -46,7 +52,9 @@ afterEach(() => {
   mockStorage.clear();
 });
 
-function makeReflection(overrides: Partial<WeeklyReflection> & { id: string; weekStart: string }): WeeklyReflection {
+function makeReflection(
+  overrides: Partial<WeeklyReflection> & { id: string; weekStart: string },
+): WeeklyReflection {
   const { id, weekStart, weekEnd, ...rest } = overrides;
   return {
     id,
@@ -189,9 +197,7 @@ describe("weekly reflection delete all", () => {
   });
 
   it("unrelated diary deletion does not remove reflections", () => {
-    saveReflections([
-      makeReflection({ id: "wr_1", weekStart: "2024-01-01" }),
-    ]);
+    saveReflections([makeReflection({ id: "wr_1", weekStart: "2024-01-01" })]);
 
     // Simulate deleting a diary record (separate storage key)
     mockStorage.set("somna.sleep-records.v1", JSON.stringify([]));

@@ -53,6 +53,22 @@ const labels: Record<
     speed: "Tempo",
     missing: "To nagranie będzie wkrótce dostępne.",
   },
+  de: {
+    play: "Play",
+    pause: "Pause",
+    back: "Back 15s",
+    fwd: "Forward 15s",
+    speed: "Speed",
+    missing: "This audio will be available soon.",
+  },
+  ja: {
+    play: "Play",
+    pause: "Pause",
+    back: "Back 15s",
+    fwd: "Forward 15s",
+    speed: "Speed",
+    missing: "This audio will be available soon.",
+  },
 };
 
 function fmt(s: number) {

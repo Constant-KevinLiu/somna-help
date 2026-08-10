@@ -41,10 +41,7 @@ function json(status: number, body: unknown): Response {
  * Excludes security-related tables (OTP challenges, sessions, hashes).
  * Returns with appropriate no-cache headers.
  */
-export async function handleAccountExport(
-  env: AccountEnv,
-  userId: string
-): Promise<Response> {
+export async function handleAccountExport(env: AccountEnv, userId: string): Promise<Response> {
   const db = env.DB;
   if (!db) {
     return json(500, {
@@ -74,7 +71,7 @@ export async function handleAccountExport(
         FROM sleep_records
         WHERE user_id = ?
         ORDER BY date DESC
-      `
+      `,
       )
       .bind(userId)
       .all();
@@ -91,7 +88,7 @@ export async function handleAccountExport(
         FROM reflections
         WHERE user_id = ?
         ORDER BY local_date DESC
-      `
+      `,
       )
       .bind(userId)
       .all();
@@ -104,7 +101,7 @@ export async function handleAccountExport(
                last_sent_at, created_at, updated_at
         FROM reminder_settings
         WHERE user_id = ?
-      `
+      `,
       )
       .bind(userId)
       .first();
@@ -122,7 +119,7 @@ export async function handleAccountExport(
         FROM program_progress
         WHERE user_id = ?
         ORDER BY updated_at DESC
-      `
+      `,
       )
       .bind(userId)
       .all();
@@ -140,7 +137,7 @@ export async function handleAccountExport(
           FROM weekly_reflections
           WHERE user_id = ?
           ORDER BY week_start DESC
-        `
+        `,
         )
         .bind(userId)
         .all();
@@ -173,8 +170,8 @@ export async function handleAccountExport(
         "content-type": "application/json; charset=utf-8",
         "content-disposition": `attachment; filename="${filename}"`,
         "cache-control": "no-store, no-cache, must-revalidate, private",
-        "pragma": "no-cache",
-        "expires": "0",
+        pragma: "no-cache",
+        expires: "0",
       },
     });
   } catch (error) {
@@ -206,7 +203,7 @@ interface DeleteRequest {
 export async function handleAccountDelete(
   env: AccountEnv,
   userId: string,
-  request: Request
+  request: Request,
 ): Promise<Response> {
   const db = env.DB;
   if (!db) {
@@ -316,7 +313,7 @@ export async function handleAccountDelete(
         UPDATE users 
         SET deleted_at = ?, preferred_locale = 'deleted', timezone = 'UTC'
         WHERE id = ?
-      `
+      `,
       )
       .bind(now, userId)
       .run();

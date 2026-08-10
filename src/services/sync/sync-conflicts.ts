@@ -6,7 +6,12 @@
  * Never silently overwrites meaningful reflection content.
  */
 
-import type { SyncSleepRecord, SyncReflection, SyncConflict, ConflictResolutionStrategy } from "./sync-types";
+import type {
+  SyncSleepRecord,
+  SyncReflection,
+  SyncConflict,
+  ConflictResolutionStrategy,
+} from "./sync-types";
 
 // =============================================================================
 // Sleep Record Conflict Resolution
@@ -25,7 +30,7 @@ export interface ConflictResult<T> {
  */
 export function resolveSleepRecordConflict(
   local: SyncSleepRecord,
-  server: SyncSleepRecord
+  server: SyncSleepRecord,
 ): ConflictResult<SyncSleepRecord> {
   // If records are identical, no conflict
   if (areSleepRecordsIdentical(local, server)) {
@@ -117,7 +122,7 @@ function hasMeaningfulSleepRecordDifferences(a: SyncSleepRecord, b: SyncSleepRec
  */
 export function resolveReflectionConflict(
   local: SyncReflection,
-  server: SyncReflection
+  server: SyncReflection,
 ): ConflictResult<SyncReflection> {
   // If content is identical, no conflict
   if (local.content.trim() === server.content.trim()) {
@@ -221,7 +226,7 @@ export function mergeReflectionContents(local: SyncReflection, server: SyncRefle
  */
 export function resolveReminderConflict<T extends { updatedAt: string }>(
   local: T,
-  server: T
+  server: T,
 ): ConflictResult<T> {
   const localTime = new Date(local.updatedAt).getTime();
   const serverTime = new Date(server.updatedAt).getTime();
@@ -279,9 +284,9 @@ function stripReflectionContent(reflection: SyncReflection): Partial<SyncReflect
 export function isDateConflict(
   localId: string,
   localDate: string,
-  serverRecords: Array<{ id: string; date?: string; localDate?: string }>
+  serverRecords: Array<{ id: string; date?: string; localDate?: string }>,
 ): boolean {
   return serverRecords.some(
-    (r) => r.id !== localId && (r.date === localDate || r.localDate === localDate)
+    (r) => r.id !== localId && (r.date === localDate || r.localDate === localDate),
   );
 }

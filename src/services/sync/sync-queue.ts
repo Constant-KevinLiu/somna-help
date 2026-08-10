@@ -33,13 +33,13 @@ export function enqueueSyncOperation(
   entityType: EntityType,
   entityId: string,
   operation: "upsert" | "delete",
-  payload: unknown
+  payload: unknown,
 ): void {
   const storage = loadQueue();
 
   // Remove existing queued item for the same entity
   storage.items = storage.items.filter(
-    (item) => !(item.entityType === entityType && item.entityId === entityId)
+    (item) => !(item.entityType === entityType && item.entityId === entityId),
   );
 
   const item: SyncQueueItem = {
@@ -66,7 +66,7 @@ export function dequeueForProcessing(): SyncQueueItem[] {
   });
 
   return readyItems.sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
   );
 }
 
@@ -175,7 +175,7 @@ export function getBatchForSync(limit: number = 20): SyncQueueItem[] {
 }
 
 export function processBatchResults(
-  results: Array<{ itemId: string; success: boolean; error?: string }>
+  results: Array<{ itemId: string; success: boolean; error?: string }>,
 ): void {
   for (const result of results) {
     if (result.success) {

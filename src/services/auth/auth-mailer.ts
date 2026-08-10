@@ -48,7 +48,7 @@ interface EmailTemplate {
 }
 
 const emailTemplates: Record<Locale, EmailTemplate> = {
-  "en": {
+  en: {
     subject: "Your Somna verification code",
     html: (code, expiryMinutes) => `
       <!DOCTYPE html>
@@ -74,7 +74,8 @@ const emailTemplates: Record<Locale, EmailTemplate> = {
       </body>
       </html>
     `,
-    text: (code, expiryMinutes) => `
+    text: (code, expiryMinutes) =>
+      `
 Verify your email
 
 Use this verification code to sign in to Somna:
@@ -90,7 +91,7 @@ Somna — your sleep health companion
     `.trim(),
   },
 
-  "es": {
+  es: {
     subject: "Tu código de verificación de Somna",
     html: (code, expiryMinutes) => `
       <!DOCTYPE html>
@@ -116,7 +117,8 @@ Somna — your sleep health companion
       </body>
       </html>
     `,
-    text: (code, expiryMinutes) => `
+    text: (code, expiryMinutes) =>
+      `
 Verifica tu correo
 
 Usa este código de verificación para iniciar sesión en Somna:
@@ -158,7 +160,8 @@ Somna — tu compañero de salud del sueño
       </body>
       </html>
     `,
-    text: (code, expiryMinutes) => `
+    text: (code, expiryMinutes) =>
+      `
 Verifique seu e-mail
 
 Use este código de verificação para entrar no Somna:
@@ -174,7 +177,7 @@ Somna — seu companheiro de saúde do sono
     `.trim(),
   },
 
-  "pl": {
+  pl: {
     subject: "Twój kod weryfikacyjny Somna",
     html: (code, expiryMinutes) => `
       <!DOCTYPE html>
@@ -200,7 +203,8 @@ Somna — seu companheiro de saúde do sono
       </body>
       </html>
     `,
-    text: (code, expiryMinutes) => `
+    text: (code, expiryMinutes) =>
+      `
 Zweryfikuj swój adres e-mail
 
 Użyj tego kodu weryfikacyjnego, aby zalogować się do Somna:
@@ -254,7 +258,7 @@ export interface SendOTPEmailOptions {
  */
 export async function sendOTPEmail(
   env: AuthMailerEnv,
-  { to, code, locale, expiryMinutes, requestId }: SendOTPEmailOptions
+  { to, code, locale, expiryMinutes, requestId }: SendOTPEmailOptions,
 ): Promise<SendOTPEmailResult> {
   const provider = "cloudflare-email";
   const recipient = redactRecipient(to);
@@ -269,7 +273,7 @@ export async function sendOTPEmail(
         errorCode: "AUTH_EMAIL_NOT_CONFIGURED",
         requestId: requestId || "unknown",
         recipient,
-      })
+      }),
     );
     return { success: false, errorCode: "AUTH_EMAIL_NOT_CONFIGURED" };
   }
@@ -295,7 +299,7 @@ export async function sendOTPEmail(
         requestId: requestId || "unknown",
         recipient,
         hasMessageId: Boolean(result?.messageId),
-      })
+      }),
     );
 
     return { success: true };
@@ -335,7 +339,7 @@ export async function sendOTPEmail(
         errorCode,
         requestId: requestId || "unknown",
         recipient,
-      })
+      }),
     );
 
     return { success: false, errorCode };

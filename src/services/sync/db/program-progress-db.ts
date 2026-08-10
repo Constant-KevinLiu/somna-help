@@ -11,10 +11,7 @@
  */
 
 import type { D1Database } from "@cloudflare/workers-types/experimental";
-import type {
-  SyncProgramProgress,
-  CanonicalProgramProgress,
-} from "@/lib/program/sync-contracts";
+import type { SyncProgramProgress, CanonicalProgramProgress } from "@/lib/program/sync-contracts";
 
 interface ProgramProgressEnv {
   DB?: D1Database;
@@ -82,14 +79,8 @@ function rowToCanonical(row: D1ProgramProgress): CanonicalProgramProgress {
     completedLessonIds: safeJsonParse<string[]>(row.completed_lesson_ids, []),
     skippedLessonIds: safeJsonParse<string[]>(row.skipped_lesson_ids, []),
     acceptedPlanIds: safeJsonParse<string[]>(row.accepted_plan_ids, []),
-    dismissedRecommendationIds: safeJsonParse<string[]>(
-      row.dismissed_recommendation_ids,
-      []
-    ),
-    milestones: safeJsonParse<CanonicalProgramProgress["milestones"]>(
-      row.milestones,
-      []
-    ),
+    dismissedRecommendationIds: safeJsonParse<string[]>(row.dismissed_recommendation_ids, []),
+    milestones: safeJsonParse<CanonicalProgramProgress["milestones"]>(row.milestones, []),
     updatedAt: row.updated_at,
   };
 }
@@ -105,7 +96,7 @@ function rowToCanonical(row: D1ProgramProgress): CanonicalProgramProgress {
 export async function getProgramProgressByUserId(
   env: ProgramProgressEnv,
   userId: string,
-  programId: string = "cbti-core"
+  programId: string = "cbti-core",
 ): Promise<CanonicalProgramProgress | null> {
   const db = env.DB;
   if (!db) return null;
@@ -117,7 +108,7 @@ export async function getProgramProgressByUserId(
         SELECT * FROM program_progress
         WHERE user_id = ? AND program_id = ?
         LIMIT 1
-      `
+      `,
       )
       .bind(userId, programId)
       .first();
@@ -145,7 +136,7 @@ export async function getProgramProgressByUserId(
 export async function upsertProgramProgress(
   env: ProgramProgressEnv,
   userId: string,
-  progress: SyncProgramProgress
+  progress: SyncProgramProgress,
 ): Promise<CanonicalProgramProgress | null> {
   const db = env.DB;
   if (!db) return null;
@@ -178,7 +169,7 @@ export async function upsertProgramProgress(
           updated_at = excluded.updated_at,
           client_id = excluded.client_id
         WHERE excluded.updated_at >= program_progress.updated_at
-      `
+      `,
       )
       .bind(
         entityId,
@@ -196,7 +187,7 @@ export async function upsertProgramProgress(
         safeJsonStringify(progress.dismissedRecommendationIds),
         safeJsonStringify(progress.milestones),
         progress.updatedAt || now,
-        progress.clientId ?? null
+        progress.clientId ?? null,
       )
       .run();
 
@@ -213,7 +204,7 @@ export async function upsertProgramProgress(
  */
 export async function deleteProgramProgressByUserId(
   env: ProgramProgressEnv,
-  userId: string
+  userId: string,
 ): Promise<number> {
   const db = env.DB;
   if (!db) return 0;

@@ -1,10 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { getProgramDefinition, validateProgramDefinition } from "./definition";
-import type {
-  ProgramDefinition,
-  ProgramWeekDefinition,
-  ProgramLessonDefinition,
-} from "./types";
+import type { ProgramDefinition, ProgramWeekDefinition, ProgramLessonDefinition } from "./types";
 
 describe("program/definition", () => {
   describe("getProgramDefinition", () => {

@@ -10,11 +10,7 @@ export const deWeek6Lessons: LessonContent[] = [
     weekSlug: "week-6",
     lessonNumber: 1,
     estimatedMinutes: 6,
-    relatedLessonSlugs: [
-      "maintaining-gains",
-      "identifying-triggers",
-      "emergency-plan",
-    ],
+    relatedLessonSlugs: ["maintaining-gains", "identifying-triggers", "emergency-plan"],
     i18n: {
       de: {
         title: "Rückfallprävention",
@@ -92,24 +88,19 @@ export const deWeek6Lessons: LessonContent[] = [
     weekSlug: "week-6",
     lessonNumber: 2,
     estimatedMinutes: 5,
-    relatedLessonSlugs: [
-      "relapse-prevention",
-      "healthy-sleep-habits",
-      "long-term-cbt-i",
-    ],
+    relatedLessonSlugs: ["relapse-prevention", "healthy-sleep-habits", "long-term-cbt-i"],
     i18n: {
       de: {
         title: "Gewinne aufrechterhalten",
         eyebrow: "WOCHE 6 · LEKTION 2",
-        subtitle:
-          "Gesunde Schlafgewohnheiten für ein Leben lang guten Schlaf.",
+        subtitle: "Gesunde Schlafgewohnheiten für ein Leben lang guten Schlaf.",
         difficulty: "Einsteiger",
         readingTime: "5 Min. Lesezeit",
         content: [
           {
             heading: "Von CBT-I zu Lebensstil",
             paras: [
-              "Nach Abschluss des CBT-I-Programms werden die Techniken zu deinen natürlichen Gewohnheiten. Das Ziel ist nicht, CBT-I für immer zu \"machen\", sondern zu schlafen wie jemand, der CBT-I gelernt hat.",
+              'Nach Abschluss des CBT-I-Programms werden die Techniken zu deinen natürlichen Gewohnheiten. Das Ziel ist nicht, CBT-I für immer zu "machen", sondern zu schlafen wie jemand, der CBT-I gelernt hat.',
               "Die wichtigsten Gewohnheiten, die beibehalten werden sollten:",
             ],
           },
@@ -168,11 +159,7 @@ export const deWeek6Lessons: LessonContent[] = [
     weekSlug: "week-6",
     lessonNumber: 3,
     estimatedMinutes: 5,
-    relatedLessonSlugs: [
-      "maintaining-gains",
-      "relapse-prevention",
-      "celebrating-progress",
-    ],
+    relatedLessonSlugs: ["maintaining-gains", "relapse-prevention", "celebrating-progress"],
     i18n: {
       de: {
         title: "Abschluss und Übergang",
@@ -204,7 +191,7 @@ export const deWeek6Lessons: LessonContent[] = [
             heading: "Der Übergang",
             paras: [
               "Ab jetzt bist du dein eigener Schlaf-Manager. Du hast die Werkzeuge, aber es liegt an dir, sie anzuwenden.",
-              "Erinnere dich: CBT-I ist nicht etwas, das du \"machst\" und dann fertig bist. Es ist eine neue Art zu schlafen, die du für den Rest deines Lebens beibehalten kannst.",
+              'Erinnere dich: CBT-I ist nicht etwas, das du "machst" und dann fertig bist. Es ist eine neue Art zu schlafen, die du für den Rest deines Lebens beibehalten kannst.',
             ],
           },
         ],

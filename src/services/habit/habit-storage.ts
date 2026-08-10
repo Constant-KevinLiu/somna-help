@@ -12,11 +12,7 @@ import {
   type NotificationPreferences,
   DEFAULT_NOTIFICATION_PREFS,
 } from "./habit-types";
-import {
-  isBrowser,
-  safeLocalStorageGet,
-  safeLocalStorageSet,
-} from "@/lib/safe-storage";
+import { isBrowser, safeLocalStorageGet, safeLocalStorageSet } from "@/lib/safe-storage";
 
 // ============================================
 // Storage Keys
@@ -64,7 +60,7 @@ export function addReminder(reminder: Reminder): Reminder[] {
 
 export function updateReminder(id: string, updates: Partial<Reminder>): Reminder | null {
   const reminders = loadReminders();
-  const index = reminders.findIndex(r => r.id === id);
+  const index = reminders.findIndex((r) => r.id === id);
   if (index === -1) return null;
 
   const updated = {
@@ -110,9 +106,12 @@ export function addOccurrence(occurrence: ReminderOccurrence): ReminderOccurrenc
   return updated;
 }
 
-export function updateOccurrence(id: string, updates: Partial<ReminderOccurrence>): ReminderOccurrence | null {
+export function updateOccurrence(
+  id: string,
+  updates: Partial<ReminderOccurrence>,
+): ReminderOccurrence | null {
   const occurrences = loadOccurrences();
-  const index = occurrences.findIndex(o => o.id === id);
+  const index = occurrences.findIndex((o) => o.id === id);
   if (index === -1) return null;
 
   const updated = {
@@ -126,20 +125,18 @@ export function updateOccurrence(id: string, updates: Partial<ReminderOccurrence
 }
 
 export function getOccurrencesByReminder(reminderId: string): ReminderOccurrence[] {
-  return loadOccurrences().filter(o => o.reminderId === reminderId);
+  return loadOccurrences().filter((o) => o.reminderId === reminderId);
 }
 
 export function getDueOccurrences(now: Date = new Date()): ReminderOccurrence[] {
   const nowIso = now.toISOString();
-  return loadOccurrences().filter(o =>
-    o.status === "scheduled" && o.dueAt <= nowIso
-  );
+  return loadOccurrences().filter((o) => o.status === "scheduled" && o.dueAt <= nowIso);
 }
 
 export function getUndeliveredDueOccurrences(now: Date = new Date()): ReminderOccurrence[] {
   const nowIso = now.toISOString();
-  return loadOccurrences().filter(o =>
-    (o.status === "scheduled" || o.status === "due") && o.dueAt <= nowIso
+  return loadOccurrences().filter(
+    (o) => (o.status === "scheduled" || o.status === "due") && o.dueAt <= nowIso,
   );
 }
 
@@ -155,22 +152,19 @@ export function appendEvent(event: ReminderEvent): void {
   // Keep only last 90 days of events to avoid quota issues
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - 90);
-  const pruned = events.filter(e => new Date(e.timestamp) >= cutoff);
+  const pruned = events.filter((e) => new Date(e.timestamp) >= cutoff);
   saveToStorage(EVENTS_KEY, [...pruned, event], EVENTS_CHANGED_EVENT);
 }
 
 export function getEventsByReminder(reminderId: string): ReminderEvent[] {
-  return loadEvents().filter(e => e.reminderId === reminderId);
+  return loadEvents().filter((e) => e.reminderId === reminderId);
 }
 
 // ============================================
 // Notification Preferences Storage
 // ============================================
 export function loadNotificationPrefs(): NotificationPreferences {
-  const stored = loadFromStorage<Partial<NotificationPreferences>>(
-    NOTIFICATION_PREFS_KEY,
-    {}
-  );
+  const stored = loadFromStorage<Partial<NotificationPreferences>>(NOTIFICATION_PREFS_KEY, {});
   return { ...DEFAULT_NOTIFICATION_PREFS, ...stored };
 }
 
@@ -203,7 +197,9 @@ export function subscribeToReminderChanges(callback: (reminders: Reminder[]) => 
   return () => window.removeEventListener(REMINDERS_CHANGED_EVENT, handler);
 }
 
-export function subscribeToOccurrenceChanges(callback: (occurrences: ReminderOccurrence[]) => void): () => void {
+export function subscribeToOccurrenceChanges(
+  callback: (occurrences: ReminderOccurrence[]) => void,
+): () => void {
   if (!isBrowser()) return () => {};
 
   const handler = (e: Event) => {

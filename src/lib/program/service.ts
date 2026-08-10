@@ -44,7 +44,7 @@ export const CANONICAL_PROGRESS_KEY = "somna:program-progress:v1";
  */
 export function createInitialProgress(
   programId: ProgramId = DEFAULT_PROGRAM_ID,
-  programVersion: number = 1
+  programVersion: number = 1,
 ): ProgramProgress {
   const now = new Date().toISOString();
   return {
@@ -113,7 +113,7 @@ function createDefaultMilestones(): ProgramMilestone[] {
 export function applyEvent(
   progress: ProgramProgress,
   event: ProgramEvent,
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): ProgramMutationResult {
   switch (event.type) {
     case "program_started":
@@ -153,7 +153,7 @@ function applied(progress: ProgramProgress): ProgramMutationResult {
 
 function blocked(
   progress: ProgramProgress,
-  reason: ProgramMutationBlockReason
+  reason: ProgramMutationBlockReason,
 ): ProgramMutationResult {
   return { status: "blocked", reason, progress };
 }
@@ -181,7 +181,7 @@ function isMutationAllowed(progress: ProgramProgress): boolean {
 function handleProgramStarted(
   progress: ProgramProgress,
   event: ProgramEvent & { type: "program_started" },
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): ProgramMutationResult {
   if (!isValidStatusTransition(progress.status, "active")) {
     return unchanged(progress);
@@ -198,7 +198,7 @@ function handleProgramStarted(
 
 function handleProgramPaused(
   progress: ProgramProgress,
-  event: ProgramEvent & { type: "program_paused" }
+  event: ProgramEvent & { type: "program_paused" },
 ): ProgramMutationResult {
   if (!isValidStatusTransition(progress.status, "paused")) {
     return unchanged(progress);
@@ -212,7 +212,7 @@ function handleProgramPaused(
 
 function handleProgramResumed(
   progress: ProgramProgress,
-  event: ProgramEvent & { type: "program_resumed" }
+  event: ProgramEvent & { type: "program_resumed" },
 ): ProgramMutationResult {
   if (!isValidStatusTransition(progress.status, "active")) {
     return unchanged(progress);
@@ -226,14 +226,14 @@ function handleProgramResumed(
 
 function handleProgramCompleted(
   progress: ProgramProgress,
-  event: ProgramEvent & { type: "program_completed" }
+  event: ProgramEvent & { type: "program_completed" },
 ): ProgramMutationResult {
   if (!isValidStatusTransition(progress.status, "completed")) {
     return unchanged(progress);
   }
   // Earn all remaining milestones
   const milestones = progress.milestones.map((m) =>
-    m.earnedAt ? m : { ...m, earnedAt: event.timestamp }
+    m.earnedAt ? m : { ...m, earnedAt: event.timestamp },
   );
   return applied({
     ...progress,
@@ -247,7 +247,7 @@ function handleProgramCompleted(
 function handleLessonCompleted(
   progress: ProgramProgress,
   event: ProgramEvent & { type: "lesson_completed" },
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): ProgramMutationResult {
   // Paused-state invariant: progress mutations are blocked when paused.
   if (!isMutationAllowed(progress)) {
@@ -275,25 +275,22 @@ function handleLessonCompleted(
     progress.milestones,
     tempProgress,
     definition,
-    event.timestamp
+    event.timestamp,
   );
 
   // Update current week
   const currentWeekId = updateCurrentWeekId(
     progress.currentWeekId ?? event.weekId,
     completedLessonIds,
-    definition
+    definition,
   );
 
   // Check if program is now complete
   const totalLessons = definition.lessons.length;
   const allDone = completedLessonIds.length >= totalLessons && totalLessons > 0;
-  const newStatus: ProgramStatus =
-    allDone && baseStatus === "active" ? "completed" : baseStatus;
+  const newStatus: ProgramStatus = allDone && baseStatus === "active" ? "completed" : baseStatus;
   const completedAt =
-    allDone && progress.completedAt === null
-      ? event.timestamp
-      : progress.completedAt;
+    allDone && progress.completedAt === null ? event.timestamp : progress.completedAt;
 
   return applied({
     ...progress,
@@ -310,7 +307,7 @@ function handleLessonCompleted(
 function handleLessonUncompleted(
   progress: ProgramProgress,
   event: ProgramEvent & { type: "lesson_uncompleted" },
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): ProgramMutationResult {
   // Paused-state invariant: progress mutations are blocked when paused.
   if (!isMutationAllowed(progress)) {
@@ -321,20 +318,14 @@ function handleLessonUncompleted(
     return unchanged(progress);
   }
 
-  const completedLessonIds = progress.completedLessonIds.filter(
-    (id) => id !== event.lessonId
-  );
+  const completedLessonIds = progress.completedLessonIds.filter((id) => id !== event.lessonId);
 
   // Re-check milestones (some may no longer be earned)
   const tempProgress: ProgramProgress = {
     ...progress,
     completedLessonIds,
   };
-  const milestones = recalculateMilestones(
-    progress.milestones,
-    tempProgress,
-    definition
-  );
+  const milestones = recalculateMilestones(progress.milestones, tempProgress, definition);
 
   // Revert from completed → active if not all done anymore
   const totalLessons = definition.lessons.length;
@@ -355,7 +346,7 @@ function handleLessonUncompleted(
 
 function handleLessonSkipped(
   progress: ProgramProgress,
-  event: ProgramEvent & { type: "lesson_skipped" }
+  event: ProgramEvent & { type: "lesson_skipped" },
 ): ProgramMutationResult {
   // Paused-state invariant: progress mutations are blocked when paused.
   if (!isMutationAllowed(progress)) {
@@ -374,7 +365,7 @@ function handleLessonSkipped(
 
 function handleLessonUnskipped(
   progress: ProgramProgress,
-  event: ProgramEvent & { type: "lesson_unskipped" }
+  event: ProgramEvent & { type: "lesson_unskipped" },
 ): ProgramMutationResult {
   // Paused-state invariant: progress mutations are blocked when paused.
   if (!isMutationAllowed(progress)) {
@@ -386,16 +377,14 @@ function handleLessonUnskipped(
   }
   return applied({
     ...progress,
-    skippedLessonIds: progress.skippedLessonIds.filter(
-      (id) => id !== event.lessonId
-    ),
+    skippedLessonIds: progress.skippedLessonIds.filter((id) => id !== event.lessonId),
     updatedAt: event.timestamp,
   });
 }
 
 function handleWeeklyPlanAccepted(
   progress: ProgramProgress,
-  event: ProgramEvent & { type: "weekly_plan_accepted" }
+  event: ProgramEvent & { type: "weekly_plan_accepted" },
 ): ProgramMutationResult {
   // Paused-state invariant: progress mutations are blocked when paused.
   if (!isMutationAllowed(progress)) {
@@ -414,7 +403,7 @@ function handleWeeklyPlanAccepted(
 
 function handleWeeklyPlanDismissed(
   progress: ProgramProgress,
-  event: ProgramEvent & { type: "weekly_plan_dismissed" }
+  event: ProgramEvent & { type: "weekly_plan_dismissed" },
 ): ProgramMutationResult {
   // Paused-state invariant: progress mutations are blocked when paused.
   if (!isMutationAllowed(progress)) {
@@ -427,17 +416,14 @@ function handleWeeklyPlanDismissed(
   }
   return applied({
     ...progress,
-    dismissedRecommendationIds: [
-      ...progress.dismissedRecommendationIds,
-      dismissedId,
-    ],
+    dismissedRecommendationIds: [...progress.dismissedRecommendationIds, dismissedId],
     updatedAt: event.timestamp,
   });
 }
 
 function handleMilestoneEarned(
   progress: ProgramProgress,
-  event: ProgramEvent & { type: "milestone_earned" }
+  event: ProgramEvent & { type: "milestone_earned" },
 ): ProgramMutationResult {
   // Paused-state invariant: progress mutations are blocked when paused.
   if (!isMutationAllowed(progress)) {
@@ -451,7 +437,7 @@ function handleMilestoneEarned(
   return applied({
     ...progress,
     milestones: progress.milestones.map((m) =>
-      m.id === event.milestoneId ? { ...m, earnedAt: event.timestamp } : m
+      m.id === event.milestoneId ? { ...m, earnedAt: event.timestamp } : m,
     ),
     updatedAt: event.timestamp,
   });
@@ -469,7 +455,7 @@ function updateMilestones(
   current: ProgramMilestone[],
   progress: ProgramProgress,
   definition: ProgramDefinition,
-  timestamp: string
+  timestamp: string,
 ): ProgramMilestone[] {
   return current.map((m) => {
     if (m.earnedAt) return m; // already earned
@@ -490,15 +476,14 @@ function updateMilestones(
 function recalculateMilestones(
   current: ProgramMilestone[],
   progress: ProgramProgress,
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): ProgramMilestone[] {
   return current.map((m) => {
     if (!m.weekId) return m;
-    const isComplete =
-      getWeekAccessStatus(progress, m.weekId, definition) === "completed";
+    const isComplete = getWeekAccessStatus(progress, m.weekId, definition) === "completed";
     return {
       ...m,
-      earnedAt: isComplete ? m.earnedAt ?? new Date().toISOString() : null,
+      earnedAt: isComplete ? (m.earnedAt ?? new Date().toISOString()) : null,
     };
   });
 }
@@ -514,23 +499,19 @@ function recalculateMilestones(
 function updateCurrentWeekId(
   current: string,
   completedLessonIds: string[],
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): string {
   const currentWeek = definition.weeks.find((w) => w.id === current);
   if (!currentWeek) return current;
 
-  const currentDone = currentWeek.lessonIds.filter((id) =>
-    completedLessonIds.includes(id)
-  ).length;
+  const currentDone = currentWeek.lessonIds.filter((id) => completedLessonIds.includes(id)).length;
 
   if (currentDone < currentWeek.lessonIds.length) {
     return current; // still working on current week
   }
 
   // Try to advance to next week
-  const nextWeek = definition.weeks.find(
-    (w) => w.order === currentWeek.order + 1
-  );
+  const nextWeek = definition.weeks.find((w) => w.order === currentWeek.order + 1);
   return nextWeek?.id ?? current;
 }
 
@@ -549,9 +530,7 @@ export interface LegacyProgramProgress {
 /**
  * Check if a value looks like the legacy progress format.
  */
-export function isLegacyProgress(
-  raw: unknown
-): raw is LegacyProgramProgress {
+export function isLegacyProgress(raw: unknown): raw is LegacyProgramProgress {
   return (
     typeof raw === "object" &&
     raw !== null &&
@@ -567,7 +546,7 @@ export function isLegacyProgress(
  */
 export function migrateLegacyProgress(
   raw: unknown,
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): ProgramProgress {
   const initial = createInitialProgress();
 
@@ -575,7 +554,7 @@ export function migrateLegacyProgress(
   if (isLegacyProgress(raw)) {
     // Filter to only valid lesson IDs
     const validLessonIds = raw.completedLessons.filter((slug: string) =>
-      definition.lessons.some((l) => l.id === slug)
+      definition.lessons.some((l) => l.id === slug),
     );
 
     if (validLessonIds.length === 0) {
@@ -591,9 +570,7 @@ export function migrateLegacyProgress(
     // Find current week
     let currentWeekId: string | null = null;
     for (const week of definition.weeks) {
-      const weekDone = week.lessonIds.filter((id) =>
-        validLessonIds.includes(id)
-      ).length;
+      const weekDone = week.lessonIds.filter((id) => validLessonIds.includes(id)).length;
       if (weekDone < week.lessonIds.length) {
         currentWeekId = week.id;
         break;
@@ -606,12 +583,7 @@ export function migrateLegacyProgress(
       status,
       completedLessonIds: validLessonIds,
     };
-    const milestones = updateMilestones(
-      initial.milestones,
-      tempProgress,
-      definition,
-      now
-    );
+    const milestones = updateMilestones(initial.milestones, tempProgress, definition, now);
 
     return {
       ...initial,
@@ -658,10 +630,5 @@ export function migrateLegacyProgress(
 }
 
 function isValidStatus(s: unknown): s is ProgramStatus {
-  return (
-    s === "not_started" ||
-    s === "active" ||
-    s === "paused" ||
-    s === "completed"
-  );
+  return s === "not_started" || s === "active" || s === "paused" || s === "completed";
 }

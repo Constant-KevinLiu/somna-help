@@ -1,9 +1,9 @@
 /**
  * Sleep Diary v2.3 - Spanish Authentication Content
- * 
+ *
  * Natively authored Spanish content for the authentication modal.
  * NOT translated from English.
- * 
+ *
  * Tone: calm, professional, warm, privacy-conscious
  */
 
@@ -23,7 +23,8 @@ export const authCopyEs: ContentPackage<AuthCopy> = {
   content: {
     modal: {
       title: "Sincroniza Tu Recorrido de Sueño",
-      subtitle: "Mantén tus registros de sueño y reflexiones seguros, y continúa en cualquier dispositivo.",
+      subtitle:
+        "Mantén tus registros de sueño y reflexiones seguros, y continúa en cualquier dispositivo.",
       privacyNote: "No necesitas contraseña. Tus datos privados de sueño permanecen privados.",
     },
     emailForm: {
@@ -34,7 +35,8 @@ export const authCopyEs: ContentPackage<AuthCopy> = {
     },
     otpForm: {
       title: "Revisa tu correo",
-      instructions: "Enviamos un código de verificación de 6 dígitos a tu correo. Introdúcelo a continuación para continuar.",
+      instructions:
+        "Enviamos un código de verificación de 6 dígitos a tu correo. Introdúcelo a continuación para continuar.",
       codeLabel: "Código de verificación",
       verifyButton: "Verificar y continuar",
       verifying: "Verificando...",
@@ -54,7 +56,8 @@ export const authCopyEs: ContentPackage<AuthCopy> = {
       rateLimited: "Demasiadas solicitudes. Por favor, inténtalo más tarde.",
       networkError: "Problema de conexión. Comprueba tu internet e inténtalo de nuevo.",
       unknownError: "Algo salió mal. Por favor, inténtalo de nuevo.",
-      emailSendFailed: "No pudimos enviar el correo de verificación. Por favor, inténtalo de nuevo.",
+      emailSendFailed:
+        "No pudimos enviar el correo de verificación. Por favor, inténtalo de nuevo.",
     },
     identityMenu: {
       syncProgress: "Sincronizar Progreso",
@@ -81,7 +84,8 @@ export const authCopyEs: ContentPackage<AuthCopy> = {
     },
     accountExport: {
       title: "Exporta Tus Datos",
-      description: "Descarga una copia completa de tus registros de sueño, reflexiones y configuraciones como un archivo JSON privado.",
+      description:
+        "Descarga una copia completa de tus registros de sueño, reflexiones y configuraciones como un archivo JSON privado.",
       button: "Descargar Datos",
       downloading: "Preparando descarga...",
       successMessage: "Tus datos han sido exportados exitosamente.",
@@ -97,7 +101,8 @@ export const authCopyEs: ContentPackage<AuthCopy> = {
     accountDelete: {
       title: "Elimina Tus Datos",
       warning: "Esta acción no se puede deshacer.",
-      explanation: "Elimina permanentemente todos tus datos de sueño, reflexiones y configuraciones de nuestros servidores. Tus datos locales también serán borrados.",
+      explanation:
+        "Elimina permanentemente todos tus datos de sueño, reflexiones y configuraciones de nuestros servidores. Tus datos locales también serán borrados.",
       confirmButton: "Eliminar Todos Mis Datos",
       cancelButton: "Cancelar",
       confirmationPlaceholder: 'Escribe "DELETE_MY_SLEEP_DATA" para confirmar',

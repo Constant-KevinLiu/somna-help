@@ -153,13 +153,7 @@ describe("date-ranges", () => {
   describe("enumerateDates", () => {
     it("returns all dates in range inclusive", () => {
       const dates = enumerateDates("2024-01-01", "2024-01-05");
-      expect(dates).toEqual([
-        "2024-01-01",
-        "2024-01-02",
-        "2024-01-03",
-        "2024-01-04",
-        "2024-01-05",
-      ]);
+      expect(dates).toEqual(["2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04", "2024-01-05"]);
     });
 
     it("returns single day for same start/end", () => {

@@ -1,11 +1,47 @@
 /**
  * Sleep Diary v2.3 - Authentication Types
- * 
+ *
  * Types for passwordless OTP authentication and session management.
  * All content follows multi-native language principles - no English fallback.
  */
 
+import type { D1Database, SendEmail, R2Bucket } from "@cloudflare/workers-types";
+
 export type Locale = "en" | "es" | "pt-BR" | "pl";
+
+// =============================================================================
+// Worker Environment Types
+// =============================================================================
+
+/**
+ * Canonical Cloudflare Worker environment type.
+ * Covers all bindings declared in wrangler.jsonc.
+ * Used as the single source of truth for env typing across the server.
+ */
+export interface WorkerEnv {
+  DB?: D1Database;
+  EMAIL?: SendEmail;
+  SHARE_BUCKET?: R2Bucket;
+  TURNSTILE_SECRET_KEY?: string;
+}
+
+/**
+ * Auth-specific environment bindings.
+ * Superset of what auth handlers need (DB + EMAIL).
+ */
+export interface AuthEnv {
+  DB?: D1Database;
+  EMAIL?: SendEmail;
+}
+
+/**
+ * Standard request context passed to all auth handlers.
+ */
+export interface RequestContext {
+  request: Request;
+  env: AuthEnv;
+  ctx: unknown;
+}
 
 // =============================================================================
 // User Types
@@ -77,9 +113,9 @@ export interface OTPVerifyData {
   intent?: AuthIntent;
 }
 
-export type AuthIntent = 
+export type AuthIntent =
   | "sync_diary"
-  | "save_reflection" 
+  | "save_reflection"
   | "enable_reminders"
   | "restore_history"
   | "export_data"
@@ -143,7 +179,7 @@ export const OTP_CONFIG = {
 // Error Types
 // =============================================================================
 
-export type AuthErrorCode = 
+export type AuthErrorCode =
   | "invalid_email"
   | "code_expired"
   | "code_invalid"

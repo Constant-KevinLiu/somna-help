@@ -14,24 +14,27 @@
 export function isBrowser(): boolean {
   // Check for actual browser window, not Node.js or other environments
   // Using multiple checks to avoid false positives in test environments
-  return typeof window !== "undefined" &&
+  return (
+    typeof window !== "undefined" &&
     typeof window.document !== "undefined" &&
     typeof window.localStorage !== "undefined" &&
     // This ensures we're in a real browser context, not a jsdom or node environment
     window.navigator?.userAgent?.length > 0 &&
-    !window.navigator.userAgent.includes("Node.js");
+    !window.navigator.userAgent.includes("Node.js")
+  );
 }
 
 export function isDocumentAvailable(): boolean {
-  return typeof document !== "undefined" &&
-    typeof document.cookie === "string";
+  return typeof document !== "undefined" && typeof document.cookie === "string";
 }
 
 export function isNavigatorAvailable(): boolean {
-  return typeof navigator !== "undefined" &&
+  return (
+    typeof navigator !== "undefined" &&
     typeof navigator.userAgent === "string" &&
     navigator.userAgent.length > 0 &&
-    !navigator.userAgent.includes("Node.js");
+    !navigator.userAgent.includes("Node.js")
+  );
 }
 
 export function isBroadcastChannelSupported(): boolean {
@@ -52,7 +55,7 @@ export function isNotificationSupported(): boolean {
 export function safeJsonParse<T>(
   json: string | null,
   defaultValue: T,
-  options?: { devWarn?: boolean }
+  options?: { devWarn?: boolean },
 ): T {
   if (!json) return defaultValue;
 
@@ -76,7 +79,7 @@ export function safeJsonParse<T>(
 export function safeLocalStorageGet<T>(
   key: string,
   defaultValue: T,
-  options?: { devWarn?: boolean }
+  options?: { devWarn?: boolean },
 ): T {
   if (!isBrowser()) return defaultValue;
 
@@ -98,7 +101,7 @@ export function safeLocalStorageGet<T>(
 export function safeLocalStorageSet(
   key: string,
   value: unknown,
-  options?: { dispatchEvent?: string; devWarn?: boolean }
+  options?: { dispatchEvent?: string; devWarn?: boolean },
 ): void {
   if (!isBrowser()) return;
 
@@ -107,9 +110,7 @@ export function safeLocalStorageSet(
     window.localStorage.setItem(key, serialized);
 
     if (options?.dispatchEvent) {
-      window.dispatchEvent(
-        new CustomEvent(options.dispatchEvent, { detail: value })
-      );
+      window.dispatchEvent(new CustomEvent(options.dispatchEvent, { detail: value }));
     }
   } catch (error) {
     if (options?.devWarn) {
@@ -134,7 +135,7 @@ export function safeLocalStorageRemove(key: string): void {
 // ============================================
 // Broadcast Channel Helper
 // ============================================
-let sharedChannels: Map<string, BroadcastChannel> = new Map();
+const sharedChannels: Map<string, BroadcastChannel> = new Map();
 
 /**
  * Get or create a shared BroadcastChannel instance.

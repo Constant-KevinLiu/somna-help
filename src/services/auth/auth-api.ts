@@ -10,7 +10,6 @@
  * with a stable code is returned (never success).
  */
 
-import type { D1Database, SendEmail } from "@cloudflare/workers-types";
 import {
   createUser,
   findUserByEmail,
@@ -40,23 +39,8 @@ import {
   isExpired,
 } from "./auth-utils";
 import { sendOTPEmail } from "./auth-mailer";
-import type { Locale, AuthIntent, SessionState } from "./auth-types";
+import type { Locale, AuthIntent, SessionState, AuthEnv, RequestContext } from "./auth-types";
 import { AUTH_COOKIE_NAME, COOKIE_OPTIONS, OTP_CONFIG } from "./auth-types";
-
-// =============================================================================
-// Types
-// =============================================================================
-
-interface AuthEnv {
-  DB?: D1Database;
-  EMAIL?: SendEmail;
-}
-
-type RequestContext = {
-  request: Request;
-  env: AuthEnv;
-  ctx: unknown;
-};
 
 function json(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -172,7 +156,9 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
   const existingChallenge = await findLatestOTPChallenge(env, emailNormalized);
   if (existingChallenge) {
     const createdAt = new Date(existingChallenge.createdAt);
-    const cooldownEnd = new Date(createdAt.getTime() + OTP_CONFIG.MIN_REQUEST_INTERVAL_SECONDS * 1000);
+    const cooldownEnd = new Date(
+      createdAt.getTime() + OTP_CONFIG.MIN_REQUEST_INTERVAL_SECONDS * 1000,
+    );
     if (cooldownEnd > new Date()) {
       const waitSeconds = Math.ceil((cooldownEnd.getTime() - Date.now()) / 1000);
       return json(429, {
@@ -200,7 +186,7 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
         status: "failed",
         errorCode: "AUTH_STORAGE_FAILED",
         requestId,
-      })
+      }),
     );
     return json(500, { success: false, error: "server_error" });
   }
@@ -225,7 +211,7 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
           stage: "otp_cleanup",
           status: "cleanup_failed",
           requestId,
-        })
+        }),
       );
     }
 

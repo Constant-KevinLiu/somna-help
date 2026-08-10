@@ -22,9 +22,15 @@ beforeEach(() => {
   mockStorage.clear();
   const mockLocalStorage: Storage = {
     getItem: (key: string) => mockStorage.get(key) ?? null,
-    setItem: (key: string, value: string) => { mockStorage.set(key, value); },
-    removeItem: (key: string) => { mockStorage.delete(key); },
-    clear: () => { mockStorage.clear(); },
+    setItem: (key: string, value: string) => {
+      mockStorage.set(key, value);
+    },
+    removeItem: (key: string) => {
+      mockStorage.delete(key);
+    },
+    clear: () => {
+      mockStorage.clear();
+    },
     key: (index: number) => Array.from(mockStorage.keys())[index] ?? null,
     length: 0,
   };
@@ -278,7 +284,9 @@ describe("program/weekly-plan storage", () => {
       weekEnd: "2026-01-05",
       recommendedLessonIds: [validLessonId],
     };
-    expect(() => saveWeeklyPlan(badPlan, definition)).toThrow(/weekStart.*before.*weekEnd|weekStart.*on or before/);
+    expect(() => saveWeeklyPlan(badPlan, definition)).toThrow(
+      /weekStart.*before.*weekEnd|weekStart.*on or before/,
+    );
   });
 
   it("saveWeeklyPlan rejects plan with invalid date format", () => {

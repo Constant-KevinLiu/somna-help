@@ -44,12 +44,8 @@ export function ProgramUnsupportedBanner({ compact = false }: Props) {
       >
         <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-foreground/90">
-            {ui.unsupportedDashLabel}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {ui.unsupportedTitle}
-          </p>
+          <p className="text-sm font-medium text-foreground/90">{ui.unsupportedDashLabel}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{ui.unsupportedTitle}</p>
         </div>
       </div>
     );
@@ -67,9 +63,7 @@ export function ProgramUnsupportedBanner({ compact = false }: Props) {
             <AlertTriangle className="h-5 w-5 text-accent" />
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="font-display text-lg text-foreground">
-              {ui.unsupportedTitle}
-            </h2>
+            <h2 className="font-display text-lg text-foreground">{ui.unsupportedTitle}</h2>
             <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {ui.unsupportedBody}
             </p>

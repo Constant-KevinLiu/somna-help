@@ -16,9 +16,8 @@ import type {
   WeeklyReflectionPrompt,
   WeeklyReflectionResponse,
 } from "@/lib/weekly-reflection/types";
-import {
-  selectWeeklyPrompts,
-} from "@/lib/weekly-reflection/prompts";
+import type { Locale } from "@/content/content-types";
+import { selectWeeklyPrompts } from "@/lib/weekly-reflection/prompts";
 import {
   getWeeklyReflectionByWeek,
   saveWeeklyReflection,
@@ -74,9 +73,7 @@ export function WeeklyReflectionFlow({
     }
 
     // Generate prompts for this week's data
-    const weekRecords = records.filter(
-      (r) => r.date >= weekStartStr && r.date <= weekEndStr,
-    );
+    const weekRecords = records.filter((r) => r.date >= weekStartStr && r.date <= weekEndStr);
     const selectedPrompts = selectWeeklyPrompts(weekRecords, habitProgress, weekStartStr);
     setPrompts(selectedPrompts);
   }, [weekStartStr, weekEndStr, records, habitProgress]);
@@ -119,7 +116,7 @@ export function WeeklyReflectionFlow({
             weekStart: weekStartStr,
             weekEnd: weekEndStr,
             timezone: getLocalTimezone(),
-            locale: locale as any,
+            locale: locale as Locale,
             responses: responseList,
             wordCount: calculateWordCount(responseList),
             createdAt: now,
@@ -148,9 +145,7 @@ export function WeeklyReflectionFlow({
     setIsEditing(false);
   };
 
-  const hasAnyResponse = Object.values(responses).some(
-    (v) => v.trim().length > 0,
-  );
+  const hasAnyResponse = Object.values(responses).some((v) => v.trim().length > 0);
 
   const totalWords = Object.values(responses).reduce(
     (count, text) => count + (text.trim() ? text.trim().split(/\s+/).length : 0),
@@ -160,20 +155,13 @@ export function WeeklyReflectionFlow({
   const showSaved = savedReflection && !isEditing;
 
   return (
-    <div
-      className={cn(
-        "glass-strong rounded-3xl p-6 md:p-8 animate-fade-up",
-        className,
-      )}
-    >
+    <div className={cn("glass-strong rounded-3xl p-6 md:p-8 animate-fade-up", className)}>
       <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
         <BookOpen className="h-3.5 w-3.5 text-accent" />
         {t("reflection.weekly.title")}
       </div>
 
-      <p className="mt-1 text-sm text-muted-foreground">
-        {t("reflection.weekly.subtitle")}
-      </p>
+      <p className="mt-1 text-sm text-muted-foreground">{t("reflection.weekly.subtitle")}</p>
 
       {/* Saved view */}
       {showSaved && (
@@ -182,7 +170,10 @@ export function WeeklyReflectionFlow({
             const prompt = prompts.find((p) => p.id === resp.promptId);
             if (!prompt) return null;
             return (
-              <div key={resp.promptId} className="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div
+                key={resp.promptId}
+                className="rounded-2xl border border-white/10 bg-white/5 p-4"
+              >
                 <div className="text-xs uppercase tracking-wider text-accent/80">
                   {idx + 1}. {t(prompt.textKey)}
                 </div>
@@ -222,9 +213,7 @@ export function WeeklyReflectionFlow({
       {/* Edit / new view */}
       {!showSaved && prompts.length > 0 && (
         <div className="mt-5">
-          <p className="text-sm text-foreground/80 mb-4">
-            {t("reflection.weekly.intro")}
-          </p>
+          <p className="text-sm text-foreground/80 mb-4">{t("reflection.weekly.intro")}</p>
 
           {/* Progress */}
           <div className="mb-4 flex items-center justify-between text-xs text-muted-foreground">
@@ -313,9 +302,7 @@ export function WeeklyReflectionFlow({
 
       {/* Empty state (no prompts — shouldn't happen but safe) */}
       {prompts.length === 0 && !showSaved && (
-        <p className="mt-4 text-sm text-muted-foreground">
-          {t("reflection.weekly.empty")}
-        </p>
+        <p className="mt-4 text-sm text-muted-foreground">{t("reflection.weekly.empty")}</p>
       )}
     </div>
   );

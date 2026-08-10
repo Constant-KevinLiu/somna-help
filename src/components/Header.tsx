@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { Menu, X, Moon, ChevronDown } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { LANG_PREFIX } from "@/lib/lang-detect";
+import type { SupportedLocale } from "@/lib/locale-registry";
+import { uiLocaleToContentLocale } from "@/content/content-types";
 import { getCalcDict } from "@/lib/calc-i18n";
 import { getCbtiDict, CBTI_SLUGS, cbtiPath } from "@/lib/cbti-i18n";
 import { getLearnDict, LEARN_SLUGS, learnPath } from "@/lib/learn-i18n";
@@ -14,7 +16,9 @@ import { IdentityMenu } from "@/components/IdentityMenu";
 // (1:1 mapping) para que switchRouteLang() pueda hacer el intercambio de
 // prefijo de forma fiable. Los textos del menú sí son nativos en cada
 // idioma (vía useI18n).
-const NAV_BY_LANG = {
+type NavItem = { to: string; key: `nav.${string}` };
+
+const NAV_BY_LANG: Record<SupportedLocale, NavItem[]> = {
   en: [
     { to: "/", key: "nav.home" as const },
     { to: "/program", key: "nav.program" as const },
@@ -63,15 +67,24 @@ const NAV_BY_LANG = {
     { to: "/relax", key: "nav.relax" as const },
     { to: "/reminders", key: "nav.reminders" as const },
   ],
+  ja: [
+    { to: "/", key: "nav.home" as const },
+    { to: "/program", key: "nav.program" as const },
+    { to: "/assessment", key: "nav.assessment" as const },
+    { to: "/diary", key: "nav.diary" as const },
+    { to: "/relax", key: "nav.relax" as const },
+    { to: "/reminders", key: "nav.reminders" as const },
+  ],
 };
 
-const DASHBOARD_BY_LANG = {
-  en: { to: "/dashboard", key: "nav.dashboard" as const },
-  es: { to: "/es/panel", key: "nav.dashboard" as const },
-  pt: { to: "/pt/painel", key: "nav.dashboard" as const },
-  pl: { to: "/pl/dashboard", key: "nav.dashboard" as const },
-  zh: { to: "/dashboard", key: "nav.dashboard" as const },
-  de: { to: "/dashboard", key: "nav.dashboard" as const },
+const DASHBOARD_BY_LANG: Record<SupportedLocale, { to: string; key: "nav.dashboard" }> = {
+  en: { to: "/dashboard", key: "nav.dashboard" },
+  es: { to: "/es/panel", key: "nav.dashboard" },
+  pt: { to: "/pt/painel", key: "nav.dashboard" },
+  pl: { to: "/pl/dashboard", key: "nav.dashboard" },
+  zh: { to: "/dashboard", key: "nav.dashboard" },
+  de: { to: "/dashboard", key: "nav.dashboard" },
+  ja: { to: "/dashboard", key: "nav.dashboard" },
 };
 
 export function Header() {
@@ -329,7 +342,7 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <IdentityMenu locale={lang} />
+            <IdentityMenu locale={uiLocaleToContentLocale(lang)} />
             <LanguageSwitcher
               onBeforeChange={async () => {
                 if (open) {

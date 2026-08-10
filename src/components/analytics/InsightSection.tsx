@@ -26,12 +26,7 @@ export function InsightSection({ insights, t, onInsightAction }: InsightSectionP
       {insights.length > 0 ? (
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
           {insights.map((insight) => (
-            <InsightCard
-              key={insight.id}
-              insight={insight}
-              t={t}
-              onAction={onInsightAction}
-            />
+            <InsightCard key={insight.id} insight={insight} t={t} onAction={onInsightAction} />
           ))}
         </div>
       ) : (

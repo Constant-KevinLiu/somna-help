@@ -34,11 +34,35 @@ const phases = [
 
 const catLabels: Record<
   RelaxCategory,
-  { en: string; zh: string; es: string; pt: string; pl: string }
+  { en: string; zh: string; es: string; pt: string; pl: string; de: string; ja: string }
 > = {
-  guided: { en: "Guided", zh: "引导", es: "Guiada", pt: "Guiada", pl: "Prowadzona" },
-  nature: { en: "Nature", zh: "自然", es: "Naturaleza", pt: "Natureza", pl: "Natura" },
-  noise: { en: "Noise", zh: "噪音", es: "Ruido", pt: "Ruído", pl: "Szum" },
+  guided: {
+    en: "Guided",
+    zh: "引导",
+    es: "Guiada",
+    pt: "Guiada",
+    pl: "Prowadzona",
+    de: "Guided",
+    ja: "Guided",
+  },
+  nature: {
+    en: "Nature",
+    zh: "自然",
+    es: "Naturaleza",
+    pt: "Natureza",
+    pl: "Natura",
+    de: "Nature",
+    ja: "Nature",
+  },
+  noise: {
+    en: "Noise",
+    zh: "噪音",
+    es: "Ruido",
+    pt: "Ruído",
+    pl: "Szum",
+    de: "Noise",
+    ja: "Noise",
+  },
 };
 
 const catIcon = { guided: Heart, nature: Wind, noise: Music } as const;

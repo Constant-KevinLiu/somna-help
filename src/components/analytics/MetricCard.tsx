@@ -55,10 +55,7 @@ export function MetricCard({
   if (isLoading) {
     return (
       <div
-        className={cn(
-          "rounded-2xl border border-white/10 bg-white/5 p-5 animate-pulse",
-          className,
-        )}
+        className={cn("rounded-2xl border border-white/10 bg-white/5 p-5 animate-pulse", className)}
       >
         <div className="h-4 w-20 rounded bg-white/10" />
         <div className="mt-2 h-8 w-16 rounded bg-white/10" />
@@ -75,17 +72,13 @@ export function MetricCard({
       role="group"
       aria-label={`${label}: ${value}${unit ? ` ${unit}` : ""}`}
     >
-      <div className="text-xs uppercase tracking-wider text-muted-foreground">
-        {label}
-      </div>
+      <div className="text-xs uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-2 flex items-baseline gap-1">
         <span className="font-display text-3xl text-gradient">{value}</span>
         {unit && <span className="text-xs text-muted-foreground">{unit}</span>}
       </div>
       {trend && trendIcon()}
-      {subValue && (
-        <div className="mt-1 text-xs text-muted-foreground">{subValue}</div>
-      )}
+      {subValue && <div className="mt-1 text-xs text-muted-foreground">{subValue}</div>}
     </div>
   );
 }

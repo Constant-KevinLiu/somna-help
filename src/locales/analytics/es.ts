@@ -18,8 +18,7 @@ export const analyticsEs: Dict = {
   "analytics.window.lastMonth": "Mes pasado",
 
   // Sufficiency
-  "analytics.sufficiency.none":
-    "Empieza a registrar tu sueño para ver tus patrones.",
+  "analytics.sufficiency.none": "Empieza a registrar tu sueño para ver tus patrones.",
   "analytics.sufficiency.insufficient":
     "Sigue registrando unos días más para ver un patrón más claro.",
   "analytics.sufficiency.limited":
@@ -83,41 +82,33 @@ export const analyticsEs: Dict = {
     "Tu eficiencia de sueño está mejorando",
   "analytics.insight.trend.improving.sleepEfficiency.body":
     "Tu eficiencia de sueño ha tendido al alza recientemente. Esto sugiere que tu sueño se está volviendo más reparador. Sigue con lo que funciona.",
-  "analytics.insight.trend.declining.sleepEfficiency.title":
-    "Tu eficiencia de sueño ha bajado",
+  "analytics.insight.trend.declining.sleepEfficiency.title": "Tu eficiencia de sueño ha bajado",
   "analytics.insight.trend.declining.sleepEfficiency.body":
     "Tu eficiencia de sueño ha sido menor recientemente. Es una observación, no un diagnóstico — muchos factores afectan cómo dormimos de una semana a otra.",
 
-  "analytics.insight.trend.improving.totalSleepTime.title":
-    "Estás durmiendo más",
+  "analytics.insight.trend.improving.totalSleepTime.title": "Estás durmiendo más",
   "analytics.insight.trend.improving.totalSleepTime.body":
     "Tu tiempo total de sueño ha aumentado. Más horas de sueño reparador pueden marcar una diferencia notable en cómo te sientes durante el día.",
-  "analytics.insight.trend.declining.totalSleepTime.title":
-    "Tu sueño total ha disminuido",
+  "analytics.insight.trend.declining.totalSleepTime.title": "Tu sueño total ha disminuido",
   "analytics.insight.trend.declining.totalSleepTime.body":
     "Tu tiempo total de sueño ha sido más corto recientemente. Vale la pena observarlo — los cambios en la rutina, el estrés o el horario influyen.",
 
-  "analytics.insight.trend.improving.sleepOnsetLatency.title":
-    "Te estás durmiendo más rápido",
+  "analytics.insight.trend.improving.sleepOnsetLatency.title": "Te estás durmiendo más rápido",
   "analytics.insight.trend.improving.sleepOnsetLatency.body":
     "Estás tardando menos en quedarte dormido. Es una buena señal — tu rutina de relajación puede estar ayudando.",
-  "analytics.insight.trend.declining.sleepOnsetLatency.title":
-    "Estás tardando más en dormirte",
+  "analytics.insight.trend.declining.sleepOnsetLatency.title": "Estás tardando más en dormirte",
   "analytics.insight.trend.declining.sleepOnsetLatency.body":
     "Has tardado más en quedarte dormido recientemente. Pensamientos acelerados, pantallas antes de dormir o cambios en la rutina pueden contribuir.",
 
-  "analytics.insight.trend.improving.sleepRegularity.title":
-    "Tu horario de sueño es más regular",
+  "analytics.insight.trend.improving.sleepRegularity.title": "Tu horario de sueño es más regular",
   "analytics.insight.trend.improving.sleepRegularity.body":
     "Tu hora de dormir y despertar ha sido más consistente. Un horario regular es uno de los pilares del sueño saludable.",
-  "analytics.insight.trend.declining.sleepRegularity.title":
-    "Tu horario ha sido más variable",
+  "analytics.insight.trend.declining.sleepRegularity.title": "Tu horario ha sido más variable",
   "analytics.insight.trend.declining.sleepRegularity.body":
     "Tu hora de dormir y despertar ha variado más recientemente. Es normal en semanas ocupadas — pequeños ajustes pueden recuperar la consistencia.",
 
   // Insight — Patterns
-  "analytics.insight.pattern.weekend_bedtime_later.title":
-    "Más tarde los fines de semana",
+  "analytics.insight.pattern.weekend_bedtime_later.title": "Más tarde los fines de semana",
   "analytics.insight.pattern.weekend_bedtime_later.body":
     "Tu hora de dormir se desplaza los fines de semana. El jet lag social — incluso un cambio pequeño — puede afectar cómo te sientes al empezar la semana.",
   "analytics.insight.pattern.weekend_waketime_later.title":
@@ -125,18 +116,15 @@ export const analyticsEs: Dict = {
   "analytics.insight.pattern.weekend_waketime_later.body":
     "Sueles despertarte más tarde los fines de semana. Dormir más de una hora más puede retrasar tu reloj corporativo y hacer que los lunes sean más difíciles.",
 
-  "analytics.insight.pattern.consistent_wake_time.title":
-    "Hora de despertar consistente",
+  "analytics.insight.pattern.consistent_wake_time.title": "Hora de despertar consistente",
   "analytics.insight.pattern.consistent_wake_time.body":
     "Tu hora de despertar ha sido muy estable. Una hora de despertar consistente es una de las formas más efectivas de fortalecer tu ritmo circadiano — excelente trabajo.",
 
-  "analytics.insight.pattern.variable_bedtime.title":
-    "Tu hora de dormir varía mucho",
+  "analytics.insight.pattern.variable_bedtime.title": "Tu hora de dormir varía mucho",
   "analytics.insight.pattern.variable_bedtime.body":
     "Tu hora de dormir ha sido muy diferente de noche a noche. Intenta observarla sin forzarla — la conciencia es el primer paso.",
 
-  "analytics.insight.pattern.stable_wake_streak.title":
-    "Racha de despertar constante",
+  "analytics.insight.pattern.stable_wake_streak.title": "Racha de despertar constante",
   "analytics.insight.pattern.stable_wake_streak.body":
     "Has mantenido una hora de despertar similar durante varios días seguidos. Esto construye un anclaje circadiano fuerte — sigue así.",
 
@@ -146,20 +134,16 @@ export const analyticsEs: Dict = {
     "Has sido más consistente con tus recordatorios que con tu diario. Los recordatorios están construyendo una rutina — ¿puedes llevarte el diario también?",
 
   // Insight — Encouragement
-  "analytics.insight.encouragement.start_recording.title":
-    "Tu historia de sueño empieza aquí",
+  "analytics.insight.encouragement.start_recording.title": "Tu historia de sueño empieza aquí",
   "analytics.insight.encouragement.start_recording.body":
     "Todo viaje comienza con una sola noche. Registrar tu sueño durante solo una semana puede revelar patrones que quizás no habías notado.",
-  "analytics.insight.encouragement.keep_going.title":
-    "Estás empezando",
+  "analytics.insight.encouragement.keep_going.title": "Estás empezando",
   "analytics.insight.encouragement.keep_going.body":
     "Genial — has empezado a registrar. Sigue así unos días más y empezarás a ver cómo se forma tu patrón de sueño.",
-  "analytics.insight.encouragement.first_week.title":
-    "Has construido una base",
+  "analytics.insight.encouragement.first_week.title": "Has construido una base",
   "analytics.insight.encouragement.first_week.body":
     "Has registrado varias noches esta semana. Eso por sí solo es un logro. La primera semana es de observación — no de perfección.",
-  "analytics.insight.encouragement.streak.title":
-    "Vas en racha",
+  "analytics.insight.encouragement.streak.title": "Vas en racha",
   "analytics.insight.encouragement.streak.body":
     "Registrar tu sueño día tras día crea conciencia, y la conciencia es el primer paso hacia el cambio. Sigue con la racha.",
 
@@ -203,18 +187,15 @@ export const analyticsEs: Dict = {
   "analytics.monthly.notableChanges": "Cambios notables",
   "analytics.monthly.previousMonth": "Mes anterior",
   "analytics.monthly.nextMonth": "Mes siguiente",
-  "analytics.monthly.empty":
-    "Sigue registrando — tu resumen mensual aparecerá aquí.",
+  "analytics.monthly.empty": "Sigue registrando — tu resumen mensual aparecerá aquí.",
 
   // Weekly Focus
   "analytics.focus.title": "Enfoque de la Semana",
   "analytics.focus.subtitle": "Una sugerencia para la semana que viene",
-  "analytics.focus.baseline_building.reason":
-    "Todavía estás construyendo tu registro de sueño.",
+  "analytics.focus.baseline_building.reason": "Todavía estás construyendo tu registro de sueño.",
   "analytics.focus.baseline_building.action":
     "Céntrate en registrar cada mañana — solo una entrada al día.",
-  "analytics.focus.recording_consistency.reason":
-    "Tu diario tiene huecos esta semana.",
+  "analytics.focus.recording_consistency.reason": "Tu diario tiene huecos esta semana.",
   "analytics.focus.recording_consistency.action":
     "Intenta completar los días que faltan. Incluso una entrada rápida ayuda a ver el panorama completo.",
   "analytics.focus.wake_time_consistency.reason":
@@ -229,12 +210,10 @@ export const analyticsEs: Dict = {
     "Tus recordatorios aún no están del todo consolidados.",
   "analytics.focus.reminder_routine.action":
     "Intenta completar al menos un recordatorio al día esta semana para construir el hábito.",
-  "analytics.focus.maintenance.reason":
-    "Tu sueño se ve consistente y eficiente.",
+  "analytics.focus.maintenance.reason": "Tu sueño se ve consistente y eficiente.",
   "analytics.focus.maintenance.action":
     "Mantén la gran rutina. Esta semana, céntrate en mantener lo que funciona.",
-  "analytics.focus.default.reason":
-    "Aquí tienes un enfoque suave para la semana.",
+  "analytics.focus.default.reason": "Aquí tienes un enfoque suave para la semana.",
   "analytics.focus.default.action":
     "Observa tus patrones de sueño con curiosidad — no hay nada que arreglar.",
   "analytics.focus.accept": "Aceptar enfoque",
@@ -245,8 +224,7 @@ export const analyticsEs: Dict = {
 
   // Weekly Reflection
   "reflection.weekly.title": "Reflexión Semanal",
-  "reflection.weekly.subtitle":
-    "Un repaso guiado para mirar atrás en tu semana y mirar adelante.",
+  "reflection.weekly.subtitle": "Un repaso guiado para mirar atrás en tu semana y mirar adelante.",
   "reflection.weekly.intro":
     "Tómate unos minutos para reflexionar sobre tu sueño y tu rutina esta semana. No hay respuestas correctas ni incorrectas — esto es para ti.",
   "reflection.weekly.skip": "Saltar",
@@ -255,8 +233,7 @@ export const analyticsEs: Dict = {
   "reflection.weekly.edit": "Editar",
   "reflection.weekly.delete": "Eliminar",
   "reflection.weekly.words": "palabras",
-  "reflection.weekly.empty":
-    "Aún no hay ninguna reflexión guardada para esta semana.",
+  "reflection.weekly.empty": "Aún no hay ninguna reflexión guardada para esta semana.",
   "reflection.weekly.start": "Empezar reflexión",
 
   "reflection.weekly.prompt.routine_consistency.1":
@@ -269,12 +246,10 @@ export const analyticsEs: Dict = {
     "¿Qué parte de tu rutina de sueño se sintió más manejable esta semana?",
   "reflection.weekly.prompt.next_week_observation.1":
     "¿Qué te gustaría observar de tu sueño la próxima semana?",
-  "reflection.weekly.prompt.wins.1":
-    "¿Qué es una cosa que salió bien con tu sueño esta semana?",
+  "reflection.weekly.prompt.wins.1": "¿Qué es una cosa que salió bien con tu sueño esta semana?",
   "reflection.weekly.prompt.wins.2":
     "¿Cuándo te sentiste más descansado esta semana y qué fue diferente?",
-  "reflection.weekly.prompt.challenges.1":
-    "¿Qué fue desafiante de tu sueño esta semana?",
+  "reflection.weekly.prompt.challenges.1": "¿Qué fue desafiante de tu sueño esta semana?",
   "reflection.weekly.prompt.gratitude.1":
     "¿Por qué cosa estás agradecido acerca de tu descanso esta semana?",
   "reflection.weekly.prompt.sleep_confidence.1":
@@ -284,18 +259,12 @@ export const analyticsEs: Dict = {
     "Escribe sobre qué ayudó o qué se interpuso...",
   "reflection.weekly.placeholder.recording_ease":
     "Comparte qué hizo que registrar fuera más fácil o más difícil...",
-  "reflection.weekly.placeholder.manageable_parts":
-    "Describe qué se sintió factible y por qué...",
-  "reflection.weekly.placeholder.next_week_observation":
-    "¿Qué quieres notar la próxima semana?",
-  "reflection.weekly.placeholder.wins":
-    "Celebra algo — grande o pequeño...",
-  "reflection.weekly.placeholder.challenges":
-    "Escribe sobre qué fue difícil...",
-  "reflection.weekly.placeholder.gratitude":
-    "¿Por qué estás agradecido?",
-  "reflection.weekly.placeholder.sleep_confidence":
-    "¿Cómo te sientes con tu sueño ahora mismo?",
+  "reflection.weekly.placeholder.manageable_parts": "Describe qué se sintió factible y por qué...",
+  "reflection.weekly.placeholder.next_week_observation": "¿Qué quieres notar la próxima semana?",
+  "reflection.weekly.placeholder.wins": "Celebra algo — grande o pequeño...",
+  "reflection.weekly.placeholder.challenges": "Escribe sobre qué fue difícil...",
+  "reflection.weekly.placeholder.gratitude": "¿Por qué estás agradecido?",
+  "reflection.weekly.placeholder.sleep_confidence": "¿Cómo te sientes con tu sueño ahora mismo?",
 
   // Dashboard
   "dashboard.analytics.keyMetrics": "Métricas Clave",

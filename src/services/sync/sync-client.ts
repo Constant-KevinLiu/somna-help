@@ -280,7 +280,10 @@ export class SyncClient {
 
   private async loadLocalReflections(): Promise<SyncReflection[]> {
     if (!isBrowser()) return [];
-    const storage = safeLocalStorageGet<{ reflections?: Array<Record<string, unknown>> }>("reflections", {});
+    const storage = safeLocalStorageGet<{ reflections?: Array<Record<string, unknown>> }>(
+      "reflections",
+      {},
+    );
     return (storage.reflections || []).map((r) => ({
       ...r,
       syncStatus: (r.syncStatus as SyncStatus) || "local",

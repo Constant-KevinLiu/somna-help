@@ -15,19 +15,9 @@ import {
   type ReminderChannel,
   type DeliveryResult,
 } from "./habit-types";
-import {
-  loadReminders,
-  getUndeliveredDueOccurrences,
-  updateOccurrence,
-} from "./habit-storage";
-import {
-  logOccurrenceDelivered,
-  logOccurrenceMissed,
-} from "./habit-events";
-import {
-  deliverBrowserNotification,
-  isChannelAvailable,
-} from "./notification-service";
+import { loadReminders, getUndeliveredDueOccurrences, updateOccurrence } from "./habit-storage";
+import { logOccurrenceDelivered, logOccurrenceMissed } from "./habit-events";
+import { deliverBrowserNotification, isChannelAvailable } from "./notification-service";
 import {
   isBrowser,
   getSharedBroadcastChannel,
@@ -54,9 +44,7 @@ export function notifyDelivery(occurrenceId: string): void {
   }
 }
 
-export function subscribeToRemoteDeliveries(
-  callback: (occurrenceId: string) => void
-): () => void {
+export function subscribeToRemoteDeliveries(callback: (occurrenceId: string) => void): () => void {
   const channel = getBroadcastChannel();
   if (!channel) return () => {};
 
@@ -101,7 +89,7 @@ function releaseDeliveryLock(occurrenceId: string): void {
 // ============================================
 export function shouldDeliverOccurrence(
   reminder: Reminder,
-  occurrence: ReminderOccurrence
+  occurrence: ReminderOccurrence,
 ): boolean {
   // Reminder must be active
   if (reminder.status !== "active") return false;
@@ -112,7 +100,11 @@ export function shouldDeliverOccurrence(
 
   // Must not already be delivered or resolved
   const resolvedStatuses: string[] = [
-    "delivered", "completed", "dismissed", "cancelled", "completed_by_related_action",
+    "delivered",
+    "completed",
+    "dismissed",
+    "cancelled",
+    "completed_by_related_action",
   ];
   if (resolvedStatuses.includes(occurrence.status)) return false;
 
@@ -129,16 +121,11 @@ export interface InAppDeliveryEvent {
 
 let inAppDeliveryCallback: ((event: InAppDeliveryEvent) => void) | null = null;
 
-export function setInAppDeliveryCallback(
-  callback: (event: InAppDeliveryEvent) => void
-): void {
+export function setInAppDeliveryCallback(callback: (event: InAppDeliveryEvent) => void): void {
   inAppDeliveryCallback = callback;
 }
 
-export function deliverInApp(
-  reminder: Reminder,
-  occurrence: ReminderOccurrence
-): DeliveryResult {
+export function deliverInApp(reminder: Reminder, occurrence: ReminderOccurrence): DeliveryResult {
   if (!inAppDeliveryCallback) {
     return {
       success: false,
@@ -164,7 +151,7 @@ export function deliverInApp(
 // ============================================
 export async function deliverOccurrence(
   reminder: Reminder,
-  occurrence: ReminderOccurrence
+  occurrence: ReminderOccurrence,
 ): Promise<DeliveryResult> {
   // Acquire lock to prevent duplicate delivery
   if (!acquireDeliveryLock(occurrence.id)) {
@@ -239,7 +226,7 @@ export async function deliverDueReminders(): Promise<DeliveryResult[]> {
   const dueOccurrences = getUndeliveredDueOccurrences();
 
   for (const occurrence of dueOccurrences) {
-    const reminder = reminders.find(r => r.id === occurrence.reminderId);
+    const reminder = reminders.find((r) => r.id === occurrence.reminderId);
     if (!reminder) continue;
 
     const result = await deliverOccurrence(reminder, occurrence);
@@ -264,7 +251,7 @@ export function processMissedReminders(gracePeriodMinutes: number = 60): void {
     if (new Date(occurrence.dueAt) < cutoff) {
       // Mark as missed
       updateOccurrence(occurrence.id, { status: "missed" });
-      const reminder = reminders.find(r => r.id === occurrence.reminderId);
+      const reminder = reminders.find((r) => r.id === occurrence.reminderId);
       if (reminder) {
         logOccurrenceMissed(reminder, occurrence);
       }

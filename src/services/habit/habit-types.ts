@@ -8,31 +8,24 @@
 // ============================================
 // Reminder Status
 // ============================================
-export type ReminderStatus =
-  | "active"
-  | "paused"
-  | "archived";
+export type ReminderStatus = "active" | "paused" | "archived";
 
 // ============================================
 // Delivery Channels
 // ============================================
-export type ReminderChannel =
-  | "in_app"
-  | "browser_notification";
+export type ReminderChannel = "in_app" | "browser_notification";
 
 // ============================================
 // Reminder Schedule
 // ============================================
-export type ScheduleType =
-  | "daily"
-  | "weekdays";
+export type ScheduleType = "daily" | "weekdays";
 
 export interface ReminderSchedule {
   type: ScheduleType;
-  time: string;           // "HH:MM" in 24h format
-  days?: number[];        // 0 = Sunday, 1 = Monday, ..., 6 = Saturday (for weekdays type)
-  startDate?: string;     // YYYY-MM-DD
-  endDate?: string;       // YYYY-MM-DD (optional)
+  time: string; // "HH:MM" in 24h format
+  days?: number[]; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday (for weekdays type)
+  startDate?: string; // YYYY-MM-DD
+  endDate?: string; // YYYY-MM-DD (optional)
 }
 
 // ============================================
@@ -70,27 +63,21 @@ export type ReminderEventType =
 // ============================================
 // Habit State
 // ============================================
-export type HabitState =
-  | "candidate"
-  | "planned"
-  | "active"
-  | "maintained"
-  | "paused"
-  | "archived";
+export type HabitState = "candidate" | "planned" | "active" | "maintained" | "paused" | "archived";
 
 // ============================================
 // Main Reminder Interface
 // ============================================
 export interface Reminder {
   id: string;
-  ownerId: string;         // User ID or anonymous session ID
-  habitId?: string;        // For future habit association
+  ownerId: string; // User ID or anonymous session ID
+  habitId?: string; // For future habit association
   title: string;
   message?: string;
   status: ReminderStatus;
   channels: ReminderChannel[];
   schedule: ReminderSchedule;
-  timezone: string;        // IANA timezone
+  timezone: string; // IANA timezone
   snoozeOptionsMinutes: number[];
   createdAt: string;
   updatedAt: string;
@@ -104,8 +91,8 @@ export interface Reminder {
 export interface ReminderOccurrence {
   id: string;
   reminderId: string;
-  scheduledAt: string;     // ISO timestamp (original scheduled time)
-  dueAt: string;           // ISO timestamp (current due time, may differ after snooze)
+  scheduledAt: string; // ISO timestamp (original scheduled time)
+  dueAt: string; // ISO timestamp (current due time, may differ after snooze)
   status: ReminderOccurrenceStatus;
   deliveredVia?: ReminderChannel;
   snoozeCount: number;
@@ -136,7 +123,7 @@ export interface HabitProgress {
   reminderId: string;
   completionCount: number;
   opportunityCount: number;
-  consistencyRate: number;      // 0-100
+  consistencyRate: number; // 0-100
   currentStreak: number;
   longestStreak: number;
   lastCompletedAt?: string;
@@ -151,8 +138,8 @@ export interface NotificationPreferences {
   permission: NotificationPermission;
   lastRequestedAt?: string;
   userExplicitlyDenied: boolean;
-  quietHoursStart?: string;     // "HH:MM"
-  quietHoursEnd?: string;       // "HH:MM"
+  quietHoursStart?: string; // "HH:MM"
+  quietHoursEnd?: string; // "HH:MM"
   showSensitiveContent: boolean;
 }
 

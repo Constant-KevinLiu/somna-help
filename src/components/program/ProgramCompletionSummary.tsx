@@ -18,8 +18,18 @@ export function ProgramCompletionSummary({ progress }: Props) {
 
   const completedDate = progress.completedAt
     ? new Date(progress.completedAt).toLocaleDateString(
-        lang === "zh" ? "zh-CN" : lang === "es" ? "es-ES" : lang === "pt" ? "pt-BR" : lang === "pl" ? "pl-PL" : lang === "de" ? "de-DE" : "en-US",
-        { year: "numeric", month: "long", day: "numeric" }
+        lang === "zh"
+          ? "zh-CN"
+          : lang === "es"
+            ? "es-ES"
+            : lang === "pt"
+              ? "pt-BR"
+              : lang === "pl"
+                ? "pl-PL"
+                : lang === "de"
+                  ? "de-DE"
+                  : "en-US",
+        { year: "numeric", month: "long", day: "numeric" },
       )
     : null;
 
@@ -62,9 +72,7 @@ export function ProgramCompletionSummary({ progress }: Props) {
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">
                   {ui.completionDateLabel}
                 </div>
-                <p className="mt-1 font-display text-base text-foreground">
-                  {completedDate}
-                </p>
+                <p className="mt-1 font-display text-base text-foreground">{completedDate}</p>
               </div>
             )}
 

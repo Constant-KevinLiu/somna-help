@@ -108,7 +108,7 @@ export function circularStdDevMinutes(timesMinutes: number[]): number | null {
   // R = 1 means all points identical → sd = 0
   // R close to 0 means widely dispersed
   if (r >= 1) return 0;
-  if (r <= 0) return 24 * 60 / 4; // max dispersion (uniform) ≈ 360 min
+  if (r <= 0) return (24 * 60) / 4; // max dispersion (uniform) ≈ 360 min
 
   const sdRadians = Math.sqrt(-2 * Math.log(r));
   const sdMinutes = Math.round((sdRadians / (2 * Math.PI)) * 24 * 60);
@@ -378,20 +378,20 @@ export function stableWakeStreak(records: SleepRecord[], thresholdMinutes = 30):
 // ============================================
 
 export interface MetricBundle {
-  timeInBed: number | null;          // avg minutes
-  totalSleepTime: number | null;     // avg minutes
-  sleepEfficiency: number | null;    // avg percent
-  sleepOnsetLatency: number | null;  // avg minutes
+  timeInBed: number | null; // avg minutes
+  totalSleepTime: number | null; // avg minutes
+  sleepEfficiency: number | null; // avg percent
+  sleepOnsetLatency: number | null; // avg minutes
   wakeAfterSleepOnset: number | null; // avg minutes
   numberOfAwakenings: number | null; // avg count
-  avgBedtime: string | null;         // HH:MM
-  avgWakeTime: string | null;        // HH:MM
+  avgBedtime: string | null; // HH:MM
+  avgWakeTime: string | null; // HH:MM
   bedtimeVariability: number | null; // SD minutes
   wakeTimeVariability: number | null; // SD minutes
-  sleepRegularity: number | null;    // 0-100
+  sleepRegularity: number | null; // 0-100
   diaryCompletionRate: number | null; // percent
-  sleepQuality: number | null;       // avg 1-5
-  mood: number | null;               // avg 1-5
+  sleepQuality: number | null; // avg 1-5
+  mood: number | null; // avg 1-5
   recordCount: number;
   eligibleDays: number;
 }
@@ -400,10 +400,7 @@ export interface MetricBundle {
  * Compute all metrics for a set of records.
  * eligibleDays = number of calendar days in the analysis window.
  */
-export function computeMetrics(
-  records: SleepRecord[],
-  eligibleDays: number,
-): MetricBundle {
+export function computeMetrics(records: SleepRecord[], eligibleDays: number): MetricBundle {
   const recordCount = records.length;
 
   // Scalar averages
@@ -425,24 +422,18 @@ export function computeMetrics(
   return {
     timeInBed: avgTIB ? Math.round(avgTIB) : null,
     totalSleepTime: tstValues.length > 0 ? Math.round(mean(tstValues)!) : null,
-    sleepEfficiency:
-      efficiencyValues.length > 0 ? Math.round(mean(efficiencyValues)!) : null,
-    sleepOnsetLatency:
-      latencyValues.length > 0 ? Math.round(mean(latencyValues)!) : null,
-    wakeAfterSleepOnset:
-      wasoValues.length > 0 ? Math.round(mean(wasoValues)!) : null,
+    sleepEfficiency: efficiencyValues.length > 0 ? Math.round(mean(efficiencyValues)!) : null,
+    sleepOnsetLatency: latencyValues.length > 0 ? Math.round(mean(latencyValues)!) : null,
+    wakeAfterSleepOnset: wasoValues.length > 0 ? Math.round(mean(wasoValues)!) : null,
     numberOfAwakenings:
-      awakeningValues.length > 0
-        ? Math.round((mean(awakeningValues) ?? 0) * 10) / 10
-        : null,
+      awakeningValues.length > 0 ? Math.round((mean(awakeningValues) ?? 0) * 10) / 10 : null,
     avgBedtime: avgBedtime(records),
     avgWakeTime: avgWakeTime(records),
     bedtimeVariability: bedtimeVariability(records),
     wakeTimeVariability: wakeTimeVariability(records),
     sleepRegularity: sleepRegularity(records),
     diaryCompletionRate: diaryCompletionRate(records, eligibleDays),
-    sleepQuality:
-      qualityValues.length > 0 ? Math.round(mean(qualityValues)! * 10) / 10 : null,
+    sleepQuality: qualityValues.length > 0 ? Math.round(mean(qualityValues)! * 10) / 10 : null,
     mood: moodValues.length > 0 ? Math.round(mean(moodValues)! * 10) / 10 : null,
     recordCount,
     eligibleDays,
@@ -450,10 +441,7 @@ export function computeMetrics(
 }
 
 /** Get a metric value by key from a bundle. Returns number or string or null. */
-export function getMetricValue(
-  bundle: MetricBundle,
-  key: MetricKey,
-): number | string | null {
+export function getMetricValue(bundle: MetricBundle, key: MetricKey): number | string | null {
   switch (key) {
     case "timeInBed":
       return bundle.timeInBed;

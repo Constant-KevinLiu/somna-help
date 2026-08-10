@@ -6,20 +6,8 @@
  */
 
 import { z } from "zod";
-import type { LocalReflection, ReflectionStorage, ReflectionCategory } from "./reflection-types";
-
-const REFLECTION_CATEGORIES: readonly ReflectionCategory[] = [
-  "sleep-thoughts",
-  "sleep-anxiety",
-  "sleep-behaviors",
-  "relaxation",
-  "gratitude",
-  "sleep-confidence",
-  "stimulus-control",
-  "sleep-restriction",
-  "night-awakenings",
-  "cognitive-reframing",
-] as const;
+import { REFLECTION_CATEGORIES } from "./reflection-types";
+import type { LocalReflection, ReflectionStorage } from "./reflection-types";
 
 const ReflectionCategorySchema = z.enum(REFLECTION_CATEGORIES);
 
@@ -82,7 +70,9 @@ export function filterValidReflections(items: unknown[]): LocalReflection[] {
  */
 export function isReflectionConsistent(reflection: LocalReflection): boolean {
   // Word count should be accurate
-  const actualWordCount = reflection.content.split(/\s+/).filter((t) => t && /\p{L}/u.test(t)).length;
+  const actualWordCount = reflection.content
+    .split(/\s+/)
+    .filter((t) => t && /\p{L}/u.test(t)).length;
   if (Math.abs(actualWordCount - reflection.wordCount) > 2) {
     return false;
   }

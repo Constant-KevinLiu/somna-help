@@ -27,14 +27,14 @@ import { recordsInRange, isoDaysAgo } from "./date-ranges";
 // ============================================
 
 const THRESHOLDS = {
-  baselineMinRecords: 3,        // < 3 records = baseline building
-  recordingMinCompletion: 50,   // < 50% completion = focus on recording
-  wakeTimeHighSD: 45,           // > 45 min SD = variable wake time
-  efficiencyForWakeFocus: 85,   // < 85% efficiency + variable wake = wake focus
-  bedtimeHighSD: 60,            // > 60 min SD = variable bedtime
-  habitMinConsistency: 50,      // < 50% = reminder routine focus
-  maintenanceEfficiency: 85,    // >= 85% = maintenance candidate
-  maintenanceRegularity: 70,    // >= 70 = maintenance candidate
+  baselineMinRecords: 3, // < 3 records = baseline building
+  recordingMinCompletion: 50, // < 50% completion = focus on recording
+  wakeTimeHighSD: 45, // > 45 min SD = variable wake time
+  efficiencyForWakeFocus: 85, // < 85% efficiency + variable wake = wake focus
+  bedtimeHighSD: 60, // > 60 min SD = variable bedtime
+  habitMinConsistency: 50, // < 50% = reminder routine focus
+  maintenanceEfficiency: 85, // >= 85% = maintenance candidate
+  maintenanceRegularity: 70, // >= 70 = maintenance candidate
 };
 
 // ============================================
@@ -61,13 +61,10 @@ export function generateWeeklyFocus(
   const recordCount = weekRecords.length;
 
   // Average habit consistency
-  const activeProgress = Array.from(habitProgress.values()).filter(
-    (p) => p.opportunityCount > 0,
-  );
+  const activeProgress = Array.from(habitProgress.values()).filter((p) => p.opportunityCount > 0);
   const avgHabitConsistency =
     activeProgress.length > 0
-      ? activeProgress.reduce((sum, p) => sum + p.consistencyRate, 0) /
-        activeProgress.length
+      ? activeProgress.reduce((sum, p) => sum + p.consistencyRate, 0) / activeProgress.length
       : null;
 
   // Rule 1: baseline building — very few records
@@ -265,9 +262,7 @@ export function saveFocusResponse(
   action: "accepted" | "dismissed" | "saved",
 ): void {
   const storage = loadFocusStorage();
-  const existingIndex = storage.entries.findIndex(
-    (e) => e.weekStart === weekStart,
-  );
+  const existingIndex = storage.entries.findIndex((e) => e.weekStart === weekStart);
 
   const entry: SavedFocusEntry = {
     weekStart,

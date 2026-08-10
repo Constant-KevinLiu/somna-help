@@ -19,11 +19,7 @@ import type {
   ProgramLessonDefinition,
   ProgramLessonTag,
 } from "./types";
-import {
-  lessonMetas,
-  WEEK_SLUGS,
-  getLessonsByWeek,
-} from "../program-lessons";
+import { lessonMetas, WEEK_SLUGS, getLessonsByWeek } from "../program-lessons";
 
 // =============================================================================
 // Difficulty mapping
@@ -62,8 +58,7 @@ function buildWeekDefinitions(): ProgramWeekDefinition[] {
     const order = index + 1;
     const weekLessons = getLessonsByWeek(slug);
     const lessonIds = weekLessons.map((l) => l.slug);
-    const prerequisiteWeekIds =
-      order > 1 ? [`week-${order - 1}`] : undefined;
+    const prerequisiteWeekIds = order > 1 ? [`week-${order - 1}`] : undefined;
 
     return {
       id: slug,
@@ -148,9 +143,7 @@ export function _clearProgramDefinitionCache(): void {
  *  - No duplicate lesson IDs
  *  - No duplicate week IDs
  */
-export function validateProgramDefinition(
-  def: ProgramDefinition
-): string[] {
+export function validateProgramDefinition(def: ProgramDefinition): string[] {
   const issues: string[] = [];
 
   // Duplicate lesson IDs

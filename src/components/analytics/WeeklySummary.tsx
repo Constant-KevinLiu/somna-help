@@ -31,19 +31,12 @@ export function WeeklySummary({
 }: WeeklySummaryProps) {
   if (!summary) {
     return (
-      <div
-        className={cn(
-          "glass-strong rounded-3xl p-6 md:p-8 animate-fade-up",
-          className,
-        )}
-      >
+      <div className={cn("glass-strong rounded-3xl p-6 md:p-8 animate-fade-up", className)}>
         <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
           <Calendar className="h-3.5 w-3.5 text-accent" />
           {t("analytics.weekly.title")}
         </div>
-        <p className="mt-4 text-sm text-muted-foreground">
-          {t("analytics.weekly.empty")}
-        </p>
+        <p className="mt-4 text-sm text-muted-foreground">{t("analytics.weekly.empty")}</p>
       </div>
     );
   }
@@ -58,12 +51,7 @@ export function WeeklySummary({
   };
 
   return (
-    <div
-      className={cn(
-        "glass-strong rounded-3xl p-6 md:p-8 animate-fade-up",
-        className,
-      )}
-    >
+    <div className={cn("glass-strong rounded-3xl p-6 md:p-8 animate-fade-up", className)}>
       {/* Header with navigation */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -135,11 +123,7 @@ export function WeeklySummary({
         />
         <MetricMini
           label={t("analytics.weekly.avgEfficiency")}
-          value={
-            summary.avgSleepEfficiency !== null
-              ? `${summary.avgSleepEfficiency}%`
-              : "—"
-          }
+          value={summary.avgSleepEfficiency !== null ? `${summary.avgSleepEfficiency}%` : "—"}
         />
         <MetricMini
           label={t("analytics.weekly.avgLatency")}
@@ -151,11 +135,7 @@ export function WeeklySummary({
         />
         <MetricMini
           label={t("analytics.weekly.regularity")}
-          value={
-            summary.sleepRegularity !== null
-              ? `${summary.sleepRegularity}/100`
-              : "—"
-          }
+          value={summary.sleepRegularity !== null ? `${summary.sleepRegularity}/100` : "—"}
         />
       </div>
 
@@ -242,9 +222,7 @@ export function WeeklySummary({
 function MetricMini({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-        {label}
-      </div>
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-1 font-display text-lg text-gradient">{value}</div>
     </div>
   );

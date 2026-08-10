@@ -6,7 +6,14 @@
 import { useState } from "react";
 import { Bell, Pause, Play, Archive, Plus, ChevronRight, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useReminders } from "@/hooks/useReminders";
@@ -14,6 +21,7 @@ import { useAllHabitProgress } from "@/hooks/useHabitProgress";
 import { ReminderForm } from "./ReminderForm";
 import { HabitProgressCard } from "./HabitProgressCard";
 import { formatRelativeTime } from "@/lib/format";
+import type { Reminder } from "@/services/habit/habit-types";
 
 export function ReminderList() {
   const {
@@ -28,9 +36,9 @@ export function ReminderList() {
 
   const progressMap = useAllHabitProgress([...activeReminders, ...pausedReminders]);
   const [showForm, setShowForm] = useState(false);
-  const [editingReminder, setEditingReminder] = useState<any>(null);
+  const [editingReminder, setEditingReminder] = useState<Reminder | null>(null);
 
-  const handleEdit = (reminder: any) => {
+  const handleEdit = (reminder: Reminder) => {
     setEditingReminder(reminder);
     setShowForm(true);
   };
@@ -40,7 +48,7 @@ export function ReminderList() {
     setEditingReminder(null);
   };
 
-  const ReminderCard = ({ reminder }: { reminder: any }) => {
+  const ReminderCard = ({ reminder }: { reminder: Reminder }) => {
     const progress = progressMap.get(reminder.id);
     const nextOccurrence = getNextForReminder(reminder.id);
 
@@ -72,12 +80,7 @@ export function ReminderList() {
                   <Play className="h-4 w-4" />
                 </Button>
               )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleEdit(reminder)}
-                title="Edit"
-              >
+              <Button variant="ghost" size="sm" onClick={() => handleEdit(reminder)} title="Edit">
                 <ChevronRight className="h-4 w-4" />
               </Button>
               <Button
@@ -132,15 +135,9 @@ export function ReminderList() {
 
       <Tabs defaultValue="active">
         <TabsList>
-          <TabsTrigger value="active">
-            Active ({activeReminders.length})
-          </TabsTrigger>
-          <TabsTrigger value="paused">
-            Paused ({pausedReminders.length})
-          </TabsTrigger>
-          <TabsTrigger value="archived">
-            Archived ({archivedReminders.length})
-          </TabsTrigger>
+          <TabsTrigger value="active">Active ({activeReminders.length})</TabsTrigger>
+          <TabsTrigger value="paused">Paused ({pausedReminders.length})</TabsTrigger>
+          <TabsTrigger value="archived">Archived ({archivedReminders.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="active" className="mt-4">
@@ -153,7 +150,7 @@ export function ReminderList() {
               </CardContent>
             </Card>
           ) : (
-            activeReminders.map(reminder => (
+            activeReminders.map((reminder) => (
               <ReminderCard key={reminder.id} reminder={reminder} />
             ))
           )}
@@ -167,7 +164,7 @@ export function ReminderList() {
               </CardContent>
             </Card>
           ) : (
-            pausedReminders.map(reminder => (
+            pausedReminders.map((reminder) => (
               <ReminderCard key={reminder.id} reminder={reminder} />
             ))
           )}
@@ -181,7 +178,7 @@ export function ReminderList() {
               </CardContent>
             </Card>
           ) : (
-            archivedReminders.map(reminder => (
+            archivedReminders.map((reminder) => (
               <ReminderCard key={reminder.id} reminder={reminder} />
             ))
           )}
@@ -189,10 +186,7 @@ export function ReminderList() {
       </Tabs>
 
       {showForm && (
-        <ReminderForm
-          reminder={editingReminder}
-          onClose={handleFormClose}
-        />
+        <ReminderForm reminder={editingReminder ?? undefined} onClose={handleFormClose} />
       )}
     </div>
   );

@@ -10,15 +10,43 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useReminders } from "@/hooks/useReminders";
-import { type ReminderSchedule, type ScheduleType, type ReminderChannel } from "@/services/habit/habit-types";
+import {
+  type Reminder,
+  type ReminderSchedule,
+  type ScheduleType,
+  type ReminderChannel,
+} from "@/services/habit/habit-types";
+
+interface ReminderFormValues {
+  title: string;
+  message: string;
+  time: string;
+  scheduleType: ScheduleType;
+  days: string[];
+  inAppChannel: boolean;
+  browserChannel: boolean;
+}
 
 interface ReminderFormProps {
-  reminder?: any;
+  reminder?: Reminder;
   onClose: () => void;
 }
 
@@ -33,8 +61,22 @@ const WEEKDAYS = [
 ];
 
 const TIME_PRESETS = [
-  "06:00", "06:30", "07:00", "07:30", "08:00", "08:30", "09:00",
-  "12:00", "13:00", "18:00", "19:00", "20:00", "21:00", "21:30", "22:00", "22:30",
+  "06:00",
+  "06:30",
+  "07:00",
+  "07:30",
+  "08:00",
+  "08:30",
+  "09:00",
+  "12:00",
+  "13:00",
+  "18:00",
+  "19:00",
+  "20:00",
+  "21:00",
+  "21:30",
+  "22:00",
+  "22:30",
 ];
 
 export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
@@ -68,13 +110,11 @@ export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
     }
   }, [reminder, form]);
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (values: ReminderFormValues) => {
     const schedule: ReminderSchedule = {
       type: values.scheduleType,
       time: values.time,
-      days: values.scheduleType === "weekdays"
-        ? values.days.map(Number)
-        : undefined,
+      days: values.scheduleType === "weekdays" ? values.days.map(Number) : undefined,
     };
 
     const channels: ReminderChannel[] = [];
@@ -104,9 +144,7 @@ export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>
-            {reminder ? "Edit Reminder" : "Create Reminder"}
-          </DialogTitle>
+          <DialogTitle>{reminder ? "Edit Reminder" : "Create Reminder"}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -186,7 +224,7 @@ export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {TIME_PRESETS.map(time => (
+                        {TIME_PRESETS.map((time) => (
                           <SelectItem key={time} value={time}>
                             {time}
                           </SelectItem>
@@ -205,7 +243,7 @@ export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
                     <FormItem>
                       <FormLabel>Repeat on</FormLabel>
                       <div className="grid grid-cols-4 gap-2">
-                        {WEEKDAYS.map(day => (
+                        {WEEKDAYS.map((day) => (
                           <FormField
                             key={day.value}
                             control={form.control}
@@ -223,10 +261,10 @@ export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
                                         return checked
                                           ? field.onChange([...field.value, day.value])
                                           : field.onChange(
-                                            field.value?.filter(
-                                              (value: string) => value !== day.value
-                                            )
-                                          );
+                                              field.value?.filter(
+                                                (value: string) => value !== day.value,
+                                              ),
+                                            );
                                       }}
                                     />
                                   </FormControl>
@@ -255,15 +293,10 @@ export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
                     <div className="space-y-0.5">
                       <FormLabel>In-app reminder</FormLabel>
-                      <FormDescription>
-                        Show a reminder while the app is open
-                      </FormDescription>
+                      <FormDescription>Show a reminder while the app is open</FormDescription>
                     </div>
                     <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -276,15 +309,10 @@ export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
                     <div className="space-y-0.5">
                       <FormLabel>Browser notification</FormLabel>
-                      <FormDescription>
-                        Require permission to show notifications
-                      </FormDescription>
+                      <FormDescription>Require permission to show notifications</FormDescription>
                     </div>
                     <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <Switch checked={field.value} onCheckedChange={field.onChange} />
                     </FormControl>
                   </FormItem>
                 )}
@@ -295,9 +323,7 @@ export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
               <Button type="button" variant="secondary" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit">
-                {reminder ? "Save Changes" : "Create Reminder"}
-              </Button>
+              <Button type="submit">{reminder ? "Save Changes" : "Create Reminder"}</Button>
             </div>
           </form>
         </Form>

@@ -37,8 +37,8 @@ export interface WeeklyReflectionResponse {
 export interface WeeklyReflection {
   id: string;
   weekStart: string; // YYYY-MM-DD (Monday of the week)
-  weekEnd: string;   // YYYY-MM-DD (Sunday)
-  timezone: string;  // IANA timezone
+  weekEnd: string; // YYYY-MM-DD (Sunday)
+  timezone: string; // IANA timezone
   locale: Locale;
   responses: WeeklyReflectionResponse[];
   wordCount: number;

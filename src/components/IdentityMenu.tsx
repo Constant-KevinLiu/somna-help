@@ -1,6 +1,6 @@
 /**
  * Sleep Diary v2.3 - Identity-aware Navigation Menu
- * 
+ *
  * Shows "Sync Progress" button when unauthenticated,
  * shows user account menu when authenticated.
  * All labels are natively authored for each locale.
@@ -20,7 +20,23 @@ import { useSession } from "@/hooks/use-session";
 import { AuthModal } from "@/components/AuthModal";
 import { AccountDataDialog } from "@/components/AccountDataDialog";
 import { getAuthCopy } from "@/content/auth-content";
-import type { Locale } from "@/services/auth/auth-types";
+import type { Locale as ContentLocale } from "@/content/content-types";
+
+function contentLocaleToUiPrefix(locale: ContentLocale): string {
+  if (locale === "en") return "";
+  if (locale === "pt-BR") return "/pt";
+  return `/${locale}`;
+}
+
+function dashboardPath(locale: ContentLocale): string {
+  return `${contentLocaleToUiPrefix(locale)}/dashboard`;
+}
+function diaryPath(locale: ContentLocale): string {
+  return `${contentLocaleToUiPrefix(locale)}/diary`;
+}
+function reminderPath(locale: ContentLocale): string {
+  return `${contentLocaleToUiPrefix(locale)}/reminder`;
+}
 import {
   Cloud,
   CloudOff,
@@ -36,14 +52,17 @@ import {
 } from "lucide-react";
 
 interface IdentityMenuProps {
-  locale: Locale;
+  locale: ContentLocale;
 }
 
 export function IdentityMenu({ locale }: IdentityMenuProps) {
   const copy = getAuthCopy(locale);
   const { session, loading, logout, refreshSession } = useSession();
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [accountDialog, setAccountDialog] = useState<{ open: boolean; mode: "export" | "delete" }>({ open: false, mode: "export" });
+  const [accountDialog, setAccountDialog] = useState<{ open: boolean; mode: "export" | "delete" }>({
+    open: false,
+    mode: "export",
+  });
 
   const handleSyncClick = () => {
     setAuthModalOpen(true);
@@ -127,69 +146,84 @@ export function IdentityMenu({ locale }: IdentityMenuProps) {
             <ChevronDown className="w-3 h-3" />
           </Button>
         </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuItem asChild>
-          <Link to={`${locale === "en" ? "" : `/${locale === "pt-BR" ? "pt" : locale}`}/dashboard` as any} className="flex items-center gap-2 w-full cursor-pointer">
-            <LayoutDashboard className="w-4 h-4" />
-            {copy.identityMenu.dashboard}
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to={`${locale === "en" ? "" : `/${locale === "pt-BR" ? "pt" : locale}`}/diary` as any} className="flex items-center gap-2 w-full cursor-pointer">
-            <BookOpen className="w-4 h-4" />
-            {copy.identityMenu.sleepDiary}
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link to={`${locale === "en" ? "" : `/${locale === "pt-BR" ? "pt" : locale}`}/reminder` as any} className="flex items-center gap-2 w-full cursor-pointer">
-            <Bell className="w-4 h-4" />
-            {copy.identityMenu.reminderCenter}
-          </Link>
-        </DropdownMenuItem>
-        
-        <DropdownMenuSeparator />
-        
-        <DropdownMenuItem className="flex items-center gap-2 cursor-default">
-          {session.user?.preferredLocale === "en" ? (
-            <Cloud className="w-4 h-4 text-green-500" />
-          ) : (
-            <CloudOff className="w-4 h-4 text-muted-foreground" />
-          )}
-          <span className="text-sm">{copy.identityMenu.syncConnected}</span>
-        </DropdownMenuItem>
-        
-        <DropdownMenuSeparator />
-        
-        <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
-          <Settings className="w-4 h-4" />
-          {copy.identityMenu.settings}
-        </DropdownMenuItem>
-        <DropdownMenuItem className="flex items-center gap-2 cursor-pointer" onClick={handleExportClick}>
-          <Download className="w-4 h-4" />
-          {copy.identityMenu.exportData}
-        </DropdownMenuItem>
-        <DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-red-600" onClick={handleDeleteClick}>
-          <Trash2 className="w-4 h-4" />
-          {copy.identityMenu.deleteData}
-        </DropdownMenuItem>
-        
-        <DropdownMenuSeparator />
-        
-        <DropdownMenuItem onClick={handleLogout} className="flex items-center gap-2 cursor-pointer">
-          <LogOut className="w-4 h-4" />
-          {copy.identityMenu.signOut}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        <DropdownMenuContent align="end" className="w-56">
+          <DropdownMenuItem asChild>
+            <Link
+              to={dashboardPath(locale)}
+              className="flex items-center gap-2 w-full cursor-pointer"
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              {copy.identityMenu.dashboard}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to={diaryPath(locale)} className="flex items-center gap-2 w-full cursor-pointer">
+              <BookOpen className="w-4 h-4" />
+              {copy.identityMenu.sleepDiary}
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link
+              to={reminderPath(locale)}
+              className="flex items-center gap-2 w-full cursor-pointer"
+            >
+              <Bell className="w-4 h-4" />
+              {copy.identityMenu.reminderCenter}
+            </Link>
+          </DropdownMenuItem>
 
-    <AccountDataDialog
-      open={accountDialog.open}
-      onOpenChange={(open) => setAccountDialog({ ...accountDialog, open })}
-      mode={accountDialog.mode}
-      copy={copy}
-      onSignOut={handleLogout}
-      onClearCache={handleClearCache}
-    />
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem className="flex items-center gap-2 cursor-default">
+            {session.user?.preferredLocale === "en" ? (
+              <Cloud className="w-4 h-4 text-green-500" />
+            ) : (
+              <CloudOff className="w-4 h-4 text-muted-foreground" />
+            )}
+            <span className="text-sm">{copy.identityMenu.syncConnected}</span>
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem className="flex items-center gap-2 cursor-pointer">
+            <Settings className="w-4 h-4" />
+            {copy.identityMenu.settings}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={handleExportClick}
+          >
+            <Download className="w-4 h-4" />
+            {copy.identityMenu.exportData}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="flex items-center gap-2 cursor-pointer text-red-600"
+            onClick={handleDeleteClick}
+          >
+            <Trash2 className="w-4 h-4" />
+            {copy.identityMenu.deleteData}
+          </DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem
+            onClick={handleLogout}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <LogOut className="w-4 h-4" />
+            {copy.identityMenu.signOut}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <AccountDataDialog
+        open={accountDialog.open}
+        onOpenChange={(open) => setAccountDialog({ ...accountDialog, open })}
+        mode={accountDialog.mode}
+        copy={copy}
+        onSignOut={handleLogout}
+        onClearCache={handleClearCache}
+      />
     </>
   );
 }

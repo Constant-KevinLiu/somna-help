@@ -252,17 +252,19 @@ function TimeWheelDialog({ value, locale, format, label, onCancel, onDone }: Tim
     liveRef.current.minute = label;
   }, []);
 
-  const handlePeriodSelectionChanged = useCallback((label: string) => {
-    liveRef.current.period = label === periodLabels.am ? "AM" : "PM";
-  }, [periodLabels]);
+  const handlePeriodSelectionChanged = useCallback(
+    (label: string) => {
+      liveRef.current.period = label === periodLabels.am ? "AM" : "PM";
+    },
+    [periodLabels],
+  );
 
   // Read the three columns' current centered values and assemble a standard
   // "HH:MM" (24h) time string, then push it back to the parent state.
   const handleDone = useCallback(() => {
     const rawHour = Number.parseInt(liveRef.current.hour, 10) || 0;
     const minute = Number.parseInt(liveRef.current.minute, 10) || 0;
-    const period: "AM" | "PM" =
-      liveRef.current.period === "AM" ? "AM" : "PM";
+    const period: "AM" | "PM" = liveRef.current.period === "AM" ? "AM" : "PM";
 
     let h = rawHour;
     if (is12h) {

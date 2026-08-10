@@ -33,17 +33,13 @@ export type MetricKey =
 // ============================================
 // Data Sufficiency
 // ============================================
-export type DataSufficiency =
-  | "none"
-  | "insufficient"
-  | "limited"
-  | "sufficient";
+export type DataSufficiency = "none" | "insufficient" | "limited" | "sufficient";
 
 export interface SufficiencyThresholds {
-  none: number;        // < none = "none"
+  none: number; // < none = "none"
   insufficient: number; // < insufficient = "insufficient"
-  limited: number;     // < limited = "limited"
-  sufficient: number;  // >= sufficient = "sufficient"
+  limited: number; // < limited = "limited"
+  sufficient: number; // >= sufficient = "sufficient"
 }
 
 /**
@@ -63,32 +59,28 @@ export interface SufficiencyThresholds {
  * states. The `sufficient` value is provided for documentation completeness.
  */
 export const DEFAULT_SUFFICIENCY: SufficiencyThresholds = {
-  none: 1,          // < 1 record   → "none"           (0 records)
-  insufficient: 3,  // < 3 records  → "insufficient"   (1-2 records)
-  limited: 7,       // < 7 records  → "limited"        (3-6 records)
-  sufficient: 7,    // ≥ 7 records  → "sufficient"     (7+ records)
+  none: 1, // < 1 record   → "none"           (0 records)
+  insufficient: 3, // < 3 records  → "insufficient"   (1-2 records)
+  limited: 7, // < 7 records  → "limited"        (3-6 records)
+  sufficient: 7, // ≥ 7 records  → "sufficient"     (7+ records)
 };
 
 // ============================================
 // Time Windows
 // ============================================
-export type WindowKey = "7d" | "14d" | "30d" | "90d" | "thisWeek" | "lastWeek" | "thisMonth" | "lastMonth";
+export type WindowKey =
+  "7d" | "14d" | "30d" | "90d" | "thisWeek" | "lastWeek" | "thisMonth" | "lastMonth";
 
 export interface DateRange {
   start: string; // YYYY-MM-DD (inclusive)
-  end: string;   // YYYY-MM-DD (inclusive)
+  end: string; // YYYY-MM-DD (inclusive)
   labelKey: string;
 }
 
 // ============================================
 // Trend Analysis
 // ============================================
-export type TrendDirection =
-  | "improving"
-  | "stable"
-  | "declining"
-  | "mixed"
-  | "insufficient_data";
+export type TrendDirection = "improving" | "stable" | "declining" | "mixed" | "insufficient_data";
 
 export interface MetricTrend {
   metric: MetricKey;
@@ -137,12 +129,7 @@ export interface PatternFinding {
 // ============================================
 // Insight Cards
 // ============================================
-export type InsightType =
-  | "metric"
-  | "pattern"
-  | "encouragement"
-  | "behavioral_focus"
-  | "trend";
+export type InsightType = "metric" | "pattern" | "encouragement" | "behavioral_focus" | "trend";
 
 export interface InsightEvidence {
   metricKey: MetricKey;
@@ -175,7 +162,7 @@ export interface InsightCard {
 // ============================================
 export interface WeeklySummary {
   weekStart: string; // YYYY-MM-DD (Monday)
-  weekEnd: string;   // YYYY-MM-DD (Sunday)
+  weekEnd: string; // YYYY-MM-DD (Sunday)
   recordedNights: number;
   eligibleDays: number;
   diaryCompletionRate: number | null;

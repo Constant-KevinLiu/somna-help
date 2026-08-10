@@ -24,7 +24,9 @@ import { ES_REFLECTION_UI } from "@/content/es/diary/reflection-ui";
 import { PT_BR_REFLECTION_UI } from "@/content/pt-BR/diary/reflection-ui";
 import { PL_REFLECTION_UI } from "@/content/pl/diary/reflection-ui";
 
-const UI_STRINGS = {
+const UI_STRINGS: Partial<
+  Record<Locale, import("@/content/en/diary/reflection-ui").ReflectionUiStrings>
+> = {
   en: EN_REFLECTION_UI,
   es: ES_REFLECTION_UI,
   "pt-BR": PT_BR_REFLECTION_UI,
@@ -38,8 +40,8 @@ interface ReflectionHistoryProps {
 
 export function ReflectionHistory({ onBack, onEditDate }: ReflectionHistoryProps) {
   const { lang } = useI18n();
-  const locale = lang as Locale;
-  const strings = UI_STRINGS[locale];
+  const contentLocale = lang as Locale;
+  const strings = UI_STRINGS[contentLocale] ?? EN_REFLECTION_UI;
 
   const [reflections, setReflections] = useState<LocalReflection[]>(() => getSortedReflections());
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
@@ -82,7 +84,7 @@ export function ReflectionHistory({ onBack, onEditDate }: ReflectionHistoryProps
             <ReflectionHistoryItem
               key={reflection.id}
               reflection={reflection}
-              locale={locale}
+              locale={contentLocale}
               onEdit={() => onEditDate(reflection.localDate)}
               onDelete={() => setDeleteTarget(reflection.id)}
             />
@@ -95,11 +97,15 @@ export function ReflectionHistory({ onBack, onEditDate }: ReflectionHistoryProps
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-md rounded-2xl bg-background p-6 shadow-xl">
             <h3 className="text-base font-semibold text-foreground">
-              {locale === "en" ? "Delete Reflection" : locale === "es" ? "Eliminar Reflexión" : locale === "pt-BR" ? "Excluir Reflexão" : "Usuń Refleksję"}
+              {contentLocale === "en"
+                ? "Delete Reflection"
+                : contentLocale === "es"
+                  ? "Eliminar Reflexión"
+                  : contentLocale === "pt-BR"
+                    ? "Excluir Reflexão"
+                    : "Usuń Refleksję"}
             </h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {strings.history.deleteConfirm}
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground">{strings.history.deleteConfirm}</p>
             <div className="mt-6 flex justify-end gap-3">
               <button
                 onClick={() => setDeleteTarget(null)}

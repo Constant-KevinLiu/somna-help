@@ -40,7 +40,14 @@ function ReminderCenter() {
   const [settings, setSettings] = useState<ReminderSettings>(DEFAULT_REMINDER_SETTINGS);
   const [hydrated, setHydrated] = useState(false);
   const [emailError, setEmailError] = useState<string | null>(null);
-  const [status, setStatus] = useState<{ enabled: boolean; email: string; time: string; timezone: string; language: string; nextRun: string } | null>(null);
+  const [status, setStatus] = useState<{
+    enabled: boolean;
+    email: string;
+    time: string;
+    timezone: string;
+    language: string;
+    nextRun: string;
+  } | null>(null);
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
 
@@ -89,7 +96,11 @@ function ReminderCenter() {
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
         const serverMessage = payload?.message;
-        if (response.status === 401 || serverMessage?.includes("invalid_api_key") || serverMessage?.includes("email_provider_failed:401")) {
+        if (
+          response.status === 401 ||
+          serverMessage?.includes("invalid_api_key") ||
+          serverMessage?.includes("email_provider_failed:401")
+        ) {
           throw new Error(t("reminder.error.apiKeyInvalid"));
         }
         throw new Error(serverMessage || "Failed to save reminder settings");
@@ -127,12 +138,19 @@ function ReminderCenter() {
       const response = await fetch("/api/reminders/test", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email: normalizeEmail(settings.email), language: settings.language || "en" }),
+        body: JSON.stringify({
+          email: normalizeEmail(settings.email),
+          language: settings.language || "en",
+        }),
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) {
         const serverMessage = payload?.message;
-        if (response.status === 401 || serverMessage?.includes("invalid_api_key") || serverMessage?.includes("email_provider_failed:401")) {
+        if (
+          response.status === 401 ||
+          serverMessage?.includes("invalid_api_key") ||
+          serverMessage?.includes("email_provider_failed:401")
+        ) {
           throw new Error(t("reminder.error.apiKeyInvalid"));
         }
         throw new Error(serverMessage || "Test email failed");
@@ -224,11 +242,10 @@ function ReminderCenter() {
 
             <div className="mt-6 grid gap-4 md:grid-cols-2">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <div className="text-sm font-medium text-foreground">{t("reminder.timezone.label")}</div>
-                <Select
-                  value={settings.timezone}
-                  onValueChange={(v) => update("timezone", v)}
-                >
+                <div className="text-sm font-medium text-foreground">
+                  {t("reminder.timezone.label")}
+                </div>
+                <Select value={settings.timezone} onValueChange={(v) => update("timezone", v)}>
                   <SelectTrigger className="mt-3" aria-label={t("reminder.timezone.label")}>
                     <SelectValue />
                   </SelectTrigger>
@@ -241,11 +258,10 @@ function ReminderCenter() {
                 </Select>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                <div className="text-sm font-medium text-foreground">{t("reminder.language.label")}</div>
-                <Select
-                  value={settings.language}
-                  onValueChange={(v) => update("language", v)}
-                >
+                <div className="text-sm font-medium text-foreground">
+                  {t("reminder.language.label")}
+                </div>
+                <Select value={settings.language} onValueChange={(v) => update("language", v)}>
                   <SelectTrigger className="mt-3" aria-label={t("reminder.language.label")}>
                     <SelectValue />
                   </SelectTrigger>
@@ -307,11 +323,24 @@ function ReminderCenter() {
             <div className="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-muted-foreground">
               <div className="font-medium text-foreground">{t("reminder.status.title")}</div>
               <div className="mt-2 space-y-1">
-                <div>{status?.enabled ? `✓ ${t("reminder.status.active")}` : `○ ${t("reminder.status.inactive")}`}</div>
-                <div>{t("reminder.status.email")}: {status?.email || settings.email || "—"}</div>
-                <div>{t("reminder.status.time")}: {status?.time || settings.reminderTime || settings.eveningTime}</div>
-                <div>{t("reminder.status.timezone")}: {status?.timezone || settings.timezone || "UTC"}</div>
-                <div>{t("reminder.status.nextRun")}: {status?.nextRun || "Pending"}</div>
+                <div>
+                  {status?.enabled
+                    ? `✓ ${t("reminder.status.active")}`
+                    : `○ ${t("reminder.status.inactive")}`}
+                </div>
+                <div>
+                  {t("reminder.status.email")}: {status?.email || settings.email || "—"}
+                </div>
+                <div>
+                  {t("reminder.status.time")}:{" "}
+                  {status?.time || settings.reminderTime || settings.eveningTime}
+                </div>
+                <div>
+                  {t("reminder.status.timezone")}: {status?.timezone || settings.timezone || "UTC"}
+                </div>
+                <div>
+                  {t("reminder.status.nextRun")}: {status?.nextRun || "Pending"}
+                </div>
               </div>
             </div>
 

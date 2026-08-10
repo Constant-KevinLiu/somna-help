@@ -7,17 +7,20 @@
 
 import type { Locale } from "@/content/content-types";
 
-export type ReflectionCategory =
-  | "sleep-thoughts"
-  | "sleep-anxiety"
-  | "sleep-behaviors"
-  | "relaxation"
-  | "gratitude"
-  | "sleep-confidence"
-  | "stimulus-control"
-  | "sleep-restriction"
-  | "night-awakenings"
-  | "cognitive-reframing";
+export const REFLECTION_CATEGORIES = [
+  "sleep-thoughts",
+  "sleep-anxiety",
+  "sleep-behaviors",
+  "relaxation",
+  "gratitude",
+  "sleep-confidence",
+  "stimulus-control",
+  "sleep-restriction",
+  "night-awakenings",
+  "cognitive-reframing",
+] as const;
+
+export type ReflectionCategory = (typeof REFLECTION_CATEGORIES)[number];
 
 export interface ReflectionPrompt {
   id: string;

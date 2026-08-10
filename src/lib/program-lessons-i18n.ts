@@ -173,7 +173,8 @@ const en: ProgramLessonUI = {
   programHubLessonsCount: "Lessons",
   programHubComplete: "Complete",
   unsupportedTitle: "Program data from a newer version",
-  unsupportedBody: "Your program data was created by a newer version of Somna. Your progress is safe, but it cannot be edited in this version. Refresh or update the application before continuing.",
+  unsupportedBody:
+    "Your program data was created by a newer version of Somna. Your progress is safe, but it cannot be edited in this version. Refresh or update the application before continuing.",
   unsupportedRefresh: "Refresh to check for updates",
   unsupportedDashLabel: "Program data unavailable",
   // Lifecycle states
@@ -184,7 +185,8 @@ const en: ProgramLessonUI = {
   statusCorrupted: "Data unavailable",
   // Start / introduction
   startProgramTitle: "Begin your CBT-I journey",
-  startProgramSubtitle: "A structured, evidence-based learning program designed to help you build more consistent and sustainable sleep habits.",
+  startProgramSubtitle:
+    "A structured, evidence-based learning program designed to help you build more consistent and sustainable sleep habits.",
   startProgramCta: "Start the program",
   programStructureInfo: "6 weeks · 18 lessons · self-paced",
   programPrivacyNote: "Your progress stays on your device. Nothing is shared without your choice.",
@@ -193,7 +195,8 @@ const en: ProgramLessonUI = {
   // Pause
   pauseProgram: "Pause program",
   pauseConfirmTitle: "Pause your program?",
-  pauseConfirmBody: "Your progress will be preserved. You can return and resume whenever you are ready.",
+  pauseConfirmBody:
+    "Your progress will be preserved. You can return and resume whenever you are ready.",
   pauseConfirmCancel: "Keep going",
   pauseConfirmPause: "Pause for now",
   pausedBannerTitle: "Program paused",
@@ -204,12 +207,14 @@ const en: ProgramLessonUI = {
   lessonPausedNote: "Lesson completion is paused. You can still read and review.",
   // Completion
   completionTitle: "You completed the Somna CBT-I Program",
-  completionSubtitle: "The goal is not perfect sleep every night. The skills you practiced can continue to support more consistent sleep over time.",
+  completionSubtitle:
+    "The goal is not perfect sleep every night. The skills you practiced can continue to support more consistent sleep over time.",
   completionDateLabel: "Completed",
   completionLessonsCount: "lessons completed",
   completionMilestone: "CBT-I Graduate milestone earned",
   reviewLessons: "Review lessons",
-  completionDisclaimer: "This program is educational and not a substitute for professional medical care.",
+  completionDisclaimer:
+    "This program is educational and not a substitute for professional medical care.",
   // Progress labels
   currentWeek: "Current week",
   overallProgress: "Overall progress",
@@ -222,7 +227,8 @@ const en: ProgramLessonUI = {
   weeklyFocusWhy: "Why this appears",
   weeklyFocusDataWindow: "Based on your last 7 days",
   weeklyFocusRelatedLesson: "Suggested lesson",
-  weeklyFocusInsufficient: "Complete a few more sleep diary entries to receive a more data-informed weekly focus.",
+  weeklyFocusInsufficient:
+    "Complete a few more sleep diary entries to receive a more data-informed weekly focus.",
   weeklyFocusDefer: "Not now",
   weeklyFocusBasedOn: "Based on",
   // Dashboard
@@ -285,7 +291,8 @@ const zh: ProgramLessonUI = {
   programHubLessonsCount: "节课",
   programHubComplete: "已完成",
   unsupportedTitle: "程序数据来自更新的版本",
-  unsupportedBody: "你的课程数据是由更新版本的 Somna 创建的。你的进度是安全的,但无法在此版本中编辑。请刷新或更新应用后再继续。",
+  unsupportedBody:
+    "你的课程数据是由更新版本的 Somna 创建的。你的进度是安全的,但无法在此版本中编辑。请刷新或更新应用后再继续。",
   unsupportedRefresh: "刷新检查更新",
   unsupportedDashLabel: "课程数据不可用",
   // Lifecycle states
@@ -397,7 +404,8 @@ const es: ProgramLessonUI = {
   programHubLessonsCount: "Lecciones",
   programHubComplete: "Completado",
   unsupportedTitle: "Datos del programa de una versión más reciente",
-  unsupportedBody: "Tus datos del programa fueron creados por una versión más reciente de Somna. Tu progreso está a salvo, pero no se puede editar en esta versión. Actualiza la aplicación antes de continuar.",
+  unsupportedBody:
+    "Tus datos del programa fueron creados por una versión más reciente de Somna. Tu progreso está a salvo, pero no se puede editar en esta versión. Actualiza la aplicación antes de continuar.",
   unsupportedRefresh: "Actualizar para revisar novedades",
   unsupportedDashLabel: "Datos del programa no disponibles",
   // Lifecycle states
@@ -408,11 +416,14 @@ const es: ProgramLessonUI = {
   statusCorrupted: "Datos no disponibles",
   // Start / introduction
   startProgramTitle: "Comienza tu camino con CBT-I",
-  startProgramSubtitle: "Un programa de aprendizaje estructurado y basado en evidencia, diseñado para ayudarte a construir hábitos de sueño más consistentes y sostenibles.",
+  startProgramSubtitle:
+    "Un programa de aprendizaje estructurado y basado en evidencia, diseñado para ayudarte a construir hábitos de sueño más consistentes y sostenibles.",
   startProgramCta: "Comenzar el programa",
   programStructureInfo: "6 semanas · 18 lecciones · a tu ritmo",
-  programPrivacyNote: "Tu progreso se queda en tu dispositivo. No se comparte nada sin tu decisión.",
-  programWhatItDoes: "Las lecciones, ejercicios y tu progreso permanecen conectados durante todo el programa.",
+  programPrivacyNote:
+    "Tu progreso se queda en tu dispositivo. No se comparte nada sin tu decisión.",
+  programWhatItDoes:
+    "Las lecciones, ejercicios y tu progreso permanecen conectados durante todo el programa.",
   programWhatItDoesNot: "Es una herramienta educativa, no un diagnóstico ni tratamiento médico.",
   // Pause
   pauseProgram: "Pausar programa",
@@ -428,7 +439,8 @@ const es: ProgramLessonUI = {
   lessonPausedNote: "La finalización de lecciones está en pausa. Aún puedes leer y repasar.",
   // Completion
   completionTitle: "Completaste el programa CBT-I de Somna",
-  completionSubtitle: "El objetivo no es dormir perfectamente todas las noches. Las habilidades que practicaste pueden seguir apoyando un sueño más consistente con el tiempo.",
+  completionSubtitle:
+    "El objetivo no es dormir perfectamente todas las noches. Las habilidades que practicaste pueden seguir apoyando un sueño más consistente con el tiempo.",
   completionDateLabel: "Completado el",
   completionLessonsCount: "lecciones completadas",
   completionMilestone: "Hito de Graduado en CBT-I obtenido",
@@ -446,7 +458,8 @@ const es: ProgramLessonUI = {
   weeklyFocusWhy: "Por qué aparece esto",
   weeklyFocusDataWindow: "Basado en tus últimos 7 días",
   weeklyFocusRelatedLesson: "Lección sugerida",
-  weeklyFocusInsufficient: "Completa algunas entradas más en el diario de sueño para recibir un enfoque semanal más basado en datos.",
+  weeklyFocusInsufficient:
+    "Completa algunas entradas más en el diario de sueño para recibir un enfoque semanal más basado en datos.",
   weeklyFocusDefer: "Ahora no",
   weeklyFocusBasedOn: "Basado en",
   // Dashboard
@@ -509,7 +522,8 @@ const pt: ProgramLessonUI = {
   programHubLessonsCount: "Lições",
   programHubComplete: "Concluído",
   unsupportedTitle: "Dados do programa de uma versão mais recente",
-  unsupportedBody: "Seus dados do programa foram criados por uma versão mais nova do Somna. Seu progresso está seguro, mas não pode ser editado nesta versão. Atualize o aplicativo antes de continuar.",
+  unsupportedBody:
+    "Seus dados do programa foram criados por uma versão mais nova do Somna. Seu progresso está seguro, mas não pode ser editado nesta versão. Atualize o aplicativo antes de continuar.",
   unsupportedRefresh: "Atualizar para verificar novidades",
   unsupportedDashLabel: "Dados do programa indisponíveis",
   // Lifecycle states
@@ -520,10 +534,12 @@ const pt: ProgramLessonUI = {
   statusCorrupted: "Dados indisponíveis",
   // Start / introduction
   startProgramTitle: "Comece sua jornada com TCC-I",
-  startProgramSubtitle: "Um programa de aprendizado estruturado e baseado em evidências, criado para ajudar você a construir hábitos de sono mais consistentes e sustentáveis.",
+  startProgramSubtitle:
+    "Um programa de aprendizado estruturado e baseado em evidências, criado para ajudar você a construir hábitos de sono mais consistentes e sustentáveis.",
   startProgramCta: "Começar o programa",
   programStructureInfo: "6 semanas · 18 lições · no seu ritmo",
-  programPrivacyNote: "Seu progresso fica no seu dispositivo. Nada é compartilhado sem sua escolha.",
+  programPrivacyNote:
+    "Seu progresso fica no seu dispositivo. Nada é compartilhado sem sua escolha.",
   programWhatItDoes: "Lições, exercícios e progresso permanecem conectados ao longo do programa.",
   programWhatItDoesNot: "Esta é uma ferramenta educacional, não diagnóstico ou tratamento médico.",
   // Pause
@@ -540,12 +556,14 @@ const pt: ProgramLessonUI = {
   lessonPausedNote: "A conclusão de lições está pausada. Você ainda pode ler e revisar.",
   // Completion
   completionTitle: "Você concluiu o Programa TCC-I da Somna",
-  completionSubtitle: "O objetivo não é dormir perfeitamente todas as noites. As habilidades que você praticou podem continuar apoiando um sono mais consistente ao longo do tempo.",
+  completionSubtitle:
+    "O objetivo não é dormir perfeitamente todas as noites. As habilidades que você praticou podem continuar apoiando um sono mais consistente ao longo do tempo.",
   completionDateLabel: "Concluído em",
   completionLessonsCount: "lições concluídas",
   completionMilestone: "Marco de Graduado em TCC-I conquistado",
   reviewLessons: "Revisar lições",
-  completionDisclaimer: "Este programa é educacional e não substitui o acompanhamento médico profissional.",
+  completionDisclaimer:
+    "Este programa é educacional e não substitui o acompanhamento médico profissional.",
   // Progress labels
   currentWeek: "Semana atual",
   overallProgress: "Progresso geral",
@@ -558,7 +576,8 @@ const pt: ProgramLessonUI = {
   weeklyFocusWhy: "Por que isso aparece",
   weeklyFocusDataWindow: "Baseado nos seus últimos 7 dias",
   weeklyFocusRelatedLesson: "Lição sugerida",
-  weeklyFocusInsufficient: "Complete mais algumas entradas no diário do sono para receber um foco semanal mais informado por dados.",
+  weeklyFocusInsufficient:
+    "Complete mais algumas entradas no diário do sono para receber um foco semanal mais informado por dados.",
   weeklyFocusDefer: "Agora não",
   weeklyFocusBasedOn: "Baseado em",
   // Dashboard
@@ -625,7 +644,8 @@ const pl: ProgramLessonUI = {
   programHubLessonsCount: "Lekcji",
   programHubComplete: "Ukończono",
   unsupportedTitle: "Dane programu z nowszej wersji",
-  unsupportedBody: "Twoje dane programu zostały utworzone przez nowszą wersję Somna. Twój postęp jest bezpieczny, ale nie może być edytowany w tej wersji. Odśwież lub zaktualizuj aplikację przed kontynuowaniem.",
+  unsupportedBody:
+    "Twoje dane programu zostały utworzone przez nowszą wersję Somna. Twój postęp jest bezpieczny, ale nie może być edytowany w tej wersji. Odśwież lub zaktualizuj aplikację przed kontynuowaniem.",
   unsupportedRefresh: "Odśwież, aby sprawdzić aktualizacje",
   unsupportedDashLabel: "Dane programu niedostępne",
   // Lifecycle states
@@ -636,16 +656,19 @@ const pl: ProgramLessonUI = {
   statusCorrupted: "Dane niedostępne",
   // Start / introduction
   startProgramTitle: "Rozpocznij swoją podróż z CBT-I",
-  startProgramSubtitle: "Ustrukturyzowany, oparty na dowodach program edukacyjny, który pomoże Ci zbudować bardziej spójne i trwałe nawyki snu.",
+  startProgramSubtitle:
+    "Ustrukturyzowany, oparty na dowodach program edukacyjny, który pomoże Ci zbudować bardziej spójne i trwałe nawyki snu.",
   startProgramCta: "Rozpocznij program",
   programStructureInfo: "6 tygodni · 18 lekcji · we własnym tempie",
-  programPrivacyNote: "Twój postęp pozostaje na Twoim urządzeniu. Nic nie jest udostępniane bez Twojej decyzji.",
+  programPrivacyNote:
+    "Twój postęp pozostaje na Twoim urządzeniu. Nic nie jest udostępniane bez Twojej decyzji.",
   programWhatItDoes: "Lekcje, ćwiczenia i postęp pozostają ze sobą powiązane przez cały program.",
   programWhatItDoesNot: "To narzędzie edukacyjne, a nie diagnoza lub leczenie medyczne.",
   // Pause
   pauseProgram: "Wstrzymaj program",
   pauseConfirmTitle: "Wstrzymać program?",
-  pauseConfirmBody: "Twój postęp zostanie zachowany. Możesz wrócić i kontynuować, kiedy będziesz gotowy.",
+  pauseConfirmBody:
+    "Twój postęp zostanie zachowany. Możesz wrócić i kontynuować, kiedy będziesz gotowy.",
   pauseConfirmCancel: "Kontynuuj",
   pauseConfirmPause: "Wstrzymaj na razie",
   pausedBannerTitle: "Program wstrzymany",
@@ -656,12 +679,14 @@ const pl: ProgramLessonUI = {
   lessonPausedNote: "Ukończenie lekcji jest wstrzymane. Nadal możesz czytać i powtarzać.",
   // Completion
   completionTitle: "Ukończyłeś/aś program CBT-I Somna",
-  completionSubtitle: "Celem nie jest idealny sen co noc. Umiejętności, które ćwiczyłeś/aś, mogą nadal wspierać bardziej spójny sen z czasem.",
+  completionSubtitle:
+    "Celem nie jest idealny sen co noc. Umiejętności, które ćwiczyłeś/aś, mogą nadal wspierać bardziej spójny sen z czasem.",
   completionDateLabel: "Ukończono",
   completionLessonsCount: "lekcji ukończonych",
   completionMilestone: "Kamień milowy Absolwenta CBT-I zdobyty",
   reviewLessons: "Powtórz lekcje",
-  completionDisclaimer: "Ten program ma charakter edukacyjny i nie zastępuje profesjonalnej opieki medycznej.",
+  completionDisclaimer:
+    "Ten program ma charakter edukacyjny i nie zastępuje profesjonalnej opieki medycznej.",
   // Progress labels
   currentWeek: "Aktualny tydzień",
   overallProgress: "Ogólny postęp",
@@ -674,7 +699,8 @@ const pl: ProgramLessonUI = {
   weeklyFocusWhy: "Dlaczego się to pojawia",
   weeklyFocusDataWindow: "Na podstawie ostatnich 7 dni",
   weeklyFocusRelatedLesson: "Sugerowana lekcja",
-  weeklyFocusInsufficient: "Uzupełnij kilka więcej wpisów w dzienniku snu, aby otrzymać bardziej oparty na danych tygodniowy fokus.",
+  weeklyFocusInsufficient:
+    "Uzupełnij kilka więcej wpisów w dzienniku snu, aby otrzymać bardziej oparty na danych tygodniowy fokus.",
   weeklyFocusDefer: "Nie teraz",
   weeklyFocusBasedOn: "Na podstawie",
   // Dashboard
@@ -733,11 +759,13 @@ const de: ProgramLessonUI = {
   badgeCbtiGraduateDesc: "Das vollständige 6-wöchige CBT-I-Programm abgeschlossen.",
   badgeLocked: "Gesperrt",
   badgeEarned: "Verdient",
-  programHubSub: "Eine Reise mit 18 Lektionen über 6 Wochen, um deinen Schlaf Schritt für Schritt wieder aufzubauen.",
+  programHubSub:
+    "Eine Reise mit 18 Lektionen über 6 Wochen, um deinen Schlaf Schritt für Schritt wieder aufzubauen.",
   programHubLessonsCount: "Lektionen",
   programHubComplete: "Abgeschlossen",
   unsupportedTitle: "Programmdaten aus einer neueren Version",
-  unsupportedBody: "Deine Programmdaten wurden von einer neueren Version von Somna erstellt. Dein Fortschritt ist sicher, kann aber in dieser Version nicht bearbeitet werden. Aktualisiere die App, bevor du fortfährst.",
+  unsupportedBody:
+    "Deine Programmdaten wurden von einer neueren Version von Somna erstellt. Dein Fortschritt ist sicher, kann aber in dieser Version nicht bearbeitet werden. Aktualisiere die App, bevor du fortfährst.",
   unsupportedRefresh: "Aktualisieren, um nach Updates zu suchen",
   unsupportedDashLabel: "Programmdaten nicht verfügbar",
   // Lifecycle states
@@ -748,16 +776,20 @@ const de: ProgramLessonUI = {
   statusCorrupted: "Daten nicht verfügbar",
   // Start / introduction
   startProgramTitle: "Beginne deine CBT-I-Reise",
-  startProgramSubtitle: "Ein strukturiertes, evidenzbasiertes Lernprogramm, das dir hilft, konsistentere und nachhaltigere Schlafgewohnheiten aufzubauen.",
+  startProgramSubtitle:
+    "Ein strukturiertes, evidenzbasiertes Lernprogramm, das dir hilft, konsistentere und nachhaltigere Schlafgewohnheiten aufzubauen.",
   startProgramCta: "Programm starten",
   programStructureInfo: "6 Wochen · 18 Lektionen · in deinem Tempo",
-  programPrivacyNote: "Dein Fortschritt bleibt auf deinem Gerät. Nichts wird ohne deine Entscheidung geteilt.",
+  programPrivacyNote:
+    "Dein Fortschritt bleibt auf deinem Gerät. Nichts wird ohne deine Entscheidung geteilt.",
   programWhatItDoes: "Lektionen, Übungen und Fortschritt bleiben während des Programms verbunden.",
-  programWhatItDoesNot: "Dies ist ein pädagogisches Werkzeug, keine medizinische Diagnose oder Behandlung.",
+  programWhatItDoesNot:
+    "Dies ist ein pädagogisches Werkzeug, keine medizinische Diagnose oder Behandlung.",
   // Pause
   pauseProgram: "Programm pausieren",
   pauseConfirmTitle: "Programm pausieren?",
-  pauseConfirmBody: "Dein Fortschritt wird erhalten bleiben. Du kannst zurückkehren und fortsetzen, wann immer du bereit bist.",
+  pauseConfirmBody:
+    "Dein Fortschritt wird erhalten bleiben. Du kannst zurückkehren und fortsetzen, wann immer du bereit bist.",
   pauseConfirmCancel: "Weiter machen",
   pauseConfirmPause: "Vorerst pausieren",
   pausedBannerTitle: "Programm pausiert",
@@ -768,12 +800,14 @@ const de: ProgramLessonUI = {
   lessonPausedNote: "Lektionsabschluss ist pausiert. Du kannst weiterhin lesen und wiederholen.",
   // Completion
   completionTitle: "Du hast das Somna CBT-I-Programm abgeschlossen",
-  completionSubtitle: "Das Ziel ist nicht perfekter Schlaf jede Nacht. Die Fähigkeiten, die du geübt hast, können langfristig einen konsistenteren Schlaf unterstützen.",
+  completionSubtitle:
+    "Das Ziel ist nicht perfekter Schlaf jede Nacht. Die Fähigkeiten, die du geübt hast, können langfristig einen konsistenteren Schlaf unterstützen.",
   completionDateLabel: "Abgeschlossen am",
   completionLessonsCount: "Lektionen abgeschlossen",
   completionMilestone: "Meilenstein CBT-I-Absolvent erreicht",
   reviewLessons: "Lektionen wiederholen",
-  completionDisclaimer: "Dieses Programm ist pädagogisch und kein Ersatz für professionelle medizinische Versorgung.",
+  completionDisclaimer:
+    "Dieses Programm ist pädagogisch und kein Ersatz für professionelle medizinische Versorgung.",
   // Progress labels
   currentWeek: "Aktuelle Woche",
   overallProgress: "Gesamtfortschritt",
@@ -786,7 +820,8 @@ const de: ProgramLessonUI = {
   weeklyFocusWhy: "Warum das erscheint",
   weeklyFocusDataWindow: "Basierend auf deinen letzten 7 Tagen",
   weeklyFocusRelatedLesson: "Vorgeschlagene Lektion",
-  weeklyFocusInsufficient: "Vervollständige ein paar weitere Schlaftagebucheinträge, um einen datenbasierteren Wochenfokus zu erhalten.",
+  weeklyFocusInsufficient:
+    "Vervollständige ein paar weitere Schlaftagebucheinträge, um einen datenbasierteren Wochenfokus zu erhalten.",
   weeklyFocusDefer: "Nicht jetzt",
   weeklyFocusBasedOn: "Basierend auf",
   // Dashboard

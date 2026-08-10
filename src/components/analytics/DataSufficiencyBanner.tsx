@@ -75,23 +75,15 @@ export function DataSufficiencyBanner({
 
   return (
     <div
-      className={cn(
-        "rounded-2xl border p-4",
-        config.toneClass,
-        className,
-      )}
+      className={cn("rounded-2xl border p-4", config.toneClass, className)}
       role="status"
       aria-live="polite"
     >
       <div className="flex items-start gap-3">
         <Icon className={cn("h-5 w-5 shrink-0 mt-0.5", config.iconClass)} aria-hidden="true" />
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-foreground">
-            {t(config.titleKey)}
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            {t(config.bodyKey)}
-          </p>
+          <p className="text-sm font-medium text-foreground">{t(config.titleKey)}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{t(config.bodyKey)}</p>
         </div>
       </div>
     </div>

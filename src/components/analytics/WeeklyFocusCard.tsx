@@ -44,49 +44,31 @@ export function WeeklyFocusCard({
 
   if (isDismissed) {
     return (
-      <div
-        className={cn(
-          "glass-strong rounded-3xl p-6 md:p-8 animate-fade-up",
-          className,
-        )}
-      >
+      <div className={cn("glass-strong rounded-3xl p-6 md:p-8 animate-fade-up", className)}>
         <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
           <Target className="h-3.5 w-3.5 text-accent" />
           {t("dashboard.analytics.focus")}
         </div>
-        <p className="mt-3 text-sm text-muted-foreground">
-          {t("analytics.focus.dismissed")}
-        </p>
+        <p className="mt-3 text-sm text-muted-foreground">{t("analytics.focus.dismissed")}</p>
       </div>
     );
   }
 
   return (
-    <div
-      className={cn(
-        "glass-strong rounded-3xl p-6 md:p-8 animate-fade-up",
-        className,
-      )}
-    >
+    <div className={cn("glass-strong rounded-3xl p-6 md:p-8 animate-fade-up", className)}>
       <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
         <Target className="h-3.5 w-3.5 text-accent" />
         {t("dashboard.analytics.focus")}
       </div>
 
-      <p className="mt-1 text-xs text-muted-foreground">
-        {t("analytics.focus.subtitle")}
-      </p>
+      <p className="mt-1 text-xs text-muted-foreground">{t("analytics.focus.subtitle")}</p>
 
       <div className="mt-4 rounded-2xl border border-accent/30 bg-accent/10 p-4">
         <div className="text-xs uppercase tracking-wider text-accent/80">
           {focus.category.replace(/_/g, " ")}
         </div>
-        <p className="mt-2 text-base leading-relaxed text-foreground">
-          {t(focus.actionKey)}
-        </p>
-        <p className="mt-2 text-sm text-foreground/70">
-          {t(focus.reasonKey)}
-        </p>
+        <p className="mt-2 text-base leading-relaxed text-foreground">{t(focus.actionKey)}</p>
+        <p className="mt-2 text-sm text-foreground/70">{t(focus.reasonKey)}</p>
       </div>
 
       {/* Evidence toggle */}

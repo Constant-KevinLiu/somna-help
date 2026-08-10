@@ -1,6 +1,6 @@
 /**
  * Integration tests for Account Export and Delete functionality.
- * 
+ *
  * Tests:
  * - Export endpoint authentication requirement
  * - Export data format and content
@@ -46,12 +46,7 @@ describe("Account API", () => {
       // - Session tokens
       // - Password hashes
       // - Email hashes
-      const excludedKeys = [
-        "otpChallenge",
-        "sessionToken",
-        "passwordHash",
-        "emailHash",
-      ];
+      const excludedKeys = ["otpChallenge", "sessionToken", "passwordHash", "emailHash"];
       expect(excludedKeys).not.toContain("userData");
     });
   });

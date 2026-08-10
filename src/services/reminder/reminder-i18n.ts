@@ -165,7 +165,8 @@ const es: Strings = {
   "reminder.status.timezone": "Zona horaria",
   "reminder.status.nextRun": "Próximo recordatorio",
   "reminder.testButton": "Enviar correo de prueba",
-  "reminder.error.apiKeyInvalid": "Error de configuración del servicio de correo. Contacte con soporte.",
+  "reminder.error.apiKeyInvalid":
+    "Error de configuración del servicio de correo. Contacte con soporte.",
   "reminder.error.network": "Error de red. Por favor, verifique su conexión.",
   "reminder.error.generic": "Ocurrió un error. Por favor, inténtelo de nuevo.",
 };
@@ -173,7 +174,8 @@ const es: Strings = {
 const de: Strings = {
   "reminder.title": "Erinnerungs-Center",
   "reminder.subtitle": "Bleib auf Kurs mit deinem CBT-I-Programm.",
-  "reminder.description": "Erhalte sanfte Erinnerungen, um deine tägliche Schlafroutine abzuschließen.",
+  "reminder.description":
+    "Erhalte sanfte Erinnerungen, um deine tägliche Schlafroutine abzuschließen.",
   "reminder.email.label": "E-Mail-Adresse",
   "reminder.email.placeholder": "you@example.com",
   "reminder.enable.label": "E-Mail-Erinnerungen aktivieren",
@@ -220,7 +222,8 @@ const de: Strings = {
   "reminder.status.timezone": "Zeitzone",
   "reminder.status.nextRun": "Nächste Erinnerung",
   "reminder.testButton": "Test-E-Mail senden",
-  "reminder.error.apiKeyInvalid": "E-Mail-Dienst-Konfigurationsfehler. Bitte kontaktiere den Support.",
+  "reminder.error.apiKeyInvalid":
+    "E-Mail-Dienst-Konfigurationsfehler. Bitte kontaktiere den Support.",
   "reminder.error.network": "Netzwerkfehler. Bitte überprüfe deine Verbindung.",
   "reminder.error.generic": "Ein Fehler ist aufgetreten. Bitte versuche es erneut.",
 };

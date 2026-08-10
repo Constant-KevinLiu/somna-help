@@ -15,6 +15,11 @@ import type {
   SyncReflection,
   SyncConflict,
 } from "../sync-types";
+import {
+  toCanonicalSleepRecord,
+  toCanonicalReflection,
+  toCanonicalReminderSettings,
+} from "../sync-types";
 import { validateSyncRequest, normalizeSleepRecord, normalizeReflection } from "../sync-validation";
 import {
   getSleepRecordsByUserId,
@@ -26,14 +31,8 @@ import {
   upsertReflection,
   batchUpsertReflections,
 } from "../db/reflections-db";
-import {
-  getReminderSettingsByUserId,
-  upsertReminderSettings,
-} from "../db/reminders-db";
-import {
-  getProgramProgressByUserId,
-  upsertProgramProgress,
-} from "../db/program-progress-db";
+import { getReminderSettingsByUserId, upsertReminderSettings } from "../db/reminders-db";
+import { getProgramProgressByUserId, upsertProgramProgress } from "../db/program-progress-db";
 import { getIdempotencyRecord, createIdempotencyRecord, logSyncOperation } from "../db/sync-db";
 import { resolveSleepRecordConflict, resolveReflectionConflict } from "../sync-conflicts";
 import {
@@ -56,7 +55,7 @@ export async function handleSync(
   env: SyncEnv,
   userId: string,
   request: Request,
-  idempotencyKey?: string
+  idempotencyKey?: string,
 ): Promise<Response> {
   // Parse sync request from body
   let syncRequest: SyncRequest;
@@ -116,7 +115,7 @@ export async function handleSync(
       syncId,
       result.conflicts.length > 0 ? "partial" : "success",
       result.sleepRecords.length + result.reflections.length,
-      result.conflicts.length
+      result.conflicts.length,
     );
 
     return json(200, {
@@ -137,7 +136,7 @@ export async function handleSync(
       "failed",
       0,
       0,
-      error instanceof Error ? error.message : "unknown error"
+      error instanceof Error ? error.message : "unknown error",
     );
 
     return json(500, {
@@ -157,8 +156,10 @@ export async function handleSync(
 async function processSync(
   env: SyncEnv,
   userId: string,
-  request: SyncRequest
-): Promise<Omit<SyncResponse, "syncId" | "serverTime" | "success" | "migrationRequired" | "lastSyncedAt">> {
+  request: SyncRequest,
+): Promise<
+  Omit<SyncResponse, "syncId" | "serverTime" | "success" | "migrationRequired" | "lastSyncedAt">
+> {
   const conflicts: SyncConflict[] = [];
 
   // Get current server state
@@ -241,11 +242,9 @@ async function processSync(
       const serverProgress = await getProgramProgressByUserId(env, userId);
       if (serverProgress) {
         // Both sides have progress — merge using union strategy
-        const localProg = fromCanonicalProgress(
-          serverProgress as CanonicalProgramProgress
-        );
+        const localProg = fromCanonicalProgress(serverProgress as CanonicalProgramProgress);
         const remoteProg = fromCanonicalProgress(
-          request.programProgress as unknown as CanonicalProgramProgress
+          request.programProgress as unknown as CanonicalProgramProgress,
         );
         const merged = mergeLocalAndRemoteProgress(localProg, remoteProg);
         const entityId = serverProgress.entityId;
@@ -256,7 +255,7 @@ async function processSync(
         finalProgramProgress = await upsertProgramProgress(
           env,
           userId,
-          request.programProgress as SyncProgramProgress
+          request.programProgress as SyncProgramProgress,
         );
       }
     } else {
@@ -267,7 +266,7 @@ async function processSync(
     // Program progress sync errors are non-fatal — don't break the whole sync
     console.error(
       "Program progress sync failed (non-fatal):",
-      progError instanceof Error ? progError.message : "unknown error"
+      progError instanceof Error ? progError.message : "unknown error",
     );
     // Still try to return whatever server has
     try {
@@ -282,9 +281,9 @@ async function processSync(
   const finalReflections = await getReflectionsByUserId(env, userId);
 
   return {
-    sleepRecords: finalSleepRecords,
-    reflections: finalReflections,
-    reminderSettings: reminderSettings || undefined,
+    sleepRecords: finalSleepRecords.map(toCanonicalSleepRecord),
+    reflections: finalReflections.map(toCanonicalReflection),
+    reminderSettings: reminderSettings ? toCanonicalReminderSettings(reminderSettings) : undefined,
     programProgress: finalProgramProgress ?? undefined,
     conflicts,
     deletedIds: [], // Client-side deletes handled separately

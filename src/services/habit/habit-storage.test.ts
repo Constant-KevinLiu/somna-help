@@ -26,14 +26,9 @@ import {
   saveNotificationPrefs,
   updateNotificationPermission,
 } from "./habit-storage";
-import {
-  DEFAULT_NOTIFICATION_PREFS,
-} from "./habit-types";
-import type {
-  Reminder,
-  ReminderOccurrence,
-  NotificationPreferences,
-} from "./habit-types";
+import { DEFAULT_NOTIFICATION_PREFS } from "./habit-types";
+import type { NotificationPreferences } from "./habit-types";
+import { makeReminder, makeOccurrence, makeEvent } from "./habit-test-fixtures";
 
 // =============================================================================
 // SSR Safety Tests
@@ -47,36 +42,22 @@ describe("Reminder Storage (SSR)", () => {
   });
 
   it("saveReminders does not throw in SSR environment", () => {
-    const testReminder: Reminder = {
+    const testReminder = makeReminder({
       id: "test-123",
-      ownerId: "anonymous",
       title: "Test Reminder",
       message: "Test message",
-      status: "active",
-      channels: ["in_app"],
-      schedule: { type: "daily", time: "09:00" },
-      snoozeOptionsMinutes: [5, 10, 15],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    });
     // This should not throw
     saveReminders([testReminder]);
     expect(true).toBeTruthy();
   });
 
   it("addReminder does not throw in SSR environment and returns array", () => {
-    const testReminder: Reminder = {
+    const testReminder = makeReminder({
       id: "test-123",
-      ownerId: "anonymous",
       title: "Test Reminder",
       message: "Test message",
-      status: "active",
-      channels: ["in_app"],
-      schedule: { type: "daily", time: "09:00" },
-      snoozeOptionsMinutes: [5, 10, 15],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    });
     const result = addReminder(testReminder);
     expect(Array.isArray(result)).toBeTruthy();
   });
@@ -114,13 +95,11 @@ describe("Occurrence Storage (SSR)", () => {
   });
 
   it("saveOccurrences does not throw in SSR environment", () => {
-    const testOccurrence: ReminderOccurrence = {
+    const testOccurrence = makeOccurrence({
       id: "occ-123",
       reminderId: "rem-123",
       dueAt: new Date().toISOString(),
-      status: "scheduled",
-      createdAt: new Date().toISOString(),
-    };
+    });
     // This should not throw
     saveOccurrences([testOccurrence]);
     expect(true).toBeTruthy();
@@ -140,13 +119,15 @@ describe("Event Storage (SSR)", () => {
 
   it("appendEvent does not throw in SSR environment", () => {
     // This should not throw
-    appendEvent({
-      id: "evt-123",
-      reminderId: "rem-123",
-      occurrenceId: "occ-123",
-      type: "delivered",
-      timestamp: new Date().toISOString(),
-    });
+    appendEvent(
+      makeEvent({
+        id: "evt-123",
+        reminderId: "rem-123",
+        occurrenceId: "occ-123",
+        type: "delivered",
+        timestamp: new Date().toISOString(),
+      }),
+    );
     expect(true).toBeTruthy();
   });
 });
@@ -209,13 +190,15 @@ describe("Storage Boundary Safety (SSR)", () => {
     // None of these should throw
     saveReminders([]);
     saveOccurrences([]);
-    appendEvent({
-      id: "test",
-      reminderId: "test",
-      occurrenceId: "test",
-      type: "dismissed",
-      timestamp: new Date().toISOString(),
-    });
+    appendEvent(
+      makeEvent({
+        id: "test",
+        reminderId: "test",
+        occurrenceId: "test",
+        type: "dismissed",
+        timestamp: new Date().toISOString(),
+      }),
+    );
     saveNotificationPrefs(DEFAULT_NOTIFICATION_PREFS);
 
     expect(true).toBeTruthy();

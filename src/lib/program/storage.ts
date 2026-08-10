@@ -17,11 +17,7 @@
  *   somna:program-plans:v1      — weekly program plans
  */
 
-import {
-  safeLocalStorageGet,
-  safeLocalStorageSet,
-  safeLocalStorageRemove,
-} from "../safe-storage";
+import { safeLocalStorageGet, safeLocalStorageSet, safeLocalStorageRemove } from "../safe-storage";
 import type { ProgramProgress, ProgramDefinition } from "./types";
 import {
   createInitialProgress,
@@ -123,9 +119,9 @@ export function isUnsupportedSchema(value: unknown): value is UnsupportedProgram
  *
  * This guard ensures we never silently downgrade user data.
  */
-export function checkSchemaVersion(raw: unknown):
-  | { ok: true }
-  | { ok: false; storedVersion: number; supportedVersion: number } {
+export function checkSchemaVersion(
+  raw: unknown,
+): { ok: true } | { ok: false; storedVersion: number; supportedVersion: number } {
   if (!raw || typeof raw !== "object") {
     return { ok: true }; // null/undefined/primitive: no schema to worry about
   }
@@ -153,16 +149,13 @@ export function checkSchemaVersion(raw: unknown):
  * Build an unsupported-schema result.
  * Preserves raw data and provides a safe display fallback.
  */
-function buildUnsupportedSchema(
-  raw: unknown,
-  storedVersion: number
-): UnsupportedProgramSchema {
+function buildUnsupportedSchema(raw: unknown, storedVersion: number): UnsupportedProgramSchema {
   // Dev-only diagnostic — never log user content, only schema metadata.
   if (typeof process !== "undefined" && process.env?.NODE_ENV === "development") {
     console.warn(
       `[program-storage] Unsupported schema version in storage: ` +
         `stored=${storedVersion}, supported=${SUPPORTED_PROGRAM_SCHEMA_VERSION}. ` +
-        `Data preserved but not mutated.`
+        `Data preserved but not mutated.`,
     );
   }
 
@@ -199,7 +192,7 @@ const PLANS_STORAGE_KEY = "somna:program-plans:v1";
  *             contract. This function is kept for backward compatibility.
  */
 export function loadProgramProgress(
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): ProgramProgress | UnsupportedProgramSchema {
   const result = loadProgramProgressResult(definition);
   switch (result.status) {
@@ -221,9 +214,7 @@ export function loadProgramProgress(
  *
  * SSR-safe: returns { status: "empty", progress: initial } on the server.
  */
-export function loadProgramProgressResult(
-  definition: ProgramDefinition
-): ProgramLoadResult {
+export function loadProgramProgressResult(definition: ProgramDefinition): ProgramLoadResult {
   const initial = createInitialProgress();
 
   // 1. Try canonical v1 format
@@ -283,7 +274,7 @@ export function saveProgramProgress(progress: ProgramProgress): boolean {
           `[program-storage] saveProgramProgress blocked: ` +
             `stored schema v${versionCheck.storedVersion} > ` +
             `supported v${versionCheck.supportedVersion}. ` +
-            `Data preserved.`
+            `Data preserved.`,
         );
       }
       return false;
@@ -339,9 +330,7 @@ export interface ProgramExportData {
  *
  * SSR-safe: returns empty export on the server.
  */
-export function exportProgramData(
-  definition: ProgramDefinition
-): ProgramExportData {
+export function exportProgramData(definition: ProgramDefinition): ProgramExportData {
   const loaded = loadProgramProgress(definition);
   const plans = loadAllPlansStorage();
 

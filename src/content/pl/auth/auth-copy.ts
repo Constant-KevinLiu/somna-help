@@ -1,9 +1,9 @@
 /**
  * Sleep Diary v2.3 - Polish Authentication Content
- * 
+ *
  * Natively authored Polish content for the authentication modal.
  * NOT translated from English.
- * 
+ *
  * Tone: calm, professional, warm, privacy-conscious
  */
 
@@ -34,7 +34,8 @@ export const authCopyPl: ContentPackage<AuthCopy> = {
     },
     otpForm: {
       title: "Sprawdź swoją pocztę",
-      instructions: "Wysłaliśmy 6-cyfrowy kod weryfikacyjny na Twój e-mail. Wpisz go poniżej, aby kontynuować.",
+      instructions:
+        "Wysłaliśmy 6-cyfrowy kod weryfikacyjny na Twój e-mail. Wpisz go poniżej, aby kontynuować.",
       codeLabel: "Kod weryfikacyjny",
       verifyButton: "Zweryfikuj i kontynuuj",
       verifying: "Weryfikowanie...",
@@ -81,7 +82,8 @@ export const authCopyPl: ContentPackage<AuthCopy> = {
     },
     accountExport: {
       title: "Eksportuj Swoje Dane",
-      description: "Pobierz pełną kopię swoich zapisów snu, refleksji i ustawień jako prywatny plik JSON.",
+      description:
+        "Pobierz pełną kopię swoich zapisów snu, refleksji i ustawień jako prywatny plik JSON.",
       button: "Pobierz Dane",
       downloading: "Przygotowywanie pobierania...",
       successMessage: "Twoje dane zostały pomyślnie wyeksportowane.",
@@ -97,13 +99,15 @@ export const authCopyPl: ContentPackage<AuthCopy> = {
     accountDelete: {
       title: "Usuń Swoje Dane",
       warning: "Tej operacji nie można cofnąć.",
-      explanation: "Trwale usuń wszystkie dane o śnie, refleksje i ustawienia z naszych serwerów. Twoje lokalne dane również zostaną wyczyszczone.",
+      explanation:
+        "Trwale usuń wszystkie dane o śnie, refleksje i ustawienia z naszych serwerów. Twoje lokalne dane również zostaną wyczyszczone.",
       confirmButton: "Usuń Wszystkie Moje Dane",
       cancelButton: "Anuluj",
       confirmationPlaceholder: 'Wpisz "DELETE_MY_SLEEP_DATA", aby potwierdzić',
       confirmationPhrase: "DELETE_MY_SLEEP_DATA",
       successMessage: "Dane Twojego konta zostały usunięte.",
-      partialFailureMessage: "Niektóre dane nie mogły zostać usunięte. Skontaktuj się z pomocą techniczną.",
+      partialFailureMessage:
+        "Niektóre dane nie mogły zostać usunięte. Skontaktuj się z pomocą techniczną.",
       sessionRevokedMessage: "Twoja sesja została cofnięta.",
       clearingCacheMessage: "Czyszczenie lokalnej pamięci podręcznej...",
       ariaLabel: "Usuń wszystkie dane o śnie i informacje o koncie",

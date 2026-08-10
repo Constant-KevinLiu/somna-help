@@ -84,11 +84,7 @@ export const deWeek2Lessons: LessonContent[] = [
     weekSlug: "week-2",
     lessonNumber: 2,
     estimatedMinutes: 5,
-    relatedLessonSlugs: [
-      "bed-sleep-association",
-      "stimulus-control",
-      "sleep-restriction",
-    ],
+    relatedLessonSlugs: ["bed-sleep-association", "stimulus-control", "sleep-restriction"],
     i18n: {
       de: {
         title: "Was ist Schlafeffizienz?",

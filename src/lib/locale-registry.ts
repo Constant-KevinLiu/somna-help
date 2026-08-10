@@ -32,15 +32,7 @@
  *  - "zh" is reserved — has main UI strings but no program/analytics content.
  *  - "ja" is reserved — type-only, no translations.
  */
-export const SUPPORTED_LOCALES = [
-  "en",
-  "es",
-  "pt",
-  "pl",
-  "de",
-  "zh",
-  "ja",
-] as const;
+export const SUPPORTED_LOCALES = ["en", "es", "pt", "pl", "de", "zh", "ja"] as const;
 
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number];
 
@@ -223,34 +215,22 @@ export const LEGACY_LOCALE_MAP: Record<string, SupportedLocale> = {
 
 /** Check if a value is a supported locale code. */
 export function isSupportedLocale(v: unknown): v is SupportedLocale {
-  return (
-    typeof v === "string" &&
-    (SUPPORTED_LOCALES as readonly string[]).includes(v)
-  );
+  return typeof v === "string" && (SUPPORTED_LOCALES as readonly string[]).includes(v);
 }
 
 /** Check if a value is an active locale code. */
 export function isActiveLocale(v: unknown): v is ActiveLocale {
-  return (
-    typeof v === "string" &&
-    (ACTIVE_LOCALES as readonly string[]).includes(v)
-  );
+  return typeof v === "string" && (ACTIVE_LOCALES as readonly string[]).includes(v);
 }
 
 /** Check if a value is a partial locale code. */
 export function isPartialLocale(v: unknown): v is PartialLocale {
-  return (
-    typeof v === "string" &&
-    (PARTIAL_LOCALES as readonly string[]).includes(v)
-  );
+  return typeof v === "string" && (PARTIAL_LOCALES as readonly string[]).includes(v);
 }
 
 /** Check if a value is a reserved locale code. */
 export function isReservedLocale(v: unknown): v is ReservedLocale {
-  return (
-    typeof v === "string" &&
-    (RESERVED_LOCALES as readonly string[]).includes(v)
-  );
+  return typeof v === "string" && (RESERVED_LOCALES as readonly string[]).includes(v);
 }
 
 // =============================================================================
@@ -269,7 +249,7 @@ export function isReservedLocale(v: unknown): v is ReservedLocale {
  */
 export function normalizePersistedLocale(
   raw: string | null | undefined,
-  fallback: SupportedLocale = "en"
+  fallback: SupportedLocale = "en",
 ): SupportedLocale {
   if (!raw) return fallback;
 
@@ -349,7 +329,7 @@ export function resolveTranslation(
   key: string,
   localeDict: Record<string, string> | undefined,
   englishDict: Record<string, string>,
-  featureFallback?: Record<string, string>
+  featureFallback?: Record<string, string>,
 ): string {
   // 1. Requested locale
   if (localeDict?.[key] !== undefined) return localeDict[key];

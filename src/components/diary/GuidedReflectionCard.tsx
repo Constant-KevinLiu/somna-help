@@ -20,9 +20,10 @@ import { ES_REFLECTION_UI } from "@/content/es/diary/reflection-ui";
 import { PT_BR_REFLECTION_UI } from "@/content/pt-BR/diary/reflection-ui";
 import { PL_REFLECTION_UI } from "@/content/pl/diary/reflection-ui";
 import type { Locale } from "@/content/content-types";
+import type { ReflectionUiStrings } from "@/content/en/diary/reflection-ui";
 import { todayLocalISO } from "@/lib/reflection/reflection-storage";
 
-const UI_STRINGS = {
+const UI_STRINGS: Partial<Record<Locale, ReflectionUiStrings>> = {
   en: EN_REFLECTION_UI,
   es: ES_REFLECTION_UI,
   "pt-BR": PT_BR_REFLECTION_UI,
@@ -36,8 +37,8 @@ interface GuidedReflectionCardProps {
 
 export function GuidedReflectionCard({ onViewHistory, onOpenAuth }: GuidedReflectionCardProps) {
   const { lang } = useI18n();
-  const locale = lang as Locale;
-  const strings = UI_STRINGS[locale];
+  const contentLocale = lang as Locale;
+  const strings = UI_STRINGS[contentLocale] ?? EN_REFLECTION_UI;
 
   const today = todayLocalISO();
 
@@ -50,7 +51,7 @@ export function GuidedReflectionCard({ onViewHistory, onOpenAuth }: GuidedReflec
     saveStatus,
     manualSave,
     isEditing,
-  } = useReflectionDraft({ locale, initialDate: today });
+  } = useReflectionDraft({ locale: contentLocale, initialDate: today });
 
   return (
     <div className="glass-strong space-y-6 rounded-3xl p-6 md:p-8">
@@ -63,7 +64,7 @@ export function GuidedReflectionCard({ onViewHistory, onOpenAuth }: GuidedReflec
         <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-accent">
           {strings.promptsHeader}
         </h3>
-        <ReflectionPromptsList prompts={prompts} locale={locale} />
+        <ReflectionPromptsList prompts={prompts} locale={contentLocale} />
       </div>
 
       <ReflectionEditor
@@ -72,7 +73,7 @@ export function GuidedReflectionCard({ onViewHistory, onOpenAuth }: GuidedReflec
         wordCount={wordCount}
         isAtWordLimit={isAtWordLimit}
         saveStatus={saveStatus}
-        locale={locale}
+        locale={contentLocale}
         strings={strings}
         ariaLabel={strings.accessibility.editorLabel}
       />

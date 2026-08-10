@@ -39,7 +39,7 @@ interface D1SleepRecord {
 
 export async function getSleepRecordsByUserId(
   env: SyncEnv,
-  userId: string
+  userId: string,
 ): Promise<SyncSleepRecord[]> {
   const db = env.DB;
   if (!db) return [];
@@ -53,18 +53,18 @@ export async function getSleepRecordsByUserId(
       FROM sleep_records
       WHERE user_id = ?
       ORDER BY local_date DESC
-    `
+    `,
     )
     .bind(userId)
     .all();
 
-  return (results.results as D1SleepRecord[]).map(mapToSyncRecord);
+  return results.results.map((row) => mapToSyncRecord(asD1SleepRecord(row)));
 }
 
 export async function getSleepRecordById(
   env: SyncEnv,
   userId: string,
-  recordId: string
+  recordId: string,
 ): Promise<SyncSleepRecord | null> {
   const db = env.DB;
   if (!db) return null;
@@ -77,19 +77,19 @@ export async function getSleepRecordById(
              sleep_score, created_at, updated_at
       FROM sleep_records
       WHERE id = ? AND user_id = ?
-    `
+    `,
     )
     .bind(recordId, userId)
     .first();
 
   if (!result) return null;
-  return mapToSyncRecord(result as D1SleepRecord);
+  return mapToSyncRecord(asD1SleepRecord(result));
 }
 
 export async function getSleepRecordByDate(
   env: SyncEnv,
   userId: string,
-  localDate: string
+  localDate: string,
 ): Promise<SyncSleepRecord | null> {
   const db = env.DB;
   if (!db) return null;
@@ -102,19 +102,19 @@ export async function getSleepRecordByDate(
              sleep_score, created_at, updated_at
       FROM sleep_records
       WHERE user_id = ? AND local_date = ?
-    `
+    `,
     )
     .bind(userId, localDate)
     .first();
 
   if (!result) return null;
-  return mapToSyncRecord(result as D1SleepRecord);
+  return mapToSyncRecord(asD1SleepRecord(result));
 }
 
 export async function upsertSleepRecord(
   env: SyncEnv,
   userId: string,
-  record: SyncSleepRecord
+  record: SyncSleepRecord,
 ): Promise<SyncSleepRecord> {
   const db = env.DB;
   if (!db) throw new Error("Database not available");
@@ -140,7 +140,7 @@ export async function upsertSleepRecord(
         sleep_efficiency = excluded.sleep_efficiency,
         sleep_score = excluded.sleep_score,
         updated_at = excluded.updated_at
-    `
+    `,
     )
     .bind(
       record.id,
@@ -156,7 +156,7 @@ export async function upsertSleepRecord(
       record.sleepEfficiency,
       record.sleepScore,
       record.createdAt || now,
-      record.updatedAt || now
+      record.updatedAt || now,
     )
     .run();
 
@@ -168,7 +168,7 @@ export async function upsertSleepRecord(
 export async function deleteSleepRecord(
   env: SyncEnv,
   userId: string,
-  recordId: string
+  recordId: string,
 ): Promise<boolean> {
   const db = env.DB;
   if (!db) return false;
@@ -178,7 +178,7 @@ export async function deleteSleepRecord(
       `
       DELETE FROM sleep_records
       WHERE id = ? AND user_id = ?
-    `
+    `,
     )
     .bind(recordId, userId)
     .run();
@@ -189,7 +189,7 @@ export async function deleteSleepRecord(
 export async function batchUpsertSleepRecords(
   env: SyncEnv,
   userId: string,
-  records: SyncSleepRecord[]
+  records: SyncSleepRecord[],
 ): Promise<SyncSleepRecord[]> {
   const results: SyncSleepRecord[] = [];
 
@@ -204,6 +204,30 @@ export async function batchUpsertSleepRecords(
 // =============================================================================
 // Mapping Helpers
 // =============================================================================
+
+/**
+ * Safely coerce a raw D1 row (Record<string, unknown>) into a typed D1SleepRecord.
+ * This is the single boundary where we assert the shape of data coming out of
+ * the database — everything downstream is fully typed.
+ */
+function asD1SleepRecord(row: Record<string, unknown>): D1SleepRecord {
+  return {
+    id: row.id as string,
+    user_id: row.user_id as string,
+    local_date: row.local_date as string,
+    timezone: row.timezone as string,
+    bedtime: row.bedtime as string,
+    wake_time: row.wake_time as string,
+    sleep_latency: row.sleep_latency as number,
+    night_awakenings: row.night_awakenings as number,
+    sleep_quality: row.sleep_quality as number,
+    mood: row.mood as number,
+    sleep_efficiency: row.sleep_efficiency as number,
+    sleep_score: row.sleep_score as number,
+    created_at: row.created_at as string,
+    updated_at: row.updated_at as string,
+  };
+}
 
 function mapToSyncRecord(d1: D1SleepRecord): SyncSleepRecord {
   return {

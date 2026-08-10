@@ -4,7 +4,11 @@ import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 import { SHARE_IMAGE_HOSTING_ENABLED, shareImageUrl } from "./lib/share-config";
 import { isSearchEngineBot, isMaliciousAiBot } from "./lib/crawler";
-import { saveReminderSettingsServer, getReminderSettingsServer, deleteReminderSettingsServer } from "./services/reminder/reminder-storage-server";
+import {
+  saveReminderSettingsServer,
+  getReminderSettingsServer,
+  deleteReminderSettingsServer,
+} from "./services/reminder/reminder-storage-server";
 import { sendReminderTestEmail } from "./services/reminder/reminder-mailer";
 import { runReminderCron } from "./services/reminder/reminder-worker";
 import {
@@ -16,10 +20,20 @@ import {
 } from "./services/auth/auth-api";
 import { handleSync, handleRestore } from "./services/sync/api/sync-api";
 import { handleAccountExport, handleAccountDelete } from "./services/account/account-api";
+import type { WorkerEnv } from "./services/auth/auth-types";
 
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
+
+/**
+ * Type guard that narrows the raw Worker env to our canonical WorkerEnv.
+ * Called once at the server adapter boundary so all downstream code works
+ * with a properly typed environment.
+ */
+function asWorkerEnv(env: unknown): WorkerEnv {
+  return env as WorkerEnv;
+}
 
 /**
  * Cloudflare R2 bucket configuration for Share Service v2.
@@ -413,6 +427,11 @@ function crawlerSafeHeaders(): Headers {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      // ── Narrow environment to canonical WorkerEnv type ─────────────────────
+      // Done ONCE at the adapter boundary so all downstream code uses a
+      // consistently typed environment.
+      const workerEnv = asWorkerEnv(env);
+
       // ── HTTPS enforcement ───────────────────────────────────────────────────
       // Any HTTP request is permanently redirected to HTTPS before any other
       // logic runs. Path, query and fragment are preserved.
@@ -457,7 +476,12 @@ export default {
         });
       }
 
-      if (url.pathname === REMINDER_PATH || url.pathname === REMINDER_STATUS_PATH || url.pathname === REMINDER_TEST_PATH || url.pathname.startsWith("/api/reminders/")) {
+      if (
+        url.pathname === REMINDER_PATH ||
+        url.pathname === REMINDER_STATUS_PATH ||
+        url.pathname === REMINDER_TEST_PATH ||
+        url.pathname.startsWith("/api/reminders/")
+      ) {
         if (request.method === "OPTIONS") {
           return new Response(null, {
             status: 204,
@@ -478,11 +502,7 @@ export default {
           const language = typeof payload?.language === "string" ? payload.language : "en";
           if (!email) return json(400, { success: false, error: "invalid_payload" });
           const result = await sendReminderTestEmail(email, language);
-          const statusCode = result.success
-            ? 200
-            : result.error === "invalid_api_key"
-            ? 401
-            : 500;
+          const statusCode = result.success ? 200 : result.error === "invalid_api_key" ? 401 : 500;
           return json(statusCode, {
             success: result.success,
             message: result.success ? "Test email queued" : result.error,
@@ -510,7 +530,7 @@ export default {
           const timezone = typeof payload?.timezone === "string" ? payload.timezone : "UTC";
           const language = typeof payload?.language === "string" ? payload.language : "en";
           if (!email && enabled) return json(400, { success: false, error: "invalid_payload" });
-          
+
           // Validate email service API key before saving
           if (enabled) {
             const apiKey = process.env.RESEND_API_KEY?.trim();
@@ -518,14 +538,23 @@ export default {
               return json(401, { success: false, error: "invalid_api_key" });
             }
           }
-          
-          const record = await saveReminderSettingsServer(env as Record<string, unknown> , { email, enabled, time, timezone, language });
+
+          const record = await saveReminderSettingsServer(env as Record<string, unknown>, {
+            email,
+            enabled,
+            time,
+            timezone,
+            language,
+          });
           return json(200, { success: true, ...record, nextRun: record.reminderTime });
         }
 
         if (request.method === "DELETE") {
           const id = url.pathname.split("/").filter(Boolean).pop();
-          const deleted = await deleteReminderSettingsServer(env as Record<string, unknown>, id ?? "");
+          const deleted = await deleteReminderSettingsServer(
+            env as Record<string, unknown>,
+            id ?? "",
+          );
           return json(200, { success: deleted });
         }
       }
@@ -579,8 +608,8 @@ export default {
           });
         }
 
-        const authContext = { request, env, ctx };
-        
+        const authContext = { request, env: workerEnv, ctx };
+
         if (url.pathname === AUTH_REQUEST_CODE) {
           return handleRequestCode(authContext);
         }
@@ -610,30 +639,31 @@ export default {
           });
         }
 
-        const authContext = { request, env, ctx };
-        const user = await getAuthenticatedUser(authContext);
+        const authContext = { request, env: workerEnv, ctx };
+        const authState = await getAuthenticatedUser(authContext);
 
-        if (!user) {
+        if (!authState?.isAuthenticated || !authState.user) {
           return json(401, {
             success: false,
             error: "unauthorized",
             message: "Valid authentication required",
           });
         }
+        const userId = authState.user.id;
 
         if (url.pathname === SYNC_PATH) {
           if (request.method !== "POST") {
             return json(405, { success: false, error: "method_not_allowed" });
           }
           const idempotencyKey = request.headers.get("Idempotency-Key") || undefined;
-          return handleSync(env as Record<string, unknown>, user.user.id, request, idempotencyKey);
+          return handleSync(workerEnv, userId, request, idempotencyKey);
         }
 
         if (url.pathname === SYNC_RESTORE_PATH) {
           if (request.method !== "GET") {
             return json(405, { success: false, error: "method_not_allowed" });
           }
-          return handleRestore(env as Record<string, unknown>, user.user.id);
+          return handleRestore(workerEnv, userId);
         }
       }
 
@@ -652,29 +682,30 @@ export default {
           });
         }
 
-        const authContext = { request, env, ctx };
-        const user = await getAuthenticatedUser(authContext);
+        const authContext = { request, env: workerEnv, ctx };
+        const authState = await getAuthenticatedUser(authContext);
 
-        if (!user) {
+        if (!authState?.isAuthenticated || !authState.user) {
           return json(401, {
             success: false,
             error: "unauthorized",
             message: "Valid authentication required",
           });
         }
+        const userId = authState.user.id;
 
         if (url.pathname === ACCOUNT_EXPORT_PATH) {
           if (request.method !== "GET") {
             return json(405, { success: false, error: "method_not_allowed" });
           }
-          return handleAccountExport(env as Record<string, unknown>, (user as any).user.id);
+          return handleAccountExport(workerEnv, userId);
         }
 
         if (url.pathname === ACCOUNT_DELETE_PATH) {
           if (request.method !== "DELETE") {
             return json(405, { success: false, error: "method_not_allowed" });
           }
-          return handleAccountDelete(env as Record<string, unknown>, (user as any).user.id, request);
+          return handleAccountDelete(workerEnv, userId, request);
         }
       }
 

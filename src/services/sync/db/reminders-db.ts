@@ -36,7 +36,7 @@ interface D1ReminderSettings {
 
 export async function getReminderSettingsByUserId(
   env: SyncEnv,
-  userId: string
+  userId: string,
 ): Promise<SyncReminderSettings | null> {
   const db = env.DB;
   if (!db) return null;
@@ -48,19 +48,19 @@ export async function getReminderSettingsByUserId(
              timezone, language, updated_at, last_sent_at
       FROM reminder_settings
       WHERE user_id = ?
-    `
+    `,
     )
     .bind(userId)
     .first();
 
   if (!result) return null;
-  return mapToSyncReminderSettings(result as D1ReminderSettings);
+  return mapToSyncReminderSettings(asD1ReminderSettings(result));
 }
 
 export async function upsertReminderSettings(
   env: SyncEnv,
   userId: string,
-  settings: SyncReminderSettings
+  settings: SyncReminderSettings,
 ): Promise<SyncReminderSettings> {
   const db = env.DB;
   if (!db) throw new Error("Database not available");
@@ -83,7 +83,7 @@ export async function upsertReminderSettings(
         timezone = excluded.timezone,
         language = excluded.language,
         updated_at = excluded.updated_at
-    `
+    `,
     )
     .bind(
       id,
@@ -94,7 +94,7 @@ export async function upsertReminderSettings(
       settings.weeklyDay || "Sunday",
       settings.timezone || "UTC",
       settings.language || "en",
-      settings.updatedAt || now
+      settings.updatedAt || now,
     )
     .run();
 
@@ -103,10 +103,7 @@ export async function upsertReminderSettings(
   return inserted;
 }
 
-export async function deleteReminderSettings(
-  env: SyncEnv,
-  userId: string
-): Promise<boolean> {
+export async function deleteReminderSettings(env: SyncEnv, userId: string): Promise<boolean> {
   const db = env.DB;
   if (!db) return false;
 
@@ -115,7 +112,7 @@ export async function deleteReminderSettings(
       `
       DELETE FROM reminder_settings
       WHERE user_id = ?
-    `
+    `,
     )
     .bind(userId)
     .run();
@@ -126,6 +123,26 @@ export async function deleteReminderSettings(
 // =============================================================================
 // Mapping Helpers
 // =============================================================================
+
+/**
+ * Safely coerce a raw D1 row (Record<string, unknown>) into a typed D1ReminderSettings.
+ * This is the single boundary where we assert the shape of data coming out of
+ * the database — everything downstream is fully typed.
+ */
+function asD1ReminderSettings(row: Record<string, unknown>): D1ReminderSettings {
+  return {
+    id: row.id as string,
+    user_id: row.user_id as string,
+    enabled: row.enabled as number,
+    morning_time: row.morning_time as string,
+    evening_time: row.evening_time as string,
+    weekly_day: row.weekly_day as string,
+    timezone: row.timezone as string,
+    language: row.language as string,
+    updated_at: row.updated_at as string,
+    last_sent_at: row.last_sent_at as string | undefined,
+  };
+}
 
 function mapToSyncReminderSettings(d1: D1ReminderSettings): SyncReminderSettings {
   return {

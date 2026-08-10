@@ -60,7 +60,10 @@ export function ReflectionEditor({
   const handlePaste = (e: React.ClipboardEvent) => {
     const pastedText = e.clipboardData.getData("text");
     const combinedText = content + pastedText;
-    const newWordCount = combinedText.trim().split(/\s+/).filter((t) => t && /\p{L}/u.test(t)).length;
+    const newWordCount = combinedText
+      .trim()
+      .split(/\s+/)
+      .filter((t) => t && /\p{L}/u.test(t)).length;
 
     if (newWordCount > MAX_WORDS) {
       e.preventDefault();
@@ -118,7 +121,13 @@ export function ReflectionEditor({
               </svg>
             )}
             {saveStatus === "saved" && (
-              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                className="h-3 w-3"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             )}

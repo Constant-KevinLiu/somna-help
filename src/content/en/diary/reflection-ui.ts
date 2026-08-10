@@ -8,6 +8,7 @@ export interface ReflectionUiStrings {
   title: string;
   subtitle: string;
   promptsHeader: string;
+  word: string;
   wordCount: string;
   wordLimit: string;
   wordLimitReached: string;
@@ -55,6 +56,7 @@ export const EN_REFLECTION_UI: ReflectionUiStrings = {
   subtitle: "Three daily prompts to explore your relationship with sleep",
   promptsHeader: "Today's prompts",
   word: "word",
+  wordCount: "word count",
   wordLimit: "words",
   wordLimitReached: "Word limit reached — you can still edit and delete",
   saveButton: "Save Reflection",

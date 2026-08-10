@@ -40,7 +40,9 @@ export async function saveReminderSettingsServer(
   return record;
 }
 
-export async function getReminderSettingsServer(env: Record<string, unknown>): Promise<ReminderRecord | null> {
+export async function getReminderSettingsServer(
+  env: Record<string, unknown>,
+): Promise<ReminderRecord | null> {
   const storage = getStorage(env);
   if (!storage?.get) return null;
   const raw = await storage.get(REMINDER_STORAGE_KEY);
@@ -48,7 +50,10 @@ export async function getReminderSettingsServer(env: Record<string, unknown>): P
   return JSON.parse(raw) as ReminderRecord;
 }
 
-export async function deleteReminderSettingsServer(env: Record<string, unknown>, id: string): Promise<boolean> {
+export async function deleteReminderSettingsServer(
+  env: Record<string, unknown>,
+  id: string,
+): Promise<boolean> {
   const storage = getStorage(env);
   if (!storage) return false;
   const current = await getReminderSettingsServer(env);
@@ -59,7 +64,13 @@ export async function deleteReminderSettingsServer(env: Record<string, unknown>,
   return false;
 }
 
-export async function appendReminderLog(env: Record<string, unknown>, record: ReminderRecord, status: string, provider: string, error?: string) {
+export async function appendReminderLog(
+  env: Record<string, unknown>,
+  record: ReminderRecord,
+  status: string,
+  provider: string,
+  error?: string,
+) {
   const storage = getStorage(env);
   if (!storage?.put) return;
   const entry = {

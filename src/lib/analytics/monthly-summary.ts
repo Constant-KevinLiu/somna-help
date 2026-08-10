@@ -57,14 +57,11 @@ export function buildMonthlySummary(
   const bestStreak = longestStreak(monthRecords);
 
   // Habit consistency (average across active reminders)
-  const activeProgress = Array.from(habitProgress.values()).filter(
-    (p) => p.opportunityCount > 0,
-  );
+  const activeProgress = Array.from(habitProgress.values()).filter((p) => p.opportunityCount > 0);
   const habitConsistency =
     activeProgress.length > 0
       ? Math.round(
-          activeProgress.reduce((sum, p) => sum + p.consistencyRate, 0) /
-            activeProgress.length,
+          activeProgress.reduce((sum, p) => sum + p.consistencyRate, 0) / activeProgress.length,
         )
       : null;
 

@@ -15,12 +15,7 @@ interface TrendRangeSelectorProps {
   className?: string;
 }
 
-const OPTIONS: WindowKey[] = [
-  "7d",
-  "14d",
-  "30d",
-  "90d",
-];
+const OPTIONS: WindowKey[] = ["7d", "14d", "30d", "90d"];
 
 export function TrendRangeSelector({
   value,
@@ -32,10 +27,7 @@ export function TrendRangeSelector({
     <div
       role="group"
       aria-label="Time range"
-      className={cn(
-        "inline-flex rounded-full border border-white/10 bg-white/5 p-1",
-        className,
-      )}
+      className={cn("inline-flex rounded-full border border-white/10 bg-white/5 p-1", className)}
     >
       {OPTIONS.map((key) => {
         const isActive = value === key;

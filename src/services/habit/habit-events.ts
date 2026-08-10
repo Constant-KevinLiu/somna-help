@@ -25,7 +25,7 @@ export function createEvent(
     channel?: ReminderChannel;
     source?: "user" | "system" | "browser" | "diary_integration";
     metadata?: Record<string, unknown>;
-  } = {}
+  } = {},
 ): ReminderEvent {
   const now = new Date();
 
@@ -65,17 +65,14 @@ export function logReminderArchived(reminder: Reminder): void {
   appendEvent(createEvent("archived", reminder, { source: "user" }));
 }
 
-export function logOccurrenceScheduled(
-  reminder: Reminder,
-  occurrence: ReminderOccurrence
-): void {
+export function logOccurrenceScheduled(reminder: Reminder, occurrence: ReminderOccurrence): void {
   appendEvent(createEvent("scheduled", reminder, { occurrence, source: "system" }));
 }
 
 export function logOccurrenceDelivered(
   reminder: Reminder,
   occurrence: ReminderOccurrence,
-  channel: ReminderChannel
+  channel: ReminderChannel,
 ): void {
   appendEvent(createEvent("delivered", reminder, { occurrence, channel, source: "system" }));
 }
@@ -83,7 +80,7 @@ export function logOccurrenceDelivered(
 export function logOccurrenceCompleted(
   reminder: Reminder,
   occurrence: ReminderOccurrence,
-  source: "user" | "diary_integration" = "user"
+  source: "user" | "diary_integration" = "user",
 ): void {
   appendEvent(createEvent("completed", reminder, { occurrence, source }));
 }
@@ -91,26 +88,22 @@ export function logOccurrenceCompleted(
 export function logOccurrenceSnoozed(
   reminder: Reminder,
   occurrence: ReminderOccurrence,
-  snoozeMinutes: number
+  snoozeMinutes: number,
 ): void {
-  appendEvent(createEvent("snoozed", reminder, {
-    occurrence,
-    source: "user",
-    metadata: { snoozeMinutes },
-  }));
+  appendEvent(
+    createEvent("snoozed", reminder, {
+      occurrence,
+      source: "user",
+      metadata: { snoozeMinutes },
+    }),
+  );
 }
 
-export function logOccurrenceDismissed(
-  reminder: Reminder,
-  occurrence: ReminderOccurrence
-): void {
+export function logOccurrenceDismissed(reminder: Reminder, occurrence: ReminderOccurrence): void {
   appendEvent(createEvent("dismissed", reminder, { occurrence, source: "user" }));
 }
 
-export function logOccurrenceMissed(
-  reminder: Reminder,
-  occurrence: ReminderOccurrence
-): void {
+export function logOccurrenceMissed(reminder: Reminder, occurrence: ReminderOccurrence): void {
   appendEvent(createEvent("missed", reminder, { occurrence, source: "system" }));
 }
 
@@ -126,43 +119,32 @@ export function logNotificationPermissionDenied(reminder: Reminder): void {
 // Event Queries
 // ============================================
 export function getCompletionEvents(reminderId: string): ReminderEvent[] {
-  return loadEvents().filter(
-    e => e.reminderId === reminderId && e.type === "completed"
-  );
+  return loadEvents().filter((e) => e.reminderId === reminderId && e.type === "completed");
 }
 
 export function getSnoozeEvents(reminderId: string): ReminderEvent[] {
-  return loadEvents().filter(
-    e => e.reminderId === reminderId && e.type === "snoozed"
-  );
+  return loadEvents().filter((e) => e.reminderId === reminderId && e.type === "snoozed");
 }
 
 export function getMissedEvents(reminderId: string): ReminderEvent[] {
-  return loadEvents().filter(
-    e => e.reminderId === reminderId && e.type === "missed"
-  );
+  return loadEvents().filter((e) => e.reminderId === reminderId && e.type === "missed");
 }
 
 export function getEventsByDateRange(
   reminderId: string,
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ): ReminderEvent[] {
   const start = startDate.toISOString();
   const end = endDate.toISOString();
 
   return loadEvents().filter(
-    e => e.reminderId === reminderId && e.timestamp >= start && e.timestamp <= end
+    (e) => e.reminderId === reminderId && e.timestamp >= start && e.timestamp <= end,
   );
 }
 
-export function getEventCountByType(
-  reminderId: string,
-  type: ReminderEventType
-): number {
-  return loadEvents().filter(
-    e => e.reminderId === reminderId && e.type === type
-  ).length;
+export function getEventCountByType(reminderId: string, type: ReminderEventType): number {
+  return loadEvents().filter((e) => e.reminderId === reminderId && e.type === type).length;
 }
 
 // ============================================
@@ -187,22 +169,20 @@ export function getMissedCount(reminderId: string): number {
 export function getTotalOpportunities(
   reminderId: string,
   startDate?: Date,
-  endDate?: Date
+  endDate?: Date,
 ): number {
   // Count all non-cancelled occurrences within the date range
-  const events = loadEvents().filter(e => e.reminderId === reminderId);
-  const relevantTypes: ReminderEventType[] = [
-    "completed", "missed", "dismissed", "snoozed",
-  ];
+  const events = loadEvents().filter((e) => e.reminderId === reminderId);
+  const relevantTypes: ReminderEventType[] = ["completed", "missed", "dismissed", "snoozed"];
 
   if (!startDate && !endDate) {
-    return events.filter(e => relevantTypes.includes(e.type)).length;
+    return events.filter((e) => relevantTypes.includes(e.type)).length;
   }
 
   const start = startDate?.toISOString() || "1970-01-01";
   const end = endDate?.toISOString() || new Date().toISOString();
 
   return events.filter(
-    e => relevantTypes.includes(e.type) && e.timestamp >= start && e.timestamp <= end
+    (e) => relevantTypes.includes(e.type) && e.timestamp >= start && e.timestamp <= end,
   ).length;
 }

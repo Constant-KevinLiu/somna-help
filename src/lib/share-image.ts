@@ -72,6 +72,24 @@ const IMG_LABELS: Record<Lang, ImgLabelSet> = {
     sleepType: "Typ snu",
     result: "Wynik",
   },
+  de: {
+    sleepEfficiency: "Sleep Efficiency",
+    improving: "Improving",
+    dayStreak: "Day Streak",
+    cbtiTraining: "CBT-I Sleep Training",
+    sleepProfile: "Sleep Profile",
+    sleepType: "Sleep Type",
+    result: "Result",
+  },
+  ja: {
+    sleepEfficiency: "Sleep Efficiency",
+    improving: "Improving",
+    dayStreak: "Day Streak",
+    cbtiTraining: "CBT-I Sleep Training",
+    sleepProfile: "Sleep Profile",
+    sleepType: "Sleep Type",
+    result: "Result",
+  },
 };
 
 function roundRect(

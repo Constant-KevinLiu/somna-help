@@ -13,11 +13,7 @@
  */
 
 import { safeLocalStorageGet, safeLocalStorageSet } from "../safe-storage";
-import type {
-  WeeklyReflection,
-  WeeklyReflectionStorage,
-  WeeklyReflectionResponse,
-} from "./types";
+import type { WeeklyReflection, WeeklyReflectionStorage, WeeklyReflectionResponse } from "./types";
 
 const STORAGE_KEY = "somna.weekly-reflections.v1";
 
@@ -89,9 +85,7 @@ function saveReflections(reflections: WeeklyReflection[]): void {
 /**
  * Get a weekly reflection for a specific week (by weekStart date).
  */
-export function getWeeklyReflectionByWeek(
-  weekStart: string,
-): WeeklyReflection | undefined {
+export function getWeeklyReflectionByWeek(weekStart: string): WeeklyReflection | undefined {
   const reflections = loadWeeklyReflections();
   return reflections.find((r) => r.weekStart === weekStart);
 }
@@ -100,13 +94,9 @@ export function getWeeklyReflectionByWeek(
  * Save or update a weekly reflection.
  * Upserts by weekStart — one reflection per week.
  */
-export function saveWeeklyReflection(
-  reflection: WeeklyReflection,
-): WeeklyReflection[] {
+export function saveWeeklyReflection(reflection: WeeklyReflection): WeeklyReflection[] {
   const reflections = loadWeeklyReflections();
-  const index = reflections.findIndex(
-    (r) => r.weekStart === reflection.weekStart,
-  );
+  const index = reflections.findIndex((r) => r.weekStart === reflection.weekStart);
 
   const updated = {
     ...reflection,
@@ -175,7 +165,5 @@ export function calculateWordCount(responses: WeeklyReflectionResponse[]): numbe
  * Get all weekly reflections sorted by date (newest first).
  */
 export function getSortedWeeklyReflections(): WeeklyReflection[] {
-  return loadWeeklyReflections().sort((a, b) =>
-    b.weekStart.localeCompare(a.weekStart),
-  );
+  return loadWeeklyReflections().sort((a, b) => b.weekStart.localeCompare(a.weekStart));
 }

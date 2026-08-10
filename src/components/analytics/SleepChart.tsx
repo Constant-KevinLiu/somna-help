@@ -29,7 +29,8 @@ import { getDateRange, enumerateDates, recordsInRange } from "@/lib/analytics/da
 import { computeTotalSleepTime, computeWASO, hhmmToMinutes } from "@/lib/analytics/metrics";
 import { cn } from "@/lib/utils";
 
-type ChartMetricKey = "sleepEfficiency" | "totalSleepTime" | "sleepOnsetLatency" | "avgBedtime" | "avgWakeTime";
+type ChartMetricKey =
+  "sleepEfficiency" | "totalSleepTime" | "sleepOnsetLatency" | "avgBedtime" | "avgWakeTime";
 
 interface SleepChartProps {
   records: SleepRecord[];
@@ -80,9 +81,7 @@ export function SleepChart({ records, window, t, className }: SleepChartProps) {
     });
   }, [records, window]);
 
-  const hasData = chartData.some(
-    (d) => d[metric] !== null && d[metric] !== undefined,
-  );
+  const hasData = chartData.some((d) => d[metric] !== null && d[metric] !== undefined);
 
   const currentMetricOpt = METRIC_OPTIONS.find((m) => m.key === metric)!;
 
@@ -139,7 +138,10 @@ export function SleepChart({ records, window, t, className }: SleepChartProps) {
       case "avgWakeTime": {
         const hours = Math.floor(numVal / 60);
         const mins = numVal % 60;
-        return [`${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`, t(currentMetricOpt.labelKey)];
+        return [
+          `${String(hours).padStart(2, "0")}:${String(mins).padStart(2, "0")}`,
+          t(currentMetricOpt.labelKey),
+        ];
       }
       default:
         return [String(value), t(currentMetricOpt.labelKey)];
@@ -170,7 +172,11 @@ export function SleepChart({ records, window, t, className }: SleepChartProps) {
 
       {/* Chart */}
       {hasData ? (
-        <div className="h-64 w-full" role="img" aria-label={`${t(currentMetricOpt.labelKey)} trend chart`}>
+        <div
+          className="h-64 w-full"
+          role="img"
+          aria-label={`${t(currentMetricOpt.labelKey)} trend chart`}
+        >
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 10, right: 10, left: -16, bottom: 0 }}>
               <CartesianGrid stroke="oklch(1 0 0 / 8%)" vertical={false} />
@@ -198,7 +204,7 @@ export function SleepChart({ records, window, t, className }: SleepChartProps) {
                   borderRadius: "12px",
                   fontSize: "12px",
                 }}
-                formatter={tooltipFormatter as any}
+                formatter={tooltipFormatter as (value: number | string) => [string, string]}
                 labelFormatter={(label) => label}
               />
               <Line

@@ -125,7 +125,8 @@ export function formatRelativeTime(d: Date): string {
     // Past
     if (diffMins > -5) return "Just now";
     if (diffMins > -60) return `${Math.abs(diffMins)} min ago`;
-    if (diffHours > -24) return `${Math.abs(diffHours)} hour${Math.abs(diffHours) !== 1 ? "s" : ""} ago`;
+    if (diffHours > -24)
+      return `${Math.abs(diffHours)} hour${Math.abs(diffHours) !== 1 ? "s" : ""} ago`;
     if (diffDays > -7) return `${Math.abs(diffDays)} day${Math.abs(diffDays) !== 1 ? "s" : ""} ago`;
     return d.toLocaleDateString();
   } else {

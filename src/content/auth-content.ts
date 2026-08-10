@@ -1,29 +1,36 @@
 /**
  * Sleep Diary v2.3 - Authentication Content Index
- * 
+ *
  * Content Governance: All four locales are independent content products.
  * No silent English fallback - missing locale content blocks deployment.
  */
 
 import type { Locale } from "./content-types";
-import { assertNoEnglishFallback } from "./content-types";
+import { validateContentPackage } from "./content-types";
 import type { AuthCopy } from "./en/auth/auth-copy";
 import { authCopyEn } from "./en/auth/auth-copy";
 import { authCopyEs } from "./es/auth/auth-copy";
 import { authCopyPtBr } from "./pt-BR/auth/auth-copy";
 import { authCopyPl } from "./pl/auth/auth-copy";
 
-const authContentPackages: Record<Locale, typeof authCopyEn> = {
-  "en": authCopyEn,
-  "es": authCopyEs,
+const authContentPackages: Partial<Record<Locale, typeof authCopyEn>> = {
+  en: authCopyEn,
+  es: authCopyEs,
   "pt-BR": authCopyPtBr,
-  "pl": authCopyPl,
+  pl: authCopyPl,
 };
 
-// Validate all content packages at module load time
-// This blocks deployment if any locale is missing or not approved
+// Validate all active content packages at module load time
+// Partial locales (e.g. de) may not have native auth content yet
+const ACTIVE_LOCALES: Locale[] = ["en", "es", "pt-BR", "pl"];
 try {
-  assertNoEnglishFallback(authContentPackages);
+  for (const locale of ACTIVE_LOCALES) {
+    const pkg = authContentPackages[locale];
+    if (!pkg) {
+      throw new Error(`Missing content package for locale: ${locale}`);
+    }
+    validateContentPackage(pkg, locale);
+  }
 } catch (error) {
   console.error("Content Governance validation failed:", error);
   throw error;
@@ -32,8 +39,8 @@ try {
 export function getAuthCopy(locale: Locale): AuthCopy {
   const pkg = authContentPackages[locale];
   if (!pkg) {
-    // This should never happen due to the validation above
-    throw new Error(`No auth content package for locale: ${locale}`);
+    // Fall back to English for locales without native auth content
+    return authCopyEn.content;
   }
   return pkg.content;
 }

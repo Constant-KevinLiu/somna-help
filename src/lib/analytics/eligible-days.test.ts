@@ -37,10 +37,7 @@ describe("eligibleDays calculation", () => {
   describe("7-day window completion rate", () => {
     it("7-day window with 2 recorded days → approximately 28.6%", () => {
       const now = new Date("2024-01-17T12:00:00Z");
-      const records = [
-        makeRecord("2024-01-15"),
-        makeRecord("2024-01-17"),
-      ];
+      const records = [makeRecord("2024-01-15"), makeRecord("2024-01-17")];
       const result = computeAnalytics(records, "7d", emptyHabitProgress, now);
 
       // 7 eligible days, 2 unique recorded days → 2/7 = 28.57% ≈ 29%

@@ -49,10 +49,7 @@ describe("calculateReflectionStreak", () => {
   });
 
   it("returns 0 when streak is broken", () => {
-    const reflections = [
-      createReflection("2024-01-10"),
-      createReflection("2024-01-11"),
-    ];
+    const reflections = [createReflection("2024-01-10"), createReflection("2024-01-11")];
     expect(calculateReflectionStreak(reflections, "2024-01-15")).toBe(0);
   });
 

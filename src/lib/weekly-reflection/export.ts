@@ -27,8 +27,8 @@ const STORAGE_KEY = "somna.weekly-reflections.v1";
  */
 export interface ExportedWeeklyReflection {
   id: string;
-  weekStart: string;   // YYYY-MM-DD (Monday)
-  weekEnd: string;     // YYYY-MM-DD (Sunday)
+  weekStart: string; // YYYY-MM-DD (Monday)
+  weekEnd: string; // YYYY-MM-DD (Sunday)
   timezone: string;
   locale: string;
   prompts: {

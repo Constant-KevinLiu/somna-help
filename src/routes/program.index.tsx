@@ -1,14 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import {
-  ArrowRight,
-  CheckCircle2,
-  Lock,
-  BookOpen,
-  Award,
-  Pause,
-  Play,
-} from "lucide-react";
+import { ArrowRight, CheckCircle2, Lock, BookOpen, Award, Pause, Play } from "lucide-react";
 import { SafeLink } from "@/components/common/SafeLink";
 import { useI18n } from "@/lib/i18n";
 import { LANG_PREFIX } from "@/lib/lang-detect";
@@ -130,9 +122,7 @@ function ProgramPage() {
   const totalWeeks = definition.weeks.length;
 
   // Current week number for display
-  const currentWeekNum = currentWeekId
-    ? Number(currentWeekId.match(/week-(\d+)/)?.[1] ?? 1)
-    : 1;
+  const currentWeekNum = currentWeekId ? Number(currentWeekId.match(/week-(\d+)/)?.[1] ?? 1) : 1;
 
   return (
     <>
@@ -176,28 +166,20 @@ function ProgramPage() {
           <div className="mx-auto max-w-3xl">
             <div className="glass-strong rounded-2xl border border-destructive/30 bg-destructive/10 p-5">
               <p className="text-sm text-destructive">{ui.statusCorrupted}</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {ui.unsupportedBody}
-              </p>
+              <p className="mt-1 text-xs text-muted-foreground">{ui.unsupportedBody}</p>
             </div>
           </div>
         </section>
       )}
 
       {/* Not Started: Introduction card */}
-      {isNotStarted && (
-        <ProgramStartCard onStart={startProgram} totalWeeks={totalWeeks} />
-      )}
+      {isNotStarted && <ProgramStartCard onStart={startProgram} totalWeeks={totalWeeks} />}
 
       {/* Paused: Paused banner */}
-      {isPaused && (
-        <ProgramPausedBanner onResume={resumeProgram} />
-      )}
+      {isPaused && <ProgramPausedBanner onResume={resumeProgram} />}
 
       {/* Completed: Completion summary */}
-      {isCompleted && (
-        <ProgramCompletionSummary progress={progress} />
-      )}
+      {isCompleted && <ProgramCompletionSummary progress={progress} />}
 
       {/* Weekly Focus — show for active and paused (but not not_started or unsupported) */}
       {hydrated && !isUnsupportedSchema && !isNotStarted && (
@@ -257,7 +239,8 @@ function ProgramPage() {
                       {ui.nextLesson}
                     </div>
                     <div className="mt-0.5 font-display text-base text-foreground">
-                      {ui.lessonLabel} {recommendedNextLesson.order} · {ui.weekLabel} {currentWeekNum}
+                      {ui.lessonLabel} {recommendedNextLesson.order} · {ui.weekLabel}{" "}
+                      {currentWeekNum}
                     </div>
                   </div>
                   <span className="inline-flex items-center gap-1 text-sm font-medium text-accent">
@@ -299,8 +282,11 @@ function ProgramPage() {
                 const wc = w.i18n[lang] ?? w.i18n.en!;
                 const shortSlug = resolveWeekSlug(w.slug) ?? w.slug;
                 const weekLessons = getLessonsByWeek(shortSlug);
-                const baseStatus: WeekAccessStatus = hydrated ? getWeekStatus(shortSlug) : "available";
-                const done = hydrated && !isUnsupportedSchema ? getWeekCompletedCount(shortSlug) : 0;
+                const baseStatus: WeekAccessStatus = hydrated
+                  ? getWeekStatus(shortSlug)
+                  : "available";
+                const done =
+                  hydrated && !isUnsupportedSchema ? getWeekCompletedCount(shortSlug) : 0;
                 const pct = hydrated && !isUnsupportedSchema ? getWeekCompletion(shortSlug) : 0;
 
                 // Determine display status
@@ -310,7 +296,7 @@ function ProgramPage() {
                   currentWeekId,
                   done,
                   weekLessons.length,
-                  progress.status
+                  progress.status,
                 );
 
                 const isLocked = baseStatus === "locked" || isUnsupportedSchema || isPaused;
@@ -327,9 +313,7 @@ function ProgramPage() {
                       aria-disabled={!canInteract}
                       tabIndex={canInteract ? undefined : -1}
                       className={`glass group block rounded-2xl p-5 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                        canInteract
-                          ? "hover:bg-white/[0.06]"
-                          : "cursor-not-allowed opacity-60"
+                        canInteract ? "hover:bg-white/[0.06]" : "cursor-not-allowed opacity-60"
                       }`}
                       onClick={canInteract ? undefined : (e) => e.preventDefault()}
                     >
@@ -383,7 +367,11 @@ function ProgramPage() {
               <div className="mt-10 text-center">
                 <SafeLink
                   to={
-                    lang === "pt" ? "/pt/assessment" : lang === "es" ? "/es/evaluacion" : "/assessment"
+                    lang === "pt"
+                      ? "/pt/assessment"
+                      : lang === "es"
+                        ? "/es/evaluacion"
+                        : "/assessment"
                   }
                   className="inline-flex rounded-full bg-gradient-to-r from-primary to-accent px-6 py-3 text-sm font-medium text-primary-foreground"
                 >
@@ -415,7 +403,7 @@ function getWeekDisplayStatus(
   currentWeekId: string | null,
   completedCount: number,
   totalCount: number,
-  programStatus: string
+  programStatus: string,
 ): WeekStatus {
   if (baseStatus === "completed") return "completed";
   if (baseStatus === "locked") return "locked";
@@ -435,7 +423,7 @@ function getHeroEyebrow(
   status: string,
   isUnsupported: boolean,
   loadStatus: string,
-  ui: ReturnType<typeof getProgramLessonUI>
+  ui: ReturnType<typeof getProgramLessonUI>,
 ): string {
   if (isUnsupported) return ui.unsupportedTitle;
   if (loadStatus === "corrupted") return ui.statusCorrupted;

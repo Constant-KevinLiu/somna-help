@@ -58,20 +58,16 @@ function mockFetchSuccess() {
     new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { "content-type": "application/json" },
-    })
+    }),
   );
 }
 
-function mockFetchFailure(
-  error: string,
-  status: number,
-  extra: Record<string, unknown> = {}
-) {
+function mockFetchFailure(error: string, status: number, extra: Record<string, unknown> = {}) {
   fetchMock.mockResolvedValue(
     new Response(JSON.stringify({ success: false, error, ...extra }), {
       status,
       headers: { "content-type": "application/json" },
-    })
+    }),
   );
 }
 

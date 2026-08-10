@@ -11,6 +11,7 @@ export const ES_REFLECTION_UI: ReflectionUiStrings = {
   subtitle: "Tres preguntas diarias para explorar tu relación con el sueño",
   promptsHeader: "Preguntas de hoy",
   word: "palabra",
+  wordCount: "conteo de palabras",
   wordLimit: "palabras",
   wordLimitReached: "Límite de palabras alcanzado — aún puedes editar y borrar",
   saveButton: "Guardar Reflexión",
@@ -39,9 +40,11 @@ export const ES_REFLECTION_UI: ReflectionUiStrings = {
     deleteConfirmAction: "Eliminar",
     cancel: "Cancelar",
   },
-  privacy: "Tus reflexiones se guardan localmente en tu dispositivo y nunca se envían a nuestros servidores.",
+  privacy:
+    "Tus reflexiones se guardan localmente en tu dispositivo y nunca se envían a nuestros servidores.",
   accessibility: {
-    editorLabel: "Editor de reflexión. Tres preguntas diarias para explorar tu relación con el sueño",
+    editorLabel:
+      "Editor de reflexión. Tres preguntas diarias para explorar tu relación con el sueño",
     wordCountAnnounce: "Has escrito",
     savedAnnounce: "Tu reflexión se ha guardado localmente",
   },

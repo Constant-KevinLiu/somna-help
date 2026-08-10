@@ -19,7 +19,8 @@ const deTitles: Record<CbtiSlug, string> = {
 
 const deSummaries: Record<CbtiSlug, string> = {
   "cbt-i-guide": "Eine umfassende Einführung in die kognitive Verhaltenstherapie bei Insomnie.",
-  "sleep-anxiety": "Warum Sorgen über den Schlaf den Schlaf verschlechtern – und wie man den Kreislauf durchbricht.",
+  "sleep-anxiety":
+    "Warum Sorgen über den Schlaf den Schlaf verschlechtern – und wie man den Kreislauf durchbricht.",
   "how-to-fall-asleep-fast":
     "Wissenschaftlich fundierte Techniken, um schneller einzuschlafen – ohne Medikamente.",
   "wake-up-at-3am": "Ursachen für nächtliches Aufwachen und was man dagegen tun kann.",
@@ -485,7 +486,11 @@ const deArticles: CbtiDict["articles"] = {
           yes: "Verlasse das Bett. Gedimmtes Licht. Ruhige Aktivität.",
           no: "Lass dich wieder einschlafen.",
         },
-        { q: "Fühlst du dich wieder müde?", yes: "Kehre ins Bett zurück.", no: "Bleib wach bis zur Müdigkeit." },
+        {
+          q: "Fühlst du dich wieder müde?",
+          yes: "Kehre ins Bett zurück.",
+          no: "Bleib wach bis zur Müdigkeit.",
+        },
         { action: "Steh zur gewohnten Zeit auf — schlaf nicht aus." },
       ],
     },

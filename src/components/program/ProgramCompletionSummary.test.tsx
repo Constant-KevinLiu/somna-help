@@ -49,7 +49,9 @@ vi.mock("@/lib/program-weeks", () => ({
 
 vi.mock("@/components/common/SafeLink", () => ({
   SafeLink: ({ children, to, className, "aria-label": ariaLabel }: any) => (
-    <a href={to} className={className} aria-label={ariaLabel}>{children}</a>
+    <a href={to} className={className} aria-label={ariaLabel}>
+      {children}
+    </a>
   ),
 }));
 
@@ -72,9 +74,7 @@ describe("ProgramCompletionSummary", () => {
     render(<ProgramCompletionSummary progress={progress} />);
 
     expect(screen.getByText("Congratulations!")).toBeInTheDocument();
-    expect(
-      screen.getByText("You've completed the CBT-I program.")
-    ).toBeInTheDocument();
+    expect(screen.getByText("You've completed the CBT-I program.")).toBeInTheDocument();
   });
 
   it("shows review action linking to program page", () => {

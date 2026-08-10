@@ -293,7 +293,8 @@ export function createWheelGesture(config: WheelGestureConfig): () => void {
     const ITEM_HEIGHT = 48; // matches WheelEngine / WheelColumn item height
     const NOTCH_PX = 100; // typical deltaY for one mouse-wheel notch
     let raw = e.deltaY;
-    if (e.deltaMode === 1) raw *= 16; // lines → px
+    if (e.deltaMode === 1)
+      raw *= 16; // lines → px
     else if (e.deltaMode === 2) raw *= ITEM_HEIGHT; // pages → px
     const step = (raw / NOTCH_PX) * ITEM_HEIGHT;
     return Math.max(-ITEM_HEIGHT, Math.min(ITEM_HEIGHT, step));

@@ -149,7 +149,7 @@ export function useReflectionDraft({
       setContentState(newContent);
       hasUnsavedChangesRef.current = true;
     },
-    [wordCount]
+    [wordCount],
   );
 
   const manualSave = useCallback(() => {
@@ -165,7 +165,7 @@ export function useReflectionDraft({
           ? "Reflexión guardada correctamente"
           : locale === "pt-BR"
             ? "Reflexão salva com sucesso"
-            : "Refleksja zapisana pomyślnie"
+            : "Refleksja zapisana pomyślnie",
     );
   }, [performSave, locale]);
 

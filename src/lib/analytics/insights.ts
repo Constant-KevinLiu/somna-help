@@ -34,14 +34,8 @@ import { daysBetween } from "./date-ranges";
 /**
  * Generate an insight from a significant trend.
  */
-function trendInsight(
-  trend: MetricTrend,
-  periodLabel: string,
-): InsightCard | null {
-  if (
-    trend.direction === "insufficient_data" ||
-    trend.direction === "stable"
-  ) {
+function trendInsight(trend: MetricTrend, periodLabel: string): InsightCard | null {
+  if (trend.direction === "insufficient_data" || trend.direction === "stable") {
     return null;
   }
 
@@ -86,8 +80,7 @@ function patternInsight(
 ): InsightCard {
   const type: InsightType = "pattern";
   const priority =
-    (pattern.confidence === "high" ? 9 : pattern.confidence === "medium" ? 6 : 3) +
-    priorityOffset;
+    (pattern.confidence === "high" ? 9 : pattern.confidence === "medium" ? 6 : 3) + priorityOffset;
 
   return {
     id: `pattern-${pattern.key}`,
@@ -98,8 +91,7 @@ function patternInsight(
     evidence: {
       metricKey: pattern.metric,
       period: periodLabel,
-      sampleSize:
-        pattern.evidence.sampleSizeWeekday + pattern.evidence.sampleSizeWeekend,
+      sampleSize: pattern.evidence.sampleSizeWeekday + pattern.evidence.sampleSizeWeekend,
       supportingPatterns: [pattern.key],
     },
     confidence: pattern.confidence,
@@ -187,10 +179,7 @@ function encouragementInsights(
 /**
  * Generate a streak/consistency insight if applicable.
  */
-function streakInsight(
-  streak: number,
-  periodLabel: string,
-): InsightCard | null {
+function streakInsight(streak: number, periodLabel: string): InsightCard | null {
   if (streak < 3) return null;
 
   return {

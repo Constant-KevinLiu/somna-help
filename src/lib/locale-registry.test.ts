@@ -304,9 +304,7 @@ describe("locale-registry", () => {
 
     it("uses feature fallback before English", () => {
       const featureDict = { world: "Feature World" };
-      expect(resolveTranslation("world", {}, enDict, featureDict)).toBe(
-        "Feature World"
-      );
+      expect(resolveTranslation("world", {}, enDict, featureDict)).toBe("Feature World");
     });
 
     it("handles undefined locale dict gracefully", () => {

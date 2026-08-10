@@ -41,14 +41,11 @@ export function buildWeeklySummary(
   const patterns = detectPatterns(weekRecords);
 
   // Habit metrics: average consistency across active reminders
-  const activeProgress = Array.from(habitProgress.values()).filter(
-    (p) => p.opportunityCount > 0,
-  );
+  const activeProgress = Array.from(habitProgress.values()).filter((p) => p.opportunityCount > 0);
   const reminderCompletion =
     activeProgress.length > 0
       ? Math.round(
-          activeProgress.reduce((sum, p) => sum + p.consistencyRate, 0) /
-            activeProgress.length,
+          activeProgress.reduce((sum, p) => sum + p.consistencyRate, 0) / activeProgress.length,
         )
       : null;
 

@@ -294,7 +294,16 @@ export const lessonMetas: LessonMeta[] = [
 export const TOTAL_LESSONS = lessonMetas.length; // 18
 
 export function lessonPath(weekSlug: string, lessonSlug: string, lang?: Lang): string {
-  const prefix = lang === "es" ? "/es" : lang === "pt" ? "/pt" : lang === "pl" ? "/pl" : lang === "de" ? "/de" : "";
+  const prefix =
+    lang === "es"
+      ? "/es"
+      : lang === "pt"
+        ? "/pt"
+        : lang === "pl"
+          ? "/pl"
+          : lang === "de"
+            ? "/de"
+            : "";
   return `${prefix}/program/${weekSlug}/${lessonSlug}`;
 }
 

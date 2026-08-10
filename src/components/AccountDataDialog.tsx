@@ -62,9 +62,9 @@ export function AccountDataDialog({
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = response.headers
-        .get("Content-Disposition")
-        ?.match(/filename="?([^"]+)"?/)?.[1] || "somna-data-export.json";
+      a.download =
+        response.headers.get("Content-Disposition")?.match(/filename="?([^"]+)"?/)?.[1] ||
+        "somna-data-export.json";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -115,8 +115,7 @@ export function AccountDataDialog({
     }
   };
 
-  const canDelete =
-    confirmation === copy.accountDelete.confirmationPhrase && acknowledged;
+  const canDelete = confirmation === copy.accountDelete.confirmationPhrase && acknowledged;
 
   if (mode === "export") {
     return (
@@ -127,9 +126,7 @@ export function AccountDataDialog({
               <Download className="w-5 h-5" />
               {copy.accountExport.title}
             </DialogTitle>
-            <DialogDescription>
-              {copy.accountExport.description}
-            </DialogDescription>
+            <DialogDescription>{copy.accountExport.description}</DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
@@ -211,21 +208,17 @@ export function AccountDataDialog({
               <Checkbox
                 id="acknowledge"
                 checked={acknowledged}
-                onCheckedChange={(checked) =>
-                  setAcknowledged(checked as boolean)
-                }
+                onCheckedChange={(checked) => setAcknowledged(checked as boolean)}
               />
-              <Label
-                htmlFor="acknowledge"
-                className="text-sm font-normal cursor-pointer"
-              >
+              <Label htmlFor="acknowledge" className="text-sm font-normal cursor-pointer">
                 I understand this action is permanent and cannot be undone.
               </Label>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="confirmation" className="text-sm font-medium">
-                Type <code className="bg-muted px-1 py-0.5 rounded text-xs">
+                Type{" "}
+                <code className="bg-muted px-1 py-0.5 rounded text-xs">
                   {copy.accountDelete.confirmationPhrase}
                 </code>{" "}
                 to confirm:

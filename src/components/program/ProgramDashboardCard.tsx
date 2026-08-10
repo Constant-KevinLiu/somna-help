@@ -1,11 +1,4 @@
-import {
-  ArrowRight,
-  BookOpen,
-  GraduationCap,
-  Pause,
-  Play,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, BookOpen, GraduationCap, Pause, Play, Sparkles } from "lucide-react";
 import { SafeLink } from "@/components/common/SafeLink";
 import { ProgramUnsupportedBanner } from "./ProgramUnsupportedBanner";
 import { useI18n } from "@/lib/i18n";
@@ -33,10 +26,7 @@ type Props = {
  *  - completed (acknowledgment + review CTA)
  *  - unsupported-version (protected warning)
  */
-export function ProgramDashboardCard({
-  onResume,
-  onStart,
-}: Props) {
+export function ProgramDashboardCard({ onResume, onStart }: Props) {
   const { lang } = useI18n();
   const ui = getProgramLessonUI(lang);
   const {
@@ -144,11 +134,7 @@ export function ProgramDashboardCard({
             />
             <BrainMetric
               label={ui.dashCurrentLesson}
-              value={
-                nextLesson
-                  ? `${ui.lessonLabel} ${nextLessonNumber}`
-                  : ui.dashProgramComplete
-              }
+              value={nextLesson ? `${ui.lessonLabel} ${nextLessonNumber}` : ui.dashProgramComplete}
             />
             <BrainMetric label={ui.dashCompletion} value={`${pct}%`} />
           </div>
@@ -208,9 +194,7 @@ export function ProgramDashboardCard({
                 <div className="text-xs uppercase tracking-wider text-muted-foreground">
                   {ui.dashPausedStatus}
                 </div>
-                <p className="mt-0.5 text-sm text-foreground/90">
-                  {ui.pausedProgressPreserved}
-                </p>
+                <p className="mt-0.5 text-sm text-foreground/90">{ui.pausedProgressPreserved}</p>
               </div>
               <button
                 type="button"
@@ -228,9 +212,7 @@ export function ProgramDashboardCard({
             <div className="mt-5 flex items-center gap-3 rounded-2xl border border-success/30 bg-success/10 p-4">
               <GraduationCap className="h-5 w-5 shrink-0 text-success" />
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-foreground">
-                  {ui.dashProgramComplete}
-                </p>
+                <p className="text-sm font-medium text-foreground">{ui.dashProgramComplete}</p>
                 <p className="text-xs text-muted-foreground">
                   {TOTAL_LESSONS} {ui.completionLessonsCount}
                 </p>
@@ -272,7 +254,10 @@ function StatusBadge({
   }
 
   const map: Record<string, { label: string; cls: string }> = {
-    not_started: { label: ui.statusNotStarted, cls: "border-white/10 bg-white/5 text-muted-foreground" },
+    not_started: {
+      label: ui.statusNotStarted,
+      cls: "border-white/10 bg-white/5 text-muted-foreground",
+    },
     active: { label: ui.statusActive, cls: "border-accent/30 bg-accent/10 text-accent" },
     paused: { label: ui.statusPaused, cls: "border-accent/30 bg-accent/10 text-accent" },
     completed: { label: ui.statusCompleted, cls: "border-success/30 bg-success/10 text-success" },
@@ -290,9 +275,7 @@ function StatusBadge({
 function BrainMetric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-3">
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-        {label}
-      </div>
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-1 font-display text-lg text-foreground">{value}</div>
     </div>
   );

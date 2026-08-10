@@ -39,7 +39,8 @@ type Props = {
 export function LessonTemplate({ lesson }: Props) {
   const { lang, t } = useI18n();
   const ui = getProgramLessonUI(lang);
-  const { progress, toggleLesson, hydrated, overallCompletion, isUnsupportedSchema } = useProgramService();
+  const { progress, toggleLesson, hydrated, overallCompletion, isUnsupportedSchema } =
+    useProgramService();
   const isPaused = hydrated && !isUnsupportedSchema && progress.status === "paused";
   const c = lesson.i18n[lang] ?? lesson.i18n.en!;
   const meta = getLessonMeta(lesson.slug)!;
@@ -329,7 +330,6 @@ function RelatedLessonCard({ weekSlug, lessonSlug }: { weekSlug: string; lessonS
     </SafeLink>
   );
 }
-
 
 /** SEO head helper for lesson routes. */
 export function lessonHead(lesson: LessonContent, lang: Lang) {

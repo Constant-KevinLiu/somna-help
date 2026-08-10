@@ -157,10 +157,7 @@ describe("useAnalyticsPageView", () => {
       const router = createMockRouter("/");
       renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
 
-      expect(router.subscribe).toHaveBeenCalledWith(
-        "onResolved",
-        expect.any(Function),
-      );
+      expect(router.subscribe).toHaveBeenCalledWith("onResolved", expect.any(Function));
     });
   });
 
@@ -569,7 +566,6 @@ describe("useAnalyticsPageView", () => {
       const navCall = mockTrackPageView.mock.calls[1][0] as Record<string, unknown>;
       expect(navCall.pathname).toBe("/new-page");
     });
-
   });
 
   // ── send_page_view: false + explicit page_view ────────────────────────
@@ -666,9 +662,7 @@ describe("useAnalyticsPageView", () => {
   describe("cleanup on unmount", () => {
     it("unsubscribes from router events on unmount", () => {
       const router = createMockRouter("/");
-      const { unmount } = renderHook(() =>
-        useAnalyticsPageView(router, { isCrawler: false }),
-      );
+      const { unmount } = renderHook(() => useAnalyticsPageView(router, { isCrawler: false }));
 
       expect((router as any).__listenerCount()).toBe(1);
 

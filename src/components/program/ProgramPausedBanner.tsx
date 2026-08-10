@@ -37,10 +37,7 @@ export function ProgramPausedBanner({ onResume, compact = false }: Props) {
   }
 
   return (
-    <section
-      className="px-5 pt-6"
-      aria-label={ui.pausedBannerTitle}
-    >
+    <section className="px-5 pt-6" aria-label={ui.pausedBannerTitle}>
       <div className="mx-auto max-w-3xl">
         <div
           className="glass-strong rounded-3xl border border-accent/30 bg-accent/[0.07] p-6 md:p-8"
@@ -51,15 +48,9 @@ export function ProgramPausedBanner({ onResume, compact = false }: Props) {
               <Pause className="h-5 w-5 text-accent" />
             </div>
             <div className="min-w-0 flex-1">
-              <h2 className="font-display text-lg text-foreground">
-                {ui.pausedBannerTitle}
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                {ui.pausedBannerBody}
-              </p>
-              <p className="mt-2 text-xs text-accent">
-                {ui.pausedProgressPreserved}
-              </p>
+              <h2 className="font-display text-lg text-foreground">{ui.pausedBannerTitle}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{ui.pausedBannerBody}</p>
+              <p className="mt-2 text-xs text-accent">{ui.pausedProgressPreserved}</p>
               {onResume && (
                 <button
                   type="button"

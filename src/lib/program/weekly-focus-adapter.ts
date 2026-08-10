@@ -68,7 +68,7 @@ export interface ProgramRecommendationInput {
   /** The evidence window used to generate the focus. */
   evidenceWindow: {
     start: string; // ISO date string, inclusive
-    end: string;   // ISO date string, inclusive
+    end: string; // ISO date string, inclusive
   };
   /** How much data backs this recommendation. */
   dataSufficiency: DataSufficiency;
@@ -102,7 +102,7 @@ export function buildProgramRecommendationInput(
   evidenceEnd: string,
   dataSufficiency: DataSufficiency,
   acceptedByUser: boolean,
-  locale: SupportedLocale
+  locale: SupportedLocale,
 ): ProgramRecommendationInput {
   return {
     focusCategory: focus.category,
@@ -128,10 +128,7 @@ export function buildProgramRecommendationInput(
  * Purpose: Documents the conceptual relationship between focus areas and
  * lesson domains. Does NOT select specific lessons.
  */
-export const FOCUS_CATEGORY_TO_LESSON_DOMAINS: Record<
-  WeeklyFocusCategory,
-  string[]
-> = {
+export const FOCUS_CATEGORY_TO_LESSON_DOMAINS: Record<WeeklyFocusCategory, string[]> = {
   baseline_building: ["education", "habit"],
   recording_consistency: ["habit"],
   wake_time_consistency: ["stimulus-control", "habit"],

@@ -16,15 +16,9 @@ import type { Lang } from "@/lib/i18n";
 // Module-level cache: key = `${weekSlug}/${lessonSlug}/${lang}`
 const titleCache = new Map<string, string>();
 
-export function useLessonTitle(
-  weekSlug: string,
-  lessonSlug: string,
-  lang: Lang
-): string | null {
+export function useLessonTitle(weekSlug: string, lessonSlug: string, lang: Lang): string | null {
   const cacheKey = `${weekSlug}/${lessonSlug}/${lang}`;
-  const [title, setTitle] = useState<string | null>(
-    () => titleCache.get(cacheKey) ?? null
-  );
+  const [title, setTitle] = useState<string | null>(() => titleCache.get(cacheKey) ?? null);
 
   useEffect(() => {
     if (titleCache.has(cacheKey)) {

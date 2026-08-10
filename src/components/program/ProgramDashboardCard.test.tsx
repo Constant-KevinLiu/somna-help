@@ -65,7 +65,9 @@ vi.mock("@/lib/program-weeks", () => ({
 
 vi.mock("@/components/common/SafeLink", () => ({
   SafeLink: ({ children, to, className }: any) => (
-    <a href={to} className={className}>{children}</a>
+    <a href={to} className={className}>
+      {children}
+    </a>
   ),
 }));
 

@@ -3,7 +3,12 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { countWords, truncateToWordLimit, wouldExceedLimit, MAX_WORDS } from "./reflection-word-count";
+import {
+  countWords,
+  truncateToWordLimit,
+  wouldExceedLimit,
+  MAX_WORDS,
+} from "./reflection-word-count";
 
 describe("countWords", () => {
   it("returns 0 for empty string", () => {
@@ -53,19 +58,25 @@ describe("countWords", () => {
 
 describe("wouldExceedLimit", () => {
   it("returns true when exceeding word limit", () => {
-    const words = Array(MAX_WORDS + 1).fill("word").join(" ");
+    const words = Array(MAX_WORDS + 1)
+      .fill("word")
+      .join(" ");
     expect(wouldExceedLimit("", words)).toBe(true);
   });
 
   it("returns false when within word limit", () => {
-    const words = Array(MAX_WORDS - 1).fill("word").join(" ");
+    const words = Array(MAX_WORDS - 1)
+      .fill("word")
+      .join(" ");
     expect(wouldExceedLimit("", words)).toBe(false);
   });
 });
 
 describe("truncateToWordLimit", () => {
   it("truncates content exceeding word limit", () => {
-    const words = Array(MAX_WORDS + 10).fill("word").join(" ");
+    const words = Array(MAX_WORDS + 10)
+      .fill("word")
+      .join(" ");
     const truncated = truncateToWordLimit(words);
     expect(countWords(truncated)).toBe(MAX_WORDS);
   });

@@ -4,10 +4,7 @@
  * Calculates and provides habit progress metrics for UI display.
  */
 import { useMemo } from "react";
-import {
-  type HabitProgress,
-  type Reminder,
-} from "@/services/habit/habit-types";
+import { type HabitProgress, type Reminder } from "@/services/habit/habit-types";
 import {
   calculateHabitProgress,
   calculateAllHabitProgress,
@@ -38,21 +35,27 @@ export function useHabitProgressForReminders(reminders: Reminder[]) {
   const progressMap = useAllHabitProgress(reminders);
 
   return useMemo(() => {
-    const allCompletions = Array.from(progressMap.values())
-      .reduce((sum, p) => sum + p.completionCount, 0);
+    const allCompletions = Array.from(progressMap.values()).reduce(
+      (sum, p) => sum + p.completionCount,
+      0,
+    );
 
-    const allOpportunities = Array.from(progressMap.values())
-      .reduce((sum, p) => sum + p.opportunityCount, 0);
+    const allOpportunities = Array.from(progressMap.values()).reduce(
+      (sum, p) => sum + p.opportunityCount,
+      0,
+    );
 
-    const overallConsistency = allOpportunities > 0
-      ? Math.round((allCompletions / allOpportunities) * 100)
-      : 0;
+    const overallConsistency =
+      allOpportunities > 0 ? Math.round((allCompletions / allOpportunities) * 100) : 0;
 
-    const activeCount = Array.from(progressMap.values())
-      .filter(p => p.currentState === "active" || p.currentState === "maintained").length;
+    const activeCount = Array.from(progressMap.values()).filter(
+      (p) => p.currentState === "active" || p.currentState === "maintained",
+    ).length;
 
-    const totalStreak = Array.from(progressMap.values())
-      .reduce((sum, p) => sum + p.currentStreak, 0);
+    const totalStreak = Array.from(progressMap.values()).reduce(
+      (sum, p) => sum + p.currentStreak,
+      0,
+    );
 
     return {
       allCompletions,

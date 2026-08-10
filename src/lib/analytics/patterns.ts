@@ -216,14 +216,11 @@ export function detectReminderDiaryPattern(
   if (habitProgress.size === 0) return null;
 
   // Get overall habit consistency (average across active reminders)
-  const progressValues = Array.from(habitProgress.values()).filter(
-    (p) => p.opportunityCount > 0,
-  );
+  const progressValues = Array.from(habitProgress.values()).filter((p) => p.opportunityCount > 0);
   if (progressValues.length === 0) return null;
 
   const avgHabitConsistency =
-    progressValues.reduce((sum, p) => sum + p.consistencyRate, 0) /
-    progressValues.length;
+    progressValues.reduce((sum, p) => sum + p.consistencyRate, 0) / progressValues.length;
 
   const diaryRate = diaryCompletionRate(records, eligibleDays);
   if (diaryRate === null) return null;
@@ -305,15 +302,9 @@ export function detectPatterns(records: SleepRecord[]): PatternFinding[] {
  * Get the strongest positive pattern (for weekly summary).
  * Returns pattern description key or null.
  */
-export function getStrongestPositivePattern(
-  patterns: PatternFinding[],
-): string | null {
+export function getStrongestPositivePattern(patterns: PatternFinding[]): string | null {
   const positivePatterns = patterns.filter((p) =>
-    [
-      "consistent_wake_time",
-      "stable_wake_streak",
-      "weekend_bedtime_earlier",
-    ].includes(p.key),
+    ["consistent_wake_time", "stable_wake_streak", "weekend_bedtime_earlier"].includes(p.key),
   );
   if (positivePatterns.length === 0) return null;
   return positivePatterns[0].key;

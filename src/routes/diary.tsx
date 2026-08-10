@@ -24,6 +24,7 @@ import { Share2 } from "lucide-react";
 import { GuidedReflectionCard, ReflectionHistory } from "@/components/diary";
 import { loadReminders, loadOccurrences, updateOccurrence } from "@/services/habit/habit-storage";
 import { logOccurrenceCompleted } from "@/services/habit/habit-events";
+import type { Reminder, ReminderOccurrence } from "@/services/habit/habit-types";
 
 export const Route = createFileRoute("/diary")({
   component: DiaryPage,
@@ -112,16 +113,16 @@ export function DiaryPage() {
 
     // Find reminders related to diary entries
     const diaryReminders = reminders.filter(
-      (r: any) => r.relatedAction === "diary_morning" || r.relatedAction === "diary_evening"
+      (r: Reminder) => r.relatedAction === "diary_morning" || r.relatedAction === "diary_evening",
     );
 
     for (const reminder of diaryReminders) {
       // Find any due occurrences for this reminder
       const dueOccurrences = occurrences.filter(
-        (o: any) =>
+        (o: ReminderOccurrence) =>
           o.reminderId === reminder.id &&
           (o.status === "scheduled" || o.status === "due" || o.status === "delivered") &&
-          o.dueAt <= now
+          o.dueAt <= now,
       );
 
       for (const occurrence of dueOccurrences) {
@@ -269,13 +270,6 @@ export function DiaryPage() {
           )}
 
           <p className="text-center text-xs text-muted-foreground">{ts("diary.feedback.note")}</p>
-
-          <GuidedReflectionCard
-            showHistory={showHistory}
-            setShowHistory={setShowHistory}
-            editDate={editDate}
-            setEditDate={setEditDate}
-          />
         </div>
       </section>
     </>

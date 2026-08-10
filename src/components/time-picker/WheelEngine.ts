@@ -135,10 +135,7 @@ export function createWheelEngine(config: WheelEngineConfig): WheelEngine {
 
   function dynamicTickCooldown(speedPx: number): number {
     const ratio = Math.min(1, speedPx / itemHeight); // 0 (still) .. 1 (≈1 cell/frame)
-    return (
-      TICK_MAX_COOLDOWN_MS -
-      ratio * (TICK_MAX_COOLDOWN_MS - TICK_MIN_COOLDOWN_MS)
-    );
+    return TICK_MAX_COOLDOWN_MS - ratio * (TICK_MAX_COOLDOWN_MS - TICK_MIN_COOLDOWN_MS);
   }
 
   // Unified audio trigger for every input source (touch drag, momentum,

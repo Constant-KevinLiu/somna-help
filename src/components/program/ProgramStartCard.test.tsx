@@ -37,9 +37,7 @@ describe("ProgramStartCard", () => {
     render(<ProgramStartCard onStart={() => {}} totalWeeks={6} />);
 
     expect(screen.getByText("Start Your Sleep Journey")).toBeInTheDocument();
-    expect(
-      screen.getByText("A 6-week CBT-I program to improve your sleep.")
-    ).toBeInTheDocument();
+    expect(screen.getByText("A 6-week CBT-I program to improve your sleep.")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Start Program" })).toBeInTheDocument();
   });
 

@@ -73,26 +73,21 @@ export const analyticsDe: Dict = {
     "Deine Schlafeffizienz verbessert sich",
   "analytics.insight.trend.improving.sleepEfficiency.body":
     "Deine Schlafeffizienz zeigt in letzter Zeit einen Aufwärtstrend. Das deutet darauf hin, dass dein Schlaf erholsamer wird. Bleib dabei, was funktioniert.",
-  "analytics.insight.trend.declining.sleepEfficiency.title":
-    "Deine Schlafeffizienz ist gesunken",
+  "analytics.insight.trend.declining.sleepEfficiency.title": "Deine Schlafeffizienz ist gesunken",
   "analytics.insight.trend.declining.sleepEfficiency.body":
     "Deine Schlafeffizienz war in letzter Zeit niedriger. Das ist eine Beobachtung, keine Diagnose — viele Faktoren beeinflussen, wie wir von Woche zu Woche schlafen.",
 
-  "analytics.insight.trend.improving.totalSleepTime.title":
-    "Du schläfst mehr",
+  "analytics.insight.trend.improving.totalSleepTime.title": "Du schläfst mehr",
   "analytics.insight.trend.improving.totalSleepTime.body":
     "Deine gesamte Schlafdauer hat zugenommen. Mehr erholsame Schlafstunden können einen spürbaren Unterschied in deinem Tagesbefinden machen.",
-  "analytics.insight.trend.declining.totalSleepTime.title":
-    "Dein Gesamtschlaf hat abgenommen",
+  "analytics.insight.trend.declining.totalSleepTime.title": "Dein Gesamtschlaf hat abgenommen",
   "analytics.insight.trend.declining.totalSleepTime.body":
     "Deine gesamte Schlafdauer war in letzter Zeit kürzer. Das ist wert zu beobachten — Veränderungen in Routine, Stress oder Zeitplan können mitwirken.",
 
-  "analytics.insight.trend.improving.sleepOnsetLatency.title":
-    "Du schläfst schneller ein",
+  "analytics.insight.trend.improving.sleepOnsetLatency.title": "Du schläfst schneller ein",
   "analytics.insight.trend.improving.sleepOnsetLatency.body":
     "Du brauchst weniger Zeit zum Einschlafen. Das ist ein gutes Zeichen — deine Einschlafrituale könnten helfen.",
-  "analytics.insight.trend.declining.sleepOnsetLatency.title":
-    "Du brauchst länger zum Einschlafen",
+  "analytics.insight.trend.declining.sleepOnsetLatency.title": "Du brauchst länger zum Einschlafen",
   "analytics.insight.trend.declining.sleepOnsetLatency.body":
     "Du brauchst in letzter Zeit länger zum Einschlafen. Gekreiste Gedanken, Bildschirmzeit vor dem Schlaf oder Veränderungen der Routine können dazu beitragen.",
 
@@ -100,54 +95,43 @@ export const analyticsDe: Dict = {
     "Dein Schlafrhythmus wird regelmäßiger",
   "analytics.insight.trend.improving.sleepRegularity.body":
     "Deine Schlafens- und Aufstehzeit waren konsistenter. Ein fester Rhythmus ist eines der Fundamente gesunden Schlafs.",
-  "analytics.insight.trend.declining.sleepRegularity.title":
-    "Dein Rhythmus war veränderlicher",
+  "analytics.insight.trend.declining.sleepRegularity.title": "Dein Rhythmus war veränderlicher",
   "analytics.insight.trend.declining.sleepRegularity.body":
     "Deine Schlafens- und Aufstehzeit haben sich in letzter Zeit stärker verändert. Das ist in anspruchsvollen Wochen normal — kleine Anpassungen können die Konstanz zurückbringen.",
 
-  "analytics.insight.pattern.weekend_bedtime_later.title":
-    "Spätere Schlafenszeit am Wochenende",
+  "analytics.insight.pattern.weekend_bedtime_later.title": "Spätere Schlafenszeit am Wochenende",
   "analytics.insight.pattern.weekend_bedtime_later.body":
     "Deine Schlafenszeit verschiebt sich am Wochenende. Sozialer Jetlag — selbst eine kleine Verschiebung — kann beeinflussen, wie du dich am Wochenanfang fühlst.",
-  "analytics.insight.pattern.weekend_waketime_later.title":
-    "Länger schlafen am Wochenende",
+  "analytics.insight.pattern.weekend_waketime_later.title": "Länger schlafen am Wochenende",
   "analytics.insight.pattern.weekend_waketime_later.body":
     "Du stehst am Wochenende später auf. Mehr als eine Stunde länger schlafen kann deine innere Uhr verschieben und Montagmorgenschwierigkeiten machen.",
 
-  "analytics.insight.pattern.consistent_wake_time.title":
-    "Konstante Aufstehzeit",
+  "analytics.insight.pattern.consistent_wake_time.title": "Konstante Aufstehzeit",
   "analytics.insight.pattern.consistent_wake_time.body":
     "Deine Aufstehzeit war sehr stabil. Eine konstante Aufstehzeit ist eine der effektivsten Möglichkeiten, deinen zirkadianen Rhythmus zu stärken — toll gemacht.",
 
-  "analytics.insight.pattern.variable_bedtime.title":
-    "Deine Schlafenszeit variiert stark",
+  "analytics.insight.pattern.variable_bedtime.title": "Deine Schlafenszeit variiert stark",
   "analytics.insight.pattern.variable_bedtime.body":
     "Deine Schlafenszeit war von Nacht zu Nacht sehr unterschiedlich. Versuche, sie zu beobachten ohne sie früher erzwingen zu wollen — Bewusstsein ist der erste Schritt.",
 
-  "analytics.insight.pattern.stable_wake_streak.title":
-    "Serie konstanten Aufstehens",
+  "analytics.insight.pattern.stable_wake_streak.title": "Serie konstanten Aufstehens",
   "analytics.insight.pattern.stable_wake_streak.body":
     "Du hast mehrere Tage hintereinander eine ähnliche Aufstehzeit gehalten. Das baut einen starken zirkadianen Anker — mach weiter so.",
 
-  "analytics.insight.pattern.reminder_habit_stronger_than_diary.title":
-    "Erinnerungen laufen gut",
+  "analytics.insight.pattern.reminder_habit_stronger_than_diary.title": "Erinnerungen laufen gut",
   "analytics.insight.pattern.reminder_habit_stronger_than_diary.body":
     "Du warst konsistenter mit deinen Erinnerungen als mit deinem Tagebuch. Die Erinnerungen bauen eine Routine auf — kannst du das Tagebuch mitnehmen?",
 
-  "analytics.insight.encouragement.start_recording.title":
-    "Deine Schlafgeschichte beginnt hier",
+  "analytics.insight.encouragement.start_recording.title": "Deine Schlafgeschichte beginnt hier",
   "analytics.insight.encouragement.start_recording.body":
     "Jede Reise beginnt mit einer einzigen Nacht. Wenn du deinen Schlaf nur eine Woche aufzeichnest, können sich Muster zeigen, die du vielleicht noch nicht bemerkt hast.",
-  "analytics.insight.encouragement.keep_going.title":
-    "Du hast angefangen",
+  "analytics.insight.encouragement.keep_going.title": "Du hast angefangen",
   "analytics.insight.encouragement.keep_going.body":
     "Super — du hast mit der Aufzeichnung begonnen. Mach noch ein paar Tage weiter, dann siehst du dein Schlafmuster langsam entstehen.",
-  "analytics.insight.encouragement.first_week.title":
-    "Du hast eine Grundlage geschaffen",
+  "analytics.insight.encouragement.first_week.title": "Du hast eine Grundlage geschaffen",
   "analytics.insight.encouragement.first_week.body":
     "Du hast in dieser Woche mehrere Nächte aufgezeichnet. Das allein ist schon ein Erfolg. Die erste Woche dient der Beobachtung — nicht der Perfektion.",
-  "analytics.insight.encouragement.streak.title":
-    "Du bist in einer Serie",
+  "analytics.insight.encouragement.streak.title": "Du bist in einer Serie",
   "analytics.insight.encouragement.streak.body":
     "Tägliche Aufzeichnung schafft Bewusstsein, und Bewusstsein ist der erste Schritt zur Veränderung. Halte die Serie.",
 
@@ -193,12 +177,10 @@ export const analyticsDe: Dict = {
 
   "analytics.focus.title": "Fokus dieser Woche",
   "analytics.focus.subtitle": "Ein sanfter Vorschlag für die kommende Woche",
-  "analytics.focus.baseline_building.reason":
-    "Du baust deinen Schlafdatensatz noch auf.",
+  "analytics.focus.baseline_building.reason": "Du baust deinen Schlafdatensatz noch auf.",
   "analytics.focus.baseline_building.action":
     "Konzentriere dich darauf, jeden Morgen aufzuzeichnen — nur ein Eintrag pro Tag.",
-  "analytics.focus.recording_consistency.reason":
-    "Dein Tagebuch hat diese Woche Lücken.",
+  "analytics.focus.recording_consistency.reason": "Dein Tagebuch hat diese Woche Lücken.",
   "analytics.focus.recording_consistency.action":
     "Versuche, die fehlenden Tage auszufüllen. Selbst ein kurzer Eintrag hilft, das Gesamtbild zu sehen.",
   "analytics.focus.wake_time_consistency.reason":
@@ -213,12 +195,10 @@ export const analyticsDe: Dict = {
     "Deine Erinnerungen sind noch nicht ganz fest etabliert.",
   "analytics.focus.reminder_routine.action":
     "Versuche, diese Woche mindestens eine Erinnerung pro Tag abzuschließen, um die Gewohnheit aufzubauen.",
-  "analytics.focus.maintenance.reason":
-    "Dein Schlaf wirkt konstant und effizient.",
+  "analytics.focus.maintenance.reason": "Dein Schlaf wirkt konstant und effizient.",
   "analytics.focus.maintenance.action":
     "Behalte die gute Routine bei. Konzentriere dich diese Woche darauf, zu halten, was funktioniert.",
-  "analytics.focus.default.reason":
-    "Hier ist ein sanfter Fokus für die Woche.",
+  "analytics.focus.default.reason": "Hier ist ein sanfter Fokus für die Woche.",
   "analytics.focus.default.action":
     "Beobachte deine Schlafmuster mit Neugier — es gibt nichts zu reparieren.",
   "analytics.focus.accept": "Fokus annehmen",
@@ -238,8 +218,7 @@ export const analyticsDe: Dict = {
   "reflection.weekly.edit": "Bearbeiten",
   "reflection.weekly.delete": "Löschen",
   "reflection.weekly.words": "Wörter",
-  "reflection.weekly.empty":
-    "Noch keine Reflexion für diese Woche gespeichert.",
+  "reflection.weekly.empty": "Noch keine Reflexion für diese Woche gespeichert.",
   "reflection.weekly.start": "Reflexion starten",
 
   "reflection.weekly.prompt.routine_consistency.1":
@@ -269,16 +248,11 @@ export const analyticsDe: Dict = {
     "Teile mit, was das Aufzeichnen erleichtert oder erschwert hat...",
   "reflection.weekly.placeholder.manageable_parts":
     "Beschreibe, was sich machbar anfühlte und warum...",
-  "reflection.weekly.placeholder.next_week_observation":
-    "Was willst du nächste Woche bemerken?",
-  "reflection.weekly.placeholder.wins":
-    "Feier etwas — Großes oder Kleines...",
-  "reflection.weekly.placeholder.challenges":
-    "Schreibe darüber, was schwierig war...",
-  "reflection.weekly.placeholder.gratitude":
-    "Wofür bist du dankbar?",
-  "reflection.weekly.placeholder.sleep_confidence":
-    "Wie fühlst du dich gerade mit deinem Schlaf?",
+  "reflection.weekly.placeholder.next_week_observation": "Was willst du nächste Woche bemerken?",
+  "reflection.weekly.placeholder.wins": "Feier etwas — Großes oder Kleines...",
+  "reflection.weekly.placeholder.challenges": "Schreibe darüber, was schwierig war...",
+  "reflection.weekly.placeholder.gratitude": "Wofür bist du dankbar?",
+  "reflection.weekly.placeholder.sleep_confidence": "Wie fühlst du dich gerade mit deinem Schlaf?",
 
   "dashboard.analytics.keyMetrics": "Wichtige Kennwerte",
   "dashboard.analytics.trends": "Trends",

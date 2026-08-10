@@ -1,6 +1,6 @@
 /**
  * Sleep Diary v2.3 - Authentication Database Operations
- * 
+ *
  * D1 database queries for users, sessions, and OTP challenges.
  * Security: All queries use prepared statements to prevent SQL injection.
  */
@@ -21,10 +21,7 @@ interface AuthEnv {
 // User Operations
 // =============================================================================
 
-export async function findUserByEmail(
-  env: AuthEnv,
-  emailNormalized: string
-): Promise<User | null> {
+export async function findUserByEmail(env: AuthEnv, emailNormalized: string): Promise<User | null> {
   const db = env.DB;
   if (!db) return null;
 
@@ -34,7 +31,7 @@ export async function findUserByEmail(
       SELECT id, email_normalized, email_hash, preferred_locale, timezone, created_at, last_login_at, deleted_at
       FROM users
       WHERE email_normalized = ? AND deleted_at IS NULL
-    `
+    `,
     )
     .bind(emailNormalized)
     .first();
@@ -53,10 +50,7 @@ export async function findUserByEmail(
   };
 }
 
-export async function findUserById(
-  env: AuthEnv,
-  userId: string
-): Promise<User | null> {
+export async function findUserById(env: AuthEnv, userId: string): Promise<User | null> {
   const db = env.DB;
   if (!db) return null;
 
@@ -66,7 +60,7 @@ export async function findUserById(
       SELECT id, email_normalized, email_hash, preferred_locale, timezone, created_at, last_login_at, deleted_at
       FROM users
       WHERE id = ? AND deleted_at IS NULL
-    `
+    `,
     )
     .bind(userId)
     .first();
@@ -90,7 +84,7 @@ export async function createUser(
   emailNormalized: string,
   emailHash: string,
   locale: string = "en",
-  timezone: string = "UTC"
+  timezone: string = "UTC",
 ): Promise<User> {
   const db = env.DB;
   if (!db) throw new Error("Database not available");
@@ -103,7 +97,7 @@ export async function createUser(
       `
       INSERT INTO users (id, email_normalized, email_hash, preferred_locale, timezone, created_at, last_login_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
-    `
+    `,
     )
     .bind(userId, emailNormalized, emailHash, locale, timezone, now, now)
     .run();
@@ -119,10 +113,7 @@ export async function createUser(
   };
 }
 
-export async function updateUserLastLogin(
-  env: AuthEnv,
-  userId: string
-): Promise<void> {
+export async function updateUserLastLogin(env: AuthEnv, userId: string): Promise<void> {
   const db = env.DB;
   if (!db) return;
 
@@ -132,7 +123,7 @@ export async function updateUserLastLogin(
       UPDATE users
       SET last_login_at = datetime('now')
       WHERE id = ?
-    `
+    `,
     )
     .bind(userId)
     .run();
@@ -142,11 +133,7 @@ export async function updateUserLastLogin(
 // Session Operations
 // =============================================================================
 
-export async function createSession(
-  env: AuthEnv,
-  userId: string,
-  token: string
-): Promise<Session> {
+export async function createSession(env: AuthEnv, userId: string, token: string): Promise<Session> {
   const db = env.DB;
   if (!db) throw new Error("Database not available");
 
@@ -160,7 +147,7 @@ export async function createSession(
       `
       INSERT INTO sessions (id, user_id, token_hash, created_at, expires_at, last_used_at)
       VALUES (?, ?, ?, ?, ?, ?)
-    `
+    `,
     )
     .bind(sessionId, userId, tokenHash, now, expiresAt, now)
     .run();
@@ -177,7 +164,7 @@ export async function createSession(
 
 export async function findSessionByTokenHash(
   env: AuthEnv,
-  tokenHash: string
+  tokenHash: string,
 ): Promise<Session | null> {
   const db = env.DB;
   if (!db) return null;
@@ -188,7 +175,7 @@ export async function findSessionByTokenHash(
       SELECT id, user_id, token_hash, created_at, expires_at, last_used_at, revoked_at
       FROM sessions
       WHERE token_hash = ? AND revoked_at IS NULL
-    `
+    `,
     )
     .bind(tokenHash)
     .first();
@@ -206,10 +193,7 @@ export async function findSessionByTokenHash(
   };
 }
 
-export async function updateSessionLastUsed(
-  env: AuthEnv,
-  sessionId: string
-): Promise<void> {
+export async function updateSessionLastUsed(env: AuthEnv, sessionId: string): Promise<void> {
   const db = env.DB;
   if (!db) return;
 
@@ -219,16 +203,13 @@ export async function updateSessionLastUsed(
       UPDATE sessions
       SET last_used_at = datetime('now')
       WHERE id = ?
-    `
+    `,
     )
     .bind(sessionId)
     .run();
 }
 
-export async function revokeSession(
-  env: AuthEnv,
-  sessionId: string
-): Promise<boolean> {
+export async function revokeSession(env: AuthEnv, sessionId: string): Promise<boolean> {
   const db = env.DB;
   if (!db) return false;
 
@@ -238,7 +219,7 @@ export async function revokeSession(
       UPDATE sessions
       SET revoked_at = datetime('now')
       WHERE id = ?
-    `
+    `,
     )
     .bind(sessionId)
     .run();
@@ -246,10 +227,7 @@ export async function revokeSession(
   return result.meta.changes > 0;
 }
 
-export async function revokeAllUserSessions(
-  env: AuthEnv,
-  userId: string
-): Promise<void> {
+export async function revokeAllUserSessions(env: AuthEnv, userId: string): Promise<void> {
   const db = env.DB;
   if (!db) return;
 
@@ -259,16 +237,13 @@ export async function revokeAllUserSessions(
       UPDATE sessions
       SET revoked_at = datetime('now')
       WHERE user_id = ? AND revoked_at IS NULL
-    `
+    `,
     )
     .bind(userId)
     .run();
 }
 
-export async function revokeAllSessions(
-  env: AuthEnv,
-  userId: string
-): Promise<number> {
+export async function revokeAllSessions(env: AuthEnv, userId: string): Promise<number> {
   const db = env.DB;
   if (!db) return 0;
 
@@ -278,7 +253,7 @@ export async function revokeAllSessions(
       UPDATE sessions
       SET revoked_at = datetime('now')
       WHERE user_id = ? AND revoked_at IS NULL
-    `
+    `,
     )
     .bind(userId)
     .run();
@@ -295,7 +270,7 @@ export async function createOTPChallenge(
   emailNormalized: string,
   codeHash: string,
   requestIpHash: string,
-  expiresAt: Date
+  expiresAt: Date,
 ): Promise<OTPChallenge> {
   const db = env.DB;
   if (!db) throw new Error("Database not available");
@@ -308,16 +283,9 @@ export async function createOTPChallenge(
       `
       INSERT INTO otp_challenges (id, email_normalized, code_hash, expires_at, attempt_count, created_at, request_ip_hash)
       VALUES (?, ?, ?, ?, 0, ?, ?)
-    `
+    `,
     )
-    .bind(
-      challengeId,
-      emailNormalized,
-      codeHash,
-      expiresAt.toISOString(),
-      now,
-      requestIpHash
-    )
+    .bind(challengeId, emailNormalized, codeHash, expiresAt.toISOString(), now, requestIpHash)
     .run();
 
   return {
@@ -333,7 +301,7 @@ export async function createOTPChallenge(
 
 export async function findLatestOTPChallenge(
   env: AuthEnv,
-  emailNormalized: string
+  emailNormalized: string,
 ): Promise<OTPChallenge | null> {
   const db = env.DB;
   if (!db) return null;
@@ -346,7 +314,7 @@ export async function findLatestOTPChallenge(
       WHERE email_normalized = ? AND consumed_at IS NULL
       ORDER BY created_at DESC
       LIMIT 1
-    `
+    `,
     )
     .bind(emailNormalized)
     .first();
@@ -365,10 +333,7 @@ export async function findLatestOTPChallenge(
   };
 }
 
-export async function incrementOTPAttempts(
-  env: AuthEnv,
-  challengeId: string
-): Promise<void> {
+export async function incrementOTPAttempts(env: AuthEnv, challengeId: string): Promise<void> {
   const db = env.DB;
   if (!db) return;
 
@@ -378,16 +343,13 @@ export async function incrementOTPAttempts(
       UPDATE otp_challenges
       SET attempt_count = attempt_count + 1
       WHERE id = ?
-    `
+    `,
     )
     .bind(challengeId)
     .run();
 }
 
-export async function markOTPConsumed(
-  env: AuthEnv,
-  challengeId: string
-): Promise<void> {
+export async function markOTPConsumed(env: AuthEnv, challengeId: string): Promise<void> {
   const db = env.DB;
   if (!db) return;
 
@@ -397,7 +359,7 @@ export async function markOTPConsumed(
       UPDATE otp_challenges
       SET consumed_at = datetime('now')
       WHERE id = ?
-    `
+    `,
     )
     .bind(challengeId)
     .run();
@@ -406,7 +368,7 @@ export async function markOTPConsumed(
 export async function countRecentOTPRequests(
   env: AuthEnv,
   emailNormalized: string,
-  since: Date
+  since: Date,
 ): Promise<number> {
   const db = env.DB;
   if (!db) return 0;
@@ -417,7 +379,7 @@ export async function countRecentOTPRequests(
       SELECT COUNT(*) as count
       FROM otp_challenges
       WHERE email_normalized = ? AND created_at >= ?
-    `
+    `,
     )
     .bind(emailNormalized, since.toISOString())
     .first();
@@ -427,7 +389,7 @@ export async function countRecentOTPRequests(
 
 export async function deleteOTPChallenge(
   env: AuthEnv,
-  challengeId: string | null
+  challengeId: string | null,
 ): Promise<boolean> {
   if (!challengeId) return false;
   const db = env.DB;
@@ -438,7 +400,7 @@ export async function deleteOTPChallenge(
       `
       DELETE FROM otp_challenges
       WHERE id = ?
-    `
+    `,
     )
     .bind(challengeId)
     .run();

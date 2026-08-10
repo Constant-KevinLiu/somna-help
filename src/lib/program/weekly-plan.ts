@@ -18,11 +18,7 @@
  */
 
 import type { ProgramDefinition, ProgramLessonDefinition } from "./types";
-import {
-  safeLocalStorageGet,
-  safeLocalStorageSet,
-  safeLocalStorageRemove,
-} from "../safe-storage";
+import { safeLocalStorageGet, safeLocalStorageSet, safeLocalStorageRemove } from "../safe-storage";
 import { PLANS_KEY } from "./storage";
 
 // =============================================================================
@@ -99,7 +95,7 @@ export class WeeklyPlanValidationError extends Error {
  */
 export function validatePlanLessonIds(
   plan: WeeklyProgramPlan,
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): boolean {
   const validIds = new Set(definition.lessons.map((l) => l.id));
   return plan.recommendedLessonIds.every((id) => validIds.has(id));
@@ -135,10 +131,7 @@ export function validatePlanAcceptance(plan: WeeklyProgramPlan): boolean {
  *  - acceptedLessonIds is subset of recommended (unless manual_selection)
  *  - Valid date order (start <= end)
  */
-export function validatePlan(
-  plan: WeeklyProgramPlan,
-  definition: ProgramDefinition
-): string[] {
+export function validatePlan(plan: WeeklyProgramPlan, definition: ProgramDefinition): string[] {
   const issues: string[] = [];
 
   // Required fields
@@ -175,8 +168,12 @@ export function validatePlan(
   }
 
   // Date order
-  if (plan.weekStart && plan.weekEnd &&
-      ISO_DATE_RE.test(plan.weekStart) && ISO_DATE_RE.test(plan.weekEnd)) {
+  if (
+    plan.weekStart &&
+    plan.weekEnd &&
+    ISO_DATE_RE.test(plan.weekStart) &&
+    ISO_DATE_RE.test(plan.weekEnd)
+  ) {
     if (plan.weekStart > plan.weekEnd) {
       issues.push("plan.weekStart must be on or before plan.weekEnd");
     }
@@ -205,8 +202,7 @@ export function validatePlan(
   }
 
   // All recommended lesson IDs are valid
-  if (Array.isArray(plan.recommendedLessonIds) &&
-      !validatePlanLessonIds(plan, definition)) {
+  if (Array.isArray(plan.recommendedLessonIds) && !validatePlanLessonIds(plan, definition)) {
     issues.push("plan has invalid lesson IDs in recommendedLessonIds");
   }
 
@@ -236,7 +232,7 @@ export function validatePlan(
  */
 export function getPlanLessons(
   plan: WeeklyProgramPlan,
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): ProgramLessonDefinition[] {
   const lessonMap = new Map(definition.lessons.map((l) => [l.id, l]));
   return plan.recommendedLessonIds
@@ -247,10 +243,7 @@ export function getPlanLessons(
 /**
  * Check if a plan can be accepted (all recommended lessons are valid).
  */
-export function canAcceptPlan(
-  plan: WeeklyProgramPlan,
-  definition: ProgramDefinition
-): boolean {
+export function canAcceptPlan(plan: WeeklyProgramPlan, definition: ProgramDefinition): boolean {
   return (
     plan.status === "proposed" &&
     validatePlanLessonIds(plan, definition) &&
@@ -292,10 +285,7 @@ export function loadWeeklyPlans(): WeeklyProgramPlan[] {
  *
  * @throws {WeeklyPlanValidationError} if the plan fails validation
  */
-export function saveWeeklyPlan(
-  plan: WeeklyProgramPlan,
-  definition: ProgramDefinition
-): void {
+export function saveWeeklyPlan(plan: WeeklyProgramPlan, definition: ProgramDefinition): void {
   const issues = validatePlan(plan, definition);
   if (issues.length > 0) {
     throw new WeeklyPlanValidationError(plan.id || "<unknown>", issues);

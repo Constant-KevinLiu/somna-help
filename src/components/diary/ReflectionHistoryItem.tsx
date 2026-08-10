@@ -3,19 +3,20 @@
  */
 
 import type { LocalReflection } from "@/lib/reflection/reflection-types";
-import type { Locale } from "@/content/content-types";
+import type { Locale as ContentLocale } from "@/content/content-types";
 import { getCategoryLabel } from "@/lib/reflection/reflection-prompts";
 import { format } from "date-fns";
 import { enUS, es, ptBR, pl } from "date-fns/locale";
+import type { Locale as DateFnsLocale } from "date-fns";
 
 interface ReflectionHistoryItemProps {
   reflection: LocalReflection;
-  locale: Locale;
+  locale: ContentLocale;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-const DATE_LOCALES = {
+const DATE_LOCALES: Partial<Record<ContentLocale, DateFnsLocale>> = {
   en: enUS,
   es: es,
   "pt-BR": ptBR,
@@ -28,8 +29,9 @@ export function ReflectionHistoryItem({
   onEdit,
   onDelete,
 }: ReflectionHistoryItemProps) {
+  const dateLocale = DATE_LOCALES[locale] ?? enUS;
   const formattedDate = format(new Date(reflection.localDate), "MMMM d, yyyy", {
-    locale: DATE_LOCALES[locale],
+    locale: dateLocale,
   });
 
   return (
@@ -46,13 +48,25 @@ export function ReflectionHistoryItem({
             onClick={onEdit}
             className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium transition hover:bg-white/20"
           >
-            {locale === "en" ? "Edit" : locale === "es" ? "Editar" : locale === "pt-BR" ? "Editar" : "Edytuj"}
+            {locale === "en"
+              ? "Edit"
+              : locale === "es"
+                ? "Editar"
+                : locale === "pt-BR"
+                  ? "Editar"
+                  : "Edytuj"}
           </button>
           <button
             onClick={onDelete}
             className="rounded-full bg-red-500/10 px-3 py-1 text-xs font-medium text-red-300 transition hover:bg-red-500/20"
           >
-            {locale === "en" ? "Delete" : locale === "es" ? "Eliminar" : locale === "pt-BR" ? "Excluir" : "Usuń"}
+            {locale === "en"
+              ? "Delete"
+              : locale === "es"
+                ? "Eliminar"
+                : locale === "pt-BR"
+                  ? "Excluir"
+                  : "Usuń"}
           </button>
         </div>
       </div>

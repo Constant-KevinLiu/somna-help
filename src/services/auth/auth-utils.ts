@@ -1,6 +1,6 @@
 /**
  * Sleep Diary v2.3 - Authentication Utilities
- * 
+ *
  * OTP generation, hashing, and email normalization.
  * Security-first implementation.
  */
@@ -21,7 +21,7 @@ import { OTP_CONFIG } from "./auth-types";
 export function normalizeEmail(email: string): string {
   const normalized = email.toLowerCase().trim();
   const [username, domain] = normalized.split("@");
-  
+
   if (!username || !domain) {
     return normalized;
   }
@@ -46,9 +46,7 @@ export function normalizeEmail(email: string): string {
  * Uses SHA-256 - not reversible without rainbow tables (which we won't have).
  */
 export function hashEmail(email: string): string {
-  return createHash("sha256")
-    .update(email.normalize())
-    .digest("hex");
+  return createHash("sha256").update(email.normalize()).digest("hex");
 }
 
 /**
@@ -60,19 +58,14 @@ export function hashSecret(secret: string): string {
   // For OTP codes which are short-lived and low-entropy,
   // we use a server-side pepper combined with the code
   const pepper = process.env.OTP_PEPPER || "somna-pepper-change-in-production";
-  return createHash("sha256")
-    .update(`${pepper}${secret}`)
-    .digest("hex");
+  return createHash("sha256").update(`${pepper}${secret}`).digest("hex");
 }
 
 /**
  * Hash IP address for rate limiting without storing raw IPs.
  */
 export function hashIp(ip: string): string {
-  return createHash("sha256")
-    .update(ip)
-    .digest("hex")
-    .slice(0, 16); // Shorten to reduce storage
+  return createHash("sha256").update(ip).digest("hex").slice(0, 16); // Shorten to reduce storage
 }
 
 // =============================================================================

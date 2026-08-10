@@ -28,13 +28,11 @@ export function TurnstileProvider({ siteKey, maxRetries = 3 }: TurnstileProvider
 
   const handleVerify = useCallback((token: string) => {
     // TODO: validate token server-side or store in global auth state.
-    // eslint-disable-next-line no-console
     console.log("[TurnstileProvider] verified", token);
   }, []);
 
   const handleError = useCallback((errorCode: string) => {
     // Non-retryable or max-retries-exceeded errors surface here.
-    // eslint-disable-next-line no-console
     console.error("[TurnstileProvider] error", errorCode);
   }, []);
 

@@ -10,11 +10,7 @@
 import { useMemo } from "react";
 import type { SleepRecord } from "@/lib/sleep-records";
 import type { HabitProgress } from "@/services/habit/habit-types";
-import type {
-  WindowKey,
-  AnalyticsResult,
-  MetricKey,
-} from "@/lib/analytics/types";
+import type { WindowKey, AnalyticsResult, MetricKey } from "@/lib/analytics/types";
 import type { MetricBundle } from "@/lib/analytics/metrics";
 import { getDateRange, recordsInRange, daysBetween, todayISO } from "@/lib/analytics/date-ranges";
 import { computeMetrics } from "@/lib/analytics/metrics";
@@ -67,14 +63,13 @@ export function computeAnalytics(
   // Uses local calendar days to match the record date format (YYYY-MM-DD).
   const today = todayISO(now);
   const effectiveEnd = range.end > today ? today : range.end;
-  const eligibleDays = range.start > effectiveEnd
-    ? 0
-    : daysBetween(range.start, effectiveEnd) + 1;
+  const eligibleDays = range.start > effectiveEnd ? 0 : daysBetween(range.start, effectiveEnd) + 1;
 
   // Filter records to only eligible days (excludes future dates in partial periods)
-  const eligibleRecords = eligibleDays > 0
-    ? (recordsInRange(windowRecords, range.start, effectiveEnd) as SleepRecord[])
-    : [];
+  const eligibleRecords =
+    eligibleDays > 0
+      ? (recordsInRange(windowRecords, range.start, effectiveEnd) as SleepRecord[])
+      : [];
   const eligibleRecordCount = eligibleRecords.length;
 
   const suf = overallSufficiency(eligibleRecordCount);
@@ -107,13 +102,7 @@ export function computeAnalytics(
   const patterns = detectPatterns(windowRecords);
 
   // Insights
-  const insights = generateInsights(
-    windowRecords,
-    periodDays,
-    habitProgress,
-    range.labelKey,
-    now,
-  );
+  const insights = generateInsights(windowRecords, periodDays, habitProgress, range.labelKey, now);
 
   // Weekly summary (for current week)
   const weeklySummary = buildWeeklySummary(records, range.start, habitProgress);

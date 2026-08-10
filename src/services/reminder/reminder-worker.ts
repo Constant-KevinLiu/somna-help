@@ -1,4 +1,8 @@
-import { appendReminderLog, getReminderSettingsServer, saveReminderSettingsServer } from "./reminder-storage-server";
+import {
+  appendReminderLog,
+  getReminderSettingsServer,
+  saveReminderSettingsServer,
+} from "./reminder-storage-server";
 import { sendReminderEmail } from "./reminder-mailer";
 
 export async function runReminderCron(env: Record<string, unknown>) {

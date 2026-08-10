@@ -42,7 +42,7 @@ export interface ProgramReminderRequest {
   /** Preferred delivery window (local time). Optional. */
   preferredWindow?: {
     startLocalTime: string; // "HH:MM" 24h
-    endLocalTime: string;   // "HH:MM" 24h
+    endLocalTime: string; // "HH:MM" 24h
   };
   /** Preferred days of the week (ISO weekday, 1=Monday ... 7=Sunday). */
   preferredDays?: number[];
@@ -64,12 +64,12 @@ export interface ProgramReminderRequest {
  * set by the user explicitly marking a lesson done.
  */
 export type ProgramReminderStatus =
-  | "requested"      // User has been asked to confirm
-  | "scheduled"      // User confirmed, reminder is active
-  | "declined"       // User declined the reminder
-  | "delivered"      // Reminder was sent
-  | "dismissed"      // User dismissed the reminder
-  | "cancelled";     // Reminder was cancelled
+  | "requested" // User has been asked to confirm
+  | "scheduled" // User confirmed, reminder is active
+  | "declined" // User declined the reminder
+  | "delivered" // Reminder was sent
+  | "dismissed" // User dismissed the reminder
+  | "cancelled"; // Reminder was cancelled
 
 export interface ProgramReminderOutcome {
   /** The original request ID. */
@@ -88,9 +88,7 @@ export interface ProgramReminderOutcome {
  * Validate that a reminder request has the minimum required fields.
  * Does NOT validate schedule feasibility — that's the reminder service's job.
  */
-export function validateReminderRequest(
-  request: ProgramReminderRequest
-): string[] {
+export function validateReminderRequest(request: ProgramReminderRequest): string[] {
   const issues: string[] = [];
 
   if (!request.planId) issues.push("planId is required");
@@ -122,9 +120,7 @@ export function validateReminderRequest(
  * ANSWER: Never. Program progress is separate from reminder delivery.
  * This function exists to make the boundary explicit in code.
  */
-export function outcomeAffectsProgramProgress(
-  _outcome: ProgramReminderOutcome
-): false {
+export function outcomeAffectsProgramProgress(_outcome: ProgramReminderOutcome): false {
   return false;
 }
 

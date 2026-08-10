@@ -45,7 +45,10 @@ export function loadReflections(): LocalReflection[] {
 
     return validated.reflections;
   } catch (e) {
-    console.error("[ReflectionStorage] Failed to load reflections:", e instanceof Error ? e.message : "unknown");
+    console.error(
+      "[ReflectionStorage] Failed to load reflections:",
+      e instanceof Error ? e.message : "unknown",
+    );
     return [];
   }
 }

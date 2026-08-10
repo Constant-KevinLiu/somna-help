@@ -15,7 +15,8 @@ import type { SleepRecord } from "@/lib/sleep-records";
 // =============================================================================
 
 export type SyncStatus = "local" | "pending" | "synced" | "conflict" | "deleted";
-export type MigrationState = "idle" | "preparing" | "uploading" | "merging" | "completed" | "partial" | "failed";
+export type MigrationState =
+  "idle" | "preparing" | "uploading" | "merging" | "completed" | "partial" | "failed";
 export type EntityType = "sleep-record" | "reflection" | "reminder" | "progress";
 
 // =============================================================================
@@ -72,10 +73,7 @@ export interface LegacySyncProgramProgress {
  * @deprecated Use the new SyncProgramProgress from @/lib/program/sync-contracts.
  * Re-exported here for backward compatibility.
  */
-export type {
-  SyncProgramProgress,
-  CanonicalProgramProgress,
-} from "@/lib/program/sync-contracts";
+export type { SyncProgramProgress, CanonicalProgramProgress } from "@/lib/program/sync-contracts";
 
 export interface SyncRequest {
   clientId: string;
@@ -110,6 +108,42 @@ export interface CanonicalReflection extends SyncReflection {
 export interface CanonicalReminderSettings extends SyncReminderSettings {
   userId: never; // Never expose internal user ID
   canonical: true;
+}
+
+// =============================================================================
+// Canonical Conversion Helpers — Server → Response boundary
+// =============================================================================
+
+/**
+ * Mark a sleep record as canonical (server-authored response).
+ * The `userId: never` is a phantom type — it is never actually present on
+ * the wire, but the type system guarantees no code path can accidentally
+ * leak the internal user ID into a sync response.
+ */
+export function toCanonicalSleepRecord(record: SyncSleepRecord): CanonicalSleepRecord {
+  return {
+    ...record,
+    canonical: true as const,
+    userId: undefined as never,
+  };
+}
+
+export function toCanonicalReflection(reflection: SyncReflection): CanonicalReflection {
+  return {
+    ...reflection,
+    canonical: true as const,
+    userId: undefined as never,
+  };
+}
+
+export function toCanonicalReminderSettings(
+  settings: SyncReminderSettings,
+): CanonicalReminderSettings {
+  return {
+    ...settings,
+    canonical: true as const,
+    userId: undefined as never,
+  };
 }
 
 export interface SyncConflict {
@@ -188,12 +222,7 @@ export interface MigrationStorage {
 // =============================================================================
 
 export type ConflictResolutionStrategy =
-  | "newest-wins"
-  | "server-wins"
-  | "client-wins"
-  | "keep-both"
-  | "manual"
-  | "merge-content";
+  "newest-wins" | "server-wins" | "client-wins" | "keep-both" | "manual" | "merge-content";
 
 export interface ConflictResolution {
   entityType: EntityType;
@@ -247,12 +276,7 @@ export interface IdempotencyRecord {
 // =============================================================================
 
 export type SyncStatusDisplay =
-  | "local-only"
-  | "syncing"
-  | "synced"
-  | "offline"
-  | "needs-attention"
-  | "sync-failed";
+  "local-only" | "syncing" | "synced" | "offline" | "needs-attention" | "sync-failed";
 
 export interface SyncStatusInfo {
   status: SyncStatusDisplay;

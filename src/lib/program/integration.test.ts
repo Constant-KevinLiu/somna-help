@@ -106,7 +106,7 @@ function apply(p: ProgramProgress, event: Parameters<typeof applyEvent>[1]): Pro
   if (result.status !== "applied") {
     throw new Error(
       `Expected applied, got ${result.status}` +
-        (result.status === "blocked" ? ` (${result.reason})` : "")
+        (result.status === "blocked" ? ` (${result.reason})` : ""),
     );
   }
   return result.progress;
@@ -267,12 +267,16 @@ describe("Phase G-0.1 — Program foundation integration", () => {
       const completedBefore = reloaded.completedLessonIds.length;
 
       // Attempt to complete a lesson while paused
-      const result = applyEvent(reloaded, {
-        type: "lesson_completed",
-        lessonId: lessons[1].id,
-        weekId: week.id,
-        timestamp: "2025-01-03T10:00:00Z",
-      }, definition);
+      const result = applyEvent(
+        reloaded,
+        {
+          type: "lesson_completed",
+          lessonId: lessons[1].id,
+          weekId: week.id,
+          timestamp: "2025-01-03T10:00:00Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("blocked");
       if (result.status === "blocked") {
@@ -316,12 +320,16 @@ describe("Phase G-0.1 — Program foundation integration", () => {
       const countBefore = reloadedPaused.completedLessonIds.length;
 
       // 4. Attempt completion while paused — blocked
-      const blockedResult = applyEvent(reloadedPaused, {
-        type: "lesson_completed",
-        lessonId: lessons[1].id,
-        weekId: week.id,
-        timestamp: "2025-01-03T10:00:00Z",
-      }, definition);
+      const blockedResult = applyEvent(
+        reloadedPaused,
+        {
+          type: "lesson_completed",
+          lessonId: lessons[1].id,
+          weekId: week.id,
+          timestamp: "2025-01-03T10:00:00Z",
+        },
+        definition,
+      );
       expect(blockedResult.status).toBe("blocked");
 
       // 5. Storage unchanged (we do NOT call saveProgramProgress on blocked)
@@ -365,19 +373,27 @@ describe("Phase G-0.1 — Program foundation integration", () => {
       });
 
       // First pause — applied
-      const r1 = applyEvent(progress, {
-        type: "program_paused",
-        programId: "cbti-core",
-        timestamp: "2025-01-02T10:00:00Z",
-      }, definition);
+      const r1 = applyEvent(
+        progress,
+        {
+          type: "program_paused",
+          programId: "cbti-core",
+          timestamp: "2025-01-02T10:00:00Z",
+        },
+        definition,
+      );
       expect(r1.status).toBe("applied");
 
       // Second pause — unchanged (invalid transition, not blocked)
-      const r2 = applyEvent(r1.progress, {
-        type: "program_paused",
-        programId: "cbti-core",
-        timestamp: "2025-01-03T10:00:00Z",
-      }, definition);
+      const r2 = applyEvent(
+        r1.progress,
+        {
+          type: "program_paused",
+          programId: "cbti-core",
+          timestamp: "2025-01-03T10:00:00Z",
+        },
+        definition,
+      );
       expect(r2.status).toBe("unchanged");
     });
 
@@ -397,19 +413,27 @@ describe("Phase G-0.1 — Program foundation integration", () => {
       });
 
       // First resume — applied
-      const r1 = applyEvent(progress, {
-        type: "program_resumed",
-        programId: "cbti-core",
-        timestamp: "2025-01-03T10:00:00Z",
-      }, definition);
+      const r1 = applyEvent(
+        progress,
+        {
+          type: "program_resumed",
+          programId: "cbti-core",
+          timestamp: "2025-01-03T10:00:00Z",
+        },
+        definition,
+      );
       expect(r1.status).toBe("applied");
 
       // Second resume — unchanged
-      const r2 = applyEvent(r1.progress, {
-        type: "program_resumed",
-        programId: "cbti-core",
-        timestamp: "2025-01-04T10:00:00Z",
-      }, definition);
+      const r2 = applyEvent(
+        r1.progress,
+        {
+          type: "program_resumed",
+          programId: "cbti-core",
+          timestamp: "2025-01-04T10:00:00Z",
+        },
+        definition,
+      );
       expect(r2.status).toBe("unchanged");
     });
 
@@ -427,11 +451,15 @@ describe("Phase G-0.1 — Program foundation integration", () => {
       expect(progress.status).toBe("completed");
 
       // Cannot pause from completed
-      const result = applyEvent(progress, {
-        type: "program_paused",
-        programId: "cbti-core",
-        timestamp: "2025-01-02T10:00:00Z",
-      }, definition);
+      const result = applyEvent(
+        progress,
+        {
+          type: "program_paused",
+          programId: "cbti-core",
+          timestamp: "2025-01-02T10:00:00Z",
+        },
+        definition,
+      );
       expect(result.status).toBe("unchanged");
     });
 
@@ -446,11 +474,15 @@ describe("Phase G-0.1 — Program foundation integration", () => {
       });
       expect(progress.status).toBe("active");
 
-      const result = applyEvent(progress, {
-        type: "program_resumed",
-        programId: "cbti-core",
-        timestamp: "2025-01-02T10:00:00Z",
-      }, definition);
+      const result = applyEvent(
+        progress,
+        {
+          type: "program_resumed",
+          programId: "cbti-core",
+          timestamp: "2025-01-02T10:00:00Z",
+        },
+        definition,
+      );
       expect(result.status).toBe("unchanged");
     });
 
@@ -472,12 +504,16 @@ describe("Phase G-0.1 — Program foundation integration", () => {
 
       // State machine can apply events to the fallback, but save is blocked
       // by the forward-schema guard in saveProgramProgress.
-      const completed = applyEvent(loaded.fallback, {
-        type: "lesson_completed",
-        lessonId: lessons[0].id,
-        weekId: week.id,
-        timestamp: "2025-07-01T00:00:00Z",
-      }, definition);
+      const completed = applyEvent(
+        loaded.fallback,
+        {
+          type: "lesson_completed",
+          lessonId: lessons[0].id,
+          weekId: week.id,
+          timestamp: "2025-07-01T00:00:00Z",
+        },
+        definition,
+      );
       // Lesson completion on the not_started fallback applies (auto-start)
       expect(completed.status).toBe("applied");
 
@@ -506,19 +542,27 @@ describe("Phase G-0.1 — Program foundation integration", () => {
         timestamp: "2025-01-02T10:00:00Z",
       });
 
-      const r1 = applyEvent(progress, {
-        type: "lesson_completed",
-        lessonId: lessons[1].id,
-        weekId: week.id,
-        timestamp: "2025-01-03T10:00:00Z",
-      }, definition);
+      const r1 = applyEvent(
+        progress,
+        {
+          type: "lesson_completed",
+          lessonId: lessons[1].id,
+          weekId: week.id,
+          timestamp: "2025-01-03T10:00:00Z",
+        },
+        definition,
+      );
 
-      const r2 = applyEvent(progress, {
-        type: "lesson_completed",
-        lessonId: lessons[1].id,
-        weekId: week.id,
-        timestamp: "2025-01-04T10:00:00Z",
-      }, definition);
+      const r2 = applyEvent(
+        progress,
+        {
+          type: "lesson_completed",
+          lessonId: lessons[1].id,
+          weekId: week.id,
+          timestamp: "2025-01-04T10:00:00Z",
+        },
+        definition,
+      );
 
       expect(r1.status).toBe("blocked");
       expect(r2.status).toBe("blocked");
@@ -609,11 +653,15 @@ describe("Phase G-0.1 — Program foundation integration", () => {
       expect(firstCompletedAt).toBe("2025-01-15T10:00:00Z");
 
       // Pause — should NOT change completedAt (but can't pause from completed)
-      const pauseResult = applyEvent(progress, {
-        type: "program_paused",
-        programId: "cbti-core",
-        timestamp: "2025-02-01T10:00:00Z",
-      }, definition);
+      const pauseResult = applyEvent(
+        progress,
+        {
+          type: "program_paused",
+          programId: "cbti-core",
+          timestamp: "2025-02-01T10:00:00Z",
+        },
+        definition,
+      );
       expect(pauseResult.status).toBe("unchanged");
       expect(pauseResult.progress.completedAt).toBe(firstCompletedAt);
 
@@ -720,9 +768,7 @@ describe("Phase G-0.1 — Program foundation integration", () => {
         programId: "definitely-wrong" as "cbti-core",
       });
 
-      expect(() => saveWeeklyPlan(invalidPlan, definition)).toThrow(
-        WeeklyPlanValidationError
-      );
+      expect(() => saveWeeklyPlan(invalidPlan, definition)).toThrow(WeeklyPlanValidationError);
 
       // The original valid plan should still be restorable
       // (verifying no partial/corrupted state was written)
@@ -784,7 +830,7 @@ describe("Phase G-0.1 — Program foundation integration", () => {
         expect(loaded.supportedSchemaVersion).toBe(SUPPORTED_PROGRAM_SCHEMA_VERSION);
         // Raw data preserved exactly
         expect((loaded.raw as Record<string, unknown>).newFutureField).toBe(
-          "some value we don't understand"
+          "some value we don't understand",
         );
         // Fallback is safe initial state
         expect(loaded.fallback.status).toBe("not_started");
@@ -824,9 +870,9 @@ describe("Phase G-0.1 — Program foundation integration", () => {
       const exp = exportProgramData(definition);
       expect(exp.unsupportedSchemaVersion).toBe(99);
       expect(exp.unsupportedSchemaRaw).toBeDefined();
-      expect(
-        (exp.unsupportedSchemaRaw as Record<string, unknown>).completedLessonIds
-      ).toEqual(["future-lesson"]);
+      expect((exp.unsupportedSchemaRaw as Record<string, unknown>).completedLessonIds).toEqual([
+        "future-lesson",
+      ]);
     });
 
     it("still allows explicit clear/delete on future schema", () => {
@@ -1110,7 +1156,7 @@ describe("Phase G-0.1 — Program foundation integration", () => {
           weekId: week.id,
           timestamp: "2025-07-01T00:00:00Z",
         },
-        definition
+        definition,
       );
       // Lesson completion on not_started fallback should apply (auto-start)
       expect(result.status).toBe("applied");
@@ -1140,7 +1186,7 @@ describe("Phase G-0.1 — Program foundation integration", () => {
           programId: "cbti-core",
           timestamp: "2025-07-01T00:00:00Z",
         },
-        definition
+        definition,
       );
       // Pause on not_started is an invalid transition, but we're testing
       // that save is blocked regardless — use the (unchanged) progress
@@ -1230,10 +1276,7 @@ describe("Phase G-0.1 — Program foundation integration", () => {
     it("deleteAllProgramData clears both progress and plans", () => {
       const progress = asProgress(loadProgramProgress(definition));
       saveProgramProgress(progress);
-      mockStorage.set(
-        "somna:program-plans:v1",
-        JSON.stringify({ schemaVersion: 1, plans: [{}] })
-      );
+      mockStorage.set("somna:program-plans:v1", JSON.stringify({ schemaVersion: 1, plans: [{}] }));
 
       expect(mockStorage.has("somna:program-progress:v1")).toBe(true);
       expect(mockStorage.has("somna:program-plans:v1")).toBe(true);

@@ -21,7 +21,7 @@ const IDEMPOTENCY_TTL_HOURS = 24;
 
 export async function getIdempotencyRecord(
   env: SyncEnv,
-  key: string
+  key: string,
 ): Promise<IdempotencyRecord | null> {
   const db = env.DB;
   if (!db) return null;
@@ -32,7 +32,7 @@ export async function getIdempotencyRecord(
       SELECT idempotency_key, sync_id, created_at, expires_at, response_hash
       FROM idempotency_keys
       WHERE idempotency_key = ? AND expires_at > datetime('now')
-    `
+    `,
     )
     .bind(key)
     .first();
@@ -52,7 +52,7 @@ export async function createIdempotencyRecord(
   env: SyncEnv,
   key: string,
   syncId: string,
-  responseHash?: string
+  responseHash?: string,
 ): Promise<IdempotencyRecord> {
   const db = env.DB;
   if (!db) throw new Error("Database not available");
@@ -65,7 +65,7 @@ export async function createIdempotencyRecord(
       `
       INSERT OR REPLACE INTO idempotency_keys (idempotency_key, sync_id, created_at, expires_at, response_hash)
       VALUES (?, ?, ?, ?, ?)
-    `
+    `,
     )
     .bind(key, syncId, now, expiresAt, responseHash || null)
     .run();
@@ -82,7 +82,7 @@ export async function cleanupExpiredIdempotencyKeys(env: SyncEnv): Promise<numbe
       `
       DELETE FROM idempotency_keys
       WHERE expires_at <= datetime('now')
-    `
+    `,
     )
     .run();
 
@@ -96,7 +96,7 @@ export async function cleanupExpiredIdempotencyKeys(env: SyncEnv): Promise<numbe
 export async function recordConflict(
   env: SyncEnv,
   userId: string,
-  conflict: SyncConflict
+  conflict: SyncConflict,
 ): Promise<void> {
   const db = env.DB;
   if (!db) return;
@@ -110,7 +110,7 @@ export async function recordConflict(
         id, user_id, entity_type, entity_id, local_date,
         resolution_type, created_at, resolved_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, NULL)
-    `
+    `,
     )
     .bind(
       `conflict_${userId}_${conflict.entityType}_${conflict.entityId}`,
@@ -119,14 +119,14 @@ export async function recordConflict(
       conflict.entityId,
       conflict.localDate || null,
       conflict.resolutionType,
-      now
+      now,
     )
     .run();
 }
 
 export async function getUnresolvedConflicts(
   env: SyncEnv,
-  userId: string
+  userId: string,
 ): Promise<Array<{ entityType: EntityType; entityId: string; localDate?: string }>> {
   const db = env.DB;
   if (!db) return [];
@@ -137,19 +137,23 @@ export async function getUnresolvedConflicts(
       SELECT entity_type, entity_id, local_date
       FROM sync_conflicts
       WHERE user_id = ? AND resolved_at IS NULL
-    `
+    `,
     )
     .bind(userId)
     .all();
 
-  return results.results as Array<{ entity_type: string; entity_id: string; local_date?: string }>;
+  return results.results.map((row) => ({
+    entityType: row.entity_type as EntityType,
+    entityId: row.entity_id as string,
+    localDate: row.local_date as string | undefined,
+  }));
 }
 
 export async function resolveConflict(
   env: SyncEnv,
   userId: string,
   entityType: EntityType,
-  entityId: string
+  entityId: string,
 ): Promise<boolean> {
   const db = env.DB;
   if (!db) return false;
@@ -162,7 +166,7 @@ export async function resolveConflict(
       UPDATE sync_conflicts
       SET resolved_at = ?
       WHERE user_id = ? AND entity_type = ? AND entity_id = ?
-    `
+    `,
     )
     .bind(now, userId, entityType, entityId)
     .run();
@@ -181,7 +185,7 @@ export async function logSyncOperation(
   status: "success" | "partial" | "failed",
   recordCount: number,
   conflictCount: number,
-  error?: string
+  error?: string,
 ): Promise<void> {
   const db = env.DB;
   if (!db) return;
@@ -193,17 +197,8 @@ export async function logSyncOperation(
       `
       INSERT INTO sync_log (id, user_id, sync_id, status, record_count, conflict_count, error, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `
+    `,
     )
-    .bind(
-      `log_${syncId}`,
-      userId,
-      syncId,
-      status,
-      recordCount,
-      conflictCount,
-      error || null,
-      now
-    )
+    .bind(`log_${syncId}`, userId, syncId, status, recordCount, conflictCount, error || null, now)
     .run();
 }

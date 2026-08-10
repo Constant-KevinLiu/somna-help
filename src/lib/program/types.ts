@@ -283,10 +283,7 @@ export const PROGRAM_TRANSITIONS: Record<ProgramStatus, ProgramStatus[]> = {
 /**
  * Check whether a status transition is valid.
  */
-export function isValidStatusTransition(
-  from: ProgramStatus,
-  to: ProgramStatus
-): boolean {
+export function isValidStatusTransition(from: ProgramStatus, to: ProgramStatus): boolean {
   return PROGRAM_TRANSITIONS[from]?.includes(to) ?? false;
 }
 
@@ -303,10 +300,7 @@ export function isValidStatusTransition(
  *  - "invalid-transition": the event cannot be applied from the current state
  */
 export type ProgramMutationBlockReason =
-  | "program-paused"
-  | "program-completed"
-  | "unsupported-version"
-  | "invalid-transition";
+  "program-paused" | "program-completed" | "unsupported-version" | "invalid-transition";
 
 /**
  * Result of applying a Program event.
@@ -345,7 +339,7 @@ export type ProgramMutationResult =
  */
 export function calculateOverallCompletion(
   progress: ProgramProgress,
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): number {
   const total = definition.lessons.length;
   if (total === 0) return 0;
@@ -358,13 +352,11 @@ export function calculateOverallCompletion(
 export function calculateWeekCompletion(
   progress: ProgramProgress,
   weekId: string,
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): number {
   const week = definition.weeks.find((w) => w.id === weekId);
   if (!week || week.lessonIds.length === 0) return 0;
-  const done = week.lessonIds.filter((id) =>
-    progress.completedLessonIds.includes(id)
-  ).length;
+  const done = week.lessonIds.filter((id) => progress.completedLessonIds.includes(id)).length;
   return Math.round((done / week.lessonIds.length) * 100);
 }
 
@@ -384,13 +376,13 @@ export type WeekAccessStatus = "locked" | "available" | "completed";
 export function getWeekAccessStatus(
   progress: ProgramProgress,
   weekId: string,
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): WeekAccessStatus {
   const week = definition.weeks.find((w) => w.id === weekId);
   if (!week) return "locked";
 
   const completedInWeek = week.lessonIds.filter((id) =>
-    progress.completedLessonIds.includes(id)
+    progress.completedLessonIds.includes(id),
   ).length;
 
   // Completed
@@ -405,7 +397,7 @@ export function getWeekAccessStatus(
   const prevWeek = definition.weeks.find((w) => w.order === week.order - 1);
   if (prevWeek) {
     const prevCompleted = prevWeek.lessonIds.filter((id) =>
-      progress.completedLessonIds.includes(id)
+      progress.completedLessonIds.includes(id),
     ).length;
     if (prevCompleted === prevWeek.lessonIds.length) return "available";
   }
@@ -422,13 +414,9 @@ export function getWeekAccessStatus(
  */
 export function getRecommendedNextLesson(
   progress: ProgramProgress,
-  definition: ProgramDefinition
+  definition: ProgramDefinition,
 ): ProgramLessonDefinition | null {
-  return (
-    definition.lessons.find(
-      (l) => !progress.completedLessonIds.includes(l.id)
-    ) ?? null
-  );
+  return definition.lessons.find((l) => !progress.completedLessonIds.includes(l.id)) ?? null;
 }
 
 // =============================================================================
@@ -436,20 +424,7 @@ export function getRecommendedNextLesson(
 // =============================================================================
 
 /** Locales for which program content is fully authored. */
-export const PROGRAM_CONTENT_LOCALES: SupportedLocale[] = [
-  "en",
-  "es",
-  "pt",
-  "pl",
-  "de",
-];
+export const PROGRAM_CONTENT_LOCALES: SupportedLocale[] = ["en", "es", "pt", "pl", "de"];
 
 /** Locales for which program UI strings are available. */
-export const PROGRAM_UI_LOCALES: SupportedLocale[] = [
-  "en",
-  "zh",
-  "es",
-  "pt",
-  "pl",
-  "de",
-];
+export const PROGRAM_UI_LOCALES: SupportedLocale[] = ["en", "zh", "es", "pt", "pl", "de"];

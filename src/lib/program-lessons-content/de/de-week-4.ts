@@ -27,7 +27,7 @@ export const deWeek4Lessons: LessonContent[] = [
           {
             heading: "Gedanken sind nicht Fakten",
             paras: [
-              "Wenn du nachts liegst und denkst: \"Ich werde morgen nicht funktionieren\", fühlt es sich wie eine absolute Wahrheit. Aber es ist nur ein Gedanke — eine Interpretation, keine Tatsache.",
+              'Wenn du nachts liegst und denkst: "Ich werde morgen nicht funktionieren", fühlt es sich wie eine absolute Wahrheit. Aber es ist nur ein Gedanke — eine Interpretation, keine Tatsache.',
               "Kognitive Umstrukturierung ist der Prozess, Gedanken zu untersuchen, ihre Genauigkeit zu hinterfragen und sie durch realistischere, weniger bedrohliche Alternativen zu ersetzen.",
             ],
           },
@@ -35,19 +35,19 @@ export const deWeek4Lessons: LessonContent[] = [
             heading: "Typische Schlafgedanken",
             paras: [
               "Ängstliche Gedanken über Schlaf fallen oft in Muster:",
-              "Katastrophisieren: \"Wenn ich heute Nacht nicht schlafe, verliere ich meinen Job.\"",
-              "Alles-oder-Nichts: \"Ich muss perfekt schlafen oder ich bin ruiniert.\"",
-              "Übergeneralisieren: \"Ich schlafe nie gut.\"",
-              "Lesen: \"Ich weiß, dass ich morgen erschöpft sein werde.\"",
+              'Katastrophisieren: "Wenn ich heute Nacht nicht schlafe, verliere ich meinen Job."',
+              'Alles-oder-Nichts: "Ich muss perfekt schlafen oder ich bin ruiniert."',
+              'Übergeneralisieren: "Ich schlafe nie gut."',
+              'Lesen: "Ich weiß, dass ich morgen erschöpft sein werde."',
             ],
           },
           {
             heading: "Der ABC-Prozess",
             paras: [
               "A (Auslöser): Du liegst wach im Bett.",
-              "B (Gedanke): \"Ich werde morgen nicht funktionieren.\"",
+              'B (Gedanke): "Ich werde morgen nicht funktionieren."',
               "C (Konsequenz): Angst, erhöhter Herzschlag, noch weniger Schlaf.",
-              "Kognitive Umstrukturierung ändert B, um C zu ändern. Statt \"Ich werde nicht funktionieren\", fragst du: \"Habe ich mich nach rauen Nächten früher schon mal durchgesetzt? Ja. Ich kann vielleicht nicht auf meinem Höchstniveau sein, aber ich werde funktionieren.\"",
+              'Kognitive Umstrukturierung ändert B, um C zu ändern. Statt "Ich werde nicht funktionieren", fragst du: "Habe ich mich nach rauen Nächten früher schon mal durchgesetzt? Ja. Ich kann vielleicht nicht auf meinem Höchstniveau sein, aber ich werde funktionieren."',
             ],
           },
         ],
@@ -107,14 +107,14 @@ export const deWeek4Lessons: LessonContent[] = [
             heading: "Die Detektiv-Methode",
             paras: [
               "Behandle deine Gedanken wie Beweise, nicht wie Urteile. Wenn ein Gedanke auftaucht, frage dich wie ein Detektiv:",
-              "\"Was ist der Beweis für diesen Gedanken?\"",
-              "\"Was ist der Beweis gegen diesen Gedanken?\"",
-              "\"Gibt es eine alternative Erklärung?\"",
-              "\"Was würde ich einem Freund sagen, der diesen Gedanken hat?\"",
+              '"Was ist der Beweis für diesen Gedanken?"',
+              '"Was ist der Beweis gegen diesen Gedanken?"',
+              '"Gibt es eine alternative Erklärung?"',
+              '"Was würde ich einem Freund sagen, der diesen Gedanken hat?"',
             ],
           },
           {
-            heading: "Beispiel: \"Ich werde morgen nicht funktionieren\"",
+            heading: 'Beispiel: "Ich werde morgen nicht funktionieren"',
             paras: [
               "Beweis dafür: Ich bin nach rauen Nächten früher schon müde gewesen.",
               "Beweis dagegen: Ich bin trotzdem zur Arbeit gegangen und meine Aufgaben erledigt. Ich bin vielleicht nicht auf meinem Höchstniveau gewesen, aber ich habe funktioniert.",
@@ -125,9 +125,9 @@ export const deWeek4Lessons: LessonContent[] = [
             heading: "Das Socratic Questioning",
             paras: [
               "Eine andere Technik ist das sokratische Fragen — sanftes Hinterfragen statt aggressiver Widerlegung:",
-              "\"Ist dieser Gedanke 100 % wahr?\"",
-              "\"Gibt es Zeiten, in denen er nicht wahr war?\"",
-              "\"Was ist das Schlimmste, das passieren könnte? Wie wahrscheinlich ist das?\"",
+              '"Ist dieser Gedanke 100 % wahr?"',
+              '"Gibt es Zeiten, in denen er nicht wahr war?"',
+              '"Was ist das Schlimmste, das passieren könnte? Wie wahrscheinlich ist das?"',
             ],
           },
         ],
@@ -140,7 +140,7 @@ export const deWeek4Lessons: LessonContent[] = [
         faqs: [
           {
             q: "Was, wenn ich keine Beweise gegen meinen Gedanken finde?",
-            a: "Dann ist der Gedanke vielleicht teilweise wahr. Aber selbst dann kannst du fragen: \"Ist er 100 % wahr? Gibt es Nuancen, die ich übersehe?\"",
+            a: 'Dann ist der Gedanke vielleicht teilweise wahr. Aber selbst dann kannst du fragen: "Ist er 100 % wahr? Gibt es Nuancen, die ich übersehe?"',
           },
           {
             q: "Soll ich Gedanken hinterfragen, wenn ich versuche zu schlafen?",
@@ -170,11 +170,7 @@ export const deWeek4Lessons: LessonContent[] = [
     weekSlug: "week-4",
     lessonNumber: 3,
     estimatedMinutes: 5,
-    relatedLessonSlugs: [
-      "challenging-negative-thoughts",
-      "cognitive-restructuring",
-      "worry-time",
-    ],
+    relatedLessonSlugs: ["challenging-negative-thoughts", "cognitive-restructuring", "worry-time"],
     i18n: {
       de: {
         title: "Gedankenprotokoll",
@@ -199,11 +195,11 @@ export const deWeek4Lessons: LessonContent[] = [
             heading: "Beispiel",
             paras: [
               "Situation: 02:00 Uhr, wach im Bett.",
-              "Gedanke: \"Ich werde morgen bei der Präsentation scheitern.\"",
+              'Gedanke: "Ich werde morgen bei der Präsentation scheitern."',
               "Emotion: Angst (85 %)",
               "Beweis dafür: Ich bin müde.",
               "Beweis dagegen: Ich habe die Präsentation vorbereitet. Ich bin nach rauen Nächten früher gut durchgekommen.",
-              "Alternativer Gedanke: \"Ich werde vielleicht etwas müder sein, aber ich habe mich gut vorbereitet. Ich kann es schaffen.\"",
+              'Alternativer Gedanke: "Ich werde vielleicht etwas müder sein, aber ich habe mich gut vorbereitet. Ich kann es schaffen."',
             ],
           },
           {

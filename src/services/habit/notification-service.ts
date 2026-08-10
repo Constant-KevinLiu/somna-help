@@ -4,15 +4,8 @@
  * Handles browser notification permission and delivery.
  * Follows privacy principles: no sensitive content by default.
  */
-import {
-  type Reminder,
-  type ReminderChannel,
-  type DeliveryResult,
-} from "./habit-types";
-import {
-  loadNotificationPrefs,
-  updateNotificationPermission,
-} from "./habit-storage";
+import { type Reminder, type ReminderChannel, type DeliveryResult } from "./habit-types";
+import { loadNotificationPrefs, updateNotificationPermission } from "./habit-storage";
 import { isNotificationSupported as isNotifSupported } from "@/lib/safe-storage";
 
 // ============================================
@@ -85,9 +78,7 @@ export function isWithinQuietHours(now: Date = new Date()): boolean {
 // ============================================
 // Notification Content (Privacy-Safe)
 // ============================================
-export function buildNotificationContent(
-  reminder: Reminder
-): { title: string; body: string } {
+export function buildNotificationContent(reminder: Reminder): { title: string; body: string } {
   const prefs = loadNotificationPrefs();
 
   // Default: privacy-safe generic content
@@ -110,7 +101,7 @@ export function buildNotificationContent(
 // ============================================
 export async function deliverBrowserNotification(
   reminder: Reminder,
-  tag?: string
+  tag?: string,
 ): Promise<DeliveryResult> {
   const result: DeliveryResult = {
     success: false,
@@ -138,7 +129,6 @@ export async function deliverBrowserNotification(
   try {
     const { title, body } = buildNotificationContent(reminder);
 
-    // eslint-disable-next-line no-new
     new Notification(title, {
       body,
       tag: tag || reminder.id,
@@ -187,7 +177,6 @@ export async function sendTestNotification(): Promise<boolean> {
   }
 
   try {
-    // eslint-disable-next-line no-new
     new Notification("Somna", {
       body: "This is a test notification. You're all set!",
       icon: "/favicon.ico",

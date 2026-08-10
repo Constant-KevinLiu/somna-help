@@ -1,9 +1,9 @@
 /**
  * Sleep Diary v2.3 - English Authentication Content
- * 
+ *
  * Natively authored English content for the authentication modal.
  * NOT translated from any other language.
- * 
+ *
  * Tone: calm, professional, warm, privacy-conscious
  */
 
@@ -145,7 +145,8 @@ export const authCopyEn: ContentPackage<AuthCopy> = {
     },
     otpForm: {
       title: "Check your email",
-      instructions: "We sent a 6-digit verification code to your email. Enter it below to continue.",
+      instructions:
+        "We sent a 6-digit verification code to your email. Enter it below to continue.",
       codeLabel: "Verification code",
       verifyButton: "Verify & continue",
       verifying: "Verifying...",
@@ -192,7 +193,8 @@ export const authCopyEn: ContentPackage<AuthCopy> = {
     },
     accountExport: {
       title: "Export Your Data",
-      description: "Download a complete copy of your sleep records, reflections, and settings as a private JSON file.",
+      description:
+        "Download a complete copy of your sleep records, reflections, and settings as a private JSON file.",
       button: "Download Data",
       downloading: "Preparing download...",
       successMessage: "Your data has been exported successfully.",
@@ -208,7 +210,8 @@ export const authCopyEn: ContentPackage<AuthCopy> = {
     accountDelete: {
       title: "Delete Your Data",
       warning: "This action cannot be undone.",
-      explanation: "Permanently delete all your sleep data, reflections, and settings from our servers. Your local data will also be cleared.",
+      explanation:
+        "Permanently delete all your sleep data, reflections, and settings from our servers. Your local data will also be cleared.",
       confirmButton: "Delete All My Data",
       cancelButton: "Cancel",
       confirmationPlaceholder: 'Type "DELETE_MY_SLEEP_DATA" to confirm',

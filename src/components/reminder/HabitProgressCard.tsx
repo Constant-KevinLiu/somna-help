@@ -31,21 +31,31 @@ export function HabitProgressCard({ progress, compact = false }: HabitProgressCa
 
   const getStatusColor = (state: string) => {
     switch (state) {
-      case "maintained": return "text-green-600";
-      case "active": return "text-blue-600";
-      case "paused": return "text-yellow-600";
-      case "archived": return "text-gray-600";
-      default: return "text-gray-600";
+      case "maintained":
+        return "text-green-600";
+      case "active":
+        return "text-blue-600";
+      case "paused":
+        return "text-yellow-600";
+      case "archived":
+        return "text-gray-600";
+      default:
+        return "text-gray-600";
     }
   };
 
   const getStatusBadge = (state: string) => {
     switch (state) {
-      case "maintained": return "🌟 Well maintained";
-      case "active": return "🔥 Building momentum";
-      case "paused": return "⏸️ Paused";
-      case "archived": return "📦 Archived";
-      default: return "🌱 Getting started";
+      case "maintained":
+        return "🌟 Well maintained";
+      case "active":
+        return "🔥 Building momentum";
+      case "paused":
+        return "⏸️ Paused";
+      case "archived":
+        return "📦 Archived";
+      default:
+        return "🌱 Getting started";
     }
   };
 

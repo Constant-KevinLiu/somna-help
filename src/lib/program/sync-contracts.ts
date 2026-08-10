@@ -25,11 +25,7 @@
  * Conflicts must NEVER corrupt Diary data.
  */
 
-import type {
-  ProgramProgress,
-  ProgramMilestone,
-  ProgramStatus,
-} from "./types";
+import type { ProgramProgress, ProgramMilestone, ProgramStatus } from "./types";
 import type { WeeklyProgramPlan } from "./weekly-plan";
 
 // =============================================================================
@@ -38,9 +34,7 @@ import type { WeeklyProgramPlan } from "./weekly-plan";
 
 export const PROGRAM_PROGRESS_ENTITY = "program_progress" as const;
 export const PROGRAM_PLAN_ENTITY = "program_plan" as const;
-export type ProgramSyncEntityType =
-  | typeof PROGRAM_PROGRESS_ENTITY
-  | typeof PROGRAM_PLAN_ENTITY;
+export type ProgramSyncEntityType = typeof PROGRAM_PROGRESS_ENTITY | typeof PROGRAM_PLAN_ENTITY;
 
 // =============================================================================
 // Sync Program Progress
@@ -172,10 +166,7 @@ export interface CanonicalWeeklyProgramPlan {
  * Both sides' completions are preserved — completing a lesson is
  * additive and should never be undone by sync.
  */
-export function mergeCompletedLessons(
-  localIds: string[],
-  remoteIds: string[]
-): string[] {
+export function mergeCompletedLessons(localIds: string[], remoteIds: string[]): string[] {
   return Array.from(new Set([...localIds, ...remoteIds]));
 }
 
@@ -192,7 +183,7 @@ export function resolveCurrentWeekId(
   localWeekId: string | null,
   localUpdatedAt: string,
   remoteWeekId: string | null,
-  remoteUpdatedAt: string
+  remoteUpdatedAt: string,
 ): string | null {
   return localUpdatedAt >= remoteUpdatedAt ? localWeekId : remoteWeekId;
 }
@@ -203,10 +194,7 @@ export function resolveCurrentWeekId(
  * Status advancement order: not_started → active → completed
  * Paused is treated as equivalent to active for advancement purposes.
  */
-export function resolveStatusConflict(
-  local: ProgramStatus,
-  remote: ProgramStatus
-): ProgramStatus {
+export function resolveStatusConflict(local: ProgramStatus, remote: ProgramStatus): ProgramStatus {
   const rank: Record<ProgramStatus, number> = {
     not_started: 0,
     paused: 1,
@@ -223,7 +211,7 @@ export function resolveStatusConflict(
  */
 export function mergeMilestones(
   local: ProgramMilestone[],
-  remote: ProgramMilestone[]
+  remote: ProgramMilestone[],
 ): ProgramMilestone[] {
   const byId = new Map<string, ProgramMilestone>();
 
@@ -256,7 +244,7 @@ export function mergeMilestones(
 export function toSyncProgress(
   progress: ProgramProgress,
   entityId: string,
-  options?: { clientId?: string; syncStatus?: string }
+  options?: { clientId?: string; syncStatus?: string },
 ): SyncProgramProgress {
   return {
     entityType: "program_progress",
@@ -283,9 +271,7 @@ export function toSyncProgress(
  * Convert canonical (server) progress → local ProgramProgress.
  * Used when receiving progress from the sync endpoint.
  */
-export function fromCanonicalProgress(
-  canonical: CanonicalProgramProgress
-): ProgramProgress {
+export function fromCanonicalProgress(canonical: CanonicalProgramProgress): ProgramProgress {
   return {
     schemaVersion: canonical.schemaVersion,
     programId: canonical.programId as "cbti-core",
@@ -334,10 +320,7 @@ function parseTimestamp(ts: string | null): Date | null {
  * This function is commutative (order of arguments does not matter) and
  * idempotent (merging a value with itself returns the same value).
  */
-export function resolveEarlierTimestamp(
-  a: string | null,
-  b: string | null
-): string | null {
+export function resolveEarlierTimestamp(a: string | null, b: string | null): string | null {
   const dateA = parseTimestamp(a);
   const dateB = parseTimestamp(b);
 
@@ -369,40 +352,30 @@ export function resolveEarlierTimestamp(
  */
 export function mergeLocalAndRemoteProgress(
   local: ProgramProgress,
-  remote: ProgramProgress
+  remote: ProgramProgress,
 ): ProgramProgress {
   const completedLessonIds = mergeCompletedLessons(
     local.completedLessonIds,
-    remote.completedLessonIds
+    remote.completedLessonIds,
   );
-  const skippedLessonIds = mergeCompletedLessons(
-    local.skippedLessonIds,
-    remote.skippedLessonIds
-  );
-  const acceptedPlanIds = mergeCompletedLessons(
-    local.acceptedPlanIds,
-    remote.acceptedPlanIds
-  );
+  const skippedLessonIds = mergeCompletedLessons(local.skippedLessonIds, remote.skippedLessonIds);
+  const acceptedPlanIds = mergeCompletedLessons(local.acceptedPlanIds, remote.acceptedPlanIds);
   const dismissedRecommendationIds = mergeCompletedLessons(
     local.dismissedRecommendationIds,
-    remote.dismissedRecommendationIds
+    remote.dismissedRecommendationIds,
   );
   const milestones = mergeMilestones(local.milestones, remote.milestones);
   const status = resolveStatusConflict(local.status, remote.status);
 
   const localLater = local.updatedAt >= remote.updatedAt;
-  const currentWeekId = localLater
-    ? local.currentWeekId
-    : remote.currentWeekId;
+  const currentWeekId = localLater ? local.currentWeekId : remote.currentWeekId;
 
   const startedAt = resolveEarlierTimestamp(local.startedAt, remote.startedAt);
 
   // completedAt: earliest valid timestamp wins (first confirmed completion).
   // If merged status is not completed, completedAt is always null.
   const completedAt =
-    status === "completed"
-      ? resolveEarlierTimestamp(local.completedAt, remote.completedAt)
-      : null;
+    status === "completed" ? resolveEarlierTimestamp(local.completedAt, remote.completedAt) : null;
 
   const updatedAt = new Date().toISOString();
 

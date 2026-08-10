@@ -122,10 +122,7 @@ export function selectWeeklyPrompts(
     const metrics = computeMetrics(records, 7);
 
     // Low consistency / variable schedule → routine prompt
-    if (
-      metrics.sleepRegularity === null ||
-      metrics.sleepRegularity < 70
-    ) {
+    if (metrics.sleepRegularity === null || metrics.sleepRegularity < 70) {
       selected.push(getPromptByCategory("routine_consistency"));
     } else {
       // Good consistency → confidence prompt
@@ -133,10 +130,7 @@ export function selectWeeklyPrompts(
     }
 
     // Low efficiency → challenges prompt
-    if (
-      metrics.sleepEfficiency !== null &&
-      metrics.sleepEfficiency < 80
-    ) {
+    if (metrics.sleepEfficiency !== null && metrics.sleepEfficiency < 80) {
       selected.push(getPromptByCategory("challenges"));
     } else if (habitProgress.size > 0) {
       // Good sleep + has habits → manageable parts
@@ -175,9 +169,7 @@ export function selectWeeklyPrompts(
 // Helper: Get first prompt of a category
 // ============================================
 
-function getPromptByCategory(
-  category: WeeklyReflectionPromptCategory,
-): WeeklyReflectionPrompt {
+function getPromptByCategory(category: WeeklyReflectionPromptCategory): WeeklyReflectionPrompt {
   const prompt = ALL_PROMPTS.find((p) => p.category === category);
   if (!prompt) {
     // Fallback to wins — should never happen

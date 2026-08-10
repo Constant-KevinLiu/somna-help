@@ -10,11 +10,7 @@ export const deWeek5Lessons: LessonContent[] = [
     weekSlug: "week-5",
     lessonNumber: 1,
     estimatedMinutes: 6,
-    relatedLessonSlugs: [
-      "4-7-8-breathing",
-      "progressive-muscle-relaxation",
-      "body-scan",
-    ],
+    relatedLessonSlugs: ["4-7-8-breathing", "progressive-muscle-relaxation", "body-scan"],
     i18n: {
       de: {
         title: "Entspannungstechniken",
@@ -28,7 +24,7 @@ export const deWeek5Lessons: LessonContent[] = [
             heading: "Warum Entspannung wichtig ist",
             paras: [
               "Bei Insomnie ist das Nervensystem oft im Zustand der Hyperarousal — körperlich und mental wach, selbst wenn du müde bist.",
-              "Entspannungstechniken aktivieren den parasympathischen Zweig des Nervensystems, den \"Ruhe und Verdauung\"-Modus. Das senkt Herzfrequenz, Blutdruck und Stresshormone.",
+              'Entspannungstechniken aktivieren den parasympathischen Zweig des Nervensystems, den "Ruhe und Verdauung"-Modus. Das senkt Herzfrequenz, Blutdruck und Stresshormone.',
             ],
           },
           {
@@ -87,17 +83,12 @@ export const deWeek5Lessons: LessonContent[] = [
     weekSlug: "week-5",
     lessonNumber: 2,
     estimatedMinutes: 5,
-    relatedLessonSlugs: [
-      "circadian-rhythm",
-      "caffeine-and-sleep",
-      "light-and-sleep",
-    ],
+    relatedLessonSlugs: ["circadian-rhythm", "caffeine-and-sleep", "light-and-sleep"],
     i18n: {
       de: {
         title: "Schlafhygiene",
         eyebrow: "WOCHE 5 · LEKTION 2",
-        subtitle:
-          "Umweltfaktoren und Gewohnheiten, die deinen Schlaf unterstützen oder behindern.",
+        subtitle: "Umweltfaktoren und Gewohnheiten, die deinen Schlaf unterstützen oder behindern.",
         difficulty: "Einsteiger",
         readingTime: "5 Min. Lesezeit",
         content: [
@@ -175,8 +166,7 @@ export const deWeek5Lessons: LessonContent[] = [
       de: {
         title: "Sorgenfenster",
         eyebrow: "WOCHE 5 · LEKTION 3",
-        subtitle:
-          "Eine strukturierte Technik, um nächtliche Grübeleien zu reduzieren.",
+        subtitle: "Eine strukturierte Technik, um nächtliche Grübeleien zu reduzieren.",
         difficulty: "Mittel",
         readingTime: "5 Min. Lesezeit",
         content: [
@@ -191,7 +181,7 @@ export const deWeek5Lessons: LessonContent[] = [
             heading: "Das Sorgenfenster",
             paras: [
               "Ein Sorgenfenster ist ein festgelegter Zeitraum am frühen Abend (z.B. 15–20 Minuten um 19 Uhr), in dem du Sorgen bewusst aufschreibst und verarbeitest.",
-              "Wenn Sorgen nachts auftauchen, kannst du sagen: \"Ich habe das bereits in meinem Sorgenfenster bearbeitet. Jetzt ist Schlafzeit.\"",
+              'Wenn Sorgen nachts auftauchen, kannst du sagen: "Ich habe das bereits in meinem Sorgenfenster bearbeitet. Jetzt ist Schlafzeit."',
             ],
           },
           {
@@ -206,7 +196,7 @@ export const deWeek5Lessons: LessonContent[] = [
         ],
         actionStepTitle: "Praktische Aufgabe",
         actionStep:
-          "Lege ein Sorgenfenster für diese Woche fest: 15–20 Minuten am frühen Abend. Schreibe jeden Tag deine Sorgen auf und plane kleine nächste Schritte. Wenn du nachts wach liegst und Sorgen kommst, erinnere dich: \"Das ist bereits bearbeitet.\"",
+          'Lege ein Sorgenfenster für diese Woche fest: 15–20 Minuten am frühen Abend. Schreibe jeden Tag deine Sorgen auf und plane kleine nächste Schritte. Wenn du nachts wach liegst und Sorgen kommst, erinnere dich: "Das ist bereits bearbeitet."',
         reflectionTitle: "Reflexion",
         reflection:
           "Wie fühlst du dich nach dem Sorgenfenster? Bemerkst du eine Veränderung in der Häufigkeit oder Intensität nächtlicher Sorgen?",

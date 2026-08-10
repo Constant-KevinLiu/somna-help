@@ -7,11 +7,7 @@
  * - Respect timezone and daylight saving transitions
  * - Prevent duplicate occurrences
  */
-import {
-  type Reminder,
-  type ReminderSchedule,
-  type ReminderOccurrence,
-} from "./habit-types";
+import { type Reminder, type ReminderSchedule, type ReminderOccurrence } from "./habit-types";
 import { loadReminders, loadOccurrences, addOccurrence } from "./habit-storage";
 
 // ============================================
@@ -39,9 +35,9 @@ export function formatTime(hours: number, minutes: number): string {
 // Timezone-Aware Date Creation
 // ============================================
 export function createDateInTimezone(
-  dateStr: string,    // YYYY-MM-DD
-  timeStr: string,    // HH:MM
-  timezone: string
+  dateStr: string, // YYYY-MM-DD
+  timeStr: string, // HH:MM
+  timezone: string,
 ): Date {
   const { hours, minutes } = parseTime(timeStr);
   const [year, month, day] = dateStr.split("-").map(Number);
@@ -63,7 +59,7 @@ export function createDateInTimezone(
   // Format the UTC date in the target timezone and parse back
   // This handles DST transitions correctly
   const formatted = formatter.format(utcDate);
-  const [m, d, y, time] = formatted.split(/[\/,\s]+/);
+  const [m, d, y, time] = formatted.split(/[/,\s]+/);
   const [h, min] = time.split(":").map(Number);
 
   return new Date(Date.UTC(parseInt(y), parseInt(m) - 1, parseInt(d), h, min));
@@ -90,7 +86,7 @@ export function addDays(date: Date, days: number): Date {
 export function isDateInRange(
   date: string, // YYYY-MM-DD
   startDate?: string,
-  endDate?: string
+  endDate?: string,
 ): boolean {
   if (startDate && date < startDate) return false;
   if (endDate && date > endDate) return false;
@@ -113,7 +109,7 @@ export function getWeekdayInTimezone(date: Date, timezone: string): number {
 export function shouldRunOnWeekday(
   schedule: ReminderSchedule,
   date: Date,
-  timezone: string
+  timezone: string,
 ): boolean {
   if (schedule.type === "daily") return true;
 
@@ -127,7 +123,7 @@ export function shouldRunOnWeekday(
 export function getNextOccurrenceDate(
   schedule: ReminderSchedule,
   timezone: string,
-  after: Date = new Date()
+  after: Date = new Date(),
 ): Date | null {
   const maxDays = 365; // Prevent infinite loop
   let current = new Date(after);
@@ -160,7 +156,7 @@ export function getOccurrencesInRange(
   schedule: ReminderSchedule,
   timezone: string,
   startDate: Date,
-  endDate: Date
+  endDate: Date,
 ): Date[] {
   const occurrences: Date[] = [];
   let current = new Date(startDate);
@@ -168,8 +164,10 @@ export function getOccurrencesInRange(
   while (current <= endDate) {
     const localDate = getLocalDate(current, timezone);
 
-    if (isDateInRange(localDate, schedule.startDate, schedule.endDate) &&
-      shouldRunOnWeekday(schedule, current, timezone)) {
+    if (
+      isDateInRange(localDate, schedule.startDate, schedule.endDate) &&
+      shouldRunOnWeekday(schedule, current, timezone)
+    ) {
       const occurrenceTime = createDateInTimezone(localDate, schedule.time, timezone);
       if (occurrenceTime >= startDate && occurrenceTime <= endDate) {
         occurrences.push(occurrenceTime);
@@ -185,23 +183,15 @@ export function getOccurrencesInRange(
 // ============================================
 // Duplicate Prevention
 // ============================================
-export function occurrenceExists(
-  reminderId: string,
-  scheduledAt: string
-): boolean {
+export function occurrenceExists(reminderId: string, scheduledAt: string): boolean {
   const existing = loadOccurrences();
-  return existing.some(
-    o => o.reminderId === reminderId && o.scheduledAt === scheduledAt
-  );
+  return existing.some((o) => o.reminderId === reminderId && o.scheduledAt === scheduledAt);
 }
 
 // ============================================
 // Create New Occurrence
 // ============================================
-export function createOccurrence(
-  reminder: Reminder,
-  scheduledAt: Date
-): ReminderOccurrence {
+export function createOccurrence(reminder: Reminder, scheduledAt: Date): ReminderOccurrence {
   const now = new Date().toISOString();
 
   return {
@@ -222,7 +212,7 @@ export function createOccurrence(
 // ============================================
 export function generateUpcomingOccurrences(
   reminder: Reminder,
-  daysAhead: number = 7
+  daysAhead: number = 7,
 ): ReminderOccurrence[] {
   if (reminder.status !== "active") return [];
 
@@ -259,27 +249,19 @@ export function generateAllUpcomingOccurrences(daysAhead: number = 7): void {
 // ============================================
 // Check for Missed Occurrences
 // ============================================
-export function findMissedOccurrences(
-  gracePeriodMinutes: number = 60
-): ReminderOccurrence[] {
+export function findMissedOccurrences(gracePeriodMinutes: number = 60): ReminderOccurrence[] {
   const now = new Date();
   const gracePeriod = gracePeriodMinutes * 60 * 1000;
   const cutoff = new Date(now.getTime() - gracePeriod);
 
   const occurrences = loadOccurrences();
-  return occurrences.filter(o =>
-    o.status === "scheduled" &&
-    new Date(o.dueAt) < cutoff
-  );
+  return occurrences.filter((o) => o.status === "scheduled" && new Date(o.dueAt) < cutoff);
 }
 
 // ============================================
 // Snooze Occurrence
 // ============================================
-export function snoozeOccurrence(
-  occurrence: ReminderOccurrence,
-  minutes: number
-): Date {
+export function snoozeOccurrence(occurrence: ReminderOccurrence, minutes: number): Date {
   const dueDate = new Date(occurrence.dueAt);
   dueDate.setMinutes(dueDate.getMinutes() + minutes);
   return dueDate;
@@ -288,14 +270,12 @@ export function snoozeOccurrence(
 // ============================================
 // Get Next Occurrence for Reminder
 // ============================================
-export function getNextOccurrenceForReminder(
-  reminderId: string
-): ReminderOccurrence | null {
+export function getNextOccurrenceForReminder(reminderId: string): ReminderOccurrence | null {
   const occurrences = loadOccurrences();
   const now = new Date().toISOString();
 
   const upcoming = occurrences
-    .filter(o => o.reminderId === reminderId && o.status === "scheduled" && o.dueAt > now)
+    .filter((o) => o.reminderId === reminderId && o.status === "scheduled" && o.dueAt > now)
     .sort((a, b) => a.dueAt.localeCompare(b.dueAt));
 
   return upcoming[0] || null;

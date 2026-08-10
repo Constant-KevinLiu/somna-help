@@ -22,8 +22,7 @@ export const analyticsEn: Dict = {
   // ============================================
   // Data Sufficiency
   // ============================================
-  "analytics.sufficiency.none":
-    "Start recording your sleep to see your patterns.",
+  "analytics.sufficiency.none": "Start recording your sleep to see your patterns.",
   "analytics.sufficiency.insufficient":
     "Keep recording for a few more days to see a clearer pattern.",
   "analytics.sufficiency.limited":
@@ -79,10 +78,8 @@ export const analyticsEn: Dict = {
     "On the days recorded, you woke up later on weekends.",
   "analytics.pattern.weekend_waketime_earlier":
     "On the days recorded, you woke up earlier on weekends.",
-  "analytics.pattern.consistent_wake_time":
-    "Your wake time has been very consistent this period.",
-  "analytics.pattern.variable_bedtime":
-    "Your bedtime varied quite a bit during this period.",
+  "analytics.pattern.consistent_wake_time": "Your wake time has been very consistent this period.",
+  "analytics.pattern.variable_bedtime": "Your bedtime varied quite a bit during this period.",
   "analytics.pattern.reminder_stronger":
     "You've been keeping up with your reminders more consistently than your diary.",
   "analytics.pattern.diary_stronger":
@@ -93,30 +90,24 @@ export const analyticsEn: Dict = {
   // ============================================
   // Insight Cards — Trends
   // ============================================
-  "analytics.insight.trend.improving.sleepEfficiency.title":
-    "Your sleep efficiency is improving",
+  "analytics.insight.trend.improving.sleepEfficiency.title": "Your sleep efficiency is improving",
   "analytics.insight.trend.improving.sleepEfficiency.body":
     "Your sleep efficiency has trended upward recently. This suggests your sleep is becoming more restful. Keep up what's working.",
-  "analytics.insight.trend.declining.sleepEfficiency.title":
-    "Your sleep efficiency has dipped",
+  "analytics.insight.trend.declining.sleepEfficiency.title": "Your sleep efficiency has dipped",
   "analytics.insight.trend.declining.sleepEfficiency.body":
     "Your sleep efficiency has been lower recently. This is a gentle observation, not a diagnosis — many factors affect how we sleep from week to week.",
 
-  "analytics.insight.trend.improving.totalSleepTime.title":
-    "You're getting more sleep",
+  "analytics.insight.trend.improving.totalSleepTime.title": "You're getting more sleep",
   "analytics.insight.trend.improving.totalSleepTime.body":
     "Your total sleep time has increased. More restful hours can make a noticeable difference in how you feel during the day.",
-  "analytics.insight.trend.declining.totalSleepTime.title":
-    "Your total sleep has decreased",
+  "analytics.insight.trend.declining.totalSleepTime.title": "Your total sleep has decreased",
   "analytics.insight.trend.declining.totalSleepTime.body":
     "Your total sleep time has been shorter recently. This is worth observing — changes in routine, stress, or schedule can all play a role.",
 
-  "analytics.insight.trend.improving.sleepOnsetLatency.title":
-    "You're falling asleep faster",
+  "analytics.insight.trend.improving.sleepOnsetLatency.title": "You're falling asleep faster",
   "analytics.insight.trend.improving.sleepOnsetLatency.body":
     "It's taking you less time to fall asleep. This is a good sign — your wind-down routine may be helping.",
-  "analytics.insight.trend.declining.sleepOnsetLatency.title":
-    "It's taking longer to fall asleep",
+  "analytics.insight.trend.declining.sleepOnsetLatency.title": "It's taking longer to fall asleep",
   "analytics.insight.trend.declining.sleepOnsetLatency.body":
     "You've been taking longer to fall asleep recently. Racing thoughts, screen time before bed, or changes in routine can all contribute.",
 
@@ -132,27 +123,22 @@ export const analyticsEn: Dict = {
   // ============================================
   // Insight Cards — Patterns
   // ============================================
-  "analytics.insight.pattern.weekend_bedtime_later.title":
-    "Later bedtimes on weekends",
+  "analytics.insight.pattern.weekend_bedtime_later.title": "Later bedtimes on weekends",
   "analytics.insight.pattern.weekend_bedtime_later.body":
     "Your bedtime shifts later on weekends. Social jet lag — even a small shift — can affect how you feel at the start of the week.",
-  "analytics.insight.pattern.weekend_waketime_later.title":
-    "Sleeping in on weekends",
+  "analytics.insight.pattern.weekend_waketime_later.title": "Sleeping in on weekends",
   "analytics.insight.pattern.weekend_waketime_later.body":
     "You tend to wake up later on weekends. Sleeping in by more than an hour can shift your body clock and make Monday mornings harder.",
 
-  "analytics.insight.pattern.consistent_wake_time.title":
-    "Consistent wake time",
+  "analytics.insight.pattern.consistent_wake_time.title": "Consistent wake time",
   "analytics.insight.pattern.consistent_wake_time.body":
     "Your wake time has been very steady. A consistent wake time is one of the most effective ways to strengthen your circadian rhythm — great job.",
 
-  "analytics.insight.pattern.variable_bedtime.title":
-    "Your bedtime varies a lot",
+  "analytics.insight.pattern.variable_bedtime.title": "Your bedtime varies a lot",
   "analytics.insight.pattern.variable_bedtime.body":
     "Your bedtime has been quite different from night to night. Try observing your bedtime without trying to force it earlier — awareness is the first step.",
 
-  "analytics.insight.pattern.stable_wake_streak.title":
-    "Consistent wake streak",
+  "analytics.insight.pattern.stable_wake_streak.title": "Consistent wake streak",
   "analytics.insight.pattern.stable_wake_streak.body":
     "You've been waking up at a similar time for several days in a row. This builds a strong circadian anchor — keep it going.",
 
@@ -164,23 +150,19 @@ export const analyticsEn: Dict = {
   // ============================================
   // Insight Cards — Encouragement
   // ============================================
-  "analytics.insight.encouragement.start_recording.title":
-    "Your sleep story starts here",
+  "analytics.insight.encouragement.start_recording.title": "Your sleep story starts here",
   "analytics.insight.encouragement.start_recording.body":
     "Every journey begins with a single night. Recording your sleep for just one week can reveal patterns you might not have noticed.",
 
-  "analytics.insight.encouragement.keep_going.title":
-    "You're getting started",
+  "analytics.insight.encouragement.keep_going.title": "You're getting started",
   "analytics.insight.encouragement.keep_going.body":
     "Great — you've begun recording. Keep going for a few more days and you'll start to see your sleep pattern take shape.",
 
-  "analytics.insight.encouragement.first_week.title":
-    "You've built a foundation",
+  "analytics.insight.encouragement.first_week.title": "You've built a foundation",
   "analytics.insight.encouragement.first_week.body":
     "You've recorded several nights this week. That alone is an achievement. The first week is about observation — not perfection.",
 
-  "analytics.insight.encouragement.streak.title":
-    "You're on a roll",
+  "analytics.insight.encouragement.streak.title": "You're on a roll",
   "analytics.insight.encouragement.streak.body":
     "Recording your sleep day after day builds awareness, and awareness is the first step toward change. Keep the streak going.",
 
@@ -230,20 +212,17 @@ export const analyticsEn: Dict = {
   "analytics.monthly.notableChanges": "Notable changes",
   "analytics.monthly.previousMonth": "Previous month",
   "analytics.monthly.nextMonth": "Next month",
-  "analytics.monthly.empty":
-    "Keep recording — your monthly overview will appear here.",
+  "analytics.monthly.empty": "Keep recording — your monthly overview will appear here.",
 
   // ============================================
   // Weekly Focus
   // ============================================
   "analytics.focus.title": "This Week's Focus",
   "analytics.focus.subtitle": "A gentle suggestion for the week ahead",
-  "analytics.focus.baseline_building.reason":
-    "You're still building your sleep record.",
+  "analytics.focus.baseline_building.reason": "You're still building your sleep record.",
   "analytics.focus.baseline_building.action":
     "Focus on recording each morning — just one entry per day.",
-  "analytics.focus.recording_consistency.reason":
-    "Your diary has gaps this week.",
+  "analytics.focus.recording_consistency.reason": "Your diary has gaps this week.",
   "analytics.focus.recording_consistency.action":
     "Try to fill in the missing days. Even a quick entry helps you see the full picture.",
   "analytics.focus.wake_time_consistency.reason":
@@ -254,16 +233,13 @@ export const analyticsEn: Dict = {
     "Your bedtime varies quite a bit from night to night.",
   "analytics.focus.bedtime_observation.action":
     "Observe your bedtime this week without trying to force it earlier. Awareness comes first.",
-  "analytics.focus.reminder_routine.reason":
-    "Your reminders aren't quite sticking yet.",
+  "analytics.focus.reminder_routine.reason": "Your reminders aren't quite sticking yet.",
   "analytics.focus.reminder_routine.action":
     "Try completing at least one reminder per day this week to build the habit.",
-  "analytics.focus.maintenance.reason":
-    "Your sleep is looking consistent and efficient.",
+  "analytics.focus.maintenance.reason": "Your sleep is looking consistent and efficient.",
   "analytics.focus.maintenance.action":
     "Keep up the great routine. This week, focus on maintaining what's working.",
-  "analytics.focus.default.reason":
-    "Here's a gentle focus for the week.",
+  "analytics.focus.default.reason": "Here's a gentle focus for the week.",
   "analytics.focus.default.action":
     "Observe your sleep patterns with curiosity — there's nothing to fix.",
   "analytics.focus.accept": "Accept focus",
@@ -276,8 +252,7 @@ export const analyticsEn: Dict = {
   // Reflection (Weekly)
   // ============================================
   "reflection.weekly.title": "Weekly Reflection",
-  "reflection.weekly.subtitle":
-    "A guided check-in to look back at your week and look ahead.",
+  "reflection.weekly.subtitle": "A guided check-in to look back at your week and look ahead.",
   "reflection.weekly.intro":
     "Take a few minutes to reflect on your sleep and your routine this week. There are no right or wrong answers — this is for you.",
   "reflection.weekly.skip": "Skip",
@@ -286,8 +261,7 @@ export const analyticsEn: Dict = {
   "reflection.weekly.edit": "Edit",
   "reflection.weekly.delete": "Delete",
   "reflection.weekly.words": "words",
-  "reflection.weekly.empty":
-    "No reflection saved for this week yet.",
+  "reflection.weekly.empty": "No reflection saved for this week yet.",
   "reflection.weekly.start": "Start reflection",
 
   // Prompts
@@ -301,14 +275,11 @@ export const analyticsEn: Dict = {
     "Which part of your sleep routine felt most manageable this week?",
   "reflection.weekly.prompt.next_week_observation.1":
     "What would you like to observe about your sleep next week?",
-  "reflection.weekly.prompt.wins.1":
-    "What's one thing that went well with your sleep this week?",
+  "reflection.weekly.prompt.wins.1": "What's one thing that went well with your sleep this week?",
   "reflection.weekly.prompt.wins.2":
     "When did you feel most rested this week, and what was different?",
-  "reflection.weekly.prompt.challenges.1":
-    "What was challenging about your sleep this week?",
-  "reflection.weekly.prompt.gratitude.1":
-    "What are you grateful for about your rest this week?",
+  "reflection.weekly.prompt.challenges.1": "What was challenging about your sleep this week?",
+  "reflection.weekly.prompt.gratitude.1": "What are you grateful for about your rest this week?",
   "reflection.weekly.prompt.sleep_confidence.1":
     "How confident do you feel in your ability to sleep well right now?",
 
@@ -317,18 +288,12 @@ export const analyticsEn: Dict = {
     "Write about what helped or what got in the way...",
   "reflection.weekly.placeholder.recording_ease":
     "Share what made it easier or harder to record...",
-  "reflection.weekly.placeholder.manageable_parts":
-    "Describe what felt doable and why...",
-  "reflection.weekly.placeholder.next_week_observation":
-    "What do you want to notice next week?",
-  "reflection.weekly.placeholder.wins":
-    "Celebrate something — big or small...",
-  "reflection.weekly.placeholder.challenges":
-    "Write about what was difficult...",
-  "reflection.weekly.placeholder.gratitude":
-    "What are you thankful for?",
-  "reflection.weekly.placeholder.sleep_confidence":
-    "How do you feel about your sleep right now?",
+  "reflection.weekly.placeholder.manageable_parts": "Describe what felt doable and why...",
+  "reflection.weekly.placeholder.next_week_observation": "What do you want to notice next week?",
+  "reflection.weekly.placeholder.wins": "Celebrate something — big or small...",
+  "reflection.weekly.placeholder.challenges": "Write about what was difficult...",
+  "reflection.weekly.placeholder.gratitude": "What are you thankful for?",
+  "reflection.weekly.placeholder.sleep_confidence": "How do you feel about your sleep right now?",
 
   // ============================================
   // Dashboard Section Titles

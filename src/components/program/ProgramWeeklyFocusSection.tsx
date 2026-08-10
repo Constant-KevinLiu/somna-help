@@ -50,10 +50,7 @@ export function ProgramWeeklyFocusSection({
   // If data is insufficient, show an honest state
   if (dataSufficiency === "none" || dataSufficiency === "insufficient") {
     return (
-      <section
-        className="px-5 pb-8"
-        aria-labelledby="program-focus-title"
-      >
+      <section className="px-5 pb-8" aria-labelledby="program-focus-title">
         <div className="mx-auto max-w-3xl">
           <div className="glass-strong rounded-3xl p-6 md:p-8">
             <div className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-muted-foreground">
@@ -63,13 +60,12 @@ export function ProgramWeeklyFocusSection({
 
             <div className="mt-4 flex items-start gap-3">
               <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                {ui.weeklyFocusInsufficient}
-              </p>
+              <p className="text-sm text-muted-foreground">{ui.weeklyFocusInsufficient}</p>
             </div>
 
             <p className="mt-3 text-xs text-muted-foreground">
-              {ui.weeklyFocusDataWindow.replace("7", String(evidenceDays))}: {recordCount} {recordCount === 1 ? "entry" : "entries"}
+              {ui.weeklyFocusDataWindow.replace("7", String(evidenceDays))}: {recordCount}{" "}
+              {recordCount === 1 ? "entry" : "entries"}
             </p>
           </div>
         </div>
@@ -85,10 +81,7 @@ export function ProgramWeeklyFocusSection({
   const hasAction = actionText !== `analytics.focus.${focus.category}.action`;
 
   return (
-    <section
-      className="px-5 pb-8"
-      aria-labelledby="program-focus-title"
-    >
+    <section className="px-5 pb-8" aria-labelledby="program-focus-title">
       <div className="mx-auto max-w-3xl">
         <div className="glass-strong rounded-3xl p-6 md:p-8">
           {/* Header */}
@@ -118,7 +111,8 @@ export function ProgramWeeklyFocusSection({
           {/* Data basis */}
           <div className="mt-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
-              {ui.weeklyFocusBasedOn} {recordCount} {recordCount === 1 ? "entry" : "entries"} / {evidenceDays} days
+              {ui.weeklyFocusBasedOn} {recordCount} {recordCount === 1 ? "entry" : "entries"} /{" "}
+              {evidenceDays} days
             </span>
           </div>
 
@@ -149,7 +143,7 @@ export function ProgramWeeklyFocusSection({
 function findRelatedLesson(
   focus: WeeklyFocus | null,
   definition: ProgramDefinition,
-  currentWeekId: string | null
+  currentWeekId: string | null,
 ): ProgramLessonDefinition | null {
   if (!focus) return null;
 
@@ -158,19 +152,13 @@ function findRelatedLesson(
 
   // First: try current week
   if (currentWeekId) {
-    const currentWeekLessons = definition.lessons.filter(
-      (l) => l.weekId === currentWeekId
-    );
-    const match = currentWeekLessons.find((l) =>
-      l.tags.some((t) => relatedTags.includes(t))
-    );
+    const currentWeekLessons = definition.lessons.filter((l) => l.weekId === currentWeekId);
+    const match = currentWeekLessons.find((l) => l.tags.some((t) => relatedTags.includes(t)));
     if (match) return match;
   }
 
   // Fallback: first lesson in the program with matching tags
-  const match = definition.lessons.find((l) =>
-    l.tags.some((t) => relatedTags.includes(t))
-  );
+  const match = definition.lessons.find((l) => l.tags.some((t) => relatedTags.includes(t)));
   return match ?? null;
 }
 

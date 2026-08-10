@@ -13,7 +13,7 @@ import { PT_BR_REFLECTION_PACKAGE } from "@/content/pt-BR/diary/reflection-promp
 import { PL_REFLECTION_PACKAGE } from "@/content/pl/diary/reflection-prompts";
 import { validateContentPackage } from "@/content/content-types";
 
-const PROMPT_PACKAGES = {
+const PROMPT_PACKAGES: Partial<Record<Locale, typeof EN_REFLECTION_PACKAGE>> = {
   en: EN_REFLECTION_PACKAGE,
   es: ES_REFLECTION_PACKAGE,
   "pt-BR": PT_BR_REFLECTION_PACKAGE,
@@ -22,6 +22,10 @@ const PROMPT_PACKAGES = {
 
 export function getPromptsForLocale(locale: Locale): ReflectionPrompt[] {
   const pkg = PROMPT_PACKAGES[locale];
+  if (!pkg) {
+    // Fall back to English for locales without native reflection content
+    return EN_REFLECTION_PACKAGE.content;
+  }
   validateContentPackage(pkg, locale);
   return pkg.content;
 }
@@ -66,7 +70,7 @@ function getDeterministicIndex(seed: string, array: unknown[], dayOffset: number
  */
 export function selectDailyPrompts(
   localDate: string,
-  locale: Locale
+  locale: Locale,
 ): [ReflectionPrompt, ReflectionPrompt, ReflectionPrompt] {
   const allPrompts = getPromptsForLocale(locale);
   const seed = `${localDate}-${locale}`;
@@ -75,15 +79,11 @@ export function selectDailyPrompts(
   const dayNumber = parseInt(localDate.split("-").join(""), 10) % 1000;
 
   // Group prompts by category type
-  const cognitivePrompts = allPrompts.filter((p) =>
-    CATEGORY_GROUPS.cognitive.includes(p.category)
-  );
+  const cognitivePrompts = allPrompts.filter((p) => CATEGORY_GROUPS.cognitive.includes(p.category));
   const behavioralPrompts = allPrompts.filter((p) =>
-    CATEGORY_GROUPS.behavioral.includes(p.category)
+    CATEGORY_GROUPS.behavioral.includes(p.category),
   );
-  const calmingPrompts = allPrompts.filter((p) =>
-    CATEGORY_GROUPS.calming.includes(p.category)
-  );
+  const calmingPrompts = allPrompts.filter((p) => CATEGORY_GROUPS.calming.includes(p.category));
 
   // Select one from each category with deterministic offset
   const cognitiveIndex = getDeterministicIndex(seed, cognitivePrompts, dayNumber % 3);
@@ -107,57 +107,63 @@ export function getDailyPromptIds(localDate: string, locale: Locale): string[] {
 /**
  * Get category labels for all categories.
  */
-export function getCategoryLabel(category: ReflectionCategory, locale: Locale): string {
-  const labels: Record<Locale, Record<ReflectionCategory, string>> = {
-    en: {
-      "sleep-thoughts": "Sleep Thoughts",
-      "sleep-anxiety": "Sleep Anxiety",
-      "sleep-behaviors": "Sleep Behaviors",
-      relaxation: "Relaxation",
-      gratitude: "Gratitude",
-      "sleep-confidence": "Sleep Confidence",
-      "stimulus-control": "Stimulus Control",
-      "sleep-restriction": "Sleep Restriction",
-      "night-awakenings": "Night Awakenings",
-      "cognitive-reframing": "Cognitive Reframing",
-    },
-    es: {
-      "sleep-thoughts": "Pensamientos sobre el Sueño",
-      "sleep-anxiety": "Ansiedad del Sueño",
-      "sleep-behaviors": "Comportamientos del Sueño",
-      relaxation: "Relajación",
-      gratitude: "Gratitud",
-      "sleep-confidence": "Confianza en el Sueño",
-      "stimulus-control": "Control del Estímulo",
-      "sleep-restriction": "Restricción del Sueño",
-      "night-awakenings": "Despertares Nocturnos",
-      "cognitive-reframing": "Reencuadre Cognitivo",
-    },
-    "pt-BR": {
-      "sleep-thoughts": "Pensamentos sobre o Sono",
-      "sleep-anxiety": "Ansiedade do Sono",
-      "sleep-behaviors": "Comportamentos do Sono",
-      relaxation: "Relaxamento",
-      gratitude: "Gratidão",
-      "sleep-confidence": "Confiança no Sono",
-      "stimulus-control": "Controle do Estímulo",
-      "sleep-restriction": "Restrição do Sono",
-      "night-awakenings": "Despertares Noturnos",
-      "cognitive-reframing": "Reenquadramento Cognitivo",
-    },
-    pl: {
-      "sleep-thoughts": "Myśli o Śnie",
-      "sleep-anxiety": "Lęk przed Snem",
-      "sleep-behaviors": "Zachowania Snu",
-      relaxation: "Relaksacja",
-      gratitude: "Wdzięczność",
-      "sleep-confidence": "Pewność Siebie w Śnie",
-      "stimulus-control": "Kontrola Bodźca",
-      "sleep-restriction": "Ograniczenie Snu",
-      "night-awakenings": "Przebudzenia Nocne",
-      "cognitive-reframing": "Przekształcenie Poznawcze",
-    },
-  };
+const CATEGORY_LABELS: Partial<Record<Locale, Record<ReflectionCategory, string>>> = {
+  en: {
+    "sleep-thoughts": "Sleep Thoughts",
+    "sleep-anxiety": "Sleep Anxiety",
+    "sleep-behaviors": "Sleep Behaviors",
+    relaxation: "Relaxation",
+    gratitude: "Gratitude",
+    "sleep-confidence": "Sleep Confidence",
+    "stimulus-control": "Stimulus Control",
+    "sleep-restriction": "Sleep Restriction",
+    "night-awakenings": "Night Awakenings",
+    "cognitive-reframing": "Cognitive Reframing",
+  },
+  es: {
+    "sleep-thoughts": "Pensamientos sobre el Sueño",
+    "sleep-anxiety": "Ansiedad del Sueño",
+    "sleep-behaviors": "Comportamientos del Sueño",
+    relaxation: "Relajación",
+    gratitude: "Gratitud",
+    "sleep-confidence": "Confianza en el Sueño",
+    "stimulus-control": "Control del Estímulo",
+    "sleep-restriction": "Restricción del Sueño",
+    "night-awakenings": "Despertares Nocturnos",
+    "cognitive-reframing": "Reencuadre Cognitivo",
+  },
+  "pt-BR": {
+    "sleep-thoughts": "Pensamentos sobre o Sono",
+    "sleep-anxiety": "Ansiedade do Sono",
+    "sleep-behaviors": "Comportamentos do Sono",
+    relaxation: "Relaxamento",
+    gratitude: "Gratidão",
+    "sleep-confidence": "Confiança no Sono",
+    "stimulus-control": "Controle do Estímulo",
+    "sleep-restriction": "Restrição do Sono",
+    "night-awakenings": "Despertares Noturnos",
+    "cognitive-reframing": "Reenquadramento Cognitivo",
+  },
+  pl: {
+    "sleep-thoughts": "Myśli o Śnie",
+    "sleep-anxiety": "Lęk przed Snem",
+    "sleep-behaviors": "Zachowania Snu",
+    relaxation: "Relaksacja",
+    gratitude: "Wdzięczność",
+    "sleep-confidence": "Pewność Siebie w Śnie",
+    "stimulus-control": "Kontrola Bodźca",
+    "sleep-restriction": "Ograniczenie Snu",
+    "night-awakenings": "Przebudzenia Nocne",
+    "cognitive-reframing": "Przekształcenie Poznawcze",
+  },
+};
 
-  return labels[locale][category];
+const EN_CATEGORY_LABELS: Record<ReflectionCategory, string> = CATEGORY_LABELS.en as Record<
+  ReflectionCategory,
+  string
+>;
+
+export function getCategoryLabel(category: ReflectionCategory, locale: Locale): string {
+  const labels = CATEGORY_LABELS[locale] ?? EN_CATEGORY_LABELS;
+  return labels[category];
 }

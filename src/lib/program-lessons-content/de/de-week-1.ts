@@ -69,13 +69,7 @@ export const deWeek1Lessons: LessonContent[] = [
         seoTitle: "Was ist Insomnie? Das 3P-Modell erklärt | Somna CBT-I",
         seoDescription:
           "Verstehe die Natur von Insomnie durch das wissenschaftliche 3P-Modell und erfahre, warum CBT-I effektiv die aufrechterhaltenden Gewohnheiten entfernt.",
-        keywords: [
-          "Insomnie",
-          "3P-Modell",
-          "chronische Insomnie",
-          "CBT-I",
-          "Insomnie-Behandlung",
-        ],
+        keywords: ["Insomnie", "3P-Modell", "chronische Insomnie", "CBT-I", "Insomnie-Behandlung"],
       },
     },
   },
@@ -112,14 +106,14 @@ export const deWeek1Lessons: LessonContent[] = [
             paras: [
               "Schlafzeit wird durch das Zusammenspiel zweier Kräfte reguliert:",
               "Zirkadianer Rhythmus — deine innere biologische Uhr, die auf Licht und Dunkelheit reagiert und tagsüber ein Wachsignal, nachts ein Müdigkeitssignal sendet.",
-              "Schlafdruck — die homostatische Schlafkraft, vergleichbar mit einer Sanduhr. Je länger wir aktiv sind, desto größer der Druck, den der Körper während der Nachtruhe \"ablassen\" muss.",
+              'Schlafdruck — die homostatische Schlafkraft, vergleichbar mit einer Sanduhr. Je länger wir aktiv sind, desto größer der Druck, den der Körper während der Nachtruhe "ablassen" muss.',
               "Hoher Schlafdruck + nächtliches Signal des zirkadianen Rhythmus = natürlich kommender Schlaf.",
             ],
           },
           {
             heading: "Wenn der Mechanismus übernommen wird",
             paras: [
-              "Bei Insomnie wird der natürliche Mechanismus durch Hyperarousal übernommen — einen biologischen und psychischen Wachzustand, der von Angst angetrieben wird. Selbst wenn der Schlafdruck sehr hoch ist, überwältigt das \"Wach\"-Signal des Nervensystems ihn. CBT-I wirkt genau deshalb, weil ihre Techniken den natürlichen Schlafdruck stärken und die innere Uhr neu synchronisieren.",
+              'Bei Insomnie wird der natürliche Mechanismus durch Hyperarousal übernommen — einen biologischen und psychischen Wachzustand, der von Angst angetrieben wird. Selbst wenn der Schlafdruck sehr hoch ist, überwältigt das "Wach"-Signal des Nervensystems ihn. CBT-I wirkt genau deshalb, weil ihre Techniken den natürlichen Schlafdruck stärken und die innere Uhr neu synchronisieren.',
             ],
           },
         ],
@@ -144,7 +138,13 @@ export const deWeek1Lessons: LessonContent[] = [
         seoTitle: "Wie funktioniert Schlaf: Zyklen, zirkadianer Rhythmus und Schlafdruck | Somna",
         seoDescription:
           "Verstehe 90-Minuten-Schlafzyklen, zirkadianen Rhythmus und Schlafdruck — und wie CBT-I ihr natürliches Gleichgewicht wiederherstellt.",
-        keywords: ["wie funktioniert Schlaf", "Schlafzyklen", "zirkadianer Rhythmus", "Schlafdruck", "NREM REM"],
+        keywords: [
+          "wie funktioniert Schlaf",
+          "Schlafzyklen",
+          "zirkadianer Rhythmus",
+          "Schlafdruck",
+          "NREM REM",
+        ],
       },
     },
   },
@@ -169,7 +169,7 @@ export const deWeek1Lessons: LessonContent[] = [
             heading: "Das Paradoxon der Anstrengung",
             paras: [
               "Eine der tiefsten Wahrheiten der Schlafwissenschaft ist das Paradoxon: je mehr du versuchst zu schlafen, desto mehr weicht der Schlaf aus. Es ist eine psychologische Falle bekannt als schlafbezogene Leistungsangst.",
-              "Wenn Erholung unerreichbar wird, ist dein erster Impuls, um sie zu kämpfen. Du kannst dich außergewöhnlich früh ins Bett legen, um Schlaf zu \"fangen\", regungslos liegen und die Augenlider zum Schließen zwingen oder dem Gehirn befehlen, \"aufzuhören zu denken\".",
+              'Wenn Erholung unerreichbar wird, ist dein erster Impuls, um sie zu kämpfen. Du kannst dich außergewöhnlich früh ins Bett legen, um Schlaf zu "fangen", regungslos liegen und die Augenlider zum Schließen zwingen oder dem Gehirn befehlen, "aufzuhören zu denken".',
               "Schlaf ist jedoch eine biologische Funktion, die durch Hingabe gesteuert wird, nicht durch Anstrengung. In dem Moment, in dem du Schlaf als zu erreichendes Ziel behandelst, betrachtet das Gehirn dies als hochriskante Aufgabe. Es beginnt, Cortisol und Adrenalin freizusetzen und einen Hyperarousal-Zustand auszulösen.",
             ],
           },
@@ -186,7 +186,7 @@ export const deWeek1Lessons: LessonContent[] = [
           "In dieser Woche üben wir die Kunst des Loslassens. Wenn du mit weit geöffneten Augen im Bett liegst und die Frustration wächst, bleib nicht dort im Kampf. Verlasse das Bett sanft, geh in einen gedimmten Raum und tu etwas Ruhiges — lies ein fesselndes Buch, höre einen Ambient-Podcast oder skizziere etwas auf einem Blatt. Kehre erst ins Bett zurück, wenn die Augenlider schwer werden und echte Müdigkeit dich überflutet.",
         reflectionTitle: "Reflexion",
         reflection:
-          "Kannst du konkrete Wege nennen, wie du zuletzt \"an Schlaf gearbeitet\" hast? Wie wäre es, wenn du heute Abend vollständig auf die Rolle der Person verzichtest, die sich zur Erholung zwingt?",
+          'Kannst du konkrete Wege nennen, wie du zuletzt "an Schlaf gearbeitet" hast? Wie wäre es, wenn du heute Abend vollständig auf die Rolle der Person verzichtest, die sich zur Erholung zwingt?',
         faqs: [
           {
             q: "Wenn ich aufstehe, wenn ich nicht schlafen kann, verliere ich nicht noch mehr Schlaf?",

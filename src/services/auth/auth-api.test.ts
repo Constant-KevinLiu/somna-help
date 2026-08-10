@@ -161,7 +161,15 @@ describe("handleRequestCode", () => {
     const order: string[] = [];
     mockCreateOTPChallenge.mockImplementation(async () => {
       order.push("create");
-      return { id: "otp_test", emailNormalized: "x", codeHash: "x", expiresAt: "x", attemptCount: 0, createdAt: "x", requestIpHash: "x" };
+      return {
+        id: "otp_test",
+        emailNormalized: "x",
+        codeHash: "x",
+        expiresAt: "x",
+        attemptCount: 0,
+        createdAt: "x",
+        requestIpHash: "x",
+      };
     });
     mockSendOTPEmail.mockImplementation(async () => {
       order.push("email");
@@ -496,12 +504,8 @@ describe("handleGetSession", () => {
 
       const setCookie = response.headers.getSetCookie?.() ?? [];
       // Session cookie should NOT be cleared (no Max-Age=0 for somna_session)
-      const sessionCookies = setCookie.filter((c: string) =>
-        c.startsWith("somna_session="),
-      );
-      const clearedCookies = sessionCookies.filter((c: string) =>
-        c.includes("Max-Age=0"),
-      );
+      const sessionCookies = setCookie.filter((c: string) => c.startsWith("somna_session="));
+      const clearedCookies = sessionCookies.filter((c: string) => c.includes("Max-Age=0"));
       expect(clearedCookies).toHaveLength(0);
     });
 
@@ -664,6 +668,7 @@ describe("getAuthenticatedUser", () => {
     expect(result).not.toBeNull();
     if (!result) throw new Error("result should not be null");
     expect(result.isAuthenticated).toBe(true);
+    if (!result.user) throw new Error("result.user should be present for authenticated session");
     expect(result.user.id).toBe(VALID_USER_ID);
     expect(result.user.preferredLocale).toBe("pt-BR");
     expect(result.user.timezone).toBe("Europe/Lisbon");

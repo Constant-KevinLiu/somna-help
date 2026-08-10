@@ -47,7 +47,7 @@ export function PauseConfirmDialog({ open, onOpenChange, onConfirm }: Props) {
     const handleTab = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;
       const focusable = dialog.querySelectorAll<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
       if (focusable.length === 0) return;
       const first = focusable[0];
@@ -113,16 +113,10 @@ export function PauseConfirmDialog({ open, onOpenChange, onConfirm }: Props) {
 
         {/* Content */}
         <div className="mt-5 text-center">
-          <h2
-            id="pause-dialog-title"
-            className="font-display text-xl text-foreground"
-          >
+          <h2 id="pause-dialog-title" className="font-display text-xl text-foreground">
             {ui.pauseConfirmTitle}
           </h2>
-          <p
-            id="pause-dialog-body"
-            className="mt-2 text-sm leading-relaxed text-muted-foreground"
-          >
+          <p id="pause-dialog-body" className="mt-2 text-sm leading-relaxed text-muted-foreground">
             {ui.pauseConfirmBody}
           </p>
         </div>

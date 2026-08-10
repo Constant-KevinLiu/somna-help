@@ -74,9 +74,7 @@ export function InsightCard({ insight, t, onAction, className }: InsightCardProp
           >
             {t(insight.titleKey)}
           </h3>
-          <p className="mt-2 text-sm leading-relaxed text-foreground/80">
-            {t(insight.bodyKey)}
-          </p>
+          <p className="mt-2 text-sm leading-relaxed text-foreground/80">{t(insight.bodyKey)}</p>
         </div>
       </div>
 
@@ -112,7 +110,9 @@ export function InsightCard({ insight, t, onAction, className }: InsightCardProp
               </div>
               <div className="flex justify-between">
                 <dt>Data sufficiency:</dt>
-                <dd className="text-foreground/80 capitalize">{insight.dataSufficiency.replace("_", " ")}</dd>
+                <dd className="text-foreground/80 capitalize">
+                  {insight.dataSufficiency.replace("_", " ")}
+                </dd>
               </div>
               {insight.evidence.supportingPatterns &&
                 insight.evidence.supportingPatterns.length > 0 && (

@@ -57,7 +57,7 @@ describe("computeSnapIndex", () => {
     expect(computeSnapIndex(0, { itemHeight: 48, itemCount: 60, loop: true })).toBe(0);
     expect(computeSnapIndex(-48, { itemHeight: 48, itemCount: 60, loop: true })).toBe(1);
     expect(computeSnapIndex(-48 * 62, { itemHeight: 48, itemCount: 60, loop: true })).toBe(
-      normalizeIndex(62, 60)
+      normalizeIndex(62, 60),
     );
   });
 });

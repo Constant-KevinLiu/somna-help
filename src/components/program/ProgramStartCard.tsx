@@ -34,7 +34,9 @@ export function ProgramStartCard({ onStart, totalWeeks }: Props) {
             {/* Structure info */}
             <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-muted-foreground">
               <BookOpen className="h-3.5 w-3.5 text-accent" />
-              {totalWeeks} {ui.weekLabel.toLowerCase()} · {TOTAL_LESSONS} {ui.lessonsLabel.toLowerCase()} · {ui.programStructureInfo.split("·")[2]?.trim() || "self-paced"}
+              {totalWeeks} {ui.weekLabel.toLowerCase()} · {TOTAL_LESSONS}{" "}
+              {ui.lessonsLabel.toLowerCase()} ·{" "}
+              {ui.programStructureInfo.split("·")[2]?.trim() || "self-paced"}
             </div>
           </div>
 
@@ -43,21 +45,21 @@ export function ProgramStartCard({ onStart, totalWeeks }: Props) {
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
               <div className="flex items-center gap-2 text-accent">
                 <Shield className="h-4 w-4" />
-                <span className="text-xs uppercase tracking-wider">{ui.programPrivacyNote.split(".")[0]}</span>
+                <span className="text-xs uppercase tracking-wider">
+                  {ui.programPrivacyNote.split(".")[0]}
+                </span>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {ui.programWhatItDoes}
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{ui.programWhatItDoes}</p>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Stethoscope className="h-4 w-4" />
-                <span className="text-xs uppercase tracking-wider">{ui.programWhatItDoesNot.split(",")[0]}</span>
+                <span className="text-xs uppercase tracking-wider">
+                  {ui.programWhatItDoesNot.split(",")[0]}
+                </span>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {ui.programWhatItDoesNot}
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{ui.programWhatItDoesNot}</p>
             </div>
           </div>
 

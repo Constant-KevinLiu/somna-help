@@ -149,12 +149,34 @@ describe("program/sync-contracts", () => {
   describe("mergeMilestones", () => {
     it("unions milestone IDs from both sides", () => {
       const local: ProgramMilestone[] = [
-        { id: "sleep-basics", titleKey: "m.sleep-basics", descriptionKey: "m.sleep-basics-desc", earnedAt: "2026-01-01T00:00:00.000Z", weekId: "week-1" },
-        { id: "habit-streak-7", titleKey: "m.streak", descriptionKey: "m.streak-desc", earnedAt: null },
+        {
+          id: "sleep-basics",
+          titleKey: "m.sleep-basics",
+          descriptionKey: "m.sleep-basics-desc",
+          earnedAt: "2026-01-01T00:00:00.000Z",
+          weekId: "week-1",
+        },
+        {
+          id: "habit-streak-7",
+          titleKey: "m.streak",
+          descriptionKey: "m.streak-desc",
+          earnedAt: null,
+        },
       ];
       const remote: ProgramMilestone[] = [
-        { id: "sleep-basics", titleKey: "m.sleep-basics", descriptionKey: "m.sleep-basics-desc", earnedAt: "2025-12-31T00:00:00.000Z", weekId: "week-1" },
-        { id: "program-completed", titleKey: "m.completed", descriptionKey: "m.completed-desc", earnedAt: null },
+        {
+          id: "sleep-basics",
+          titleKey: "m.sleep-basics",
+          descriptionKey: "m.sleep-basics-desc",
+          earnedAt: "2025-12-31T00:00:00.000Z",
+          weekId: "week-1",
+        },
+        {
+          id: "program-completed",
+          titleKey: "m.completed",
+          descriptionKey: "m.completed-desc",
+          earnedAt: null,
+        },
       ];
 
       const result = mergeMilestones(local, remote);
@@ -164,10 +186,20 @@ describe("program/sync-contracts", () => {
 
     it("keeps earlier timestamp for same milestone (earliest earns it first)", () => {
       const local: ProgramMilestone[] = [
-        { id: "sleep-basics", earnedAt: "2026-01-05T00:00:00.000Z", titleKey: "m.sleep-basics", descriptionKey: "m.desc" },
+        {
+          id: "sleep-basics",
+          earnedAt: "2026-01-05T00:00:00.000Z",
+          titleKey: "m.sleep-basics",
+          descriptionKey: "m.desc",
+        },
       ];
       const remote: ProgramMilestone[] = [
-        { id: "sleep-basics", earnedAt: "2026-01-01T00:00:00.000Z", titleKey: "m.sleep-basics", descriptionKey: "m.desc" },
+        {
+          id: "sleep-basics",
+          earnedAt: "2026-01-01T00:00:00.000Z",
+          titleKey: "m.sleep-basics",
+          descriptionKey: "m.desc",
+        },
       ];
 
       const result = mergeMilestones(local, remote);
@@ -177,10 +209,20 @@ describe("program/sync-contracts", () => {
 
     it("earned beats not earned (if remote has it earned, local doesn't)", () => {
       const local: ProgramMilestone[] = [
-        { id: "sleep-basics", earnedAt: null, titleKey: "m.sleep-basics", descriptionKey: "m.desc" },
+        {
+          id: "sleep-basics",
+          earnedAt: null,
+          titleKey: "m.sleep-basics",
+          descriptionKey: "m.desc",
+        },
       ];
       const remote: ProgramMilestone[] = [
-        { id: "sleep-basics", earnedAt: "2026-01-01T00:00:00.000Z", titleKey: "m.sleep-basics", descriptionKey: "m.desc" },
+        {
+          id: "sleep-basics",
+          earnedAt: "2026-01-01T00:00:00.000Z",
+          titleKey: "m.sleep-basics",
+          descriptionKey: "m.desc",
+        },
       ];
 
       const result = mergeMilestones(local, remote);
@@ -190,10 +232,20 @@ describe("program/sync-contracts", () => {
 
     it("earned beats not earned (if local has it earned, remote doesn't)", () => {
       const local: ProgramMilestone[] = [
-        { id: "sleep-basics", earnedAt: "2026-01-01T00:00:00.000Z", titleKey: "m.sleep-basics", descriptionKey: "m.desc" },
+        {
+          id: "sleep-basics",
+          earnedAt: "2026-01-01T00:00:00.000Z",
+          titleKey: "m.sleep-basics",
+          descriptionKey: "m.desc",
+        },
       ];
       const remote: ProgramMilestone[] = [
-        { id: "sleep-basics", earnedAt: null, titleKey: "m.sleep-basics", descriptionKey: "m.desc" },
+        {
+          id: "sleep-basics",
+          earnedAt: null,
+          titleKey: "m.sleep-basics",
+          descriptionKey: "m.desc",
+        },
       ];
 
       const result = mergeMilestones(local, remote);
@@ -208,7 +260,7 @@ describe("program/sync-contracts", () => {
         "week-1",
         "2026-01-01T00:00:00.000Z",
         "week-3",
-        "2026-01-15T00:00:00.000Z"
+        "2026-01-15T00:00:00.000Z",
       );
       expect(result).toBe("week-3");
     });
@@ -218,7 +270,7 @@ describe("program/sync-contracts", () => {
         "week-3",
         "2026-01-15T00:00:00.000Z",
         "week-1",
-        "2026-01-01T00:00:00.000Z"
+        "2026-01-01T00:00:00.000Z",
       );
       expect(result).toBe("week-3");
     });
@@ -228,7 +280,7 @@ describe("program/sync-contracts", () => {
         null,
         "2026-01-01T00:00:00.000Z",
         null,
-        "2026-01-15T00:00:00.000Z"
+        "2026-01-15T00:00:00.000Z",
       );
       expect(result).toBeNull();
     });
@@ -238,7 +290,7 @@ describe("program/sync-contracts", () => {
         null,
         "2026-01-01T00:00:00.000Z",
         "week-2",
-        "2026-01-15T00:00:00.000Z"
+        "2026-01-15T00:00:00.000Z",
       );
       expect(result).toBe("week-2");
     });
@@ -268,9 +320,7 @@ describe("program/sync-contracts", () => {
       };
 
       const merged = mergeLocalAndRemoteProgress(local, remote);
-      expect(merged.completedLessonIds.sort()).toEqual(
-        ["lesson-1", "lesson-2", "lesson-3"].sort()
-      );
+      expect(merged.completedLessonIds.sort()).toEqual(["lesson-1", "lesson-2", "lesson-3"].sort());
     });
 
     it("LWW: local is newer → local currentWeekId wins", () => {
@@ -641,29 +691,23 @@ describe("program/sync-contracts", () => {
 
     it("local value + remote null → local", () => {
       expect(resolveEarlierTimestamp("2026-01-01T00:00:00.000Z", null)).toBe(
-        "2026-01-01T00:00:00.000Z"
+        "2026-01-01T00:00:00.000Z",
       );
     });
 
     it("local null + remote value → remote", () => {
       expect(resolveEarlierTimestamp(null, "2026-01-01T00:00:00.000Z")).toBe(
-        "2026-01-01T00:00:00.000Z"
+        "2026-01-01T00:00:00.000Z",
       );
     });
 
     it("earlier of two valid timestamps wins", () => {
-      expect(
-        resolveEarlierTimestamp(
-          "2026-01-01T00:00:00.000Z",
-          "2026-01-15T00:00:00.000Z"
-        )
-      ).toBe("2026-01-01T00:00:00.000Z");
-      expect(
-        resolveEarlierTimestamp(
-          "2026-01-15T00:00:00.000Z",
-          "2026-01-01T00:00:00.000Z"
-        )
-      ).toBe("2026-01-01T00:00:00.000Z");
+      expect(resolveEarlierTimestamp("2026-01-01T00:00:00.000Z", "2026-01-15T00:00:00.000Z")).toBe(
+        "2026-01-01T00:00:00.000Z",
+      );
+      expect(resolveEarlierTimestamp("2026-01-15T00:00:00.000Z", "2026-01-01T00:00:00.000Z")).toBe(
+        "2026-01-01T00:00:00.000Z",
+      );
     });
 
     it("equal timestamps return first arg (stable)", () => {
@@ -673,13 +717,13 @@ describe("program/sync-contracts", () => {
 
     it("invalid local timestamp treated as null", () => {
       expect(resolveEarlierTimestamp("not-a-date", "2026-01-01T00:00:00.000Z")).toBe(
-        "2026-01-01T00:00:00.000Z"
+        "2026-01-01T00:00:00.000Z",
       );
     });
 
     it("invalid remote timestamp treated as null", () => {
       expect(resolveEarlierTimestamp("2026-01-01T00:00:00.000Z", "garbage")).toBe(
-        "2026-01-01T00:00:00.000Z"
+        "2026-01-01T00:00:00.000Z",
       );
     });
 
@@ -698,10 +742,10 @@ describe("program/sync-contracts", () => {
 
     it("empty string treated as invalid → null", () => {
       expect(resolveEarlierTimestamp("", "2026-01-01T00:00:00.000Z")).toBe(
-        "2026-01-01T00:00:00.000Z"
+        "2026-01-01T00:00:00.000Z",
       );
       expect(resolveEarlierTimestamp("2026-01-01T00:00:00.000Z", "")).toBe(
-        "2026-01-01T00:00:00.000Z"
+        "2026-01-01T00:00:00.000Z",
       );
     });
 

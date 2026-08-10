@@ -94,10 +94,8 @@ function debugLog(event: string, detail?: string): void {
   try {
     const prefix = "[ga4]";
     if (detail !== undefined) {
-      // eslint-disable-next-line no-console
       console.log(prefix, event, detail);
     } else {
-      // eslint-disable-next-line no-console
       console.log(prefix, event);
     }
   } catch {
@@ -350,12 +348,9 @@ export function trackPageView(input: PageViewInput): void {
     }
 
     // Validate search and hash are strings (or undefined)
-    const search = input.search !== undefined && typeof input.search === "string"
-      ? input.search
-      : "";
-    const hash = input.hash !== undefined && typeof input.hash === "string"
-      ? input.hash
-      : "";
+    const search =
+      input.search !== undefined && typeof input.search === "string" ? input.search : "";
+    const hash = input.hash !== undefined && typeof input.hash === "string" ? input.hash : "";
 
     // Build full path from normalized parts
     const fullPath = pathname + search + hash;
@@ -365,9 +360,7 @@ export function trackPageView(input: PageViewInput): void {
 
     // Build page_location from window.location.origin + sanitized path
     // window.location.origin is always a string in browser environments.
-    const origin = typeof window.location?.origin === "string"
-      ? window.location.origin
-      : "";
+    const origin = typeof window.location?.origin === "string" ? window.location.origin : "";
     const pageLocation = origin + sanitizedPath;
 
     // Title: use provided string, else fall back to document.title

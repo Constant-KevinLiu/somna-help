@@ -38,6 +38,8 @@ import { sleepWindow } from "@/lib/cbti-brain";
 import { ProgramDashboardCard } from "@/components/program/ProgramDashboardCard";
 import { loadReminders } from "@/services/habit/habit-storage";
 import { calculateAllHabitProgress } from "@/services/habit/habit-progress";
+import type { Reminder, HabitProgress } from "@/services/habit/habit-types";
+import type { FocusUserAction } from "@/lib/analytics/types";
 
 // Phase F — Analytics
 import { useState as useStateHook } from "react";
@@ -52,11 +54,7 @@ import {
   DataSufficiencyBanner,
   SleepChart,
 } from "@/components/analytics";
-import {
-  getSavedFocus,
-  saveFocusResponse,
-  isFocusDismissed,
-} from "@/lib/analytics/weekly-focus";
+import { getSavedFocus, saveFocusResponse, isFocusDismissed } from "@/lib/analytics/weekly-focus";
 import { weekStart as getWeekStart } from "@/lib/analytics/date-ranges";
 import { previousWeek, nextWeek } from "@/lib/analytics/weekly-summary";
 import { BarChart3 } from "lucide-react";
@@ -121,7 +119,7 @@ export function Dash() {
     () => Array.from(habitProgress.values()).reduce((sum, p) => sum + p.completionCount, 0),
     [habitProgress],
   );
-  const activeRemindersCount = reminders.filter((r: any) => r.status === "active").length;
+  const activeRemindersCount = reminders.filter((r) => r.status === "active").length;
 
   // Phase F — Analytics state (client-side only)
   const [analyticsWindow, setAnalyticsWindow] = useStateHook<WindowKey>("30d");
@@ -484,21 +482,14 @@ export function Dash() {
             {/* Sleep chart */}
             {analyticsHydrated && analytics.records.length > 0 && (
               <div className="mt-5">
-                <SleepChart
-                  records={analytics.records}
-                  window={analyticsWindow}
-                  t={baseT}
-                />
+                <SleepChart records={analytics.records} window={analyticsWindow} t={baseT} />
               </div>
             )}
           </div>
 
           {/* SECTION F2 — Insights */}
           {analyticsHydrated && (
-            <InsightSection
-              insights={analytics.insights.slice(0, 4)}
-              t={baseT}
-            />
+            <InsightSection insights={analytics.insights.slice(0, 4)} t={baseT} />
           )}
 
           {/* SECTION F3 — Weekly Summary + Weekly Focus (side by side on large screens) */}
@@ -515,7 +506,7 @@ export function Dash() {
               <WeeklyFocusCard
                 focus={analytics.weeklyFocus}
                 t={baseT}
-                userAction={focusAction as any}
+                userAction={focusAction as FocusUserAction | undefined}
                 onAccept={handleFocusAccept}
                 onDismiss={handleFocusDismiss}
                 onSave={handleFocusSave}
@@ -567,26 +558,32 @@ export function Dash() {
               </div>
             ) : (
               <div className="mt-4 space-y-3">
-                {Array.from(habitProgress.values()).slice(0, 3).map((progress: any) => {
-                  const reminder = reminders.find((r: any) => r.id === progress.reminderId);
-                  if (!reminder) return null;
-                  return (
-                    <div key={progress.reminderId} className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5">
-                          <Bell className="h-5 w-5 text-accent" />
-                        </div>
-                        <div>
-                          <div className="font-medium">{reminder.title}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {progress.currentStreak} day streak · {progress.consistencyRate}% consistency
+                {Array.from(habitProgress.values())
+                  .slice(0, 3)
+                  .map((progress: HabitProgress) => {
+                    const reminder = reminders.find((r) => r.id === progress.reminderId);
+                    if (!reminder) return null;
+                    return (
+                      <div
+                        key={progress.reminderId}
+                        className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/5 p-4"
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5">
+                            <Bell className="h-5 w-5 text-accent" />
+                          </div>
+                          <div>
+                            <div className="font-medium">{reminder.title}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {progress.currentStreak} day streak · {progress.consistencyRate}%
+                              consistency
+                            </div>
                           </div>
                         </div>
+                        <Flame className="h-5 w-5 text-orange-400" />
                       </div>
-                      <Flame className="h-5 w-5 text-orange-400" />
-                    </div>
-                  );
-                })}
+                    );
+                  })}
                 <SafeLink
                   to={`${langPrefix}/reminders`}
                   className="mt-2 flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 py-3 text-sm transition hover:border-white/20 hover:bg-white/10"
@@ -694,11 +691,8 @@ function formatMinutes(min: number | string | null): string {
 function MetricMini({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
-        {label}
-      </div>
+      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</div>
       <div className="mt-1 font-display text-lg text-gradient">{value}</div>
     </div>
   );
 }
-

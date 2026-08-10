@@ -10,11 +10,7 @@
 
 import type { SleepRecord } from "@/lib/sleep-records";
 import { minutesInBed } from "@/lib/sleep-records";
-import type {
-  MetricKey,
-  MetricTrend,
-  TrendDirection,
-} from "./types";
+import type { MetricKey, MetricTrend, TrendDirection } from "./types";
 import {
   computeTotalSleepTime,
   computeWASO,
@@ -36,20 +32,20 @@ import { recordsInRange, addDays, isoDaysAgo } from "./date-ranges";
 //   - Count: absolute count
 
 export const MEANINGFUL_CHANGE: Record<MetricKey, number> = {
-  sleepEfficiency: 3,        // percentage points
-  totalSleepTime: 20,        // minutes
-  timeInBed: 20,             // minutes
-  sleepOnsetLatency: 5,      // minutes (improvement = decrease)
-  wakeAfterSleepOnset: 10,   // minutes (improvement = decrease)
-  numberOfAwakenings: 1,     // count
-  avgBedtime: 15,            // minutes shift
-  avgWakeTime: 15,           // minutes shift
-  bedtimeVariability: 10,    // minutes SD change (improvement = decrease)
-  wakeTimeVariability: 10,   // minutes SD change (improvement = decrease)
-  sleepRegularity: 5,        // points (improvement = increase)
-  diaryCompletionRate: 10,   // percentage points
-  sleepQuality: 0.3,         // rating points (1-5 scale)
-  mood: 0.3,                 // rating points
+  sleepEfficiency: 3, // percentage points
+  totalSleepTime: 20, // minutes
+  timeInBed: 20, // minutes
+  sleepOnsetLatency: 5, // minutes (improvement = decrease)
+  wakeAfterSleepOnset: 10, // minutes (improvement = decrease)
+  numberOfAwakenings: 1, // count
+  avgBedtime: 15, // minutes shift
+  avgWakeTime: 15, // minutes shift
+  bedtimeVariability: 10, // minutes SD change (improvement = decrease)
+  wakeTimeVariability: 10, // minutes SD change (improvement = decrease)
+  sleepRegularity: 5, // points (improvement = increase)
+  diaryCompletionRate: 10, // percentage points
+  sleepQuality: 0.3, // rating points (1-5 scale)
+  mood: 0.3, // rating points
 };
 
 /**
@@ -64,8 +60,8 @@ export const HIGHER_IS_BETTER: Record<MetricKey, boolean> = {
   sleepOnsetLatency: false,
   wakeAfterSleepOnset: false,
   numberOfAwakenings: false,
-  avgBedtime: false,         // not directional per se — just "shifted"
-  avgWakeTime: false,        // not directional
+  avgBedtime: false, // not directional per se — just "shifted"
+  avgWakeTime: false, // not directional
   bedtimeVariability: false, // lower = more consistent = better
   wakeTimeVariability: false,
   sleepRegularity: true,
@@ -84,9 +80,7 @@ function extractMetricValues(records: SleepRecord[], metric: MetricKey): number[
     case "sleepEfficiency":
       return records.map((r) => r.sleepEfficiency);
     case "totalSleepTime":
-      return records
-        .map((r) => computeTotalSleepTime(r))
-        .filter((v): v is number => v !== null);
+      return records.map((r) => computeTotalSleepTime(r)).filter((v): v is number => v !== null);
     case "timeInBed":
       return records.map((r) => minutesInBed(r.bedtime, r.wakeUpTime));
     case "sleepOnsetLatency":
@@ -227,9 +221,7 @@ export function calculateMetricTrend(
 
   // Percentage change (avoid division by zero)
   const percentageChange =
-    previousVal !== 0
-      ? Math.round((absoluteChange / Math.abs(previousVal)) * 1000) / 10
-      : null;
+    previousVal !== 0 ? Math.round((absoluteChange / Math.abs(previousVal)) * 1000) / 10 : null;
 
   // Determine direction
   const threshold = MEANINGFUL_CHANGE[metric];
@@ -241,22 +233,15 @@ export function calculateMetricTrend(
     direction = "stable";
     explanationKey = "analytics.trend.stable";
   } else {
-    const isImproving = higherBetter
-      ? absoluteChange > 0
-      : absoluteChange < 0; // for lower-is-better metrics, decrease = improvement
+    const isImproving = higherBetter ? absoluteChange > 0 : absoluteChange < 0; // for lower-is-better metrics, decrease = improvement
 
     // For non-directional metrics (avgBedtime, avgWakeTime), use "shifted"
     if (metric === "avgBedtime" || metric === "avgWakeTime") {
       direction = absoluteChange > 0 ? "declining" : "improving"; // later = declining pattern
-      explanationKey =
-        absoluteChange > 0
-          ? "analytics.trend.later"
-          : "analytics.trend.earlier";
+      explanationKey = absoluteChange > 0 ? "analytics.trend.later" : "analytics.trend.earlier";
     } else {
       direction = isImproving ? "improving" : "declining";
-      explanationKey = isImproving
-        ? "analytics.trend.improving"
-        : "analytics.trend.declining";
+      explanationKey = isImproving ? "analytics.trend.improving" : "analytics.trend.declining";
     }
   }
 
@@ -324,14 +309,10 @@ export function calculateAllTrends(
  * Get the "primary" trend — the most actionable, highest-confidence trend.
  * Returns null if no meaningful trend exists.
  */
-export function getPrimaryTrend(
-  trends: Record<MetricKey, MetricTrend | null>,
-): MetricTrend | null {
+export function getPrimaryTrend(trends: Record<MetricKey, MetricTrend | null>): MetricTrend | null {
   const meaningful = Object.values(trends).filter(
     (t): t is MetricTrend =>
-      t !== null &&
-      t.direction !== "insufficient_data" &&
-      t.direction !== "stable",
+      t !== null && t.direction !== "insufficient_data" && t.direction !== "stable",
   );
 
   if (meaningful.length === 0) return null;

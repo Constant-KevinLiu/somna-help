@@ -130,10 +130,14 @@ describe("program/service", () => {
       expect(r1.status).toBe("applied");
       p = appliedOrThrow(r1);
 
-      const r2 = applyEvent(p, {
-        ...event,
-        timestamp: "2026-01-02T00:00:00.000Z",
-      }, definition);
+      const r2 = applyEvent(
+        p,
+        {
+          ...event,
+          timestamp: "2026-01-02T00:00:00.000Z",
+        },
+        definition,
+      );
       // Should not change because active → active is not a valid transition
       expect(r2.status).toBe("unchanged");
       expect(r2.progress.startedAt).toBe(p.startedAt);
@@ -143,17 +147,27 @@ describe("program/service", () => {
   describe("program_paused / program_resumed", () => {
     it("pauses an active program", () => {
       let p = createInitialProgress();
-      p = appliedOrThrow(applyEvent(p, {
-        type: "program_started",
-        programId: "cbti-core",
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition));
+      p = appliedOrThrow(
+        applyEvent(
+          p,
+          {
+            type: "program_started",
+            programId: "cbti-core",
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        ),
+      );
 
-      const result = applyEvent(p, {
-        type: "program_paused",
-        programId: "cbti-core",
-        timestamp: "2026-01-02T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "program_paused",
+          programId: "cbti-core",
+          timestamp: "2026-01-02T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("applied");
       expect(result.progress.status).toBe("paused");
@@ -161,22 +175,38 @@ describe("program/service", () => {
 
     it("resumes a paused program", () => {
       let p = createInitialProgress();
-      p = appliedOrThrow(applyEvent(p, {
-        type: "program_started",
-        programId: "cbti-core",
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition));
-      p = appliedOrThrow(applyEvent(p, {
-        type: "program_paused",
-        programId: "cbti-core",
-        timestamp: "2026-01-02T00:00:00.000Z",
-      }, definition));
+      p = appliedOrThrow(
+        applyEvent(
+          p,
+          {
+            type: "program_started",
+            programId: "cbti-core",
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        ),
+      );
+      p = appliedOrThrow(
+        applyEvent(
+          p,
+          {
+            type: "program_paused",
+            programId: "cbti-core",
+            timestamp: "2026-01-02T00:00:00.000Z",
+          },
+          definition,
+        ),
+      );
 
-      const result = applyEvent(p, {
-        type: "program_resumed",
-        programId: "cbti-core",
-        timestamp: "2026-01-03T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "program_resumed",
+          programId: "cbti-core",
+          timestamp: "2026-01-03T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("applied");
       expect(result.progress.status).toBe("active");
@@ -185,33 +215,55 @@ describe("program/service", () => {
     it("preserves progress through pause/resume cycle", () => {
       let p = createInitialProgress();
       // Start and complete a few lessons
-      p = appliedOrThrow(applyEvent(p, {
-        type: "program_started",
-        programId: "cbti-core",
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition));
-      p = appliedOrThrow(applyEvent(p, {
-        type: "lesson_completed",
-        lessonId: definition.lessons[0].id,
-        weekId: definition.lessons[0].weekId,
-        timestamp: "2026-01-02T00:00:00.000Z",
-      }, definition));
-      p = appliedOrThrow(applyEvent(p, {
-        type: "lesson_completed",
-        lessonId: definition.lessons[1].id,
-        weekId: definition.lessons[1].weekId,
-        timestamp: "2026-01-03T00:00:00.000Z",
-      }, definition));
+      p = appliedOrThrow(
+        applyEvent(
+          p,
+          {
+            type: "program_started",
+            programId: "cbti-core",
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        ),
+      );
+      p = appliedOrThrow(
+        applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: definition.lessons[0].id,
+            weekId: definition.lessons[0].weekId,
+            timestamp: "2026-01-02T00:00:00.000Z",
+          },
+          definition,
+        ),
+      );
+      p = appliedOrThrow(
+        applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: definition.lessons[1].id,
+            weekId: definition.lessons[1].weekId,
+            timestamp: "2026-01-03T00:00:00.000Z",
+          },
+          definition,
+        ),
+      );
 
       const completedBefore = p.completedLessonIds.length;
       const weekBefore = p.currentWeekId;
 
       // Pause
-      const pauseResult = applyEvent(p, {
-        type: "program_paused",
-        programId: "cbti-core",
-        timestamp: "2026-01-04T00:00:00.000Z",
-      }, definition);
+      const pauseResult = applyEvent(
+        p,
+        {
+          type: "program_paused",
+          programId: "cbti-core",
+          timestamp: "2026-01-04T00:00:00.000Z",
+        },
+        definition,
+      );
       expect(pauseResult.status).toBe("applied");
       const paused = pauseResult.progress;
 
@@ -220,11 +272,15 @@ describe("program/service", () => {
       expect(paused.currentWeekId).toBe(weekBefore);
 
       // Resume
-      const resumeResult = applyEvent(paused, {
-        type: "program_resumed",
-        programId: "cbti-core",
-        timestamp: "2026-01-10T00:00:00.000Z",
-      }, definition);
+      const resumeResult = applyEvent(
+        paused,
+        {
+          type: "program_resumed",
+          programId: "cbti-core",
+          timestamp: "2026-01-10T00:00:00.000Z",
+        },
+        definition,
+      );
       expect(resumeResult.status).toBe("applied");
       const resumed = resumeResult.progress;
 
@@ -235,11 +291,15 @@ describe("program/service", () => {
 
     it("cannot pause a not_started program", () => {
       const p = createInitialProgress();
-      const result = applyEvent(p, {
-        type: "program_paused",
-        programId: "cbti-core",
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "program_paused",
+          programId: "cbti-core",
+          timestamp: "2026-01-01T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("unchanged");
       expect(result.progress.status).toBe("not_started");
@@ -249,17 +309,27 @@ describe("program/service", () => {
 
     it("cannot resume an active program (no-op)", () => {
       let p = createInitialProgress();
-      p = appliedOrThrow(applyEvent(p, {
-        type: "program_started",
-        programId: "cbti-core",
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition));
+      p = appliedOrThrow(
+        applyEvent(
+          p,
+          {
+            type: "program_started",
+            programId: "cbti-core",
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        ),
+      );
 
-      const result = applyEvent(p, {
-        type: "program_resumed",
-        programId: "cbti-core",
-        timestamp: "2026-01-02T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "program_resumed",
+          programId: "cbti-core",
+          timestamp: "2026-01-02T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("unchanged");
       expect(result.progress).toBe(p);
@@ -272,23 +342,41 @@ describe("program/service", () => {
     describe("paused-state mutation enforcement", () => {
       function startAndPause(): ProgramProgress {
         let p = createInitialProgress();
-        p = appliedOrThrow(applyEvent(p, {
-          type: "program_started",
-          programId: "cbti-core",
-          timestamp: "2026-01-01T00:00:00.000Z",
-        }, definition));
+        p = appliedOrThrow(
+          applyEvent(
+            p,
+            {
+              type: "program_started",
+              programId: "cbti-core",
+              timestamp: "2026-01-01T00:00:00.000Z",
+            },
+            definition,
+          ),
+        );
         // Complete one lesson before pausing
-        p = appliedOrThrow(applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: definition.lessons[0].id,
-          weekId: definition.lessons[0].weekId,
-          timestamp: "2026-01-02T00:00:00.000Z",
-        }, definition));
-        p = appliedOrThrow(applyEvent(p, {
-          type: "program_paused",
-          programId: "cbti-core",
-          timestamp: "2026-01-03T00:00:00.000Z",
-        }, definition));
+        p = appliedOrThrow(
+          applyEvent(
+            p,
+            {
+              type: "lesson_completed",
+              lessonId: definition.lessons[0].id,
+              weekId: definition.lessons[0].weekId,
+              timestamp: "2026-01-02T00:00:00.000Z",
+            },
+            definition,
+          ),
+        );
+        p = appliedOrThrow(
+          applyEvent(
+            p,
+            {
+              type: "program_paused",
+              programId: "cbti-core",
+              timestamp: "2026-01-03T00:00:00.000Z",
+            },
+            definition,
+          ),
+        );
         return p;
       }
 
@@ -296,12 +384,16 @@ describe("program/service", () => {
         const p = startAndPause();
         const beforeCount = p.completedLessonIds.length;
 
-        const result = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: definition.lessons[1].id,
-          weekId: definition.lessons[1].weekId,
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: definition.lessons[1].id,
+            weekId: definition.lessons[1].weekId,
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(result.status).toBe("blocked");
         if (result.status === "blocked") {
@@ -317,12 +409,16 @@ describe("program/service", () => {
         const p = startAndPause();
         const beforeCount = p.completedLessonIds.length;
 
-        const result = applyEvent(p, {
-          type: "lesson_uncompleted",
-          lessonId: definition.lessons[0].id,
-          weekId: definition.lessons[0].weekId,
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "lesson_uncompleted",
+            lessonId: definition.lessons[0].id,
+            weekId: definition.lessons[0].weekId,
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(result.status).toBe("blocked");
         if (result.status === "blocked") {
@@ -335,12 +431,16 @@ describe("program/service", () => {
       it("blocks lesson_skipped when paused", () => {
         const p = startAndPause();
 
-        const result = applyEvent(p, {
-          type: "lesson_skipped",
-          lessonId: definition.lessons[2].id,
-          weekId: definition.lessons[2].weekId,
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "lesson_skipped",
+            lessonId: definition.lessons[2].id,
+            weekId: definition.lessons[2].weekId,
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(result.status).toBe("blocked");
         if (result.status === "blocked") {
@@ -352,29 +452,51 @@ describe("program/service", () => {
       it("blocks lesson_unskipped when paused", () => {
         // We need a paused program with a skipped lesson
         let p = createInitialProgress();
-        p = appliedOrThrow(applyEvent(p, {
-          type: "program_started",
-          programId: "cbti-core",
-          timestamp: "2026-01-01T00:00:00.000Z",
-        }, definition));
-        p = appliedOrThrow(applyEvent(p, {
-          type: "lesson_skipped",
-          lessonId: definition.lessons[2].id,
-          weekId: definition.lessons[2].weekId,
-          timestamp: "2026-01-02T00:00:00.000Z",
-        }, definition));
-        p = appliedOrThrow(applyEvent(p, {
-          type: "program_paused",
-          programId: "cbti-core",
-          timestamp: "2026-01-03T00:00:00.000Z",
-        }, definition));
+        p = appliedOrThrow(
+          applyEvent(
+            p,
+            {
+              type: "program_started",
+              programId: "cbti-core",
+              timestamp: "2026-01-01T00:00:00.000Z",
+            },
+            definition,
+          ),
+        );
+        p = appliedOrThrow(
+          applyEvent(
+            p,
+            {
+              type: "lesson_skipped",
+              lessonId: definition.lessons[2].id,
+              weekId: definition.lessons[2].weekId,
+              timestamp: "2026-01-02T00:00:00.000Z",
+            },
+            definition,
+          ),
+        );
+        p = appliedOrThrow(
+          applyEvent(
+            p,
+            {
+              type: "program_paused",
+              programId: "cbti-core",
+              timestamp: "2026-01-03T00:00:00.000Z",
+            },
+            definition,
+          ),
+        );
 
-        const result = applyEvent(p, {
-          type: "lesson_unskipped",
-          lessonId: definition.lessons[2].id,
-          weekId: definition.lessons[2].weekId,
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "lesson_unskipped",
+            lessonId: definition.lessons[2].id,
+            weekId: definition.lessons[2].weekId,
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(result.status).toBe("blocked");
         if (result.status === "blocked") {
@@ -386,11 +508,15 @@ describe("program/service", () => {
       it("blocks weekly_plan_accepted when paused", () => {
         const p = startAndPause();
 
-        const result = applyEvent(p, {
-          type: "weekly_plan_accepted",
-          planId: "plan-week-1-2026-01-05",
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "weekly_plan_accepted",
+            planId: "plan-week-1-2026-01-05",
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(result.status).toBe("blocked");
         if (result.status === "blocked") {
@@ -402,11 +528,15 @@ describe("program/service", () => {
       it("blocks weekly_plan_dismissed when paused", () => {
         const p = startAndPause();
 
-        const result = applyEvent(p, {
-          type: "weekly_plan_dismissed",
-          planId: "plan-week-1-2026-01-05",
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "weekly_plan_dismissed",
+            planId: "plan-week-1-2026-01-05",
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(result.status).toBe("blocked");
         if (result.status === "blocked") {
@@ -418,29 +548,37 @@ describe("program/service", () => {
       it("blocks milestone_earned when paused", () => {
         const p = startAndPause();
 
-        const result = applyEvent(p, {
-          type: "milestone_earned",
-          milestoneId: "sleep-basics",
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "milestone_earned",
+            milestoneId: "sleep-basics",
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(result.status).toBe("blocked");
         if (result.status === "blocked") {
           expect(result.reason).toBe("program-paused");
         }
         // Milestone not earned
-        const milestone = result.progress.milestones.find(m => m.id === "sleep-basics");
+        const milestone = result.progress.milestones.find((m) => m.id === "sleep-basics");
         expect(milestone?.earnedAt).toBeNull();
       });
 
       it("allows resume when paused (lifecycle transition, not mutation)", () => {
         const p = startAndPause();
 
-        const result = applyEvent(p, {
-          type: "program_resumed",
-          programId: "cbti-core",
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "program_resumed",
+            programId: "cbti-core",
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(result.status).toBe("applied");
         expect(result.progress.status).toBe("active");
@@ -449,19 +587,27 @@ describe("program/service", () => {
       it("blocked events are deterministic (repeatable)", () => {
         const p = startAndPause();
 
-        const r1 = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: definition.lessons[1].id,
-          weekId: definition.lessons[1].weekId,
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const r1 = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: definition.lessons[1].id,
+            weekId: definition.lessons[1].weekId,
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
 
-        const r2 = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: definition.lessons[1].id,
-          weekId: definition.lessons[1].weekId,
-          timestamp: "2026-01-05T00:00:00.000Z",
-        }, definition);
+        const r2 = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: definition.lessons[1].id,
+            weekId: definition.lessons[1].weekId,
+            timestamp: "2026-01-05T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(r1.status).toBe("blocked");
         expect(r2.status).toBe("blocked");
@@ -479,30 +625,42 @@ describe("program/service", () => {
         const weekId = definition.lessons[1].weekId;
 
         // Attempt completion while paused — should be blocked
-        const blockedResult = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId,
-          weekId,
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const blockedResult = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId,
+            weekId,
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
         expect(blockedResult.status).toBe("blocked");
 
         // Resume
-        const resumeResult = applyEvent(p, {
-          type: "program_resumed",
-          programId: "cbti-core",
-          timestamp: "2026-01-05T00:00:00.000Z",
-        }, definition);
+        const resumeResult = applyEvent(
+          p,
+          {
+            type: "program_resumed",
+            programId: "cbti-core",
+            timestamp: "2026-01-05T00:00:00.000Z",
+          },
+          definition,
+        );
         expect(resumeResult.status).toBe("applied");
         p = resumeResult.progress;
 
         // Now completion should work
-        const completeResult = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId,
-          weekId,
-          timestamp: "2026-01-06T00:00:00.000Z",
-        }, definition);
+        const completeResult = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId,
+            weekId,
+            timestamp: "2026-01-06T00:00:00.000Z",
+          },
+          definition,
+        );
         expect(completeResult.status).toBe("applied");
         expect(completeResult.progress.completedLessonIds).toContain(lessonId);
       });
@@ -510,11 +668,15 @@ describe("program/service", () => {
       it("cannot pause when already paused (unchanged, not blocked)", () => {
         const p = startAndPause();
 
-        const result = applyEvent(p, {
-          type: "program_paused",
-          programId: "cbti-core",
-          timestamp: "2026-01-04T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "program_paused",
+            programId: "cbti-core",
+            timestamp: "2026-01-04T00:00:00.000Z",
+          },
+          definition,
+        );
 
         // Pause when already paused is "unchanged" (invalid transition),
         // not "blocked" — it's a lifecycle transition guard, not a mutation guard
@@ -524,17 +686,27 @@ describe("program/service", () => {
 
       it("cannot resume when already active (unchanged, not blocked)", () => {
         let p = createInitialProgress();
-        p = appliedOrThrow(applyEvent(p, {
-          type: "program_started",
-          programId: "cbti-core",
-          timestamp: "2026-01-01T00:00:00.000Z",
-        }, definition));
+        p = appliedOrThrow(
+          applyEvent(
+            p,
+            {
+              type: "program_started",
+              programId: "cbti-core",
+              timestamp: "2026-01-01T00:00:00.000Z",
+            },
+            definition,
+          ),
+        );
 
-        const result = applyEvent(p, {
-          type: "program_resumed",
-          programId: "cbti-core",
-          timestamp: "2026-01-02T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "program_resumed",
+            programId: "cbti-core",
+            timestamp: "2026-01-02T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(result.status).toBe("unchanged");
       });
@@ -543,46 +715,68 @@ describe("program/service", () => {
         // Complete all week-1 lessons, then pause, then try to complete
         // week-1's final lesson — should be blocked, milestone not earned
         let p = createInitialProgress();
-        p = appliedOrThrow(applyEvent(p, {
-          type: "program_started",
-          programId: "cbti-core",
-          timestamp: "2026-01-01T00:00:00.000Z",
-        }, definition));
+        p = appliedOrThrow(
+          applyEvent(
+            p,
+            {
+              type: "program_started",
+              programId: "cbti-core",
+              timestamp: "2026-01-01T00:00:00.000Z",
+            },
+            definition,
+          ),
+        );
 
-        const week1Lessons = definition.lessons.filter(l => l.weekId === "week-1");
+        const week1Lessons = definition.lessons.filter((l) => l.weekId === "week-1");
         // Complete all but the last lesson of week 1
         for (let i = 0; i < week1Lessons.length - 1; i++) {
-          p = appliedOrThrow(applyEvent(p, {
-            type: "lesson_completed",
-            lessonId: week1Lessons[i].id,
-            weekId: "week-1",
-            timestamp: `2026-01-0${i + 1}T00:00:00.000Z`,
-          }, definition));
+          p = appliedOrThrow(
+            applyEvent(
+              p,
+              {
+                type: "lesson_completed",
+                lessonId: week1Lessons[i].id,
+                weekId: "week-1",
+                timestamp: `2026-01-0${i + 1}T00:00:00.000Z`,
+              },
+              definition,
+            ),
+          );
         }
 
         // Pause before the final week-1 lesson
-        p = appliedOrThrow(applyEvent(p, {
-          type: "program_paused",
-          programId: "cbti-core",
-          timestamp: "2026-01-05T00:00:00.000Z",
-        }, definition));
+        p = appliedOrThrow(
+          applyEvent(
+            p,
+            {
+              type: "program_paused",
+              programId: "cbti-core",
+              timestamp: "2026-01-05T00:00:00.000Z",
+            },
+            definition,
+          ),
+        );
 
         // Milestone not yet earned
-        expect(p.milestones.find(m => m.id === "sleep-basics")?.earnedAt).toBeNull();
+        expect(p.milestones.find((m) => m.id === "sleep-basics")?.earnedAt).toBeNull();
 
         // Attempt to complete the final lesson — blocked
         const lastLesson = week1Lessons[week1Lessons.length - 1];
-        const result = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: lastLesson.id,
-          weekId: "week-1",
-          timestamp: "2026-01-06T00:00:00.000Z",
-        }, definition);
+        const result = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: lastLesson.id,
+            weekId: "week-1",
+            timestamp: "2026-01-06T00:00:00.000Z",
+          },
+          definition,
+        );
 
         expect(result.status).toBe("blocked");
         // Milestone still not earned
         expect(
-          result.progress.milestones.find(m => m.id === "sleep-basics")?.earnedAt
+          result.progress.milestones.find((m) => m.id === "sleep-basics")?.earnedAt,
         ).toBeNull();
       });
     });
@@ -597,12 +791,16 @@ describe("program/service", () => {
       const p = createInitialProgress();
       const firstLesson = definition.lessons[0];
 
-      const result = applyEvent(p, {
-        type: "lesson_completed",
-        lessonId: firstLesson.id,
-        weekId: firstLesson.weekId,
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "lesson_completed",
+          lessonId: firstLesson.id,
+          weekId: firstLesson.weekId,
+          timestamp: "2026-01-01T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("applied");
       const next = appliedOrThrow(result);
@@ -615,22 +813,30 @@ describe("program/service", () => {
       let p = createInitialProgress();
       const firstLesson = definition.lessons[0];
 
-      const r1 = applyEvent(p, {
-        type: "lesson_completed",
-        lessonId: firstLesson.id,
-        weekId: firstLesson.weekId,
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition);
+      const r1 = applyEvent(
+        p,
+        {
+          type: "lesson_completed",
+          lessonId: firstLesson.id,
+          weekId: firstLesson.weekId,
+          timestamp: "2026-01-01T00:00:00.000Z",
+        },
+        definition,
+      );
       expect(r1.status).toBe("applied");
       p = appliedOrThrow(r1);
 
       const countBefore = p.completedLessonIds.length;
-      const r2 = applyEvent(p, {
-        type: "lesson_completed",
-        lessonId: firstLesson.id,
-        weekId: firstLesson.weekId,
-        timestamp: "2026-01-02T00:00:00.000Z",
-      }, definition);
+      const r2 = applyEvent(
+        p,
+        {
+          type: "lesson_completed",
+          lessonId: firstLesson.id,
+          weekId: firstLesson.weekId,
+          timestamp: "2026-01-02T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(r2.status).toBe("unchanged");
       expect(r2.progress.completedLessonIds.length).toBe(countBefore);
@@ -638,17 +844,19 @@ describe("program/service", () => {
 
     it("earns sleep-basics milestone after week 1 completed", () => {
       let p = createInitialProgress();
-      const week1Lessons = definition.lessons.filter(
-        (l) => l.weekId === "week-1"
-      );
+      const week1Lessons = definition.lessons.filter((l) => l.weekId === "week-1");
 
       for (const lesson of week1Lessons) {
-        const r = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: lesson.id,
-          weekId: lesson.weekId,
-          timestamp: "2026-01-01T00:00:00.000Z",
-        }, definition);
+        const r = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: lesson.id,
+            weekId: lesson.weekId,
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        );
         if (r.status === "applied") {
           p = r.progress;
         }
@@ -662,12 +870,16 @@ describe("program/service", () => {
       let p = createInitialProgress();
 
       for (const lesson of definition.lessons) {
-        const r = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: lesson.id,
-          weekId: lesson.weekId,
-          timestamp: "2026-01-01T00:00:00.000Z",
-        }, definition);
+        const r = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: lesson.id,
+            weekId: lesson.weekId,
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        );
         if (r.status === "applied") {
           p = r.progress;
         }
@@ -683,19 +895,29 @@ describe("program/service", () => {
       let p = createInitialProgress();
       const lesson = definition.lessons[0];
 
-      p = appliedOrThrow(applyEvent(p, {
-        type: "lesson_completed",
-        lessonId: lesson.id,
-        weekId: lesson.weekId,
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition));
+      p = appliedOrThrow(
+        applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: lesson.id,
+            weekId: lesson.weekId,
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        ),
+      );
 
-      const result = applyEvent(p, {
-        type: "lesson_uncompleted",
-        lessonId: lesson.id,
-        weekId: lesson.weekId,
-        timestamp: "2026-01-02T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "lesson_uncompleted",
+          lessonId: lesson.id,
+          weekId: lesson.weekId,
+          timestamp: "2026-01-02T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("applied");
       const uncompleted = appliedOrThrow(result);
@@ -705,24 +927,32 @@ describe("program/service", () => {
     it("reverts from completed → active when a lesson is unmarked", () => {
       let p = createInitialProgress();
       for (const lesson of definition.lessons) {
-        const r = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: lesson.id,
-          weekId: lesson.weekId,
-          timestamp: "2026-01-01T00:00:00.000Z",
-        }, definition);
+        const r = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: lesson.id,
+            weekId: lesson.weekId,
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        );
         if (r.status === "applied") {
           p = r.progress;
         }
       }
       expect(p.status).toBe("completed");
 
-      const result = applyEvent(p, {
-        type: "lesson_uncompleted",
-        lessonId: definition.lessons[0].id,
-        weekId: definition.lessons[0].weekId,
-        timestamp: "2026-01-02T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "lesson_uncompleted",
+          lessonId: definition.lessons[0].id,
+          weekId: definition.lessons[0].weekId,
+          timestamp: "2026-01-02T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("applied");
       const uncompleted = appliedOrThrow(result);
@@ -732,29 +962,35 @@ describe("program/service", () => {
 
     it("revokes a milestone when its week is no longer complete", () => {
       let p = createInitialProgress();
-      const week1Lessons = definition.lessons.filter(
-        (l) => l.weekId === "week-1"
-      );
+      const week1Lessons = definition.lessons.filter((l) => l.weekId === "week-1");
 
       for (const lesson of week1Lessons) {
-        const r = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: lesson.id,
-          weekId: lesson.weekId,
-          timestamp: "2026-01-01T00:00:00.000Z",
-        }, definition);
+        const r = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: lesson.id,
+            weekId: lesson.weekId,
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        );
         if (r.status === "applied") {
           p = r.progress;
         }
       }
       expect(p.milestones.find((m) => m.id === "sleep-basics")?.earnedAt).not.toBeNull();
 
-      const result = applyEvent(p, {
-        type: "lesson_uncompleted",
-        lessonId: week1Lessons[0].id,
-        weekId: "week-1",
-        timestamp: "2026-01-02T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "lesson_uncompleted",
+          lessonId: week1Lessons[0].id,
+          weekId: "week-1",
+          timestamp: "2026-01-02T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("applied");
       const uncompleted = appliedOrThrow(result);
@@ -767,12 +1003,16 @@ describe("program/service", () => {
       const p = createInitialProgress();
       const lesson = definition.lessons[0];
 
-      const result = applyEvent(p, {
-        type: "lesson_skipped",
-        lessonId: lesson.id,
-        weekId: lesson.weekId,
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "lesson_skipped",
+          lessonId: lesson.id,
+          weekId: lesson.weekId,
+          timestamp: "2026-01-01T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("applied");
       expect(result.progress.skippedLessonIds).toContain(lesson.id);
@@ -782,22 +1022,30 @@ describe("program/service", () => {
       let p = createInitialProgress();
       const lesson = definition.lessons[0];
 
-      const r1 = applyEvent(p, {
-        type: "lesson_skipped",
-        lessonId: lesson.id,
-        weekId: lesson.weekId,
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition);
+      const r1 = applyEvent(
+        p,
+        {
+          type: "lesson_skipped",
+          lessonId: lesson.id,
+          weekId: lesson.weekId,
+          timestamp: "2026-01-01T00:00:00.000Z",
+        },
+        definition,
+      );
       expect(r1.status).toBe("applied");
       p = r1.progress;
 
       const countBefore = p.skippedLessonIds.length;
-      const r2 = applyEvent(p, {
-        type: "lesson_skipped",
-        lessonId: lesson.id,
-        weekId: lesson.weekId,
-        timestamp: "2026-01-02T00:00:00.000Z",
-      }, definition);
+      const r2 = applyEvent(
+        p,
+        {
+          type: "lesson_skipped",
+          lessonId: lesson.id,
+          weekId: lesson.weekId,
+          timestamp: "2026-01-02T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(r2.status).toBe("unchanged");
       expect(r2.progress.skippedLessonIds.length).toBe(countBefore);
@@ -817,12 +1065,16 @@ describe("program/service", () => {
     it("returns 100 when all lessons complete", () => {
       let p = createInitialProgress();
       for (const lesson of definition.lessons) {
-        const r = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: lesson.id,
-          weekId: lesson.weekId,
-          timestamp: "2026-01-01T00:00:00.000Z",
-        }, definition);
+        const r = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: lesson.id,
+            weekId: lesson.weekId,
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        );
         if (r.status === "applied") {
           p = r.progress;
         }
@@ -835,12 +1087,16 @@ describe("program/service", () => {
       // Complete first 9 lessons (half of 18)
       for (let i = 0; i < 9; i++) {
         const lesson = definition.lessons[i];
-        const r = applyEvent(p, {
-          type: "lesson_completed",
-          lessonId: lesson.id,
-          weekId: lesson.weekId,
-          timestamp: "2026-01-01T00:00:00.000Z",
-        }, definition);
+        const r = applyEvent(
+          p,
+          {
+            type: "lesson_completed",
+            lessonId: lesson.id,
+            weekId: lesson.weekId,
+            timestamp: "2026-01-01T00:00:00.000Z",
+          },
+          definition,
+        );
         if (r.status === "applied") {
           p = r.progress;
         }
@@ -855,9 +1111,7 @@ describe("program/service", () => {
 
   describe("isLegacyProgress", () => {
     it("returns true for legacy shape", () => {
-      expect(
-        isLegacyProgress({ completedLessons: ["lesson-1"] })
-      ).toBe(true);
+      expect(isLegacyProgress({ completedLessons: ["lesson-1"] })).toBe(true);
     });
 
     it("returns false for modern shape (has schemaVersion)", () => {
@@ -865,7 +1119,7 @@ describe("program/service", () => {
         isLegacyProgress({
           schemaVersion: 1,
           completedLessons: [],
-        })
+        }),
       ).toBe(false);
     });
 
@@ -878,20 +1132,14 @@ describe("program/service", () => {
 
   describe("migrateLegacyProgress", () => {
     it("migrates empty legacy to initial state", () => {
-      const result = migrateLegacyProgress(
-        { completedLessons: [] },
-        definition
-      );
+      const result = migrateLegacyProgress({ completedLessons: [] }, definition);
       expect(result.status).toBe("not_started");
       expect(result.schemaVersion).toBe(1);
     });
 
     it("migrates legacy with completed lessons", () => {
       const legacy = {
-        completedLessons: [
-          definition.lessons[0].id,
-          definition.lessons[1].id,
-        ],
+        completedLessons: [definition.lessons[0].id, definition.lessons[1].id],
       };
       const result = migrateLegacyProgress(legacy, definition);
 
@@ -912,17 +1160,12 @@ describe("program/service", () => {
 
     it("filters out invalid lesson IDs", () => {
       const legacy = {
-        completedLessons: [
-          definition.lessons[0].id,
-          "fake-lesson-that-does-not-exist",
-        ],
+        completedLessons: [definition.lessons[0].id, "fake-lesson-that-does-not-exist"],
       };
       const result = migrateLegacyProgress(legacy, definition);
       expect(result.completedLessonIds).toHaveLength(1);
       expect(result.completedLessonIds).toContain(definition.lessons[0].id);
-      expect(result.completedLessonIds).not.toContain(
-        "fake-lesson-that-does-not-exist"
-      );
+      expect(result.completedLessonIds).not.toContain("fake-lesson-that-does-not-exist");
     });
 
     it("modern shape passes through with validation", () => {
@@ -945,11 +1188,15 @@ describe("program/service", () => {
   describe("weekly_plan events", () => {
     it("accepts a plan (adds to acceptedPlanIds)", () => {
       const p = createInitialProgress();
-      const result = applyEvent(p, {
-        type: "weekly_plan_accepted",
-        planId: "plan-123",
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "weekly_plan_accepted",
+          planId: "plan-123",
+          timestamp: "2026-01-01T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("applied");
       expect(result.progress.acceptedPlanIds).toContain("plan-123");
@@ -957,11 +1204,15 @@ describe("program/service", () => {
 
     it("dismisses a plan (adds to dismissedRecommendationIds)", () => {
       const p = createInitialProgress();
-      const result = applyEvent(p, {
-        type: "weekly_plan_dismissed",
-        planId: "plan-456",
-        timestamp: "2026-01-01T00:00:00.000Z",
-      }, definition);
+      const result = applyEvent(
+        p,
+        {
+          type: "weekly_plan_dismissed",
+          planId: "plan-456",
+          timestamp: "2026-01-01T00:00:00.000Z",
+        },
+        definition,
+      );
 
       expect(result.status).toBe("applied");
       expect(result.progress.dismissedRecommendationIds).toContain("plan:plan-456");

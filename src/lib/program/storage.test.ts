@@ -24,9 +24,15 @@ beforeEach(() => {
   mockStorage.clear();
   const mockLocalStorage: Storage = {
     getItem: (key: string) => mockStorage.get(key) ?? null,
-    setItem: (key: string, value: string) => { mockStorage.set(key, value); },
-    removeItem: (key: string) => { mockStorage.delete(key); },
-    clear: () => { mockStorage.clear(); },
+    setItem: (key: string, value: string) => {
+      mockStorage.set(key, value);
+    },
+    removeItem: (key: string) => {
+      mockStorage.delete(key);
+    },
+    clear: () => {
+      mockStorage.clear();
+    },
     key: (index: number) => Array.from(mockStorage.keys())[index] ?? null,
     length: 0,
   };

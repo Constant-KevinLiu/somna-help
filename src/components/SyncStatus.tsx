@@ -94,9 +94,7 @@ export function SyncStatus({ compact = false, showSyncNow = true }: SyncStatusPr
     return (
       <div className="flex items-center gap-2 text-sm">
         <span aria-hidden="true">{icon}</span>
-        <span className="text-gray-600 dark:text-gray-400">
-          {copy.statusLabels[status.status]}
-        </span>
+        <span className="text-gray-600 dark:text-gray-400">{copy.statusLabels[status.status]}</span>
       </div>
     );
   }

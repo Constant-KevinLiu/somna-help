@@ -56,9 +56,14 @@ export function validateReminderSettings(raw: unknown): ReminderSettings {
   const eveningTime = isValidTime(obj.eveningTime) ? obj.eveningTime : "22:00";
   const weeklyDay = isValidWeekday(obj.weeklyDay) ? obj.weeklyDay : "Sunday";
   const reminderTime = isValidTime(obj.reminderTime) ? obj.reminderTime : eveningTime;
-  const timezone = typeof obj.timezone === "string" && obj.timezone.trim() ? obj.timezone.trim() : "UTC";
-  const language = typeof obj.language === "string" && obj.language.trim() ? obj.language.trim() : "en";
-  const reminderType = typeof obj.reminderType === "string" && obj.reminderType.trim() ? obj.reminderType.trim() : "BEDTIME_REMINDER";
+  const timezone =
+    typeof obj.timezone === "string" && obj.timezone.trim() ? obj.timezone.trim() : "UTC";
+  const language =
+    typeof obj.language === "string" && obj.language.trim() ? obj.language.trim() : "en";
+  const reminderType =
+    typeof obj.reminderType === "string" && obj.reminderType.trim()
+      ? obj.reminderType.trim()
+      : "BEDTIME_REMINDER";
   const updatedAt = typeof obj.updatedAt === "string" ? obj.updatedAt : "";
   const lastSentAt = typeof obj.lastSentAt === "string" ? obj.lastSentAt : null;
 

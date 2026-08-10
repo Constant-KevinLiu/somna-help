@@ -21,9 +21,7 @@ function RemindersPage() {
 
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Reminders & Habits</h1>
-        <p className="text-gray-500 mt-2">
-          Build consistent sleep habits with gentle reminders.
-        </p>
+        <p className="text-gray-500 mt-2">Build consistent sleep habits with gentle reminders.</p>
       </div>
 
       <Tabs defaultValue="reminders">
@@ -65,16 +63,16 @@ function RemindersPage() {
                 <div>
                   <h4 className="font-medium">Privacy First</h4>
                   <p className="text-gray-500 mt-1">
-                    By default, browser notifications show generic text. You can opt
-                    in to show your custom reminder text in notification settings.
+                    By default, browser notifications show generic text. You can opt in to show your
+                    custom reminder text in notification settings.
                   </p>
                 </div>
 
                 <div>
                   <h4 className="font-medium">No Background Push</h4>
                   <p className="text-gray-500 mt-1">
-                    Currently, reminders only work while the browser is open.
-                    Close the browser and you won't receive notifications.
+                    Currently, reminders only work while the browser is open. Close the browser and
+                    you won't receive notifications.
                   </p>
                 </div>
               </CardContent>

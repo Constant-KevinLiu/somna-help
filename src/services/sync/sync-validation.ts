@@ -7,7 +7,13 @@
  */
 
 import { countWords, MAX_WORDS } from "@/lib/reflection/reflection-word-count";
-import type { SyncSleepRecord, SyncReflection, SyncReminderSettings, SyncRequest, SyncError } from "./sync-types";
+import type {
+  SyncSleepRecord,
+  SyncReflection,
+  SyncReminderSettings,
+  SyncRequest,
+  SyncError,
+} from "./sync-types";
 import type { Locale } from "@/content/content-types";
 
 // =============================================================================
@@ -17,7 +23,15 @@ import type { Locale } from "@/content/content-types";
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_FORMAT = /^([01]\d|2[0-3]):([0-5]\d)$/;
 const VALID_LOCALES: Locale[] = ["en", "es", "pt-BR", "pl"];
-const VALID_WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const VALID_WEEKDAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 // =============================================================================
 // Helpers
@@ -55,7 +69,9 @@ export function validateSleepRecord(record: unknown): ValidationResult<SyncSleep
   if (!record || typeof record !== "object") {
     return {
       valid: false,
-      errors: [{ code: "validation_failed", message: "Invalid sleep record format", retryable: false }],
+      errors: [
+        { code: "validation_failed", message: "Invalid sleep record format", retryable: false },
+      ],
     };
   }
 
@@ -63,7 +79,11 @@ export function validateSleepRecord(record: unknown): ValidationResult<SyncSleep
 
   // Required fields
   if (!r.id || typeof r.id !== "string") {
-    errors.push({ code: "validation_failed", message: "Missing or invalid record ID", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Missing or invalid record ID",
+      retryable: false,
+    });
   }
 
   if (!isISODate(r.date)) {
@@ -75,36 +95,75 @@ export function validateSleepRecord(record: unknown): ValidationResult<SyncSleep
   }
 
   if (!isValidTime(r.wakeUpTime)) {
-    errors.push({ code: "validation_failed", message: "Invalid wake up time format", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid wake up time format",
+      retryable: false,
+    });
   }
 
   if (!isValidNumberInRange(r.sleepLatency, 0, 180)) {
-    errors.push({ code: "validation_failed", message: "Invalid sleep latency", entityType: "sleep-record", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid sleep latency",
+      entityType: "sleep-record",
+      retryable: false,
+    });
   }
 
   if (!isValidNumberInRange(r.nightAwakenings, 0, 20)) {
-    errors.push({ code: "validation_failed", message: "Invalid night awakenings count", entityType: "sleep-record", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid night awakenings count",
+      entityType: "sleep-record",
+      retryable: false,
+    });
   }
 
   if (!isValidNumberInRange(r.sleepQuality, 1, 5)) {
-    errors.push({ code: "validation_failed", message: "Invalid sleep quality", entityType: "sleep-record", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid sleep quality",
+      entityType: "sleep-record",
+      retryable: false,
+    });
   }
 
   if (!isValidNumberInRange(r.mood, 1, 5)) {
-    errors.push({ code: "validation_failed", message: "Invalid mood rating", entityType: "sleep-record", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid mood rating",
+      entityType: "sleep-record",
+      retryable: false,
+    });
   }
 
   if (!isValidNumberInRange(r.sleepEfficiency, 0, 100)) {
-    errors.push({ code: "validation_failed", message: "Invalid sleep efficiency", entityType: "sleep-record", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid sleep efficiency",
+      entityType: "sleep-record",
+      retryable: false,
+    });
   }
 
   if (!isValidNumberInRange(r.sleepScore, 0, 100)) {
-    errors.push({ code: "validation_failed", message: "Invalid sleep score", entityType: "sleep-record", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid sleep score",
+      entityType: "sleep-record",
+      retryable: false,
+    });
   }
 
   // Optional timezone
   if (r.timezone && typeof r.timezone !== "string") {
-    errors.push({ code: "validation_failed", message: "Invalid timezone", entityType: "sleep-record", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid timezone",
+      entityType: "sleep-record",
+      retryable: false,
+    });
   }
 
   return {
@@ -124,7 +183,9 @@ export function validateReflection(reflection: unknown): ValidationResult<SyncRe
   if (!reflection || typeof reflection !== "object") {
     return {
       valid: false,
-      errors: [{ code: "validation_failed", message: "Invalid reflection format", retryable: false }],
+      errors: [
+        { code: "validation_failed", message: "Invalid reflection format", retryable: false },
+      ],
     };
   }
 
@@ -132,31 +193,65 @@ export function validateReflection(reflection: unknown): ValidationResult<SyncRe
 
   // Required fields
   if (!r.id || typeof r.id !== "string") {
-    errors.push({ code: "validation_failed", message: "Missing or invalid reflection ID", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Missing or invalid reflection ID",
+      retryable: false,
+    });
   }
 
   if (!isISODate(r.localDate)) {
-    errors.push({ code: "validation_failed", message: "Invalid local date format", entityType: "reflection", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid local date format",
+      entityType: "reflection",
+      retryable: false,
+    });
   }
 
   if (!r.timezone || typeof r.timezone !== "string") {
-    errors.push({ code: "validation_failed", message: "Missing timezone", entityType: "reflection", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Missing timezone",
+      entityType: "reflection",
+      retryable: false,
+    });
   }
 
   if (!isValidLocale(r.locale)) {
-    errors.push({ code: "validation_failed", message: "Invalid locale", entityType: "reflection", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid locale",
+      entityType: "reflection",
+      retryable: false,
+    });
   }
 
   if (!Array.isArray(r.promptIds)) {
-    errors.push({ code: "validation_failed", message: "Invalid prompt IDs", entityType: "reflection", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid prompt IDs",
+      entityType: "reflection",
+      retryable: false,
+    });
   }
 
   if (!Array.isArray(r.promptCategories)) {
-    errors.push({ code: "validation_failed", message: "Invalid prompt categories", entityType: "reflection", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid prompt categories",
+      entityType: "reflection",
+      retryable: false,
+    });
   }
 
   if (typeof r.content !== "string") {
-    errors.push({ code: "validation_failed", message: "Invalid content", entityType: "reflection", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid content",
+      entityType: "reflection",
+      retryable: false,
+    });
   } else {
     // Word count validation — MUST match client logic
     const wordCount = countWords(r.content);
@@ -177,7 +272,12 @@ export function validateReflection(reflection: unknown): ValidationResult<SyncRe
   }
 
   if (!isValidNumberInRange(r.wordCount, 0, MAX_WORDS + 50)) {
-    errors.push({ code: "validation_failed", message: "Invalid word count", entityType: "reflection", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid word count",
+      entityType: "reflection",
+      retryable: false,
+    });
   }
 
   return {
@@ -191,40 +291,81 @@ export function validateReflection(reflection: unknown): ValidationResult<SyncRe
 // Reminder Settings Validation
 // =============================================================================
 
-export function validateReminderSettings(settings: unknown): ValidationResult<SyncReminderSettings> {
+export function validateReminderSettings(
+  settings: unknown,
+): ValidationResult<SyncReminderSettings> {
   const errors: SyncError[] = [];
 
   if (!settings || typeof settings !== "object") {
     return {
       valid: false,
-      errors: [{ code: "validation_failed", message: "Invalid reminder settings format", retryable: false }],
+      errors: [
+        {
+          code: "validation_failed",
+          message: "Invalid reminder settings format",
+          retryable: false,
+        },
+      ],
     };
   }
 
   const s = settings as Record<string, unknown>;
 
   if (typeof s.enabled !== "boolean") {
-    errors.push({ code: "validation_failed", message: "Invalid enabled flag", entityType: "reminder", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid enabled flag",
+      entityType: "reminder",
+      retryable: false,
+    });
   }
 
   if (s.morningTime !== undefined && !isValidTime(s.morningTime)) {
-    errors.push({ code: "validation_failed", message: "Invalid morning time format", entityType: "reminder", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid morning time format",
+      entityType: "reminder",
+      retryable: false,
+    });
   }
 
   if (s.eveningTime !== undefined && !isValidTime(s.eveningTime)) {
-    errors.push({ code: "validation_failed", message: "Invalid evening time format", entityType: "reminder", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid evening time format",
+      entityType: "reminder",
+      retryable: false,
+    });
   }
 
-  if (s.weeklyDay !== undefined && (typeof s.weeklyDay !== "string" || !VALID_WEEKDAYS.includes(s.weeklyDay))) {
-    errors.push({ code: "validation_failed", message: "Invalid weekly day", entityType: "reminder", retryable: false });
+  if (
+    s.weeklyDay !== undefined &&
+    (typeof s.weeklyDay !== "string" || !VALID_WEEKDAYS.includes(s.weeklyDay))
+  ) {
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid weekly day",
+      entityType: "reminder",
+      retryable: false,
+    });
   }
 
   if (!s.timezone || typeof s.timezone !== "string") {
-    errors.push({ code: "validation_failed", message: "Missing timezone", entityType: "reminder", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Missing timezone",
+      entityType: "reminder",
+      retryable: false,
+    });
   }
 
   if (!isValidLocale(s.language)) {
-    errors.push({ code: "validation_failed", message: "Invalid language", entityType: "reminder", retryable: false });
+    errors.push({
+      code: "validation_failed",
+      message: "Invalid language",
+      entityType: "reminder",
+      retryable: false,
+    });
   }
 
   return {
@@ -244,7 +385,9 @@ export function validateSyncRequest(request: unknown): ValidationResult<SyncRequ
   if (!request || typeof request !== "object") {
     return {
       valid: false,
-      errors: [{ code: "invalid_payload", message: "Invalid sync request format", retryable: false }],
+      errors: [
+        { code: "invalid_payload", message: "Invalid sync request format", retryable: false },
+      ],
     };
   }
 
@@ -255,15 +398,27 @@ export function validateSyncRequest(request: unknown): ValidationResult<SyncRequ
   }
 
   if (!r.syncId || typeof r.syncId !== "string") {
-    errors.push({ code: "invalid_payload", message: "Missing sync ID for idempotency", retryable: false });
+    errors.push({
+      code: "invalid_payload",
+      message: "Missing sync ID for idempotency",
+      retryable: false,
+    });
   }
 
   if (!Array.isArray(r.sleepRecords)) {
-    errors.push({ code: "invalid_payload", message: "Invalid sleep records array", retryable: false });
+    errors.push({
+      code: "invalid_payload",
+      message: "Invalid sleep records array",
+      retryable: false,
+    });
   }
 
   if (!Array.isArray(r.reflections)) {
-    errors.push({ code: "invalid_payload", message: "Invalid reflections array", retryable: false });
+    errors.push({
+      code: "invalid_payload",
+      message: "Invalid reflections array",
+      retryable: false,
+    });
   }
 
   // Validate individual records if arrays exist

@@ -49,10 +49,7 @@ export const METRIC_MINIMUMS: Record<MetricKey, number> = {
 /**
  * Get sufficiency for a specific metric given its sample size.
  */
-export function metricSufficiency(
-  metric: MetricKey,
-  sampleSize: number,
-): DataSufficiency {
+export function metricSufficiency(metric: MetricKey, sampleSize: number): DataSufficiency {
   const min = METRIC_MINIMUMS[metric];
   if (sampleSize < min) return "none";
 

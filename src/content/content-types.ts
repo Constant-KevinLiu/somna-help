@@ -55,30 +55,27 @@ export interface ContentPackage<T> {
 // Validation Helpers
 // =============================================================================
 
-export function validateContentPackage<T>(
-  pkg: ContentPackage<T>,
-  requiredLocale: Locale
-): boolean {
+export function validateContentPackage<T>(pkg: ContentPackage<T>, requiredLocale: Locale): boolean {
   if (pkg.metadata.locale !== requiredLocale) {
-    throw new Error(`Content locale mismatch: expected ${requiredLocale}, got ${pkg.metadata.locale}`);
+    throw new Error(
+      `Content locale mismatch: expected ${requiredLocale}, got ${pkg.metadata.locale}`,
+    );
   }
-  
+
   if (pkg.metadata.medicalReviewStatus !== "approved") {
     throw new Error(`Content not medically approved for ${requiredLocale}`);
   }
-  
+
   if (pkg.metadata.nativeReviewStatus !== "approved") {
     throw new Error(`Content not natively reviewed for ${requiredLocale}`);
   }
-  
+
   return true;
 }
 
-export function assertNoEnglishFallback<T>(
-  packages: Record<Locale, ContentPackage<T>>
-): void {
+export function assertNoEnglishFallback<T>(packages: Record<Locale, ContentPackage<T>>): void {
   const locales: Locale[] = ["en", "es", "pt-BR", "pl"];
-  
+
   for (const locale of locales) {
     if (!packages[locale]) {
       throw new Error(`Missing content package for locale: ${locale}`);

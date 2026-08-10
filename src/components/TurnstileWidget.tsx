@@ -146,7 +146,6 @@ export function TurnstileWidget({
 
   if (!siteKey) {
     if (import.meta.env.DEV) {
-      // eslint-disable-next-line no-console
       console.warn("[TurnstileWidget] PUBLIC_TURNSTILE_SITE_KEY is not set");
     }
     return null;

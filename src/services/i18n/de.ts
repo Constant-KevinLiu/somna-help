@@ -98,7 +98,8 @@ export const de: Dict = {
     "Die meisten Erwachsenen fühlen sich mit 7,5–9 Stunden Schlaf am besten. Volle 90-Minuten-Zyklen können morgendliche Müdigkeit reduzieren und die Tagesenergie verbessern.",
 
   "program.title": "CBT-I-Programm in 6 Wochen",
-  "program.sub": "Eine behutsame Reise über sechs Wochen – deinen Schlaf Schritt für Schritt zurückgewinnen.",
+  "program.sub":
+    "Eine behutsame Reise über sechs Wochen – deinen Schlaf Schritt für Schritt zurückgewinnen.",
   "program.hubSub":
     "18 kurze, praxisnahe Lektionen in 6 Wochen – damit dein Gehirn wieder gut schläft, ohne Medikamente.",
 
@@ -117,8 +118,7 @@ export const de: Dict = {
   "assess.q4": "Wie würdest du deine Unruhe vor dem Einschlafen beschreiben?",
   "assess.q5": "Wie erholt fühlst du dich nach dem Aufwachen?",
   "assess.result": "Dein Schlafprofil",
-  "assess.result.sub":
-    "Ein Startpunkt, keine Diagnose. Dein CBT-I-Plan baut darauf auf.",
+  "assess.result.sub": "Ein Startpunkt, keine Diagnose. Dein CBT-I-Plan baut darauf auf.",
   "assess.cta.program": "Programm starten",
   "assess.cta.dashboard": "Zur Übersicht",
   "assess.level.label": "Schlafprofil",
@@ -152,8 +152,7 @@ export const de: Dict = {
   "assess.stat.duration.value.l4": "6 Wochen",
 
   "diary.title": "Schlaftagebuch",
-  "diary.sub":
-    "Ein sanftes, wertfreies Protokoll zeigt, was bereits funktioniert.",
+  "diary.sub": "Ein sanftes, wertfreies Protokoll zeigt, was bereits funktioniert.",
   "diary.save": "Eintrag speichern",
   "diary.saved": "Eintrag gespeichert 🌙",
   "diary.bedtime": "Schlafenszeit",

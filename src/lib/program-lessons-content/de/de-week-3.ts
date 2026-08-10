@@ -19,8 +19,7 @@ export const deWeek3Lessons: LessonContent[] = [
       de: {
         title: "Was ist Schlafrestriktion?",
         eyebrow: "WOCHE 3 · LEKTION 1",
-        subtitle:
-          "Die effektivste, aber am meisten missverstandene CBT-I-Technik erklärt.",
+        subtitle: "Die effektivste, aber am meisten missverstandene CBT-I-Technik erklärt.",
         difficulty: "Mittel",
         readingTime: "6 Min. Lesezeit",
         content: [
@@ -85,11 +84,7 @@ export const deWeek3Lessons: LessonContent[] = [
     weekSlug: "week-3",
     lessonNumber: 2,
     estimatedMinutes: 5,
-    relatedLessonSlugs: [
-      "sleep-restriction",
-      "adjusting-your-window",
-      "what-is-sleep-efficiency",
-    ],
+    relatedLessonSlugs: ["sleep-restriction", "adjusting-your-window", "what-is-sleep-efficiency"],
     i18n: {
       de: {
         title: "Dein Schlafzeitfenster berechnen",
@@ -166,11 +161,7 @@ export const deWeek3Lessons: LessonContent[] = [
     weekSlug: "week-3",
     lessonNumber: 3,
     estimatedMinutes: 5,
-    relatedLessonSlugs: [
-      "calculating-your-sleep-window",
-      "sleep-restriction",
-      "when-to-expand",
-    ],
+    relatedLessonSlugs: ["calculating-your-sleep-window", "sleep-restriction", "when-to-expand"],
     i18n: {
       de: {
         title: "Dein Zeitfenster anpassen",
