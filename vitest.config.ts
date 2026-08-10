@@ -29,8 +29,6 @@ export default defineConfig({
     // Report file count, test count, pass/fail/skip
     reporters: ["default"],
     // Component tests (.test.tsx) use jsdom
-    environmentMatchGlobs: [
-      ["src/components/**/*.test.tsx", "jsdom"],
-    ],
+    environmentMatchGlobs: [["src/components/**/*.test.tsx", "jsdom"]],
   },
 });
