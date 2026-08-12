@@ -180,7 +180,7 @@ export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
             />
 
             <div className="space-y-4">
-              <FormLabel>Schedule</FormLabel>
+              <h3 className="text-sm font-medium text-foreground">Schedule</h3>
 
               <FormField
                 control={form.control}
@@ -284,7 +284,7 @@ export function ReminderForm({ reminder, onClose }: ReminderFormProps) {
             </div>
 
             <div className="space-y-4">
-              <FormLabel>Delivery Channels</FormLabel>
+              <h3 className="text-sm font-medium text-foreground">Delivery Channels</h3>
 
               <FormField
                 control={form.control}
