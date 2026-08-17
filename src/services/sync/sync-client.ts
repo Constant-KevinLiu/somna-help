@@ -15,9 +15,20 @@ import type {
   SyncReminderSettings,
   SyncStatusInfo,
   SyncStatusDisplay,
+  CanonicalReflection,
 } from "./sync-types";
 import { enqueueSyncOperation, getQueueStatus, processBatchResults } from "./sync-queue";
 import { isBrowser, safeLocalStorageGet, safeLocalStorageSet } from "@/lib/safe-storage";
+// Canonical reflection repository (single source of truth)
+import {
+  loadSyncReflections,
+  mergeSyncReflections,
+  markReflectionsSynced,
+  setLastSyncedAt,
+  getLastSyncedAt,
+  handleSignInSync,
+  handleSignOut as handleReflectionSignOut,
+} from "@/lib/reflection/reflection-storage";
 // Program progress sync integration (Phase G-0.1)
 import {
   toSyncProgress,
@@ -52,9 +63,18 @@ interface SyncResult {
 // State
 // =============================================================================
 
-let currentStatus: SyncStatusDisplay = "synced";
+let currentStatus: SyncStatusDisplay = "local-only";
 let lastSyncedAt: string | undefined;
 let currentSyncPromise: Promise<SyncResult> | null = null;
+
+// Initialize lastSyncedAt from canonical reflection storage
+if (isBrowser()) {
+  try {
+    lastSyncedAt = getLastSyncedAt();
+  } catch {
+    // ignore
+  }
+}
 
 // =============================================================================
 // Sync Client
@@ -62,7 +82,7 @@ let currentSyncPromise: Promise<SyncResult> | null = null;
 
 export class SyncClient {
   private config: SyncClientConfig;
-  private sessionToken: string | null = null;
+  private authenticated: boolean = false;
 
   constructor(config: SyncClientConfig) {
     this.config = {
@@ -71,12 +91,60 @@ export class SyncClient {
     };
   }
 
-  setSessionToken(token: string | null): void {
-    this.sessionToken = token;
+  /**
+   * Mark the client as authenticated (called when session cookie is active).
+   * Authentication uses HttpOnly cookies — no token stored in JS.
+   */
+  setAuthenticated(value: boolean): void {
+    this.authenticated = value;
+  }
+
+  /**
+   * @deprecated Use setAuthenticated() instead.
+   * Kept for backward compatibility with older code.
+   */
+  setSessionToken(_token: string | null): void {
+    // Auth is cookie-based — this is a no-op
+    this.authenticated = _token !== null;
   }
 
   isAuthenticated(): boolean {
-    return this.sessionToken !== null;
+    return this.authenticated;
+  }
+
+  // ===========================================================================
+  // Sign-in / Sign-out hooks (bridge between auth and canonical storage)
+  // ===========================================================================
+
+  /**
+   * Handle user sign-in: merge server state with local data.
+   *
+   * Requirements:
+   * - Signing in must not erase local reflections.
+   * - Local-only data is preserved and marked "pending" for upload.
+   * - Server data is merged deterministically (no duplicates).
+   *
+   * Call this after the session cookie is set and the first sync/restore completes.
+   */
+  handleSignIn(serverReflections: CanonicalReflection[]): void {
+    if (!isBrowser()) return;
+    handleSignInSync(serverReflections);
+  }
+
+  /**
+   * Handle user sign-out: preserve local data, clear sync status.
+   *
+   * Requirements:
+   * - Signing out must not erase local-only data.
+   * - "synced" becomes "local" (user is anonymous again).
+   * - Drafts, quarantined records, and migration markers are all preserved.
+   */
+  handleSignOut(): void {
+    if (!isBrowser()) return;
+    handleReflectionSignOut();
+    this.authenticated = false;
+    lastSyncedAt = undefined;
+    updateStatus("local-only");
   }
 
   // ===========================================================================
@@ -138,6 +206,13 @@ export class SyncClient {
         body: JSON.stringify(request),
         credentials: "include",
       });
+
+      if (response.status === 401) {
+        // Session expired or not authenticated — update state
+        this.authenticated = false;
+        updateStatus("offline");
+        return { success: false, error: "Not authenticated" };
+      }
 
       if (!response.ok) {
         throw new Error(`Sync failed: ${response.status}`);
@@ -248,7 +323,7 @@ export class SyncClient {
     // Update sleep records
     await this.saveSleepRecordsToLocal(response.sleepRecords);
 
-    // Update reflections
+    // Update reflections via canonical repository
     await this.saveReflectionsToLocal(response.reflections);
 
     // Update reminder settings
@@ -261,8 +336,11 @@ export class SyncClient {
       this.saveProgramProgressToLocal(response.programProgress);
     }
 
-    // Update sync timestamp
+    // Update sync timestamp (both in-memory and in canonical storage)
     lastSyncedAt = response.lastSyncedAt;
+    if (isBrowser()) {
+      setLastSyncedAt(response.lastSyncedAt);
+    }
   }
 
   // ===========================================================================
@@ -280,14 +358,10 @@ export class SyncClient {
 
   private async loadLocalReflections(): Promise<SyncReflection[]> {
     if (!isBrowser()) return [];
-    const storage = safeLocalStorageGet<{ reflections?: Array<Record<string, unknown>> }>(
-      "reflections",
-      {},
-    );
-    return (storage.reflections || []).map((r) => ({
-      ...r,
-      syncStatus: (r.syncStatus as SyncStatus) || "local",
-    })) as SyncReflection[];
+    // Use canonical reflection repository as single source of truth.
+    // Drafts are NEVER included — only committed history.
+    const reflections = loadSyncReflections();
+    return reflections as SyncReflection[];
   }
 
   private async loadLocalReminderSettings(): Promise<SyncReminderSettings | undefined> {
@@ -299,12 +373,17 @@ export class SyncClient {
     safeLocalStorageSet("sleepRecords", records);
   }
 
-  private async saveReflectionsToLocal(reflections: SyncReflection[]): Promise<void> {
-    safeLocalStorageSet("reflections", {
-      version: "1",
-      reflections,
-      lastSyncedAt,
-    });
+  private async saveReflectionsToLocal(reflections: CanonicalReflection[]): Promise<void> {
+    if (!isBrowser()) return;
+    // Merge server state into canonical repository (deterministic, no duplicates).
+    // This is the only path that sets syncStatus to "synced" — never before
+    // server acknowledgement.
+    const merged = mergeSyncReflections(reflections);
+    // Mark successfully synced IDs
+    const syncedIds = merged.filter((r) => r.syncStatus === "synced").map((r) => r.id);
+    if (syncedIds.length > 0) {
+      markReflectionsSynced(syncedIds);
+    }
   }
 
   private async saveReminderSettingsToLocal(settings: SyncReminderSettings): Promise<void> {
@@ -383,7 +462,7 @@ export function getSyncStatus(): SyncStatusInfo {
   const queue = getQueueStatus();
 
   // Determine overall status
-  let status: SyncStatusDisplay = "synced";
+  let status: SyncStatusDisplay = "local-only";
 
   if (isBrowser() && !navigator.onLine) {
     status = "offline";
@@ -393,6 +472,8 @@ export function getSyncStatus(): SyncStatusInfo {
     status = "needs-attention";
   } else if (queue.pendingCount > 0) {
     status = "syncing";
+  } else if (currentStatus === "synced" && lastSyncedAt) {
+    status = "synced";
   }
 
   return {

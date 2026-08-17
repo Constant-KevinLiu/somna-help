@@ -21,7 +21,7 @@ import { ShareModal } from "@/components/ShareModal";
 import { TimeWheelPicker } from "@/components/ui/TimeWheelPicker";
 import { trackShare } from "@/lib/share-analytics";
 import { Share2 } from "lucide-react";
-import { GuidedReflectionCard, ReflectionHistory } from "@/components/diary";
+import { ReflectionPanel } from "@/components/diary";
 import { loadReminders, loadOccurrences, updateOccurrence } from "@/services/habit/habit-storage";
 import { logOccurrenceCompleted } from "@/services/habit/habit-events";
 import type { Reminder, ReminderOccurrence } from "@/services/habit/habit-types";
@@ -49,8 +49,8 @@ export function DiaryPage() {
   const [mood, setMood] = useState(4);
   const [feedback, setFeedback] = useState<SleepRecord | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
-  const [editDate, setEditDate] = useState<string | null>(null);
+  const [_showHistory, _setShowHistory] = useState(false); // deprecated
+  const [_editDate, _setEditDate] = useState<string | null>(null); // deprecated
 
   // Load existing records so we can share the latest weekly summary.
   const records = useMemo(() => loadRecords(), []);
@@ -219,24 +219,8 @@ export function DiaryPage() {
             </div>
           )}
 
-          {/* Guided CBT-I Reflection Section */}
-          {showHistory ? (
-            <ReflectionHistory
-              onBack={() => {
-                setShowHistory(false);
-                setEditDate(null);
-              }}
-              onEditDate={(date) => {
-                setEditDate(date);
-                setShowHistory(false);
-              }}
-            />
-          ) : (
-            <GuidedReflectionCard
-              onViewHistory={() => setShowHistory(true)}
-              key={editDate || "today"}
-            />
-          )}
+          {/* Guided CBT-I Reflection Section — Today + Timeline tabs */}
+          <ReflectionPanel />
 
           {/* Weekly summary share */}
           {records.length > 0 && (

@@ -13,6 +13,11 @@ import type {
   MigrationMetadata,
 } from "./sync-types";
 import { getSyncClient } from "./sync-client";
+// Canonical reflection repository
+import {
+  loadSyncReflections,
+  REFLECTIONS_STORAGE_KEY_V2,
+} from "@/lib/reflection/reflection-storage";
 
 const MIGRATION_STORAGE_KEY = "somna:migration-state";
 
@@ -162,7 +167,7 @@ export async function createSnapshot(): Promise<{
 }> {
   const storage = loadMigrationState();
 
-  // Load current local data
+  // Load current local data from canonical sources
   let sleepRecords: SyncSleepRecord[] = [];
   let reflections: SyncReflection[] = [];
 
@@ -176,11 +181,8 @@ export async function createSnapshot(): Promise<{
   }
 
   try {
-    const rawReflections = localStorage.getItem("reflections");
-    if (rawReflections) {
-      const parsed = JSON.parse(rawReflections) as { reflections?: SyncReflection[] };
-      reflections = parsed.reflections || [];
-    }
+    // Load from canonical reflection repository
+    reflections = loadSyncReflections() as SyncReflection[];
   } catch {
     // Ignore
   }
@@ -211,11 +213,13 @@ export async function restoreFromSnapshot(snapshotId: string): Promise<boolean> 
 
   try {
     localStorage.setItem("sleepRecords", JSON.stringify(snapshot.sleepRecords));
+    // Restore to canonical reflection storage key
     localStorage.setItem(
-      "reflections",
+      REFLECTIONS_STORAGE_KEY_V2,
       JSON.stringify({
-        version: "1",
+        version: "2",
         reflections: snapshot.reflections,
+        quarantined: [],
       }),
     );
     return true;
@@ -254,10 +258,9 @@ function hasLocalSleepRecords(): boolean {
 
 function hasLocalReflections(): boolean {
   try {
-    const raw = localStorage.getItem("reflections");
-    if (!raw) return false;
-    const storage = JSON.parse(raw) as { reflections?: unknown[] };
-    return (storage.reflections?.length || 0) > 0;
+    // Check canonical reflection repository
+    const reflections = loadSyncReflections();
+    return reflections.length > 0;
   } catch {
     return false;
   }

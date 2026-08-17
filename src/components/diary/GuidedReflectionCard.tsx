@@ -12,6 +12,7 @@
 
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n";
+import { getContentLocale } from "@/lib/locale-registry";
 import { useReflectionDraft } from "@/hooks/useReflectionDraft";
 import { ReflectionPromptsList } from "./ReflectionPromptsList";
 import { ReflectionEditor } from "./ReflectionEditor";
@@ -19,11 +20,12 @@ import { EN_REFLECTION_UI } from "@/content/en/diary/reflection-ui";
 import { ES_REFLECTION_UI } from "@/content/es/diary/reflection-ui";
 import { PT_BR_REFLECTION_UI } from "@/content/pt-BR/diary/reflection-ui";
 import { PL_REFLECTION_UI } from "@/content/pl/diary/reflection-ui";
-import type { Locale } from "@/content/content-types";
+import type { ContentLocale } from "@/content/content-types";
 import type { ReflectionUiStrings } from "@/content/en/diary/reflection-ui";
 import { todayLocalISO } from "@/lib/reflection/reflection-storage";
+import type { SupportedLocale } from "@/lib/locale-registry";
 
-const UI_STRINGS: Partial<Record<Locale, ReflectionUiStrings>> = {
+const UI_STRINGS: Partial<Record<ContentLocale, ReflectionUiStrings>> = {
   en: EN_REFLECTION_UI,
   es: ES_REFLECTION_UI,
   "pt-BR": PT_BR_REFLECTION_UI,
@@ -33,11 +35,18 @@ const UI_STRINGS: Partial<Record<Locale, ReflectionUiStrings>> = {
 interface GuidedReflectionCardProps {
   onViewHistory: () => void;
   onOpenAuth?: () => void;
+  /** Optional: notify parent after a successful save (for history refresh) */
+  onSaved?: () => void;
 }
 
-export function GuidedReflectionCard({ onViewHistory, onOpenAuth }: GuidedReflectionCardProps) {
+export function GuidedReflectionCard({
+  onViewHistory,
+  onOpenAuth,
+  onSaved,
+}: GuidedReflectionCardProps) {
   const { lang } = useI18n();
-  const contentLocale = lang as Locale;
+  const uiLocale = lang as SupportedLocale;
+  const contentLocale = getContentLocale(uiLocale) as ContentLocale;
   const strings = UI_STRINGS[contentLocale] ?? EN_REFLECTION_UI;
 
   const today = todayLocalISO();
@@ -51,7 +60,14 @@ export function GuidedReflectionCard({ onViewHistory, onOpenAuth }: GuidedReflec
     saveStatus,
     manualSave,
     isEditing,
-  } = useReflectionDraft({ locale: contentLocale, initialDate: today });
+  } = useReflectionDraft({ locale: uiLocale, initialDate: today });
+
+  const handleSave = () => {
+    const success = manualSave();
+    if (success && onSaved) {
+      onSaved();
+    }
+  };
 
   return (
     <div className="glass-strong space-y-6 rounded-3xl p-6 md:p-8">
@@ -80,7 +96,7 @@ export function GuidedReflectionCard({ onViewHistory, onOpenAuth }: GuidedReflec
 
       <div className="flex flex-wrap items-center gap-3">
         <button
-          onClick={manualSave}
+          onClick={handleSave}
           disabled={content.trim().length === 0}
           className="rounded-full bg-gradient-to-r from-primary to-accent px-5 py-2.5 text-sm font-medium text-primary-foreground transition hover:scale-[1.02] disabled:opacity-50 disabled:hover:scale-100"
         >

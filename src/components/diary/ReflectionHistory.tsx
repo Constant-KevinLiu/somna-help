@@ -8,9 +8,10 @@
  * - Empty state
  */
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { useI18n } from "@/lib/i18n";
+import { getContentLocale } from "@/lib/locale-registry";
 import {
   getSortedReflections,
   deleteReflection,
@@ -18,14 +19,15 @@ import {
 } from "@/lib/reflection/reflection-storage";
 import type { LocalReflection } from "@/lib/reflection/reflection-types";
 import { ReflectionHistoryItem } from "./ReflectionHistoryItem";
-import type { Locale } from "@/content/content-types";
+import type { ContentLocale } from "@/content/content-types";
 import { EN_REFLECTION_UI } from "@/content/en/diary/reflection-ui";
 import { ES_REFLECTION_UI } from "@/content/es/diary/reflection-ui";
 import { PT_BR_REFLECTION_UI } from "@/content/pt-BR/diary/reflection-ui";
 import { PL_REFLECTION_UI } from "@/content/pl/diary/reflection-ui";
+import type { SupportedLocale } from "@/lib/locale-registry";
 
 const UI_STRINGS: Partial<
-  Record<Locale, import("@/content/en/diary/reflection-ui").ReflectionUiStrings>
+  Record<ContentLocale, import("@/content/en/diary/reflection-ui").ReflectionUiStrings>
 > = {
   en: EN_REFLECTION_UI,
   es: ES_REFLECTION_UI,
@@ -40,16 +42,26 @@ interface ReflectionHistoryProps {
 
 export function ReflectionHistory({ onBack, onEditDate }: ReflectionHistoryProps) {
   const { lang } = useI18n();
-  const contentLocale = lang as Locale;
+  const uiLocale = lang as SupportedLocale;
+  const contentLocale = getContentLocale(uiLocale) as ContentLocale;
   const strings = UI_STRINGS[contentLocale] ?? EN_REFLECTION_UI;
 
   const [reflections, setReflections] = useState<LocalReflection[]>(() => getSortedReflections());
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
+  const refresh = useCallback(() => {
+    setReflections(getSortedReflections());
+  }, []);
+
+  // Refresh when component mounts (in case data changed while hidden)
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
   const handleDelete = (id: string) => {
     try {
       deleteReflection(id);
-      setReflections(getSortedReflections());
+      refresh();
       toast.success(strings.toast.deleted);
     } catch (error) {
       toast.error(strings.toast.deleteError);
@@ -94,16 +106,23 @@ export function ReflectionHistory({ onBack, onEditDate }: ReflectionHistoryProps
 
       {/* Delete Confirmation Dialog */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-dialog-title"
+        >
           <div className="w-full max-w-md rounded-2xl bg-background p-6 shadow-xl">
-            <h3 className="text-base font-semibold text-foreground">
+            <h3 id="delete-dialog-title" className="text-base font-semibold text-foreground">
               {contentLocale === "en"
                 ? "Delete Reflection"
                 : contentLocale === "es"
                   ? "Eliminar Reflexión"
                   : contentLocale === "pt-BR"
                     ? "Excluir Reflexão"
-                    : "Usuń Refleksję"}
+                    : contentLocale === "pl"
+                      ? "Usuń Refleksję"
+                      : "Delete Reflection"}
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">{strings.history.deleteConfirm}</p>
             <div className="mt-6 flex justify-end gap-3">
@@ -115,7 +134,7 @@ export function ReflectionHistory({ onBack, onEditDate }: ReflectionHistoryProps
               </button>
               <button
                 onClick={() => handleDelete(deleteTarget)}
-                className="rounded-full bg-red-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-600"
+                className="rounded-full bg-red-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 focus:ring-offset-background"
               >
                 {strings.history.deleteConfirmAction}
               </button>

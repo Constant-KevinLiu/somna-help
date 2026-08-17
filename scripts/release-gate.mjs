@@ -392,9 +392,18 @@ run("Single SleepRecord source (one SLEEP_RECORDS_KEY)", () => {
 
 run("Single Reflection storage key", () => {
   const storage = read("src/lib/reflection/reflection-storage.ts");
-  const keyCount = (storage.match(/REFLECTIONS_STORAGE_KEY\s*=\s*"/g) || []).length;
-  if (keyCount !== 1) throw new Error(`found ${keyCount} key definitions`);
-  return "one canonical storage key";
+  // Canonical committed-history key is v2
+  const hasCanonicalKey = storage.includes('REFLECTIONS_STORAGE_KEY_V2 = "somna.reflections.v2"');
+  // Draft storage must be a separate key (not mixed with committed history)
+  const hasDraftKey = storage.includes(
+    'REFLECTION_DRAFT_STORAGE_KEY = "somna.reflection-draft.v1"',
+  );
+  // Legacy v1 key exists only for migration
+  const hasLegacyKey = storage.includes('REFLECTIONS_STORAGE_KEY_V1 = "somna.reflections.v1"');
+  if (!hasCanonicalKey) throw new Error("missing canonical v2 storage key");
+  if (!hasDraftKey) throw new Error("missing separate draft storage key");
+  if (!hasLegacyKey) throw new Error("missing legacy v1 migration key");
+  return "canonical v2 key + separate draft key + legacy v1 migration key";
 });
 
 run("Reflection word limit (750) enforced", () => {

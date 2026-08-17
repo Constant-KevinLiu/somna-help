@@ -9,3 +9,5 @@ export { ReflectionEditor } from "./ReflectionEditor";
 export { ReflectionHistory } from "./ReflectionHistory";
 export { ReflectionHistoryItem } from "./ReflectionHistoryItem";
 export { ReflectionPromptsList } from "./ReflectionPromptsList";
+export { ReflectionTimeline } from "./ReflectionTimeline";
+export { ReflectionPanel } from "./ReflectionPanel";
