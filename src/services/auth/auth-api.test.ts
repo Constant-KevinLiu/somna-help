@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { handleRequestCode } from "./auth-api";
+import { handleRequestCode, handleVerifyCode } from "./auth-api";
 
 // -----------------------------------------------------------------------------
 // Mock auth-db
@@ -146,8 +146,9 @@ describe("handleRequestCode", () => {
 
     expect(mockSendOTPEmail).toHaveBeenCalledTimes(1);
     const callArg = mockSendOTPEmail.mock.calls[0];
-    // First arg is env
-    expect(callArg[0]).toBe(env);
+    // First arg is the resolved env (same bindings, possibly a new object)
+    expect(callArg[0].DB).toBe(env.DB);
+    expect(callArg[0].EMAIL).toBe(env.EMAIL);
     // Second arg has options
     const opts = callArg[1];
     expect(opts.to).toBe("User@Example.com"); // raw email, not normalized
@@ -321,6 +322,147 @@ describe("handleRequestCode", () => {
 
     expect(response.status).toBe(400);
     expect(mockSendOTPEmail).not.toHaveBeenCalled();
+  });
+
+  // ─── Runtime environment validation ────────────────────────────────────────
+
+  describe("runtime environment validation", () => {
+    it("does not throw when env is undefined (Vite dev scenario)", async () => {
+      await expect(
+        handleRequestCode({
+          request: makeRequest({ email: "user@example.com" }),
+          env: undefined as any,
+          ctx: {},
+        }),
+      ).resolves.toBeInstanceOf(Response);
+    });
+
+    it("returns structured 503 AUTH_SERVICE_UNAVAILABLE when env is undefined", async () => {
+      const response = await handleRequestCode({
+        request: makeRequest({ email: "user@example.com" }),
+        env: undefined as any,
+        ctx: {},
+      });
+
+      expect(response.status).toBe(503);
+      const body = await response.json();
+      expect(body.success).toBe(false);
+      expect(body.error).toBe("service_unavailable");
+      expect(body.code).toBe("AUTH_SERVICE_UNAVAILABLE");
+    });
+
+    it("returns structured 503 when DB is missing", async () => {
+      const response = await handleRequestCode({
+        request: makeRequest({ email: "user@example.com" }),
+        env: { EMAIL: makeMockEmail() as any },
+        ctx: {},
+      });
+
+      expect(response.status).toBe(503);
+      const body = await response.json();
+      expect(body.success).toBe(false);
+      expect(body.code).toBe("AUTH_SERVICE_UNAVAILABLE");
+    });
+
+    it("returns structured 503 when env is null", async () => {
+      const response = await handleRequestCode({
+        request: makeRequest({ email: "user@example.com" }),
+        env: null as any,
+        ctx: {},
+      });
+
+      expect(response.status).toBe(503);
+      const body = await response.json();
+      expect(body.code).toBe("AUTH_SERVICE_UNAVAILABLE");
+    });
+
+    it("proceeds to rate-limit lookup when DB is available", async () => {
+      const env = { DB: makeMockDB() as any, EMAIL: makeMockEmail() as any };
+      mockCountRecentOTPRequests.mockResolvedValue(0);
+
+      await handleRequestCode({
+        request: makeRequest({ email: "user@example.com" }),
+        env,
+        ctx: {},
+      });
+
+      expect(mockCountRecentOTPRequests).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not advance to email send or OTP creation when DB is missing", async () => {
+      await handleRequestCode({
+        request: makeRequest({ email: "user@example.com" }),
+        env: undefined as any,
+        ctx: {},
+      });
+
+      expect(mockCountRecentOTPRequests).not.toHaveBeenCalled();
+      expect(mockCreateOTPChallenge).not.toHaveBeenCalled();
+      expect(mockSendOTPEmail).not.toHaveBeenCalled();
+    });
+
+    it("does not expose OTP codes or secrets in 503 response", async () => {
+      const response = await handleRequestCode({
+        request: makeRequest({ email: "user@example.com" }),
+        env: undefined as any,
+        ctx: {},
+      });
+
+      const bodyText = await response.text();
+      // No numeric code that could be an OTP
+      expect(bodyText).not.toMatch(/\b\d{6}\b/);
+      // No hash / secret leakage
+      expect(bodyText.toLowerCase()).not.toContain("secret");
+      expect(bodyText.toLowerCase()).not.toContain("hash");
+      expect(bodyText.toLowerCase()).not.toContain("token");
+      expect(bodyText.toLowerCase()).not.toContain("password");
+      // Sanitized — no stack traces or internal details
+      expect(bodyText.toLowerCase()).not.toContain("stack");
+      expect(bodyText.toLowerCase()).not.toContain("typeerror");
+    });
+  });
+});
+
+// =============================================================================
+// handleVerifyCode — runtime environment tests
+// =============================================================================
+
+describe("handleVerifyCode — runtime env", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns 503 AUTH_SERVICE_UNAVAILABLE when env is undefined", async () => {
+    const response = await handleVerifyCode({
+      request: new Request("https://somna.help/api/auth/verify-code", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "user@example.com", code: "123456" }),
+      }),
+      env: undefined as any,
+      ctx: {},
+    });
+
+    expect(response.status).toBe(503);
+    const body = await response.json();
+    expect(body.success).toBe(false);
+    expect(body.code).toBe("AUTH_SERVICE_UNAVAILABLE");
+  });
+
+  it("does not query DB or create session when env is missing", async () => {
+    await handleVerifyCode({
+      request: new Request("https://somna.help/api/auth/verify-code", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ email: "user@example.com", code: "123456" }),
+      }),
+      env: undefined as any,
+      ctx: {},
+    });
+
+    expect(mockFindLatestOTPChallenge).not.toHaveBeenCalled();
+    expect(mockFindUserByEmail).not.toHaveBeenCalled();
+    expect(mockCreateSession).not.toHaveBeenCalled();
   });
 });
 
@@ -574,6 +716,48 @@ describe("handleGetSession", () => {
       expect(mockFindUserByEmail).not.toHaveBeenCalled();
     });
   });
+
+  describe("runtime environment validation", () => {
+    it("returns { authenticated: false } with no cookie even when env is undefined", async () => {
+      const response = await handleGetSession({
+        request: makeSessionRequest(null),
+        env: undefined as any,
+        ctx: {},
+      });
+
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body.authenticated).toBe(false);
+    });
+
+    it("clears cookie and returns unauthenticated when DB is missing but cookie is present", async () => {
+      const response = await handleGetSession({
+        request: makeSessionRequest(VALID_TOKEN),
+        env: undefined as any,
+        ctx: {},
+      });
+
+      expect(response.status).toBe(200);
+      const body = await response.json();
+      expect(body.authenticated).toBe(false);
+
+      const setCookie = response.headers.getSetCookie?.() ?? [];
+      expect(setCookie.some((c: string) => c.startsWith("somna_session="))).toBe(true);
+      expect(setCookie.some((c: string) => c.includes("Max-Age=0"))).toBe(true);
+    });
+
+    it("does not call any DB functions when env is undefined", async () => {
+      await handleGetSession({
+        request: makeSessionRequest(VALID_TOKEN),
+        env: undefined as any,
+        ctx: {},
+      });
+
+      expect(mockFindSessionByTokenHash).not.toHaveBeenCalled();
+      expect(mockFindUserById).not.toHaveBeenCalled();
+      expect(mockUpdateSessionLastUsed).not.toHaveBeenCalled();
+    });
+  });
 });
 
 // =============================================================================
@@ -702,5 +886,28 @@ describe("getAuthenticatedUser", () => {
 
     expect(result).toBeNull();
     expect(mockFindUserById).toHaveBeenCalledWith(env, VALID_USER_ID);
+  });
+
+  describe("runtime environment validation", () => {
+    it("returns null when no cookie even with undefined env", async () => {
+      const result = await getAuthenticatedUser({
+        request: makeAuthRequest(null),
+        env: undefined as any,
+        ctx: {},
+      });
+
+      expect(result).toBeNull();
+    });
+
+    it("returns null when env is undefined but cookie is present (no DB)", async () => {
+      const result = await getAuthenticatedUser({
+        request: makeAuthRequest(VALID_TOKEN),
+        env: undefined as any,
+        ctx: {},
+      });
+
+      expect(result).toBeNull();
+      expect(mockFindSessionByTokenHash).not.toHaveBeenCalled();
+    });
   });
 });

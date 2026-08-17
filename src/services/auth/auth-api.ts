@@ -41,6 +41,7 @@ import {
 import { sendOTPEmail } from "./auth-mailer";
 import type { Locale, AuthIntent, SessionState, AuthEnv, RequestContext } from "./auth-types";
 import { AUTH_COOKIE_NAME, COOKIE_OPTIONS, OTP_CONFIG } from "./auth-types";
+import { resolveAuthEnv, requireDB } from "./auth-runtime-env";
 
 function json(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -127,6 +128,29 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
 
   const requestId = getRequestId(request);
 
+  // ── Runtime environment validation ────────────────────────────────────────
+  // Safely narrow the raw env. In production this is a no-op; in Vite local dev
+  // env may be undefined. Missing bindings produce structured 503 responses
+  // rather than unhandled TypeErrors.
+  const authEnv = resolveAuthEnv(env);
+  const dbCheck = requireDB(authEnv);
+  if (!dbCheck.ok) {
+    console.error(
+      JSON.stringify({
+        stage: "request_code",
+        status: "service_unavailable",
+        errorCode: dbCheck.code,
+        detail: dbCheck.detail,
+        requestId,
+      }),
+    );
+    return json(503, {
+      success: false,
+      error: "service_unavailable",
+      code: "AUTH_SERVICE_UNAVAILABLE",
+    });
+  }
+
   let payload: { email?: string; intent?: AuthIntent; locale?: string };
   try {
     payload = (await request.json()) as { email?: string; intent?: AuthIntent; locale?: string };
@@ -147,13 +171,13 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
 
   // Rate limiting: Max 10 requests per email per day
   const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  const recentRequests = await countRecentOTPRequests(env, emailNormalized, dayAgo);
+  const recentRequests = await countRecentOTPRequests(authEnv, emailNormalized, dayAgo);
   if (recentRequests >= OTP_CONFIG.MAX_DAILY_REQUESTS) {
     return json(429, { success: false, error: "rate_limited" });
   }
 
   // Check if there's a recent unexpired challenge
-  const existingChallenge = await findLatestOTPChallenge(env, emailNormalized);
+  const existingChallenge = await findLatestOTPChallenge(authEnv, emailNormalized);
   if (existingChallenge) {
     const createdAt = new Date(existingChallenge.createdAt);
     const cooldownEnd = new Date(
@@ -177,7 +201,13 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
   // Persist challenge
   let challengeId: string | null = null;
   try {
-    const challenge = await createOTPChallenge(env, emailNormalized, codeHash, ipHash, expiresAt);
+    const challenge = await createOTPChallenge(
+      authEnv,
+      emailNormalized,
+      codeHash,
+      ipHash,
+      expiresAt,
+    );
     challengeId = challenge.id;
   } catch (error) {
     console.error(
@@ -192,7 +222,7 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
   }
 
   // Send email via Cloudflare Email Sending
-  const emailResult = await sendOTPEmail(env, {
+  const emailResult = await sendOTPEmail(authEnv, {
     to: email,
     code,
     locale,
@@ -203,7 +233,7 @@ export async function handleRequestCode({ request, env }: RequestContext): Promi
   if (!emailResult.success) {
     // Invalidate the unusable OTP challenge so it cannot be consumed
     try {
-      await deleteOTPChallenge(env, challengeId);
+      await deleteOTPChallenge(authEnv, challengeId);
     } catch {
       // Best-effort cleanup; failure here doesn't change the outcome
       console.warn(
@@ -244,6 +274,25 @@ export async function handleVerifyCode({ request, env }: RequestContext): Promis
     return json(405, { success: false, error: "method_not_allowed" });
   }
 
+  // ── Runtime environment validation ────────────────────────────────────────
+  const authEnv = resolveAuthEnv(env);
+  const dbCheck = requireDB(authEnv);
+  if (!dbCheck.ok) {
+    console.error(
+      JSON.stringify({
+        stage: "verify_code",
+        status: "service_unavailable",
+        errorCode: dbCheck.code,
+        detail: dbCheck.detail,
+      }),
+    );
+    return json(503, {
+      success: false,
+      error: "service_unavailable",
+      code: "AUTH_SERVICE_UNAVAILABLE",
+    });
+  }
+
   let payload: { email?: string; code?: string; intent?: AuthIntent };
   try {
     payload = (await request.json()) as { email?: string; code?: string; intent?: AuthIntent };
@@ -264,7 +313,7 @@ export async function handleVerifyCode({ request, env }: RequestContext): Promis
   const emailNormalized = normalizeEmail(email);
 
   // Find the latest challenge
-  const challenge = await findLatestOTPChallenge(env, emailNormalized);
+  const challenge = await findLatestOTPChallenge(authEnv, emailNormalized);
   if (!challenge) {
     return json(400, { success: false, error: "invalid_code" });
   }
@@ -276,34 +325,34 @@ export async function handleVerifyCode({ request, env }: RequestContext): Promis
 
   // Check attempt count
   if (challenge.attemptCount >= OTP_CONFIG.MAX_ATTEMPTS) {
-    await markOTPConsumed(env, challenge.id);
+    await markOTPConsumed(authEnv, challenge.id);
     return json(400, { success: false, error: "max_attempts" });
   }
 
   // Verify code
   const codeHash = hashSecret(code);
   if (codeHash !== challenge.codeHash) {
-    await incrementOTPAttempts(env, challenge.id);
+    await incrementOTPAttempts(authEnv, challenge.id);
     return json(400, { success: false, error: "invalid_code" });
   }
 
   // Mark challenge as consumed
-  await markOTPConsumed(env, challenge.id);
+  await markOTPConsumed(authEnv, challenge.id);
 
   // Find or create user
-  let user = await findUserByEmail(env, emailNormalized);
+  let user = await findUserByEmail(authEnv, emailNormalized);
   if (!user) {
     const locale = getLocaleFromRequest(request);
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    user = await createUser(env, emailNormalized, hashEmail(emailNormalized), locale, timezone);
+    user = await createUser(authEnv, emailNormalized, hashEmail(emailNormalized), locale, timezone);
   }
 
   // Update last login
-  await updateUserLastLogin(env, user.id);
+  await updateUserLastLogin(authEnv, user.id);
 
   // Create session
   const sessionToken = generateSessionToken();
-  await createSession(env, user.id, sessionToken);
+  await createSession(authEnv, user.id, sessionToken);
 
   // Prepare response
   const response = json(200, {
@@ -326,14 +375,32 @@ export async function handleVerifyCode({ request, env }: RequestContext): Promis
 // =============================================================================
 
 export async function handleGetSession({ request, env }: RequestContext): Promise<Response> {
+  const authEnv = resolveAuthEnv(env);
   const sessionToken = getSessionCookie(request);
 
   if (!sessionToken) {
     return json(200, { authenticated: false });
   }
 
+  // DB is required once we have a cookie to validate
+  const dbCheck = requireDB(authEnv);
+  if (!dbCheck.ok) {
+    // Can't verify the session — clear it and report unauthenticated rather
+    // than 503, since the session endpoint is polled on every navigation.
+    const response = json(200, { authenticated: false });
+    clearSessionCookie(response);
+    console.warn(
+      JSON.stringify({
+        stage: "get_session",
+        status: "db_unavailable",
+        errorCode: dbCheck.code,
+      }),
+    );
+    return response;
+  }
+
   const tokenHash = hashSecret(sessionToken);
-  const session = await findSessionByTokenHash(env, tokenHash);
+  const session = await findSessionByTokenHash(authEnv, tokenHash);
 
   if (!session || isExpired(session.expiresAt)) {
     const response = json(200, { authenticated: false });
@@ -342,10 +409,10 @@ export async function handleGetSession({ request, env }: RequestContext): Promis
   }
 
   // Update last used
-  await updateSessionLastUsed(env, session.id);
+  await updateSessionLastUsed(authEnv, session.id);
 
   // Get user by ID (session.userId is a user ID, not an email)
-  const user = await findUserById(env, session.userId);
+  const user = await findUserById(authEnv, session.userId);
   if (!user) {
     const response = json(200, { authenticated: false });
     clearSessionCookie(response);
@@ -371,13 +438,18 @@ export async function handleGetSession({ request, env }: RequestContext): Promis
 // =============================================================================
 
 export async function handleLogout({ request, env }: RequestContext): Promise<Response> {
+  const authEnv = resolveAuthEnv(env);
   const sessionToken = getSessionCookie(request);
 
   if (sessionToken) {
     const tokenHash = hashSecret(sessionToken);
-    const session = await findSessionByTokenHash(env, tokenHash);
-    if (session) {
-      await revokeSession(env, session.id);
+    // If DB is unavailable, we still clear the cookie client-side — best-effort
+    // server-side revocation is skipped without breaking the logout UX.
+    if (authEnv.DB) {
+      const session = await findSessionByTokenHash(authEnv, tokenHash);
+      if (session) {
+        await revokeSession(authEnv, session.id);
+      }
     }
   }
 
@@ -394,27 +466,33 @@ export async function getAuthenticatedUser({
   request,
   env,
 }: RequestContext): Promise<SessionState | null> {
+  const authEnv = resolveAuthEnv(env);
   const sessionToken = getSessionCookie(request);
 
   if (!sessionToken) {
     return null;
   }
 
+  // Without a DB we cannot validate sessions
+  if (!authEnv.DB) {
+    return null;
+  }
+
   const tokenHash = hashSecret(sessionToken);
-  const session = await findSessionByTokenHash(env, tokenHash);
+  const session = await findSessionByTokenHash(authEnv, tokenHash);
 
   if (!session || isExpired(session.expiresAt)) {
     return null;
   }
 
   // Get user by ID (session.userId is a user ID, not an email)
-  const user = await findUserById(env, session.userId);
+  const user = await findUserById(authEnv, session.userId);
   if (!user) {
     return null;
   }
 
   // Update last used (don't await)
-  updateSessionLastUsed(env, session.id).catch(() => {});
+  updateSessionLastUsed(authEnv, session.id).catch(() => {});
 
   return {
     isAuthenticated: true,

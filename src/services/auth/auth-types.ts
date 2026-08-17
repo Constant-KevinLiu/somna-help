@@ -192,6 +192,18 @@ export type AuthErrorCode =
   | "network_error"
   | "unknown_error";
 
+/**
+ * Service-level error codes returned when a required runtime binding is
+ * unavailable. These map to 503 Service Unavailable responses.
+ */
+export type AuthServiceErrorCode =
+  | "AUTH_SERVICE_UNAVAILABLE"
+  | "AUTH_DB_UNAVAILABLE"
+  | "AUTH_EMAIL_NOT_CONFIGURED"
+  | "AUTH_EMAIL_UNAVAILABLE"
+  | "AUTH_EMAIL_REJECTED"
+  | "AUTH_EMAIL_RATE_LIMITED";
+
 export interface AuthError {
   code: AuthErrorCode;
   message: string;
