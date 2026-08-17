@@ -56,7 +56,7 @@ const ReflectionCategorySchema = z.enum(REFLECTION_CATEGORIES);
 
 const ContentLocaleSchema = z.enum(["en", "es", "pt-BR", "pl", "de"]);
 
-const SyncStatusSchema = z.enum(["local", "pending", "synced", "conflict"]);
+const SyncStatusSchema = z.enum(["local", "pending", "synced", "conflict", "failed"]);
 
 /**
  * Reflection ID schema — accepts known formats.

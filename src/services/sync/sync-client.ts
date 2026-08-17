@@ -17,7 +17,12 @@ import type {
   SyncStatusDisplay,
   CanonicalReflection,
 } from "./sync-types";
-import { enqueueSyncOperation, getQueueStatus, processBatchResults } from "./sync-queue";
+import {
+  enqueueSyncOperation,
+  getQueueStatus,
+  processBatchResults,
+  getBatchForSync,
+} from "./sync-queue";
 import { isBrowser, safeLocalStorageGet, safeLocalStorageSet } from "@/lib/safe-storage";
 // Canonical reflection repository (single source of truth)
 import {
@@ -223,6 +228,17 @@ export class SyncClient {
       // Update local cache with canonical server state
       await this.applyServerState(result);
 
+      // Clear successfully synced items from the offline queue
+      // (all upsert items are covered by the full sync; deletes confirmed by server)
+      if (isBrowser()) {
+        const batch = getBatchForSync(100);
+        const successResults = batch.map((item) => ({
+          itemId: item.id,
+          success: true,
+        }));
+        processBatchResults(successResults);
+      }
+
       return {
         success: true,
         conflicts: result.conflicts,
@@ -286,6 +302,22 @@ export class SyncClient {
     const reminderSettings = await this.loadLocalReminderSettings();
     const programProgress = this.loadLocalProgramProgress();
 
+    // Collect pending delete operations from the queue
+    const queue = getQueueStatus();
+    const pendingDeletes =
+      queue.failedCount + queue.pendingCount > 0
+        ? getBatchForSync(50).filter((item) => item.operation === "delete")
+        : [];
+
+    const deletedIds: SyncRequest["deletedIds"] = {
+      sleepRecords: pendingDeletes
+        .filter((item) => item.entityType === "sleep-record")
+        .map((item) => item.entityId),
+      reflections: pendingDeletes
+        .filter((item) => item.entityType === "reflection")
+        .map((item) => item.entityId),
+    };
+
     return {
       clientId: this.config.clientId,
       syncId: `sync_${Date.now()}_${Math.random().toString(36).slice(2)}`,
@@ -294,6 +326,7 @@ export class SyncClient {
       reflections,
       reminderSettings,
       programProgress,
+      deletedIds,
     };
   }
 
@@ -341,6 +374,11 @@ export class SyncClient {
     if (isBrowser()) {
       setLastSyncedAt(response.lastSyncedAt);
     }
+
+    // Notify UI components that storage has changed (Timeline, stats, etc.)
+    if (isBrowser()) {
+      window.dispatchEvent(new CustomEvent("reflection-storage-change"));
+    }
   }
 
   // ===========================================================================
@@ -378,12 +416,37 @@ export class SyncClient {
     // Merge server state into canonical repository (deterministic, no duplicates).
     // This is the only path that sets syncStatus to "synced" — never before
     // server acknowledgement.
+    const beforeCount = loadSyncReflections().length;
     const merged = mergeSyncReflections(reflections);
+    const afterCount = merged.length;
+
+    // Count by status for structured logging
+    const syncedCount = merged.filter((r) => r.syncStatus === "synced").length;
+    const pendingCount = merged.filter((r) => r.syncStatus === "pending").length;
+    const conflictCount = merged.filter((r) => r.syncStatus === "conflict").length;
+    const localCount = merged.filter((r) => r.syncStatus === "local").length;
+
     // Mark successfully synced IDs
     const syncedIds = merged.filter((r) => r.syncStatus === "synced").map((r) => r.id);
     if (syncedIds.length > 0) {
       markReflectionsSynced(syncedIds);
     }
+
+    // Sanitized structured log — no content, only counts and statuses
+    console.log(
+      JSON.stringify({
+        source: "sync-client",
+        event: "reflection_merge_completed",
+        serverRecordCount: reflections.length,
+        localBeforeCount: beforeCount,
+        localAfterCount: afterCount,
+        insertedCount: Math.max(0, afterCount - beforeCount),
+        syncedCount,
+        pendingCount,
+        conflictCount,
+        localCount,
+      }),
+    );
   }
 
   private async saveReminderSettingsToLocal(settings: SyncReminderSettings): Promise<void> {

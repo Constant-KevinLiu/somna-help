@@ -4,7 +4,7 @@
  * Server-side sync endpoint for authenticated batch synchronization.
  * Handles idempotency, conflict resolution, and returns canonical state.
  * Security: User ID is always derived from session, never from client.
- * Privacy: Never log reflection content.
+ * Privacy: Never log reflection content, sleep content, or user identifiers.
  */
 
 import type { D1Database } from "@cloudflare/workers-types";
@@ -28,8 +28,10 @@ import {
 } from "../db/sleep-records-db";
 import {
   getReflectionsByUserId,
+  getReflectionById,
   upsertReflection,
   batchUpsertReflections,
+  deleteReflection,
 } from "../db/reflections-db";
 import { getReminderSettingsByUserId, upsertReminderSettings } from "../db/reminders-db";
 import { getProgramProgressByUserId, upsertProgramProgress } from "../db/program-progress-db";
@@ -42,6 +44,35 @@ import {
   type SyncProgramProgress,
   type CanonicalProgramProgress,
 } from "@/lib/program/sync-contracts";
+
+// =============================================================================
+// Structured diagnostic logging (sanitized — never logs private content)
+// =============================================================================
+
+function syncLog(event: string, data: Record<string, unknown>): void {
+  console.log(
+    JSON.stringify({
+      source: "sync-api",
+      event,
+      ...data,
+    }),
+  );
+}
+
+/**
+ * Map an arbitrary error to a sanitized category so raw messages (which may
+ * contain user identifiers or sensitive context) never reach diagnostic logs.
+ */
+function categorizeError(error: unknown): string {
+  if (!(error instanceof Error)) return "unknown";
+  const msg = error.message.toLowerCase();
+  if (msg.includes("database")) return "database_error";
+  if (msg.includes("insert") || msg.includes("upsert")) return "write_error";
+  if (msg.includes("fetch") || msg.includes("network")) return "network_error";
+  if (msg.includes("validation")) return "validation_error";
+  if (msg.includes("timeout")) return "timeout";
+  return "server_error";
+}
 
 interface SyncEnv {
   DB?: D1Database;
@@ -91,6 +122,12 @@ export async function handleSync(
   // Validate request
   const validation = validateSyncRequest(syncRequest);
   if (!validation.valid) {
+    syncLog("reflection_upload_rejected", {
+      syncId,
+      reason: "validation_failed",
+      reflectionCount: syncRequest.reflections?.length ?? 0,
+      errorCount: validation.errors.length,
+    });
     return json(400, {
       syncId,
       serverTime,
@@ -98,6 +135,15 @@ export async function handleSync(
       errors: validation.errors,
     });
   }
+
+  // Structured log: reflection upload requested (sanitized, no content, no user identifiers)
+  syncLog("reflection_upload_requested", {
+    syncId,
+    reflectionCount: syncRequest.reflections?.length ?? 0,
+    sleepRecordCount: syncRequest.sleepRecords?.length ?? 0,
+    hasReminderSettings: !!syncRequest.reminderSettings,
+    hasProgramProgress: !!syncRequest.programProgress,
+  });
 
   try {
     // Process sync in transaction-like sequence
@@ -118,6 +164,15 @@ export async function handleSync(
       result.conflicts.length,
     );
 
+    // Structured log: reflection upload accepted (counts only, no content, no user identifiers)
+    syncLog("reflection_upload_accepted", {
+      syncId,
+      serverReflectionCount: result.reflections.length,
+      serverSleepRecordCount: result.sleepRecords.length,
+      conflictCount: result.conflicts.length,
+      reflectionConflicts: result.conflicts.filter((c) => c.entityType === "reflection").length,
+    });
+
     return json(200, {
       ...result,
       syncId,
@@ -128,6 +183,11 @@ export async function handleSync(
     });
   } catch (error) {
     console.error("Sync failed:", error instanceof Error ? error.message : "unknown error");
+
+    syncLog("reflection_upload_failed", {
+      syncId,
+      errorCategory: categorizeError(error),
+    });
 
     await logSyncOperation(
       env,
@@ -276,6 +336,31 @@ async function processSync(
     }
   }
 
+  // Process deletions
+  const processedDeletedIds: string[] = [];
+
+  if (request.deletedIds?.reflections?.length) {
+    for (const id of request.deletedIds.reflections) {
+      // Verify the record belongs to this user by trying to fetch it first
+      const existing = await getReflectionById(env, userId, id);
+      if (existing) {
+        const deleted = await deleteReflection(env, userId, id);
+        if (deleted) {
+          processedDeletedIds.push(id);
+        }
+      }
+    }
+
+    // Structured log: reflection deletions processed
+    if (processedDeletedIds.length > 0) {
+      syncLog("reflection_deletions_processed", {
+        syncId: request.syncId,
+        deletedCount: processedDeletedIds.length,
+        requestedCount: request.deletedIds.reflections.length,
+      });
+    }
+  }
+
   // Fetch full canonical state from server
   const finalSleepRecords = await getSleepRecordsByUserId(env, userId);
   const finalReflections = await getReflectionsByUserId(env, userId);
@@ -286,7 +371,7 @@ async function processSync(
     reminderSettings: reminderSettings ? toCanonicalReminderSettings(reminderSettings) : undefined,
     programProgress: finalProgramProgress ?? undefined,
     conflicts,
-    deletedIds: [], // Client-side deletes handled separately
+    deletedIds: processedDeletedIds,
   };
 }
 
@@ -295,6 +380,10 @@ async function processSync(
 // =============================================================================
 
 export async function handleRestore(env: SyncEnv, userId: string): Promise<Response> {
+  syncLog("reflection_pull_requested", {
+    endpoint: "restore",
+  });
+
   try {
     const [sleepRecords, reflections, reminderSettings, programProgress] = await Promise.all([
       getSleepRecordsByUserId(env, userId),
@@ -303,6 +392,14 @@ export async function handleRestore(env: SyncEnv, userId: string): Promise<Respo
       getProgramProgressByUserId(env, userId),
     ]);
     const serverTime = new Date().toISOString();
+
+    // Structured log: remote records returned (count only, no content, no user identifiers)
+    syncLog("reflection_pull_completed", {
+      remoteReflectionCount: reflections.length,
+      remoteSleepRecordCount: sleepRecords.length,
+      hasReminderSettings: !!reminderSettings,
+      hasProgramProgress: !!programProgress,
+    });
 
     return json(200, {
       serverTime,
@@ -315,6 +412,11 @@ export async function handleRestore(env: SyncEnv, userId: string): Promise<Respo
     });
   } catch (error) {
     console.error("Restore failed:", error instanceof Error ? error.message : "unknown error");
+
+    syncLog("reflection_pull_failed", {
+      errorCategory: categorizeError(error),
+    });
+
     return json(500, {
       success: false,
       error: "server_error",

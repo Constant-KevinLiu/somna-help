@@ -34,7 +34,7 @@ export interface ReflectionPrompt {
   text: string;
 }
 
-export type SyncStatus = "local" | "pending" | "synced" | "conflict";
+export type SyncStatus = "local" | "pending" | "synced" | "conflict" | "failed";
 
 /**
  * A committed reflection record in history.

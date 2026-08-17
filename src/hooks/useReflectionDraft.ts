@@ -32,6 +32,8 @@ import {
 import { countWords, MAX_WORDS } from "@/lib/reflection/reflection-word-count";
 import { selectDailyPrompts } from "@/lib/reflection/reflection-prompts";
 import type { SupportedLocale } from "@/lib/locale-registry";
+import { getSyncClient } from "@/services/sync/sync-client";
+import { enqueueSyncOperation } from "@/services/sync/sync-queue";
 
 interface UseReflectionDraftOptions {
   locale: SupportedLocale;
@@ -161,12 +163,25 @@ export function useReflectionDraft({
   }, [localDate, contentLocale, prompts, content, wordCount]);
 
   /**
+   * Check if the sync client is authenticated (browser-only).
+   */
+  const isSyncAuthenticated = useCallback((): boolean => {
+    if (typeof window === "undefined") return false;
+    try {
+      return getSyncClient().isAuthenticated();
+    } catch {
+      return false;
+    }
+  }, []);
+
+  /**
    * Explicitly commit the reflection to history.
    *
    * This is the real "Save Reflection" action:
    * 1. Writes to committed history storage
    * 2. Clears the draft
    * 3. Only shows success toast AFTER successful persistence
+   * 4. If authenticated, marks as pending and triggers sync upload
    *
    * Returns true if save succeeded, false otherwise.
    */
@@ -180,6 +195,11 @@ export function useReflectionDraft({
     try {
       const existing = getReflectionByDate(localDate);
       const now = new Date().toISOString();
+      const authenticated = isSyncAuthenticated();
+
+      // When authenticated, new/edited records start as "pending" sync status.
+      // When anonymous, they stay "local".
+      const initialSyncStatus: LocalReflection["syncStatus"] = authenticated ? "pending" : "local";
 
       const reflection: LocalReflection = {
         id: existing?.id || generateReflectionId(),
@@ -192,7 +212,7 @@ export function useReflectionDraft({
         wordCount,
         createdAt: existing?.createdAt || now,
         updatedAt: now,
-        syncStatus: "local",
+        syncStatus: initialSyncStatus,
       };
 
       const saved = saveReflection(reflection);
@@ -205,13 +225,34 @@ export function useReflectionDraft({
       hasUnsavedChangesRef.current = false;
       setIsEditing(true);
 
+      // If authenticated, trigger sync upload in the background.
+      // If offline, the record is already "pending" and will be picked up
+      // by the next sync when back online.
+      if (authenticated && typeof window !== "undefined") {
+        // Enqueue for retry on failure
+        enqueueSyncOperation("reflection", saved.id, "upsert", {
+          ...saved,
+          legacyId: undefined,
+        });
+
+        // Attempt immediate sync (non-blocking — save already succeeded)
+        if (navigator.onLine) {
+          getSyncClient()
+            .sync()
+            .catch(() => {
+              // Sync failure is non-fatal — record stays "pending"
+              // and will retry when back online
+            });
+        }
+      }
+
       return true;
     } catch (error) {
       setSaveStatus("error");
       console.error("[Reflection] Commit failed:", error);
       return false;
     }
-  }, [localDate, contentLocale, prompts, content, wordCount]);
+  }, [localDate, contentLocale, prompts, content, wordCount, isSyncAuthenticated]);
 
   const setContent = useCallback(
     (newContent: string) => {

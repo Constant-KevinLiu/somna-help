@@ -42,6 +42,7 @@ export interface ReflectionUiStrings {
     savedLocally: string;
     synced: string;
     pending: string;
+    syncFailed?: string;
     expand: string;
     collapse: string;
     edit: string;
@@ -122,6 +123,7 @@ export const EN_REFLECTION_UI: ReflectionUiStrings = {
     savedLocally: "Saved locally",
     synced: "Synced",
     pending: "Sync pending",
+    syncFailed: "Sync failed",
     expand: "Show more",
     collapse: "Show less",
     edit: "Edit",

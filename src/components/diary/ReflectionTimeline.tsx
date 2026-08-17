@@ -32,6 +32,8 @@ import { getSortedReflections, deleteReflection } from "@/lib/reflection/reflect
 import { getCategoryLabel } from "@/lib/reflection/reflection-prompts";
 import type { ContentLocale } from "@/content/content-types";
 import type { ReflectionUiStrings } from "@/content/en/diary/reflection-ui";
+import { getSyncClient } from "@/services/sync/sync-client";
+import { enqueueSyncOperation } from "@/services/sync/sync-queue";
 
 interface ReflectionTimelineProps {
   strings: ReflectionUiStrings;
@@ -104,6 +106,18 @@ export function ReflectionTimeline({
     setReflections(getSortedReflections());
   }, [refreshKey]);
 
+  // Refresh when storage changes due to sync merge or auth state change
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setReflections(getSortedReflections());
+    };
+
+    window.addEventListener("reflection-storage-change", handleStorageChange);
+    return () => {
+      window.removeEventListener("reflection-storage-change", handleStorageChange);
+    };
+  }, []);
+
   const groups = useMemo(() => groupByDate(reflections), [reflections]);
 
   const toggleExpand = useCallback((id: string) => {
@@ -146,6 +160,24 @@ export function ReflectionTimeline({
     (id: string) => {
       try {
         deleteReflection(id);
+
+        // If authenticated, enqueue delete for sync propagation
+        if (typeof window !== "undefined") {
+          try {
+            const client = getSyncClient();
+            if (client.isAuthenticated()) {
+              enqueueSyncOperation("reflection", id, "delete", { id });
+              if (navigator.onLine) {
+                client.sync().catch(() => {
+                  // Non-fatal — stays queued for retry
+                });
+              }
+            }
+          } catch {
+            // Sync queue failure shouldn't break the local delete
+          }
+        }
+
         setReflections(getSortedReflections());
         setExpandedIds((prev) => {
           const next = new Set(prev);
@@ -174,6 +206,8 @@ export function ReflectionTimeline({
         return strings.timeline.synced;
       case "pending":
         return strings.timeline.pending;
+      case "failed":
+        return strings.timeline.syncFailed || "Sync failed";
       case "local":
       case "conflict":
       default:
@@ -184,13 +218,15 @@ export function ReflectionTimeline({
   const getSyncIcon = (status: LocalReflection["syncStatus"]) => {
     switch (status) {
       case "synced":
-        return <CheckCircle2 className="h-3 w-3" />;
+        return <CheckCircle2 className="h-3 w-3 text-green-400" />;
       case "pending":
-        return <RefreshCw className="h-3 w-3 animate-spin" />;
+        return <RefreshCw className="h-3 w-3 animate-spin text-amber-400" />;
+      case "failed":
+        return <RefreshCw className="h-3 w-3 text-red-400" />;
       case "local":
       case "conflict":
       default:
-        return <Clock className="h-3 w-3" />;
+        return <Clock className="h-3 w-3 text-muted-foreground" />;
     }
   };
 
